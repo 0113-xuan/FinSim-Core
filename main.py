@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 
 # 1. 初始化 FastAPI
 app = FastAPI(title="AI 財務模擬系統 API", version="1.0.0")
