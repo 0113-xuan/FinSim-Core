@@ -77,3 +77,11 @@ if __name__ == "__main__":
     print("=== AI 財務模擬系統後端已啟動 ===")
     print("請開啟瀏覽器輸入 http://127.0.0.1:8000/docs 查看 API 文件")
     uvicorn.run(app, host="127.0.0.1", port=8000)
+    
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],   # 這行就是 VIP 名單！
+    allow_credentials=True,
+    allow_methods=["*"],   # 允許 GET, POST 等所有動作
+    allow_headers=["*"],
+)
