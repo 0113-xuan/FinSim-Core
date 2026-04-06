@@ -4,6 +4,12 @@ from typing import List, Optional
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from supabase import create_client
+
+SUPABASE_URL = "https://tpgtuairychavuzfgifc.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwZ3R1YWlyeWNoYXZ1emZnaWZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NjY2ODQsImV4cCI6MjA5MTA0MjY4NH0.W-BQ7HijWcGnqRlQQSRyaT4GDdLCKMaYYBtL7LFFz-I"
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # 1. 初始化 FastAPI
 app = FastAPI(title="AI 財務模擬系統 API", version="1.0.0")
@@ -42,23 +48,57 @@ class SimulationRequest(BaseModel):
 def home():
     return {"message": "後端系統運作中", "docs": "/docs"}
 
-# [POST] 建立使用者
+# 建立使用者
 @app.post("/user/create")
 async def create_user(user: UserCreate):
-    # TODO: 這裡之後要呼叫組員 D 的資料庫儲存功能
-    return {"status": "success", "message": f"使用者 {user.username} 已建立"}
+    try:
+        data = {
+            "name": user.username,
+            "email": f"{user.username}@test.com"
+        }
+
+        response = supabase.table("users").insert(data).execute()
+
+        return {
+            "status": "success",
+            "data": response.data
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # [POST] 執行模擬 (核心功能)
 @app.post("/simulate")
 async def simulate(request: SimulationRequest):
-    # TODO: 這裡要呼叫組員 C 的 simulate_future() 函數
-    mock_result = {
-        "user_id": request.user_id,
-        "future_savings": request.initial_savings + (request.monthly_income - request.monthly_expense) * 12 * request.years,
-        "bankruptcy_probability": "5%",
-        "fsi_index": 0.35
-    }
-    return mock_result
+    try:
+        future_savings = request.initial_savings + \
+            (request.monthly_income - request.monthly_expense) * 12 * request.years
+
+        # 先建立 session
+        session = supabase.table("simulation_sessions").insert({
+            "user_id": request.user_id,
+            "simulation_name": "預設模擬"
+        }).execute()
+
+        session_id = session.data[0]["id"]
+
+        # 存結果
+        result = supabase.table("simulation_results").insert({
+            "session_id": session_id,
+            "simulation_year": request.years,
+            "projected_income": request.monthly_income,
+            "projected_expense": request.monthly_expense,
+            "projected_savings": future_savings,
+            "financial_stress_score": 35.0
+        }).execute()
+
+        return {
+            "future_savings": future_savings,
+            "session_id": session_id
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # [POST] 新增財務事件
 @app.post("/event/add")
