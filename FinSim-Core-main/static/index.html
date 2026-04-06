@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>財務模擬系統</title>
+</head>
+<body>
+    <h1>🎉 成功！這是組員 A 的前端畫面！</h1>
+    <p>如果看到這個畫面，代表前後端已經成功整合在同一個專案裡了。</p>
+    
+    <hr>
+    <h3>後端連線測試：</h3>
+    <button onclick="testAPI()">點我跟後端拿資料</button>
+    <p id="result" style="color: blue;"></p>
+
+    <script>
+        // 這就是組員 A 未來要寫的串接程式碼
+        function testAPI() {
+            // 因為現在前後端放在一起，可以直接呼叫相對路徑 /api/hello
+            fetch('/api/hello')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerText = "後端回應：" + data.message;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
