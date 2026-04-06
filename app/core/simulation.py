@@ -1,7 +1,10 @@
-# simulation.py
 from typing import Dict, List, Any, Optional
-from fsi import calculate_fsi, classify_risk
-from events import get_monthly_event_net, get_salary_for_month, get_debt_payment_for_month
+from app.core.fsi import calculate_fsi, classify_risk
+from app.core.events import (
+    get_monthly_event_net,
+    get_salary_for_month,
+    get_debt_payment_for_month,
+)
 
 
 def monthly_income(base_salary: float, raise_rate: float, month: int) -> float:
@@ -13,7 +16,12 @@ def monthly_income(base_salary: float, raise_rate: float, month: int) -> float:
     return round(income, 2)
 
 
-def monthly_expense(fixed_expense: float, variable_expense: float, inflation_rate: float, month: int) -> float:
+def monthly_expense(
+    fixed_expense: float,
+    variable_expense: float,
+    inflation_rate: float,
+    month: int
+) -> float:
     """
     月支出模型：固定支出 + 變動支出逐年通膨成長
     """
@@ -24,13 +32,35 @@ def monthly_expense(fixed_expense: float, variable_expense: float, inflation_rat
 
 
 def summarize_simulation(simulation_curve: List[Dict[str, Any]]) -> Dict[str, Any]:
-    final_balance = simulation_curve[-1]["balance"] if simulation_curve else 0
-    min_balance = min(item["balance"] for item in simulation_curve) if simulation_curve else 0
-    max_fsi = max(item["fsi"] for item in simulation_curve) if simulation_curve else 0
-    avg_fsi = round(sum(item["fsi"] for item in simulation_curve) / len(simulation_curve), 4) if simulation_curve else 0
+    """
+    將逐月模擬結果彙總成 summary
+    """
+    if not simulation_curve:
+        return {
+            "final_balance": 0.0,
+            "min_balance": 0.0,
+            "max_fsi": 0.0,
+            "avg_fsi": 0.0,
+            "high_risk_months": 0,
+            "first_risk_month": None,
+        }
 
-    high_risk_months = sum(1 for item in simulation_curve if item["risk_level"] in ("high", "crisis"))
-    first_risk_month = next((item["month"] for item in simulation_curve if item["risk_level"] in ("high", "crisis")), None)
+    final_balance = simulation_curve[-1]["balance"]
+    min_balance = min(item["balance"] for item in simulation_curve)
+    max_fsi = max(item["fsi"] for item in simulation_curve)
+    avg_fsi = round(
+        sum(item["fsi"] for item in simulation_curve) / len(simulation_curve),
+        4
+    )
+
+    high_risk_months = sum(
+        1 for item in simulation_curve if item["risk_level"] in ("high", "crisis")
+    )
+
+    first_risk_month = next(
+        (item["month"] for item in simulation_curve if item["risk_level"] in ("high", "crisis")),
+        None
+    )
 
     return {
         "final_balance": round(final_balance, 2),
@@ -38,7 +68,7 @@ def summarize_simulation(simulation_curve: List[Dict[str, Any]]) -> Dict[str, An
         "max_fsi": round(max_fsi, 4),
         "avg_fsi": avg_fsi,
         "high_risk_months": high_risk_months,
-        "first_risk_month": first_risk_month
+        "first_risk_month": first_risk_month,
     }
 
 
@@ -51,7 +81,9 @@ def simulate_finance(
     override_inflation_rate: Optional[float] = None
 ) -> Dict[str, Any]:
     """
-    profile 格式:
+    財務模擬主函式
+
+    profile 格式：
     {
         "salary": 35000,
         "fixed_expense": 12000,
@@ -62,18 +94,30 @@ def simulate_finance(
         "target_emergency_months": 3
     }
     """
+    if months <= 0:
+        raise ValueError("months must be > 0")
 
     events = events or []
     loans = loans or []
 
-    base_salary = profile["salary"]
-    fixed_expense = profile["fixed_expense"]
-    variable_expense = profile["variable_expense"]
+    base_salary = float(profile["salary"])
+    fixed_expense = float(profile["fixed_expense"])
+    variable_expense = float(profile["variable_expense"])
     balance = float(profile["balance"])
 
-    raise_rate = override_raise_rate if override_raise_rate is not None else profile.get("raise_rate", 0.03)
-    inflation_rate = override_inflation_rate if override_inflation_rate is not None else profile.get("inflation_rate", 0.02)
-    target_emergency_months = profile.get("target_emergency_months", 3)
+    raise_rate = (
+        float(override_raise_rate)
+        if override_raise_rate is not None
+        else float(profile.get("raise_rate", 0.03))
+    )
+
+    inflation_rate = (
+        float(override_inflation_rate)
+        if override_inflation_rate is not None
+        else float(profile.get("inflation_rate", 0.02))
+    )
+
+    target_emergency_months = float(profile.get("target_emergency_months", 3))
 
     salary_events = [e for e in events if e.get("type") == "salary_change"]
 
@@ -83,19 +127,24 @@ def simulate_finance(
         base_income = monthly_income(base_salary, raise_rate, month)
         income = get_salary_for_month(month, base_income, salary_events)
 
-        expense = monthly_expense(fixed_expense, variable_expense, inflation_rate, month)
+        expense = monthly_expense(
+            fixed_expense=fixed_expense,
+            variable_expense=variable_expense,
+            inflation_rate=inflation_rate,
+            month=month
+        )
 
         event_net = get_monthly_event_net(month, events)
         debt_payment = get_debt_payment_for_month(month, loans)
 
         net_cashflow = income - expense - debt_payment + event_net
-        balance = balance + net_cashflow
+        balance += net_cashflow
 
         fsi = calculate_fsi(
             income=income,
             expense=expense,
             debt_payment=debt_payment,
-            balance=balance,    
+            balance=balance,
             target_emergency_months=target_emergency_months
         )
         risk_level = classify_risk(fsi, balance)

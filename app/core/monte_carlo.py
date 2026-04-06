@@ -1,15 +1,15 @@
-# monte_carlo.py
 import random
 from typing import Dict, Any, List, Optional
-from simulation import simulate_finance
+from app.core.simulation import simulate_finance
 
 
 def generate_random_shock_event(months: int) -> List[Dict[str, Any]]:
     """
     隨機產生一次性突發支出
-    機率 10%，金額 5000~50000
+    機率 10%，金額 5000 ~ 50000
     """
-    events = []
+    events: List[Dict[str, Any]] = []
+
     if random.random() < 0.10:
         shock_month = random.randint(1, months)
         shock_amount = random.randint(5000, 50000)
@@ -19,6 +19,7 @@ def generate_random_shock_event(months: int) -> List[Dict[str, Any]]:
             "amount": -shock_amount,
             "note": "random_shock"
         })
+
     return events
 
 
@@ -29,6 +30,20 @@ def run_monte_carlo(
     months: int = 60,
     simulations: int = 1000
 ) -> Dict[str, Any]:
+    """
+    Monte Carlo 多情境模擬
+
+    每次模擬會：
+    - 隨機抽樣薪資成長率
+    - 隨機抽樣通膨率
+    - 可能加入一次突發支出
+    """
+    if months <= 0:
+        raise ValueError("months must be > 0")
+
+    if simulations <= 0:
+        raise ValueError("simulations must be > 0")
+
     base_events = base_events or []
     loans = loans or []
 
@@ -39,7 +54,7 @@ def run_monte_carlo(
         sampled_inflation_rate = random.uniform(0.01, 0.04)
 
         random_events = generate_random_shock_event(months)
-        all_events = base_events + random_events
+        all_events = list(base_events) + random_events
 
         result = simulate_finance(
             profile=profile,

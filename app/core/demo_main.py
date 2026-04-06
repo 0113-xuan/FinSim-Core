@@ -1,7 +1,6 @@
-# demo_main.py
-from simulation import simulate_finance
-from monte_carlo import run_monte_carlo
-from advisor import compare_options, generate_advice
+from app.core.simulation import simulate_finance
+from app.core.monte_carlo import run_monte_carlo
+from app.core.advisor import compare_options, generate_advice
 
 
 def main():
@@ -84,7 +83,12 @@ def main():
     )
     print("\n=== 比較結果 ===")
     for item in compare_result["options"]:
-        print(item["name"], item["score"], item["simulation_summary"], item["monte_carlo_summary"])
+        print(
+            item["name"],
+            item["score"],
+            item["simulation_summary"],
+            item["monte_carlo_summary"]
+        )
 
     advice = generate_advice(compare_result)
     print("\n=== AI 建議 ===")

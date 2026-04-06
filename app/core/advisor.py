@@ -1,13 +1,17 @@
-# advisor.py
 from typing import Dict, Any, List
-from simulation import simulate_finance
-from monte_carlo import run_monte_carlo
+from app.core.simulation import simulate_finance
+from app.core.monte_carlo import run_monte_carlo
 
 
 def score_option(sim_summary: Dict[str, Any], mc_summary: Dict[str, Any]) -> float:
     """
+    方案評分函式
     分數越低越好
-    你可以之後再調整權重
+
+    權重邏輯：
+    - max_fsi 越高越差
+    - min_balance 若為負，懲罰越重
+    - bankrupt_probability 越高越差
     """
     score = 0.0
 
@@ -25,7 +29,9 @@ def compare_options(
     mc_runs: int = 300
 ) -> Dict[str, Any]:
     """
-    options 格式:
+    比較多個方案，回傳最佳方案與各方案結果
+
+    options 格式：
     [
         {
             "name": "buy_now",
@@ -35,6 +41,9 @@ def compare_options(
         ...
     ]
     """
+    if not options:
+        raise ValueError("options must not be empty")
+
     option_results = []
 
     for option in options:
@@ -72,6 +81,9 @@ def compare_options(
 
 
 def generate_advice(compare_result: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    依最佳方案生成建議文字與風險摘要
+    """
     best = compare_result["options"][0]
     sim = best["simulation_summary"]
     mc = best["monte_carlo_summary"]
@@ -94,9 +106,24 @@ def generate_advice(compare_result: Dict[str, Any]) -> Dict[str, Any]:
         f"Monte Carlo 破產機率為 {mc['bankrupt_probability'] * 100:.2f}%"
     ]
 
+    suggestions = []
+
+    if sim["min_balance"] < 0:
+        suggestions.append("此方案曾出現資產轉負，建議降低支出或延後高額決策。")
+
+    if sim["max_fsi"] >= 0.90:
+        suggestions.append("財務壓力偏高，建議增加緊急預備金或降低貸款負擔。")
+
+    if mc["bankrupt_probability"] >= 0.15:
+        suggestions.append("情境風險偏高，建議保守規劃並預留更高安全邊際。")
+
+    if not suggestions:
+        suggestions.append("整體風險可控，可作為優先考慮方案。")
+
     return {
         "summary": summary,
         "risk_level": risk_level,
         "best_option": best["name"],
-        "reason": reasons
+        "reason": reasons,
+        "suggestions": suggestions
     }
