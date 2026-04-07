@@ -1,29 +1,348 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <title>財務模擬系統</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minecraft Bank UI</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>🎉 成功！這是組員 A 的前端畫面！</h1>
-    <p>如果看到這個畫面，代表前後端已經成功整合在同一個專案裡了。</p>
-    
-    <hr>
-    <h3>後端連線測試：</h3>
-    <button onclick="testAPI()">點我跟後端拿資料</button>
-    <p id="result" style="color: blue;"></p>
+  <div class="bg-cloud cloud-1"></div>
+  <div class="bg-cloud cloud-2"></div>
+  <div class="bg-ground-dirt"></div>
+  <div class="bg-ground-grass"></div>
 
-    <script>
-        // 這就是組員 A 未來要寫的串接程式碼
-        function testAPI() {
-            // 因為現在前後端放在一起，可以直接呼叫相對路徑 /api/hello
-            fetch('/api/hello')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('result').innerText = "後端回應：" + data.message;
-                })
-                .catch(error => console.error('Error:', error));
+  <div class="container">
+    
+    <header class="mc-panel variant-glass hud-panel">
+      <div class="hud-content">
+        <div class="hud-item">
+          <div class="hud-text">
+            <span class="hud-label">資產總額 (Balance)</span>
+            <span id="total-balance" class="hud-value text-green">$ 1,250,000</span>
+          </div>
+        </div>
+        <div class="hud-item">
+          <svg class="icon text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+          <div class="hud-text">
+            <span class="hud-label">月收入 (Income)</span>
+            <span class="hud-value text-green">+ 120,000</span>
+          </div>
+        </div>
+        <div class="hud-item">
+          <svg class="icon text-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7 7 7-7"/></svg>
+          <div class="hud-text">
+            <span class="hud-label">月支出 (Expenses)</span>
+            <span class="hud-value text-red">- 450,000</span>
+          </div>
+        </div>
+        <div class="hud-item credit-score">
+          <span class="hud-label">信用評分 (Credit)</span>
+          <div class="hearts">
+            <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            <svg class="icon-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="grid-layout">
+      <div class="col-left">
+        
+        <section class="mc-panel variant-dirt mt-6 relative-panel">
+          <div class="panel-badge badge-dirt">小鎮選單 (Town Menu)</div>
+          <div class="town-menu">
+            <button class="mc-button variant-stone menu-btn" data-target="panel-car">
+              <img src="Minecart_JE3_BE2.png" alt="車行" class="menu-icon">
+              <div class="menu-text">
+                <span class="menu-title text-white">車行</span>
+                <span class="menu-desc">購買代步工具</span>
+              </div>
+            </button>
+
+            <button class="mc-button variant-stone menu-btn" data-target="panel-house">
+              <img src="Oak_Log_Axis_Y_JE5_BE3.png" alt="房屋" class="menu-icon">
+              <div class="menu-text">
+                <span class="menu-title text-white">房屋</span>
+                <span class="menu-desc">投資房地產</span>
+              </div>
+            </button>
+
+            <button class="mc-button variant-stone menu-btn" data-target="panel-job">
+              <img src="Diamond_Pickaxe_JE3_BE3.png" alt="工作" class="menu-icon">
+              <div class="menu-text">
+                <span class="menu-title text-white">工作</span>
+                <span class="menu-desc">打工賺錢去</span>
+              </div>
+            </button>
+          </div>
+        </section>
+        <div id="dynamic-content-area">
+        <section id="panel-default" class="mc-panel variant-stone mt-6 relative-panel">
+            <div class="panel-badge badge-stone">財務圖表 (Finance)</div>
+            
+            <div style="background-color: rgba(0,0,0,0.5); border: 2px solid #555;" class="p-2 mb-3 text-center">
+              <span class="text-yellow drop-shadow-black text-sm">
+                ✨ 下一步該怎麼做？請從上方的小鎮選單選擇地點！ ✨
+              </span>
+            </div>
+
+            <div class="chart-container" style="position: relative; height: 250px; width: 100%; padding-left: 20px; padding-right: 10px;">
+              <canvas id="financeChart"></canvas>
+            </div>
+          </section>
+
+          <section id="panel-car" class="mc-panel variant-stone mt-6 relative-panel hidden">
+            <div class="panel-badge badge-stone">車行 (Car Shop)</div>
+            <div class="p-4 text-white">
+              <p>歡迎來到村民車行！這裡未來會顯示可購買的礦車清單。</p>
+            </div>
+          </section>
+
+          <section id="panel-house" class="mc-panel variant-stone mt-6 relative-panel hidden">
+            <div class="panel-badge badge-stone">房屋 (Real Estate)</div>
+            <div class="p-4 text-white">
+              <p>想要安身立命嗎？這裡未來會顯示房地產投資物件。</p>
+            </div>
+          </section>
+
+          <section id="panel-job" class="mc-panel variant-stone mt-6 relative-panel hidden">
+            <div class="panel-badge badge-stone">工作 (Job Center)</div>
+            <div class="p-4 text-white">
+              <p>去礦坑挖礦吧！這裡未來會顯示打工賺錢的選項。</p>
+            </div>
+          </section>
+
+        </div>
+
+        <section class="mc-panel variant-obsidian mt-6 relative-panel chat-section">
+          <div class="panel-badge badge-obsidian">💬 AI 對話 (AI Chat)</div>
+          <div class="chat-messages">
+            <div class="message text-green drop-shadow-black">
+              <span class="sender">[System]</span> 歡迎來到小鎮銀行！
+            </div>
+            <div class="message text-yellow drop-shadow-black">
+              <span class="sender">[Advisor]</span> 您的帳戶目前狀態良好，建議可以考慮投資「房屋」增加被動收入。
+            </div>
+            <div class="message text-white drop-shadow-black">
+              <span class="sender">[Player]</span> 我想了解目前的貸款利率。
+            </div>
+          </div>
+          <div class="chat-input-area">
+            <input type="text" class="chat-input" placeholder="T 傳送訊息...">
+            <button class="mc-button variant-stone chat-send-btn">
+              <svg class="icon text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </button>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="col-right">
+        <section class="mc-panel variant-stone mt-6 relative-panel h-full flex-col">
+          <div class="panel-badge badge-stone">記帳系統 (Accounting)</div>
+          
+          <div id="accounting-form" class="flex-col gap-4 mt-4 h-full">
+            <div class="form-group flex-col">
+              <label class="text-white text-sm mb-1 text-shadow-sm">金額 (Amount)</label>
+              <input type="number" id="record-amount" class="mc-input" placeholder="例如: 500 (支出請加負號)">
+            </div>
+            
+            <div class="form-group flex-col mt-4">
+              <label class="text-white text-sm mb-1 text-shadow-sm">備註 (Note)</label>
+              <input type="text" id="record-note" class="mc-input" placeholder="例如: 購買鐵十字鎬">
+            </div>
+            
+            <div class="form-group flex-col mt-4">
+              <label class="text-white text-sm mb-1 text-shadow-sm">日期 (Date)</label>
+              <input type="date" id="record-date" class="mc-input">
+            </div>
+
+            <div class="flex-col gap-2 mt-auto pt-6">
+              <button id="btn-submit-record" class="mc-button variant-green text-white w-full">➕ 新增紀錄</button>
+              <button id="btn-view-history" class="mc-button variant-stone text-black w-full">📜 查看歷史紀錄</button>
+            </div>
+          </div>
+
+          <div id="history-panel" class="hidden flex-col h-full mt-4">
+            <button id="btn-back-to-form" class="mc-button variant-stone text-black mb-4 w-full">⬅ 返回記帳</button>
+            <div id="history-list" class="flex-col gap-2 overflow-y-auto flex-1 text-white">
+              </div>
+          </div>
+
+        </section>
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    // 1. 選單切換邏輯
+    const menuButtons = document.querySelectorAll('.menu-btn');
+    const allPanels = [
+      document.getElementById('panel-default'),
+      document.getElementById('panel-car'),
+      document.getElementById('panel-house'),
+      document.getElementById('panel-job')
+    ];
+
+    menuButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetId = button.getAttribute('data-target');
+
+        allPanels.forEach(panel => {
+          if (panel) panel.classList.add('hidden');
+        });
+
+        const targetPanel = document.getElementById(targetId);
+        if (targetPanel) targetPanel.classList.remove('hidden');
+      });
+    });
+
+    // 2. 記帳與歷史紀錄切換邏輯
+    const accountingForm = document.getElementById('accounting-form');
+    const historyPanel = document.getElementById('history-panel');
+    const btnViewHistory = document.getElementById('btn-view-history');
+    const btnBackToForm = document.getElementById('btn-back-to-form');
+    
+    btnViewHistory.addEventListener('click', () => {
+      accountingForm.classList.add('hidden');
+      historyPanel.classList.remove('hidden');
+    });
+
+    btnBackToForm.addEventListener('click', () => {
+      historyPanel.classList.add('hidden');
+      accountingForm.classList.remove('hidden');
+    });
+
+    // ==========================================
+    // 3. 記帳收集與畫面渲染邏輯
+    // ==========================================
+    const btnSubmitRecord = document.getElementById('btn-submit-record');
+    const historyList = document.getElementById('history-list');
+    
+    //宣告一個變數，記錄玩家目前的真實總存款 (起始值為 125 萬)
+    let currentBalance = 1250000; 
+
+    btnSubmitRecord.addEventListener('click', () => {
+      const amount = document.getElementById('record-amount').value;
+      const note = document.getElementById('record-note').value;
+      const date = document.getElementById('record-date').value;
+
+      if (!amount || !note || !date) {
+        alert("⚠️ 請完整填寫金額、備註與日期！");
+        return;
+      }
+
+      const numAmount = Number(amount);
+      const isIncome = numAmount >= 0;
+      const colorClass = isIncome ? 'text-green' : 'text-red';
+      const sign = isIncome ? '+ ' : '- ';
+      const displayAmount = Math.abs(numAmount).toLocaleString(); 
+
+      // 🌟 核心魔法 1：更新 HUD 總資產 🌟
+      currentBalance += numAmount; // 把輸入的金額加進總資產 (若為負數則自動扣除)
+      document.getElementById('total-balance').textContent = '$ ' + currentBalance.toLocaleString();
+
+      // 🌟 核心魔法 2：更新 Chart.js 財務圖表 🌟
+      // 取日期的「月-日」加到 X 軸 (例如 2026-04-07 變成 04-07)
+      const shortDate = date.substring(5); 
+      financeChart.data.labels.push(shortDate);
+      
+      // 把計算後的新資產加到 Y 軸
+      financeChart.data.datasets[0].data.push(currentBalance);
+      
+      // 通知圖表「資料更新了，請重畫！」
+      financeChart.update();
+
+      // 🌟 產生歷史紀錄面板 HTML 🌟
+      const recordHTML = `
+        <div class="mc-panel variant-obsidian p-2 text-sm border-2">
+          <div class="text-gray text-xs">${date}</div>
+          <div class="flex justify-between mt-1">
+            <span>${note}</span>
+            <span class="${colorClass}">${sign}$ ${displayAmount}</span>
+          </div>
+        </div>
+      `;
+
+      historyList.insertAdjacentHTML('afterbegin', recordHTML);
+
+      // 清空輸入框
+      document.getElementById('record-amount').value = '';
+      document.getElementById('record-note').value = '';
+      document.getElementById('record-date').value = '';
+      
+      alert("✅ 紀錄新增成功！圖表與資產已同步更新！");
+    });
+// ==========================================
+    // 4. 實作 Chart.js 動態財務圖表
+    // ==========================================
+    const ctx = document.getElementById('financeChart').getContext('2d');
+    
+    const financeChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['1月', '2月', '3月', '4月', '5月', '6月'], // X軸標籤
+        datasets: [{
+          label: '總資產預測',
+          data: [1250000, 1100000, 1300000, 1200000, 1400000, 1600000], 
+          borderColor: '#5c9e31', 
+          backgroundColor: 'rgba(92, 158, 49, 0.2)',
+          borderWidth: 3,
+          stepped: true, 
+          pointBackgroundColor: '#85db49',
+          pointBorderColor: '#111',
+          pointRadius: 5,
+          pointHoverRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        
+        // ✨✨✨ 就是這裡！幫你新增好的 padding 魔法 ✨✨✨
+        layout: {
+          padding: {
+            left: 45, // 空出 45px 給百萬數字
+            right: 20
+          }
+        },
+        // ✨✨✨ 新增結束 ✨✨✨
+
+        plugins: {
+          legend: { 
+            labels: { 
+              color: 'white', 
+              font: { family: "'DotGothic16', sans-serif", size: 14 } 
+            } 
+          }
+        },
+        scales: {
+          y: { 
+            ticks: { color: '#9ca3af', font: { family: "'Press Start 2P', cursive", size: 10 } },
+            grid: { color: '#333' }
+          },
+          x: { 
+            ticks: { color: '#9ca3af', font: { family: "'DotGothic16', sans-serif", size: 12 } },
+            grid: { color: '#333' }
+          }
         }
-    </script>
+      }
+    });
+  </script>
 </body>
 </html>
