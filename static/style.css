@@ -104,12 +104,8 @@ body {
   text-align: center;
   transition: transform 0.1s;
 }
-.mc-button:hover {
-  filter: brightness(1.1);
-}
-.mc-button:active {
-  filter: brightness(0.95);
-}
+.mc-button:hover { filter: brightness(1.1); }
+.mc-button:active { filter: brightness(0.95); }
 
 /* Variant 樣式 */
 .variant-stone {
@@ -145,13 +141,6 @@ body {
   border-left-color: #85db49;
   border-bottom-color: #38611d;
   border-right-color: #38611d;
-}
-.variant-red {
-  background-color: #d32f2f;
-  border-top-color: #f87171;
-  border-left-color: #f87171;
-  border-bottom-color: #991b1b;
-  border-right-color: #991b1b;
 }
 
 /* =========================================
@@ -195,9 +184,6 @@ body {
 /* =========================================
    排版工具 (Utility Classes)
 ========================================= */
-.mt-6 { margin-top: 24px; }
-.mt-8 { margin-top: 32px; }
-.h-full { height: 100%; }
 .flex-col { display: flex; flex-direction: column; }
 .text-white { color: white; }
 .text-green { color: var(--text-green); }
@@ -205,6 +191,8 @@ body {
 .text-yellow { color: var(--text-yellow); }
 .text-gray { color: var(--text-gray); }
 .drop-shadow-black { text-shadow: 2px 2px 0 rgba(0,0,0,1); }
+.text-shadow-sm { text-shadow: 1px 1px 0 rgba(0,0,0,1); }
+.w-full { width: 100%; }
 .icon { width: 24px; height: 24px; }
 
 /* =========================================
@@ -212,177 +200,143 @@ body {
 ========================================= */
 
 /* HUD 狀態列 */
-.hud-panel {
-  margin-bottom: 24px;
-}
-.hud-content {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 24px;
-  color: white;
-  text-shadow: 2px 2px 0 rgba(0,0,0,1);
-}
-.hud-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.hud-text {
-  display: flex;
-  flex-direction: column;
-}
-.hud-label {
-  font-size: 10px;
-  color: #e5e7eb;
-  margin-bottom: 4px;
-}
+.hud-panel { margin-bottom: 24px; }
+.hud-content { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; color: white; text-shadow: 2px 2px 0 rgba(0,0,0,1); }
+.hud-item { display: flex; align-items: center; gap: 8px; }
+.hud-text { display: flex; flex-direction: column; }
+.hud-label { font-size: 10px; color: #e5e7eb; margin-bottom: 4px; }
 .hud-value { font-size: 16px; }
-
 .credit-score { margin-left: auto; align-items: flex-end; flex-direction: column;}
 .hearts { display: flex; gap: 4px; }
 .icon-heart { width: 16px; height: 16px; fill: #ef4444; }
 .icon-shield { width: 16px; height: 16px; fill: #facc15; margin-left: 4px; }
 
-/* 網格排版 (Main Layout) */
-.grid-layout {
-  display: grid;
-  grid-template-columns: 8fr 4fr;
-  gap: 24px;
-  flex: 1;
-  padding-bottom: 16px;
+/* =========================================
+   網格排版 (Main Layout) - 完美的左二右一
+========================================= */
+.grid-layout { 
+  display: grid; 
+  grid-template-columns: 7fr 5fr; /* 左邊佔 7 份，右邊佔 5 份 */
+  gap: 24px; 
+  flex: 1; 
+  align-items: stretch; /* 強迫左右兩大欄等高 */
+  padding-bottom: 16px; 
 }
-@media (max-width: 1024px) {
-  .grid-layout { grid-template-columns: 1fr; }
+
+@media (max-width: 768px) {
+  .grid-layout { grid-template-columns: 1fr; } 
   .credit-score { margin-left: 0; align-items: flex-start; }
 }
-.col-left { display: flex; flex-direction: column; gap: 24px; }
 
-/* 小鎮選單 (Town Menu) */
-.town-menu {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-}
-.menu-btn {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 16px;
-  height: 100px;
-}
-.menu-btn:hover { transform: scale(1.05); }
-.menu-icon {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-  image-rendering: pixelated;
-  filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.5));
-}
-.menu-text {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-}
-.menu-title {
-  font-size: 18px;
-  font-weight: bold;
-  text-shadow: 2px 2px 0 rgba(0,0,0,1);
-}
-.menu-desc {
-  font-size: 10px;
-  color: var(--text-gray);
-  margin-top: 8px;
+/* 左側欄：直向容器 */
+.col-left { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 24px; 
+  height: 100%; 
 }
 
-/* 財務圖表 (Finance Chart) */
-.chart-section { height: 300px; }
-.chart-container {
-  width: 100%;
+/* 右側欄：填滿高度 */
+.col-right {
   height: 100%;
-  background-color: var(--mc-obsidian-bg);
-  border: 4px solid;
-  border-top-color: #111; border-left-color: #111;
-  border-bottom-color: #444; border-right-color: #444;
-  box-shadow: inset 4px 4px 0 rgba(0,0,0,0.5);
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-}
-.chart-svg {
-  flex: 1;
-  width: 100%;
-  margin-bottom: 8px;
-}
-.chart-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-  color: var(--text-light-gray);
-  padding: 0 16px;
 }
 
-/* AI 對話 (Chat Window) */
-.chat-section {
-  height: 250px;
-  display: flex;
-  flex-direction: column;
-  margin-top: auto;
+/* =========================================
+   左上：財務圖表 (Finance Chart)
+========================================= */
+#panel-default {
+  flex: 6; /* 佔據左側 60% 空間 */
+  display: flex; 
+  flex-direction: column; 
+  margin-top: 0 !important; /* 與右側對齊 */
 }
-.chat-messages {
-  flex: 1;
-  overflow-y: auto;
-  font-size: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
+.chart-container {
+  width: 100%; flex: 1; min-height: 200px; position: relative; 
+  background-color: var(--mc-obsidian-bg); border: 4px solid;
+  border-top-color: #111; border-left-color: #111; border-bottom-color: #444; border-right-color: #444;
+  box-shadow: inset 4px 4px 0 rgba(0,0,0,0.5); padding: 16px 16px 16px 4px; 
 }
-.message { line-height: 1.6; }
-.sender { margin-right: 8px; }
-.chat-input-area {
-  display: flex;
-  gap: 8px;
-  border-top: 1px solid #444;
-  padding-top: 8px;
+
+/* =========================================
+   左下：AI 對話框 (Chat Window)
+========================================= */
+.chat-section { 
+  flex: 4; /* 佔據左側 40% 空間 */
+  display: flex; 
+  flex-direction: column; 
+  margin-top: 0 !important; 
+  height: auto; /* 取消固定高度，讓 flex 自動分配 */
 }
-.chat-input {
-  flex: 1;
-  background-color: rgba(0,0,0,0.6);
-  border: 2px solid #555;
-  color: white;
+.chat-messages { 
+  flex: 1; 
+  overflow-y: auto; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 12px; 
   padding: 8px;
-  font-family: inherit;
-  font-size: 14px;
-  outline: none;
-  box-shadow: inset 2px 2px 0 rgba(0,0,0,0.8);
+}
+
+/* 對話泡泡 */
+.msg-bubble {
+  border-radius: 0; 
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.6);
+  line-height: 1.6;
+  max-width: 85%;
+}
+.message-player { flex-direction: row-reverse; }
+.message-player .msg-bubble { background-color: #2563eb; border-color: #1e3a8a; }
+
+/* 麥塊風格自訂捲軸 */
+.chat-messages::-webkit-scrollbar { width: 12px; }
+.chat-messages::-webkit-scrollbar-track { background: #1e1e1e; border-left: 2px solid #000; }
+.chat-messages::-webkit-scrollbar-thumb { background: #555; border: 2px solid #000; box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2); }
+.chat-messages::-webkit-scrollbar-thumb:hover { background: #777; }
+
+/* 聊天輸入區 */
+.chat-input-area { display: flex; gap: 8px; border-top: 1px solid #444; padding-top: 12px; }
+.chat-input {
+  flex: 1; background-color: rgba(0,0,0,0.6); border: 2px solid #555; color: white; padding: 8px;
+  font-family: inherit; font-size: 14px; outline: none; box-shadow: inset 2px 2px 0 rgba(0,0,0,0.8);
 }
 .chat-input:focus { border-color: white; }
 .chat-send-btn { padding: 8px 12px; }
 
-/* 事件選擇 (Events Panel) */
-.event-intro {
-  font-size: 10px;
-  margin-bottom: 16px;
-  line-height: 1.8;
-}
-.event-list {
+/* =========================================
+   右側：記帳系統 (Accounting)
+========================================= */
+.col-right > section {
+  margin-top: 0 !important; 
+  height: 100%; /* 填滿右邊全部高度 */
   display: flex;
   flex-direction: column;
-  gap: 16px;
 }
-.event-btn {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  padding: 16px;
+
+/* 麥塊輸入框 (記帳用，之前漏掉的補回在這裡) */
+.mc-input {
+  background-color: rgba(0, 0, 0, 0.6); border: 2px solid #555555; color: white; padding: 10px;
+  font-family: inherit; font-size: 14px; outline: none; box-shadow: inset 3px 3px 0 rgba(0, 0, 0, 0.8); width: 100%;
 }
-.event-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
+.mc-input:focus { border-color: #85db49; }
+
+/* =========================================
+   像素復古風元件 (Retro Pixel UI - 登入註冊專用)
+========================================= */
+/* 實心粗框按鈕 */
+.btn-pixel {
+  border: 4px solid #000; padding: 12px 16px; font-family: inherit; cursor: pointer; text-align: center;
+  border-radius: 0; box-shadow: 4px 4px 0px 0px #000; transition: transform 0.1s, box-shadow 0.1s;
 }
-.event-title { font-size: 10px; margin-bottom: 4px; }
-.event-en { font-size: 10px; opacity: 0.7; }
+.btn-pixel:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px #000; }
+
+/* 實心粗框輸入框 */
+.mc-input-pixel {
+  background-color: #fff; border: 4px solid #000; color: #000; padding: 12px;
+  font-family: inherit; font-size: 14px; outline: none; width: 100%; border-radius: 0;
+  box-shadow: inset 3px 3px 0px rgba(0,0,0,0.1); 
+}
+.mc-input-pixel:focus { border-color: #3b82f6; }
+
+/* 顏色小幫手 (給按鈕用的) */
+.bg-yellow { background-color: #fde047; }
+.bg-gray { background-color: #9ca3af; }
+.bg-green { background-color: #4ade80; }
