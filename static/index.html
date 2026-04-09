@@ -3,17 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minecraft Bank UI</title>
+  <title>FutureWallet 模擬平台</title>
   <link rel="stylesheet" href="style.css">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    .btn-pixel {
+      border: 4px solid #000;
+      padding: 12px 16px;
+      font-family: inherit;
+      cursor: pointer;
+      text-align: center;
+      border-radius: 0; 
+      box-shadow: 4px 4px 0px 0px #000; 
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .btn-pixel:active {
+      transform: translate(4px, 4px); 
+      box-shadow: 0px 0px 0px 0px #000; 
+    }
+    .mc-input-pixel {
+      background-color: #fff;
+      border: 4px solid #000;
+      color: #000;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+      border-radius: 0;
+      box-shadow: inset 3px 3px 0px rgba(0,0,0,0.1); 
+    }
+    .mc-input-pixel:focus {
+      border-color: #3b82f6; 
+    }
+    /* 加上 !important 強迫覆蓋掉所有錯誤的設定 */
+    .bg-yellow { background-color: #fde047 !important; }
+    .bg-gray { background-color: #9ca3af !important; }
+    .bg-green { background-color: #4ade80 !important; }
+  </style>
 </head>
 <body>
   <div class="bg-cloud cloud-1"></div>
@@ -23,196 +56,281 @@
 
   <div class="container">
     
-    <header class="mc-panel variant-glass hud-panel">
-      <div class="hud-content">
-        <div class="hud-item">
-          <div class="hud-text">
-            <span class="hud-label">資產總額 (Balance)</span>
-            <span id="total-balance" class="hud-value text-green">$ 1,250,000</span>
-          </div>
-        </div>
-        <div class="hud-item">
-          <svg class="icon text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
-          <div class="hud-text">
-            <span class="hud-label">月收入 (Income)</span>
-            <span class="hud-value text-green">+ 120,000</span>
-          </div>
-        </div>
-        <div class="hud-item">
-          <svg class="icon text-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7 7 7-7"/></svg>
-          <div class="hud-text">
-            <span class="hud-label">月支出 (Expenses)</span>
-            <span class="hud-value text-red">- 450,000</span>
-          </div>
-        </div>
-        <div class="hud-item credit-score">
-          <span class="hud-label">信用評分 (Credit)</span>
-          <div class="hearts">
-            <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-            <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-            <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-            <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-            <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-            <svg class="icon-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-        </div>
-      </div>
-    </header>
+    <div id="page-register" class="mc-panel variant-stone max-w-md mx-auto mt-20 p-8 flex-col gap-4 hidden relative-panel">
+      <div class="panel-badge badge-stone">Register</div>
+      <h2 class="text-center text-xl font-bold mb-4 drop-shadow-black text-white">建立新帳號</h2>
+      
+      <label class="text-white text-sm text-shadow-sm">帳號 (Username)</label>
+      <input type="text" id="reg-account" class="mc-input-pixel mb-4" placeholder="輸入想使用的帳號">
+      
+      <label class="text-white text-sm text-shadow-sm">密碼 (Password)</label>
+      <input type="password" id="reg-password" class="mc-input-pixel mb-6" placeholder="輸入密碼">
+      
+      <button id="btn-submit-register" class="btn-pixel bg-yellow text-black w-full font-bold">確認註冊</button>
+      <button id="btn-back-to-login" class="btn-pixel bg-gray text-black w-full mt-4 font-bold">返回登入</button>
+    </div>
 
-    <main class="grid-layout">
-      <div class="col-left">
-        
-        <section class="mc-panel variant-dirt mt-6 relative-panel">
-          <div class="panel-badge badge-dirt">小鎮選單 (Town Menu)</div>
-          <div class="town-menu">
-            <button class="mc-button variant-stone menu-btn" data-target="panel-car">
-              <img src="Minecart_JE3_BE2.png" alt="車行" class="menu-icon">
-              <div class="menu-text">
-                <span class="menu-title text-white">車行</span>
-                <span class="menu-desc">購買代步工具</span>
-              </div>
-            </button>
+    <div id="page-login" class="mc-panel variant-stone max-w-md mx-auto mt-20 p-8 flex-col gap-4 relative-panel">
+      <div class="panel-badge badge-stone">Login</div>
+      <h2 class="text-center text-xl font-bold mb-4 drop-shadow-black text-white">FutureWallet 登入</h2>
+      
+      <input type="text" id="login-account" class="mc-input-pixel mb-4" placeholder="輸入帳號">
+      <input type="password" id="login-password" class="mc-input-pixel mb-6" placeholder="輸入密碼">
+      
+      <button id="btn-login" class="btn-pixel bg-green text-black w-full font-bold">登入 (Login)</button>
+      <button id="btn-register" class="btn-pixel variant-obsidian text-white w-full mt-4 font-bold">註冊新帳號</button>
+    </div>
 
-            <button class="mc-button variant-stone menu-btn" data-target="panel-house">
-              <img src="Oak_Log_Axis_Y_JE5_BE3.png" alt="房屋" class="menu-icon">
-              <div class="menu-text">
-                <span class="menu-title text-white">房屋</span>
-                <span class="menu-desc">投資房地產</span>
-              </div>
-            </button>
+    <div id="page-setup" class="mc-panel variant-dirt max-w-md mx-auto mt-20 p-8 flex-col gap-4 hidden relative-panel">
+      <div class="panel-badge badge-dirt">Setup</div>
+      <h2 class="text-center text-xl font-bold mb-4 text-white drop-shadow-black">設定初始財務狀況</h2>
+      <p class="text-sm text-gray-200 mb-4">請輸入您的真實資料以進行準確的 AI 模擬：</p>
+      
+      <label class="text-white text-sm text-shadow-sm">目前資產總額 ($)</label>
+      <input type="number" id="setup-balance" class="mc-input mb-4" placeholder="例如: 1250000">
+      
+      <label class="text-white text-sm text-shadow-sm">每月固定收入 ($)</label>
+      <input type="number" id="setup-income" class="mc-input mb-6" placeholder="例如: 45000">
+      
+      <button id="btn-start-sim" class="btn-pixel bg-yellow text-black w-full font-bold">開始財務模擬 🚀</button>
+    </div>
 
-            <button class="mc-button variant-stone menu-btn" data-target="panel-job">
-              <img src="Diamond_Pickaxe_JE3_BE3.png" alt="工作" class="menu-icon">
-              <div class="menu-text">
-                <span class="menu-title text-white">工作</span>
-                <span class="menu-desc">打工賺錢去</span>
-              </div>
-            </button>
-          </div>
-        </section>
-        <div id="dynamic-content-area">
-        <section id="panel-default" class="mc-panel variant-stone mt-6 relative-panel">
-            <div class="panel-badge badge-stone">財務圖表 (Finance)</div>
-            
-            <div style="background-color: rgba(0,0,0,0.5); border: 2px solid #555;" class="p-2 mb-3 text-center">
-              <span class="text-yellow drop-shadow-black text-sm">
-                ✨ 下一步該怎麼做？請從上方的小鎮選單選擇地點！ ✨
-              </span>
+    <div id="page-dashboard" class="hidden flex-col h-full">
+      
+      <header class="mc-panel variant-glass hud-panel">
+        <div class="hud-content">
+          <div class="hud-item">
+            <svg class="icon text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <div class="hud-text">
+              <span class="hud-label">資產總額 (Balance)</span>
+              <span id="total-balance" class="hud-value text-green">$ 0</span>
             </div>
+          </div>
+          <div class="hud-item">
+            <svg class="icon text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+            <div class="hud-text">
+              <span class="hud-label">月收入 (Income)</span>
+              <span id="monthly-income" class="hud-value text-green">+ 0</span>
+            </div>
+          </div>
+          <div class="hud-item credit-score">
+            <span class="hud-label">信用評分 (Credit)</span>
+            <div class="hearts">
+              <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+              <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+              <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+              <svg class="icon-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+              <svg class="icon-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+          </div>
+        </div>
+      </header>
 
-            <div class="chart-container" style="position: relative; height: 250px; width: 100%; padding-left: 20px; padding-right: 10px;">
+      <main class="grid-layout">
+        
+        <div class="col-left">
+
+          <section id="panel-default" class="mc-panel variant-stone relative-panel">
+            <div class="panel-badge badge-stone">財務圖表 (Finance)</div>
+            <div class="chart-container">
               <canvas id="financeChart"></canvas>
             </div>
           </section>
 
-          <section id="panel-car" class="mc-panel variant-stone mt-6 relative-panel hidden">
-            <div class="panel-badge badge-stone">車行 (Car Shop)</div>
-            <div class="p-4 text-white">
-              <p>歡迎來到村民車行！這裡未來會顯示可購買的礦車清單。</p>
+          <section class="mc-panel variant-obsidian relative-panel chat-section flex-col">
+            <div class="panel-badge badge-obsidian">💬 AI 顧問 (Advisor)</div>
+            <div id="chat-messages" class="chat-messages">
+              <div class="text-center text-gray-400 text-xs my-2">-- 模擬已啟動，您的專屬 AI 顧問已上線 --</div>
+              <div class="message-ai flex items-start gap-2">
+                <div class="text-2xl drop-shadow-black">🧙‍♂️</div>
+                <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-2 text-white text-sm">
+                  您好！我是您的財務顧問。根據您的初始設定，資金已就位。請在右側輸入您的收支，或隨時向我詢問財務建議！
+                </div>
+              </div>
             </div>
-          </section>
-
-          <section id="panel-house" class="mc-panel variant-stone mt-6 relative-panel hidden">
-            <div class="panel-badge badge-stone">房屋 (Real Estate)</div>
-            <div class="p-4 text-white">
-              <p>想要安身立命嗎？這裡未來會顯示房地產投資物件。</p>
-            </div>
-          </section>
-
-          <section id="panel-job" class="mc-panel variant-stone mt-6 relative-panel hidden">
-            <div class="panel-badge badge-stone">工作 (Job Center)</div>
-            <div class="p-4 text-white">
-              <p>去礦坑挖礦吧！這裡未來會顯示打工賺錢的選項。</p>
+            <div class="chat-input-area mt-3 flex gap-2">
+              <input type="text" id="chat-input" class="mc-input-pixel flex-1" placeholder="按 Enter 傳送訊息...">
+              <button id="btn-send-chat" class="btn-pixel bg-yellow text-black font-bold">送出</button>
             </div>
           </section>
 
         </div>
 
-        <section class="mc-panel variant-obsidian mt-6 relative-panel chat-section">
-          <div class="panel-badge badge-obsidian">💬 AI 對話 (AI Chat)</div>
-          <div class="chat-messages">
-            <div class="message text-green drop-shadow-black">
-              <span class="sender">[System]</span> 歡迎來到小鎮銀行！
-            </div>
-            <div class="message text-yellow drop-shadow-black">
-              <span class="sender">[Advisor]</span> 您的帳戶目前狀態良好，建議可以考慮投資「房屋」增加被動收入。
-            </div>
-            <div class="message text-white drop-shadow-black">
-              <span class="sender">[Player]</span> 我想了解目前的貸款利率。
-            </div>
-          </div>
-          <div class="chat-input-area">
-            <input type="text" class="chat-input" placeholder="T 傳送訊息...">
-            <button class="mc-button variant-stone chat-send-btn">
-              <svg class="icon text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-            </button>
-          </div>
-        </section>
-
-      </div>
-
-      <div class="col-right">
-        <section class="mc-panel variant-stone mt-6 relative-panel h-full flex-col">
-          <div class="panel-badge badge-stone">記帳系統 (Accounting)</div>
-          
-          <div id="accounting-form" class="flex-col gap-4 mt-4 h-full">
-            <div class="form-group flex-col">
-              <label class="text-white text-sm mb-1 text-shadow-sm">金額 (Amount)</label>
-              <input type="number" id="record-amount" class="mc-input" placeholder="例如: 500 (支出請加負號)">
-            </div>
+        <div class="col-right">
+          <section class="mc-panel variant-stone relative-panel h-full flex-col">
+            <div class="panel-badge badge-stone">記帳系統 (Accounting)</div>
             
-            <div class="form-group flex-col mt-4">
-              <label class="text-white text-sm mb-1 text-shadow-sm">備註 (Note)</label>
-              <input type="text" id="record-note" class="mc-input" placeholder="例如: 購買鐵十字鎬">
-            </div>
-            
-            <div class="form-group flex-col mt-4">
-              <label class="text-white text-sm mb-1 text-shadow-sm">日期 (Date)</label>
-              <input type="date" id="record-date" class="mc-input">
-            </div>
-
-            <div class="flex-col gap-2 mt-auto pt-6">
-              <button id="btn-submit-record" class="mc-button variant-green text-white w-full">➕ 新增紀錄</button>
-              <button id="btn-view-history" class="mc-button variant-stone text-black w-full">📜 查看歷史紀錄</button>
-            </div>
-          </div>
-
-          <div id="history-panel" class="hidden flex-col h-full mt-4">
-            <button id="btn-back-to-form" class="mc-button variant-stone text-black mb-4 w-full">⬅ 返回記帳</button>
-            <div id="history-list" class="flex-col gap-2 overflow-y-auto flex-1 text-white">
+            <div id="accounting-form" class="flex-col gap-4 mt-4 h-full">
+              <div class="form-group flex-col">
+                <label class="text-white text-sm mb-1 text-shadow-sm">金額 (Amount)</label>
+                <input type="number" id="record-amount" class="mc-input" placeholder="例如: 500 (支出請加負號)">
               </div>
-          </div>
+              <div class="form-group flex-col mt-4">
+                <label class="text-white text-sm mb-1 text-shadow-sm">備註 (Note)</label>
+                <input type="text" id="record-note" class="mc-input" placeholder="例如: 購買鐵十字鎬">
+              </div>
+              <div class="form-group flex-col mt-4">
+                <label class="text-white text-sm mb-1 text-shadow-sm">日期 (Date)</label>
+                <input type="date" id="record-date" class="mc-input">
+              </div>
+              <div class="flex-col gap-2 mt-auto pt-6">
+                <button id="btn-submit-record" class="btn-pixel bg-green text-black w-full font-bold">➕ 新增紀錄</button>
+                <button id="btn-view-history" class="btn-pixel bg-gray text-black w-full mt-2 font-bold">📜 查看歷史紀錄</button>
+              </div>
+            </div>
 
-        </section>
-      </div>
-    </main>
+            <div id="history-panel" class="hidden flex-col h-full mt-4">
+              <button id="btn-back-to-form" class="btn-pixel bg-gray text-black mb-4 w-full font-bold">⬅ 返回記帳</button>
+              <div id="history-list" class="flex-col gap-2 overflow-y-auto flex-1 text-white">
+                </div>
+            </div>
 
+          </section>
+        </div>
+
+      </main>
+
+    </div>
   </div>
 
   <script>
-    // 1. 選單切換邏輯
-    const menuButtons = document.querySelectorAll('.menu-btn');
-    const allPanels = [
-      document.getElementById('panel-default'),
-      document.getElementById('panel-car'),
-      document.getElementById('panel-house'),
-      document.getElementById('panel-job')
-    ];
+    // ==========================================
+    // 1. 頁面切換控制與正式 API 串接
+    // ==========================================
+    const pageRegister = document.getElementById('page-register'); 
+    const pageLogin = document.getElementById('page-login');
+    const pageSetup = document.getElementById('page-setup');
+    const pageDashboard = document.getElementById('page-dashboard');
 
-    menuButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const targetId = button.getAttribute('data-target');
+    let currentBalance = 0; 
 
-        allPanels.forEach(panel => {
-          if (panel) panel.classList.add('hidden');
-        });
-
-        const targetPanel = document.getElementById(targetId);
-        if (targetPanel) targetPanel.classList.remove('hidden');
-      });
+    // --- 註冊與登入的切換 ---
+    document.getElementById('btn-register').addEventListener('click', () => {
+      pageLogin.classList.add('hidden');
+      pageRegister.classList.remove('hidden');
     });
 
+    document.getElementById('btn-back-to-login').addEventListener('click', () => {
+      pageRegister.classList.add('hidden');
+      pageLogin.classList.remove('hidden');
+    });
+
+    // 🌟 正式版：註冊 API 串接
+    document.getElementById('btn-submit-register').addEventListener('click', async () => {
+      const acc = document.getElementById('reg-account').value;
+      const pass = document.getElementById('reg-password').value;
+      const registerBtn = document.getElementById('btn-submit-register'); 
+
+      if(!acc || !pass) {
+        alert("⚠️ 請完整輸入帳號與密碼！");
+        return;
+      }
+
+      const originalBtnText = registerBtn.textContent;
+      registerBtn.textContent = "註冊中...";
+      registerBtn.disabled = true;
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/user/create', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: acc, password: pass })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === "success") {
+          alert("✅ 註冊成功！請使用新帳號登入。");
+          document.getElementById('reg-account').value = '';
+          document.getElementById('reg-password').value = '';
+          pageRegister.classList.add('hidden');
+          pageLogin.classList.remove('hidden');
+        } else {
+          alert("❌ 註冊失敗：" + (data.detail || "發生未知錯誤"));
+        }
+      } catch (error) {
+        console.error("連線錯誤:", error);
+        alert("🚨 無法連線到伺服器，請確認後端是否已啟動！");
+      } finally {
+        registerBtn.textContent = originalBtnText;
+        registerBtn.disabled = false;
+      }
+    });
+
+    // --- 登入 -> 設定 的切換 ---
+    document.getElementById('btn-login').addEventListener('click', () => {
+      pageLogin.classList.add('hidden');
+      pageSetup.classList.remove('hidden');
+    });
+
+    // 🌟 正式版：開始模擬 API 串接 (/simulate)
+    document.getElementById('btn-start-sim').addEventListener('click', async () => {
+      const initBalance = document.getElementById('setup-balance').value;
+      const initIncome = document.getElementById('setup-income').value;
+      const startBtn = document.getElementById('btn-start-sim');
+
+      if(!initBalance || !initIncome) {
+        alert("請輸入資產與收入才能進行模擬喔！");
+        return;
+      }
+
+      const originalText = startBtn.textContent;
+      startBtn.textContent = "AI 運算中... ⏳";
+      startBtn.disabled = true;
+
+      try {
+        const payload = {
+          profile: {
+            salary: Number(initIncome),
+            fixed_expense: 0,
+            variable_expense: 0,
+            current_balance: Number(initBalance)
+          },
+          months: 12,
+          events: [],
+          loans: []
+        };
+
+        const response = await fetch('http://127.0.0.1:8000/simulate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log("【後端 AI 模擬結果】:", data);
+          
+          currentBalance = Number(initBalance); 
+          document.getElementById('total-balance').textContent = '$ ' + currentBalance.toLocaleString();
+          document.getElementById('monthly-income').textContent = '+ ' + Number(initIncome).toLocaleString();
+
+          financeChart.data.datasets[0].data = [currentBalance];
+          financeChart.data.labels = ['初始'];
+          financeChart.update();
+
+          pageSetup.classList.add('hidden');
+          pageDashboard.classList.remove('hidden');
+          
+          if (typeof financeChart !== 'undefined') {
+            financeChart.resize();
+          }
+        } else {
+          alert("❌ 模擬失敗：" + (data.detail || "發生未知錯誤"));
+        }
+      } catch (error) {
+        console.error("連線錯誤:", error);
+        alert("🚨 無法連線到後端，請確認 FastAPI 伺服器已啟動！");
+      } finally {
+        startBtn.textContent = originalText;
+        startBtn.disabled = false;
+      }
+    });
+
+    // ==========================================
     // 2. 記帳與歷史紀錄切換邏輯
+    // ==========================================
     const accountingForm = document.getElementById('accounting-form');
     const historyPanel = document.getElementById('history-panel');
     const btnViewHistory = document.getElementById('btn-view-history');
@@ -234,9 +352,6 @@
     const btnSubmitRecord = document.getElementById('btn-submit-record');
     const historyList = document.getElementById('history-list');
     
-    //宣告一個變數，記錄玩家目前的真實總存款 (起始值為 125 萬)
-    let currentBalance = 1250000; 
-
     btnSubmitRecord.addEventListener('click', () => {
       const amount = document.getElementById('record-amount').value;
       const note = document.getElementById('record-note').value;
@@ -253,22 +368,14 @@
       const sign = isIncome ? '+ ' : '- ';
       const displayAmount = Math.abs(numAmount).toLocaleString(); 
 
-      // 🌟 核心魔法 1：更新 HUD 總資產 🌟
-      currentBalance += numAmount; // 把輸入的金額加進總資產 (若為負數則自動扣除)
+      currentBalance += numAmount; 
       document.getElementById('total-balance').textContent = '$ ' + currentBalance.toLocaleString();
 
-      // 🌟 核心魔法 2：更新 Chart.js 財務圖表 🌟
-      // 取日期的「月-日」加到 X 軸 (例如 2026-04-07 變成 04-07)
       const shortDate = date.substring(5); 
       financeChart.data.labels.push(shortDate);
-      
-      // 把計算後的新資產加到 Y 軸
       financeChart.data.datasets[0].data.push(currentBalance);
-      
-      // 通知圖表「資料更新了，請重畫！」
       financeChart.update();
 
-      // 🌟 產生歷史紀錄面板 HTML 🌟
       const recordHTML = `
         <div class="mc-panel variant-obsidian p-2 text-sm border-2">
           <div class="text-gray text-xs">${date}</div>
@@ -278,17 +385,16 @@
           </div>
         </div>
       `;
-
       historyList.insertAdjacentHTML('afterbegin', recordHTML);
 
-      // 清空輸入框
       document.getElementById('record-amount').value = '';
       document.getElementById('record-note').value = '';
       document.getElementById('record-date').value = '';
       
       alert("✅ 紀錄新增成功！圖表與資產已同步更新！");
     });
-// ==========================================
+
+    // ==========================================
     // 4. 實作 Chart.js 動態財務圖表
     // ==========================================
     const ctx = document.getElementById('financeChart').getContext('2d');
@@ -296,10 +402,10 @@
     const financeChart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: ['1月', '2月', '3月', '4月', '5月', '6月'], // X軸標籤
+        labels: [], 
         datasets: [{
           label: '總資產預測',
-          data: [1250000, 1100000, 1300000, 1200000, 1400000, 1600000], 
+          data: [], 
           borderColor: '#5c9e31', 
           backgroundColor: 'rgba(92, 158, 49, 0.2)',
           borderWidth: 3,
@@ -313,34 +419,79 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        
-        // ✨✨✨ 就是這裡！幫你新增好的 padding 魔法 ✨✨✨
-        layout: {
-          padding: {
-            left: 45, // 空出 45px 給百萬數字
-            right: 20
-          }
-        },
-        // ✨✨✨ 新增結束 ✨✨✨
-
+        layout: { padding: { left: 45, right: 20 } },
         plugins: {
           legend: { 
-            labels: { 
-              color: 'white', 
-              font: { family: "'DotGothic16', sans-serif", size: 14 } 
-            } 
+            labels: { color: 'white', font: { family: "'DotGothic16', sans-serif", size: 14 } } 
           }
         },
         scales: {
-          y: { 
-            ticks: { color: '#9ca3af', font: { family: "'Press Start 2P', cursive", size: 10 } },
-            grid: { color: '#333' }
-          },
-          x: { 
-            ticks: { color: '#9ca3af', font: { family: "'DotGothic16', sans-serif", size: 12 } },
-            grid: { color: '#333' }
-          }
+          y: { ticks: { color: '#9ca3af', font: { family: "'Press Start 2P', cursive", size: 10 } }, grid: { color: '#333' } },
+          x: { ticks: { color: '#9ca3af', font: { family: "'DotGothic16', sans-serif", size: 12 } }, grid: { color: '#333' } }
         }
+      }
+    });
+
+    // ==========================================
+    // 5. AI 對話框互動邏輯
+    // ==========================================
+    const chatInput = document.getElementById('chat-input');
+    const btnSendChat = document.getElementById('btn-send-chat');
+    const chatMessages = document.getElementById('chat-messages');
+
+    function sendMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      const playerHtml = `
+        <div class="message-player flex items-start gap-2">
+          <div class="text-2xl drop-shadow-black">🧑‍🌾</div>
+          <div class="msg-bubble bg-blue-600 border-2 border-blue-800 p-2 text-white text-sm">
+            ${text}
+          </div>
+        </div>
+      `;
+      chatMessages.insertAdjacentHTML('beforeend', playerHtml);
+      
+      chatInput.value = '';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      const typingId = 'typing-' + Date.now();
+      const typingHtml = `
+        <div id="${typingId}" class="message-ai flex items-start gap-2 opacity-70">
+          <div class="text-2xl drop-shadow-black">🧙‍♂️</div>
+          <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-2 text-gray-400 text-sm">
+            魔法運算中... ⏳
+          </div>
+        </div>
+      `;
+      chatMessages.insertAdjacentHTML('beforeend', typingHtml);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // 這裡暫時用 setTimeout 模擬後端回覆，未來可接上 /ai/advice API
+      setTimeout(() => {
+        document.getElementById(typingId).remove();
+        
+        const aiResponse = "這是個好問題！但我目前還在跟後端的 Python 系統連線中。等組員把 `/ai/advice` API 寫好，我就能針對您的收支狀況給出神準的預測！";
+
+        const aiHtml = `
+          <div class="message-ai flex items-start gap-2">
+            <div class="text-2xl drop-shadow-black">🧙‍♂️</div>
+            <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-2 text-white text-sm">
+              ${aiResponse}
+            </div>
+          </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', aiHtml);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 1500); 
+    }
+
+    btnSendChat.addEventListener('click', sendMessage);
+
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
       }
     });
   </script>
