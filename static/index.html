@@ -42,10 +42,20 @@
     .mc-input-pixel:focus {
       border-color: #3b82f6; 
     }
-    /* 加上 !important 強迫覆蓋掉所有錯誤的設定 */
     .bg-yellow { background-color: #fde047 !important; }
     .bg-gray { background-color: #9ca3af !important; }
     .bg-green { background-color: #4ade80 !important; }
+
+    /* 🌟 標題浮動動畫 🌟 */
+    .floating-logo {
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 15px 10px rgba(0,0,0,0.6));
+    }
+    @keyframes float {
+      0% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-10px) scale(1.02); }
+      100% { transform: translateY(0px) scale(1); }
+    }
   </style>
 </head>
 <body>
@@ -56,7 +66,11 @@
 
   <div class="container">
     
-    <div id="page-register" class="mc-panel variant-stone max-w-md mx-auto mt-20 p-8 flex-col gap-4 hidden relative-panel">
+    <div id="main-logo" class="w-full flex justify-center mt-10 mb-4">
+      <img src="logo.png" alt="AI Bank Wallet" class="floating-logo w-auto max-w-full sm:max-w-xl md:max-w-2xl px-4">
+    </div>
+
+    <div id="page-register" class="mc-panel variant-stone max-w-md mx-auto mt-4 p-8 flex-col gap-4 hidden relative-panel">
       <div class="panel-badge badge-stone">Register</div>
       <h2 class="text-center text-xl font-bold mb-4 drop-shadow-black text-white">建立新帳號</h2>
       
@@ -70,9 +84,9 @@
       <button id="btn-back-to-login" class="btn-pixel bg-gray text-black w-full mt-4 font-bold">返回登入</button>
     </div>
 
-    <div id="page-login" class="mc-panel variant-stone max-w-md mx-auto mt-20 p-8 flex-col gap-4 relative-panel">
+    <div id="page-login" class="mc-panel variant-stone max-w-md mx-auto mt-4 p-8 flex-col gap-4 relative-panel">
       <div class="panel-badge badge-stone">Login</div>
-      <h2 class="text-center text-xl font-bold mb-4 drop-shadow-black text-white">FutureWallet 登入</h2>
+      <h2 class="text-center text-xl font-bold mb-4 drop-shadow-black text-white">登入</h2>
       
       <input type="text" id="login-account" class="mc-input-pixel mb-4" placeholder="輸入帳號">
       <input type="password" id="login-password" class="mc-input-pixel mb-6" placeholder="輸入密碼">
@@ -81,7 +95,7 @@
       <button id="btn-register" class="btn-pixel variant-obsidian text-white w-full mt-4 font-bold">註冊新帳號</button>
     </div>
 
-    <div id="page-setup" class="mc-panel variant-dirt max-w-md mx-auto mt-20 p-8 flex-col gap-4 hidden relative-panel">
+    <div id="page-setup" class="mc-panel variant-dirt max-w-md mx-auto mt-4 p-8 flex-col gap-4 hidden relative-panel">
       <div class="panel-badge badge-dirt">Setup</div>
       <h2 class="text-center text-xl font-bold mb-4 text-white drop-shadow-black">設定初始財務狀況</h2>
       <p class="text-sm text-gray-200 mb-4">請輸入您的真實資料以進行準確的 AI 模擬：</p>
@@ -195,12 +209,13 @@
 
   <script>
     // ==========================================
-    // 1. 頁面切換控制與正式 API 串接
+    // 1. 頁面切換控制 (純前端測試版)
     // ==========================================
     const pageRegister = document.getElementById('page-register'); 
     const pageLogin = document.getElementById('page-login');
     const pageSetup = document.getElementById('page-setup');
     const pageDashboard = document.getElementById('page-dashboard');
+    const mainLogo = document.getElementById('main-logo'); // 抓取標題 Logo
 
     let currentBalance = 0; 
 
@@ -215,46 +230,21 @@
       pageLogin.classList.remove('hidden');
     });
 
-    // 🌟 正式版：註冊 API 串接
-    document.getElementById('btn-submit-register').addEventListener('click', async () => {
+    // 🌟 測試版：假裝註冊成功
+    document.getElementById('btn-submit-register').addEventListener('click', () => {
       const acc = document.getElementById('reg-account').value;
       const pass = document.getElementById('reg-password').value;
-      const registerBtn = document.getElementById('btn-submit-register'); 
 
       if(!acc || !pass) {
         alert("⚠️ 請完整輸入帳號與密碼！");
         return;
       }
 
-      const originalBtnText = registerBtn.textContent;
-      registerBtn.textContent = "註冊中...";
-      registerBtn.disabled = true;
-
-      try {
-        const response = await fetch('http://127.0.0.1:8000/user/create', { 
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: acc, password: pass })
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.status === "success") {
-          alert("✅ 註冊成功！請使用新帳號登入。");
-          document.getElementById('reg-account').value = '';
-          document.getElementById('reg-password').value = '';
-          pageRegister.classList.add('hidden');
-          pageLogin.classList.remove('hidden');
-        } else {
-          alert("❌ 註冊失敗：" + (data.detail || "發生未知錯誤"));
-        }
-      } catch (error) {
-        console.error("連線錯誤:", error);
-        alert("🚨 無法連線到伺服器，請確認後端是否已啟動！");
-      } finally {
-        registerBtn.textContent = originalBtnText;
-        registerBtn.disabled = false;
-      }
+      alert("🔧 (測試模式) ✅ 註冊成功！請使用新帳號登入。");
+      document.getElementById('reg-account').value = '';
+      document.getElementById('reg-password').value = '';
+      pageRegister.classList.add('hidden');
+      pageLogin.classList.remove('hidden');
     });
 
     // --- 登入 -> 設定 的切換 ---
@@ -263,69 +253,36 @@
       pageSetup.classList.remove('hidden');
     });
 
-    // 🌟 正式版：開始模擬 API 串接 (/simulate)
-    document.getElementById('btn-start-sim').addEventListener('click', async () => {
+    // 🌟 測試版：假裝模擬成功，直接進主控台
+    document.getElementById('btn-start-sim').addEventListener('click', () => {
       const initBalance = document.getElementById('setup-balance').value;
       const initIncome = document.getElementById('setup-income').value;
-      const startBtn = document.getElementById('btn-start-sim');
 
       if(!initBalance || !initIncome) {
         alert("請輸入資產與收入才能進行模擬喔！");
         return;
       }
 
-      const originalText = startBtn.textContent;
-      startBtn.textContent = "AI 運算中... ⏳";
-      startBtn.disabled = true;
+      // 1. 更新前端畫面數字
+      currentBalance = Number(initBalance); 
+      document.getElementById('total-balance').textContent = '$ ' + currentBalance.toLocaleString();
+      document.getElementById('monthly-income').textContent = '+ ' + Number(initIncome).toLocaleString();
 
-      try {
-        const payload = {
-          profile: {
-            salary: Number(initIncome),
-            fixed_expense: 0,
-            variable_expense: 0,
-            current_balance: Number(initBalance)
-          },
-          months: 12,
-          events: [],
-          loans: []
-        };
+      // 2. 更新圖表第一點
+      financeChart.data.datasets[0].data = [currentBalance];
+      financeChart.data.labels = ['初始'];
+      financeChart.update();
 
-        const response = await fetch('http://127.0.0.1:8000/simulate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          console.log("【後端 AI 模擬結果】:", data);
-          
-          currentBalance = Number(initBalance); 
-          document.getElementById('total-balance').textContent = '$ ' + currentBalance.toLocaleString();
-          document.getElementById('monthly-income').textContent = '+ ' + Number(initIncome).toLocaleString();
-
-          financeChart.data.datasets[0].data = [currentBalance];
-          financeChart.data.labels = ['初始'];
-          financeChart.update();
-
-          pageSetup.classList.add('hidden');
-          pageDashboard.classList.remove('hidden');
-          
-          if (typeof financeChart !== 'undefined') {
-            financeChart.resize();
-          }
-        } else {
-          alert("❌ 模擬失敗：" + (data.detail || "發生未知錯誤"));
-        }
-      } catch (error) {
-        console.error("連線錯誤:", error);
-        alert("🚨 無法連線到後端，請確認 FastAPI 伺服器已啟動！");
-      } finally {
-        startBtn.textContent = originalText;
-        startBtn.disabled = false;
+      // 3. 隱藏設定頁與 Logo，顯示主控台
+      pageSetup.classList.add('hidden');
+      mainLogo.classList.add('hidden'); // 進入主控台時把 Logo 藏起來
+      pageDashboard.classList.remove('hidden');
+      
+      if (typeof financeChart !== 'undefined') {
+        financeChart.resize();
       }
+      
+      alert("🔧 (測試模式) 已跳過後端連線，直接進入主控台！");
     });
 
     // ==========================================
@@ -468,11 +425,10 @@
       chatMessages.insertAdjacentHTML('beforeend', typingHtml);
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
-      // 這裡暫時用 setTimeout 模擬後端回覆，未來可接上 /ai/advice API
       setTimeout(() => {
         document.getElementById(typingId).remove();
         
-        const aiResponse = "這是個好問題！但我目前還在跟後端的 Python 系統連線中。等組員把 `/ai/advice` API 寫好，我就能針對您的收支狀況給出神準的預測！";
+        const aiResponse = "🔧 (測試模式) 這是個好問題！但目前後端尚未連線，我只能在這邊跟你聊聊天喔！";
 
         const aiHtml = `
           <div class="message-ai flex items-start gap-2">
