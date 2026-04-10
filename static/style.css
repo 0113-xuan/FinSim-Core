@@ -340,3 +340,30 @@ body {
 .bg-yellow { background-color: #fde047; }
 .bg-gray { background-color: #9ca3af; }
 .bg-green { background-color: #4ade80; }
+/* 🌟 Minecraft 黃色閃爍標語特效 🌟 */
+    .splash-text {
+      position: absolute;
+      /* 定位在 Logo 的右下方，你可以微調這兩個數字來對齊你的圖片 */
+      right: 25%; 
+      bottom: 15%; 
+      
+      color: #ffff00; /* 經典麥塊黃 */
+      font-family: 'DotGothic16', 'Press Start 2P', sans-serif; /* 像素字體 */
+      font-size: 20px;
+      font-weight: bold;
+      text-shadow: 2px 2px 0 #3f3f00; /* 深褐色立體陰影 */
+      
+      /* 傾斜並加上無限縮放動畫 */
+      transform: rotate(-20deg);
+      animation: splash-pulse 0.4s alternate infinite ease-in-out;
+      
+      z-index: 50; /* 確保它浮在圖片最上層 */
+      pointer-events: none; /* 讓滑鼠點擊可以穿透它 */
+      white-space: nowrap; /* 確保字不會斷行 */
+    }
+
+    /* 標語跳動的動畫關鍵影格 */
+    @keyframes splash-pulse {
+      from { transform: rotate(-20deg) scale(1); }
+      to   { transform: rotate(-20deg) scale(1.15); }
+    }
