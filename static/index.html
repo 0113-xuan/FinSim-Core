@@ -209,7 +209,7 @@
 
   <script>
     // ==========================================
-    // 1. 頁面切換控制 (純前端測試版)
+    // 1. 頁面切換控制與正式 API 串接
     // ==========================================
     const pageRegister = document.getElementById('page-register'); 
     const pageLogin = document.getElementById('page-login');
@@ -230,21 +230,47 @@
       pageLogin.classList.remove('hidden');
     });
 
-    // 🌟 測試版：假裝註冊成功
-    document.getElementById('btn-submit-register').addEventListener('click', () => {
+    // 🌟 正式版：註冊 API 串接
+    document.getElementById('btn-submit-register').addEventListener('click', async () => {
       const acc = document.getElementById('reg-account').value;
       const pass = document.getElementById('reg-password').value;
+      const registerBtn = document.getElementById('btn-submit-register');
 
       if(!acc || !pass) {
         alert("⚠️ 請完整輸入帳號與密碼！");
         return;
       }
 
-      alert("🔧 (測試模式) ✅ 註冊成功！請使用新帳號登入。");
-      document.getElementById('reg-account').value = '';
-      document.getElementById('reg-password').value = '';
-      pageRegister.classList.add('hidden');
-      pageLogin.classList.remove('hidden');
+      const originalBtnText = registerBtn.textContent;
+      registerBtn.textContent = "註冊中...";
+      registerBtn.disabled = true;
+
+      try {
+        // 使用相對路徑連線
+        const response = await fetch('/user/create', { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: acc, password: pass })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === "success") {
+          alert("✅ 註冊成功！請使用新帳號登入。");
+          document.getElementById('reg-account').value = '';
+          document.getElementById('reg-password').value = '';
+          pageRegister.classList.add('hidden');
+          pageLogin.classList.remove('hidden');
+        } else {
+          alert("❌ 註冊失敗：" + JSON.stringify(data.detail || data));
+        }
+      } catch (error) {
+        console.error("連線錯誤:", error);
+        alert("🚨 無法連線到伺服器，請確認後端是否已啟動！");
+      } finally {
+        registerBtn.textContent = originalBtnText;
+        registerBtn.disabled = false;
+      }
     });
 
     // --- 登入 -> 設定 的切換 ---
@@ -253,36 +279,71 @@
       pageSetup.classList.remove('hidden');
     });
 
-    // 🌟 測試版：假裝模擬成功，直接進主控台
-    document.getElementById('btn-start-sim').addEventListener('click', () => {
+    // 🌟 正式版：開始模擬 API 串接 (/simulate)
+    document.getElementById('btn-start-sim').addEventListener('click', async () => {
       const initBalance = document.getElementById('setup-balance').value;
       const initIncome = document.getElementById('setup-income').value;
+      const startBtn = document.getElementById('btn-start-sim');
 
       if(!initBalance || !initIncome) {
         alert("請輸入資產與收入才能進行模擬喔！");
         return;
       }
 
-      // 1. 更新前端畫面數字
-      currentBalance = Number(initBalance); 
-      document.getElementById('total-balance').textContent = '$ ' + currentBalance.toLocaleString();
-      document.getElementById('monthly-income').textContent = '+ ' + Number(initIncome).toLocaleString();
+      const originalText = startBtn.textContent;
+      startBtn.textContent = "AI 運算中... ⏳";
+      startBtn.disabled = true;
 
-      // 2. 更新圖表第一點
-      financeChart.data.datasets[0].data = [currentBalance];
-      financeChart.data.labels = ['初始'];
-      financeChart.update();
+      try {
+        const payload = {
+          profile: {
+            salary: Number(initIncome),
+            fixed_expense: 0,
+            variable_expense: 0,
+            balance: Number(initBalance)
+          },
+          months: 12,
+          events: [],
+          loans: []
+        };
 
-      // 3. 隱藏設定頁與 Logo，顯示主控台
-      pageSetup.classList.add('hidden');
-      mainLogo.classList.add('hidden'); // 進入主控台時把 Logo 藏起來
-      pageDashboard.classList.remove('hidden');
-      
-      if (typeof financeChart !== 'undefined') {
-        financeChart.resize();
+        // 使用相對路徑連線
+        const response = await fetch('/simulate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log("【後端 AI 模擬結果】:", data);
+          
+          currentBalance = Number(initBalance); 
+          document.getElementById('total-balance').textContent = '$ ' + currentBalance.toLocaleString();
+          document.getElementById('monthly-income').textContent = '+ ' + Number(initIncome).toLocaleString();
+
+          financeChart.data.datasets[0].data = [currentBalance];
+          financeChart.data.labels = ['初始'];
+          financeChart.update();
+
+          pageSetup.classList.add('hidden');
+          mainLogo.classList.add('hidden'); 
+          pageDashboard.classList.remove('hidden');
+          
+          if (typeof financeChart !== 'undefined') {
+            financeChart.resize();
+          }
+        } else {
+          alert("❌ 模擬失敗：" + JSON.stringify(data.detail || data));
+        }
+      } catch (error) {
+        console.error("連線錯誤:", error);
+        alert("🚨 無法連線到後端，請確認 FastAPI 伺服器已啟動！");
+      } finally {
+        startBtn.textContent = originalText;
+        startBtn.disabled = false;
       }
-      
-      alert("🔧 (測試模式) 已跳過後端連線，直接進入主控台！");
     });
 
     // ==========================================
@@ -396,10 +457,11 @@
     const btnSendChat = document.getElementById('btn-send-chat');
     const chatMessages = document.getElementById('chat-messages');
 
-    function sendMessage() {
+    async function sendMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
 
+      // 1. 顯示使用者的訊息
       const playerHtml = `
         <div class="message-player flex items-start gap-2">
           <div class="text-2xl drop-shadow-black">🧑‍🌾</div>
@@ -413,6 +475,7 @@
       chatInput.value = '';
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
+      // 2. 顯示 AI 正在思考的動畫
       const typingId = 'typing-' + Date.now();
       const typingHtml = `
         <div id="${typingId}" class="message-ai flex items-start gap-2 opacity-70">
@@ -425,24 +488,118 @@
       chatMessages.insertAdjacentHTML('beforeend', typingHtml);
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
-      setTimeout(() => {
-        document.getElementById(typingId).remove();
-        
-        const aiResponse = "🔧 (測試模式) 這是個好問題！但目前後端尚未連線，我只能在這邊跟你聊聊天喔！";
+      try {
+        // 3. 準備傳給後端的資料
+        const initIncome = document.getElementById('setup-income').value || 0;
 
-        const aiHtml = `
-          <div class="message-ai flex items-start gap-2">
-            <div class="text-2xl drop-shadow-black">🧙‍♂️</div>
-            <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-2 text-white text-sm">
-              ${aiResponse}
+        const payload = {
+          profile: {
+             salary: Number(initIncome),
+             fixed_expense: 0,
+             variable_expense: 0,
+             balance: currentBalance // 使用全域變數，這樣 AI 會知道最新餘額
+          },
+          options: [
+            {
+               name: "使用者提問",
+               description: text,
+               events: []
+            }
+          ],
+          months: 12,
+          mc_runs: 100
+        };
+
+        // 4. 呼叫後端 API
+        const response = await fetch('/ai/advice', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        // 5. 移除「思考中」的動畫
+        const typingElement = document.getElementById(typingId);
+        if (typingElement) typingElement.remove();
+
+        if (response.ok) {
+           // 🌟 6. 解析後端回傳的 JSON 並美化排版
+           let aiResponseText = "";
+           
+           if (typeof data === 'string') {
+               aiResponseText = data; // 如果後端只傳字串，直接印出
+           } 
+           else if (data.summary || data.best_option) {
+               // 將 JSON 資料轉化為有條理的 HTML 報告
+               const riskLabel = data.risk_level === 'low' ? '🟢 低風險' : data.risk_level === 'medium' ? '🟡 中風險' : '🔴 高風險';
+               const reasonsHtml = data.reason ? data.reason.map(r => `<li>${r}</li>`).join('') : '';
+               const suggestionsHtml = data.suggestions ? data.suggestions.map(s => `<li>${s}</li>`).join('') : '';
+
+               aiResponseText = `
+                   <strong style="color:#fde047;">📊 顧問分析報告：</strong><br>
+                   ${data.summary || "分析完成。"}<br><br>
+                   
+                   <strong style="color:#4ade80;">🏆 最佳建議方案：</strong><br>
+                   ▶ 方案名稱：${data.best_option || "無"}<br>
+                   ▶ 風險評估：${riskLabel}<br><br>
+                   
+                   <strong style="color:#60a5fa;">💡 詳細說明與建議：</strong><br>
+                   <ul style="list-style-type: disc; margin-left: 20px;">
+                       ${reasonsHtml}
+                       ${suggestionsHtml}
+                   </ul>
+               `;
+           }
+           else {
+               // 如果格式都不是上面兩種，就直接印出 JSON 字串
+               aiResponseText = JSON.stringify(data);
+           }
+           
+           const aiHtml = `
+            <div class="message-ai flex items-start gap-2">
+              <div class="text-2xl drop-shadow-black">🧙‍♂️</div>
+              <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-2 text-white text-sm">
+                ${aiResponseText}
+              </div>
             </div>
-          </div>
-        `;
-        chatMessages.insertAdjacentHTML('beforeend', aiHtml);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }, 1500); 
+          `;
+          chatMessages.insertAdjacentHTML('beforeend', aiHtml);
+
+        } else {
+           // 處理後端報錯
+           const errorHtml = `
+            <div class="message-ai flex items-start gap-2">
+              <div class="text-2xl drop-shadow-black">🧙‍♂️</div>
+              <div class="msg-bubble bg-red-800 border-2 border-red-600 p-2 text-white text-sm">
+                抱歉，我的魔法水晶球出錯了。(${JSON.stringify(data.detail || data)})
+              </div>
+            </div>
+          `;
+          chatMessages.insertAdjacentHTML('beforeend', errorHtml);
+        }
+
+      } catch (error) {
+         console.error("對話連線錯誤:", error);
+         
+         const typingElement = document.getElementById(typingId);
+         if (typingElement) typingElement.remove();
+         
+         const errorHtml = `
+            <div class="message-ai flex items-start gap-2">
+              <div class="text-2xl drop-shadow-black">🧙‍♂️</div>
+              <div class="msg-bubble bg-red-800 border-2 border-red-600 p-2 text-white text-sm">
+                連線失敗，請確認後端伺服器是否正常運作。
+              </div>
+            </div>
+          `;
+          chatMessages.insertAdjacentHTML('beforeend', errorHtml);
+      } finally {
+         chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
     }
 
+    // 🌟 這裡補上了按鈕與鍵盤監聽事件 🌟
     btnSendChat.addEventListener('click', sendMessage);
 
     chatInput.addEventListener('keypress', (e) => {
@@ -450,6 +607,7 @@
         sendMessage();
       }
     });
+
   </script>
 </body>
 </html>
