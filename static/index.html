@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FutureWallet 模擬平台</title>
-  <link rel="stylesheet" href="style.css">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,40 +12,109 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    .btn-pixel {
-      border: 4px solid #000;
-      padding: 12px 16px;
-      font-family: inherit;
-      cursor: pointer;
-      text-align: center;
-      border-radius: 0; 
-      box-shadow: 4px 4px 0px 0px #000; 
-      transition: transform 0.1s, box-shadow 0.1s;
+    :root {
+      --mc-sky: #87CEEB;
+      --mc-dirt-bg: #86592d;
+      --mc-grass-bg: #5c9e31;
+      --mc-stone-bg: #c6c6c6;
+      --mc-stone-border-light: #ffffff;
+      --mc-stone-border-dark: #555555;
+      --mc-dirt-border-light: #c69c6d;
+      --mc-dirt-border-dark: #4d3319;
+      --mc-obsidian-bg: #1e1e1e;
+      --mc-obsidian-border-light: #4a4a4a;
+      --mc-obsidian-border-dark: #111111;
+      --text-green: #5c9e31;
+      --text-red: #f87171;
     }
-    .btn-pixel:active {
-      transform: translate(4px, 4px); 
-      box-shadow: 0px 0px 0px 0px #000; 
-    }
-    .mc-input-pixel {
-      background-color: #fff;
-      border: 4px solid #000;
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--mc-sky);
+      font-family: 'Press Start 2P', 'DotGothic16', sans-serif;
       color: #000;
-      padding: 12px;
-      font-family: inherit;
-      font-size: 14px;
-      outline: none;
-      width: 100%;
-      border-radius: 0;
-      box-shadow: inset 3px 3px 0px rgba(0,0,0,0.1); 
+      line-height: 1.5;
+      overflow-x: hidden;
+      min-height: 100vh;
     }
-    .mc-input-pixel:focus {
-      border-color: #3b82f6; 
-    }
+
+    /* 背景裝飾 */
+    .bg-cloud { position: absolute; background-color: rgba(255, 255, 255, 0.8); border: 4px solid rgba(255, 255, 255, 0.9); box-shadow: 4px 4px 0 rgba(0,0,0,0.1); }
+    .cloud-1 { top: 40px; left: 10%; width: 128px; height: 64px; }
+    .cloud-2 { top: 96px; right: 20%; width: 192px; height: 80px; }
+    .bg-ground-dirt { position: absolute; bottom: 0; left: 0; right: 0; height: 35vh; background-color: var(--mc-dirt-bg); z-index: 0; }
+    .bg-ground-grass { position: absolute; bottom: 35vh; left: 0; right: 0; height: 16px; background-color: var(--mc-grass-bg); z-index: 0; }
+
+    .container { position: relative; z-index: 10; max-width: 1400px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; min-height: 100vh; }
+
+    /* Minecraft 面板與按鈕 */
+    .mc-panel { border: 4px solid; padding: 16px; }
+    .variant-stone { background-color: var(--mc-stone-bg); border-top-color: var(--mc-stone-border-light); border-left-color: var(--mc-stone-border-light); border-bottom-color: var(--mc-stone-border-dark); border-right-color: var(--mc-stone-border-dark); }
+    .variant-dirt { background-color: var(--mc-dirt-bg); border-top-color: var(--mc-dirt-border-light); border-left-color: var(--mc-dirt-border-light); border-bottom-color: var(--mc-dirt-border-dark); border-right-color: var(--mc-dirt-border-dark); }
+    .variant-obsidian { background-color: var(--mc-obsidian-bg); border-top-color: var(--mc-obsidian-border-light); border-left-color: var(--mc-obsidian-border-light); border-bottom-color: var(--mc-obsidian-border-dark); border-right-color: var(--mc-obsidian-border-dark); color: white; }
+    .variant-glass { background-color: rgba(255, 255, 255, 0.2); border: none; box-shadow: inset 4px 4px 0 rgba(255, 255, 255, 0.3); }
+
+    .relative-panel { position: relative; }
+    .panel-badge { position: absolute; top: -28px; left: 16px; border: 4px solid; border-bottom: none; padding: 4px 12px; font-size: 12px; z-index: 10; }
+    .badge-dirt { background-color: var(--mc-dirt-bg); border-color: var(--mc-dirt-border-light) var(--mc-dirt-border-dark) transparent var(--mc-dirt-border-light); color: white; text-shadow: 2px 2px 0 #000; }
+    .badge-stone { background-color: var(--mc-stone-bg); border-color: var(--mc-stone-border-light) var(--mc-stone-border-dark) transparent var(--mc-stone-border-light); color: black; }
+    .badge-obsidian { background-color: #2b2b2b; border-color: var(--mc-obsidian-border-light) var(--mc-obsidian-border-dark) transparent var(--mc-obsidian-border-light); color: white; text-shadow: 2px 2px 0 #000; }
+
+    /* 像素風 UI (強制覆蓋) */
+    .btn-pixel { border: 4px solid #000; padding: 12px 16px; font-family: inherit; cursor: pointer; text-align: center; border-radius: 0; box-shadow: 4px 4px 0px 0px #000; transition: transform 0.1s, box-shadow 0.1s; }
+    .btn-pixel:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px #000; }
+    .mc-input-pixel { background-color: #fff; border: 4px solid #000; color: #000; padding: 12px; font-family: inherit; font-size: 14px; outline: none; width: 100%; border-radius: 0; box-shadow: inset 3px 3px 0px rgba(0,0,0,0.1); }
+    .mc-input-pixel:focus { border-color: #3b82f6; }
+    .mc-input { background-color: rgba(0, 0, 0, 0.6); border: 2px solid #555555; color: white; padding: 10px; font-family: inherit; font-size: 14px; outline: none; box-shadow: inset 3px 3px 0 rgba(0, 0, 0, 0.8); width: 100%; }
+    .mc-input:focus { border-color: #85db49; }
     .bg-yellow { background-color: #fde047 !important; }
     .bg-gray { background-color: #9ca3af !important; }
     .bg-green { background-color: #4ade80 !important; }
 
-    /* 🌟 標題浮動動畫 🌟 */
+    /* HUD 與小工具 */
+    .hud-panel { margin-bottom: 24px; }
+    .hud-content { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; color: white; text-shadow: 2px 2px 0 #000; }
+    .hud-item { display: flex; align-items: center; gap: 8px; }
+    .hud-text { display: flex; flex-direction: column; }
+    .hud-label { font-size: 10px; color: #e5e7eb; margin-bottom: 4px; }
+    .hud-value { font-size: 16px; }
+    .credit-score { margin-left: auto; align-items: flex-end; flex-direction: column;}
+    .hearts { display: flex; gap: 4px; }
+    .icon-heart { width: 16px; height: 16px; fill: #ef4444; }
+    .icon-shield { width: 16px; height: 16px; fill: #facc15; margin-left: 4px; }
+    .icon { width: 24px; height: 24px; }
+    .text-green { color: var(--text-green); }
+    .text-red { color: var(--text-red); }
+    .drop-shadow-black { text-shadow: 2px 2px 0 #000; }
+    .text-shadow-sm { text-shadow: 1px 1px 0 #000; }
+
+    /* 網格排版 (左 7 : 右 5) */
+    .grid-layout { display: grid; grid-template-columns: 7fr 5fr; gap: 24px; flex: 1; align-items: stretch; padding-bottom: 16px; }
+    @media (max-width: 1024px) { .grid-layout { grid-template-columns: 1fr; } .credit-score { margin-left: 0; align-items: flex-start; } }
+    .col-left { display: flex; flex-direction: column; gap: 24px; height: 100%; }
+    .col-right { height: 100%; }
+
+    /* 圖表與對話框 */
+    #panel-default { flex: 6; display: flex; flex-direction: column; margin-top: 0 !important; }
+    .chart-container { width: 100%; flex: 1; min-height: 200px; position: relative; background-color: var(--mc-obsidian-bg); border: 4px solid; border-color: #111 #444 #444 #111; box-shadow: inset 4px 4px 0 rgba(0,0,0,0.5); padding: 16px 16px 16px 4px; }
+    .chat-section { flex: 4; display: flex; flex-direction: column; margin-top: 0 !important; height: auto; }
+    .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 8px; }
+    .msg-bubble { border-radius: 0; box-shadow: 3px 3px 0 rgba(0,0,0,0.6); line-height: 1.6; max-width: 85%; }
+    .message-player { flex-direction: row-reverse; }
+    .message-player .msg-bubble { background-color: #2563eb; border-color: #1e3a8a; }
+    .chat-messages::-webkit-scrollbar { width: 12px; }
+    .chat-messages::-webkit-scrollbar-track { background: #1e1e1e; border-left: 2px solid #000; }
+    .chat-messages::-webkit-scrollbar-thumb { background: #555; border: 2px solid #000; box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2); }
+    .chat-messages::-webkit-scrollbar-thumb:hover { background: #777; }
+    .chat-input-area { display: flex; gap: 8px; border-top: 1px solid #444; padding-top: 12px; }
+    
+    /* 記帳系統右側 */
+    .col-right > section { margin-top: 0 !important; height: 100%; display: flex; flex-direction: column; }
+
+    /* ==========================================
+       🌟 視覺特效動畫 (Logo 與標語) 🌟
+       ========================================== */
     .floating-logo {
       animation: float 4s ease-in-out infinite;
       filter: drop-shadow(0 15px 10px rgba(0,0,0,0.6));
@@ -55,6 +123,26 @@
       0% { transform: translateY(0px) scale(1); }
       50% { transform: translateY(-10px) scale(1.02); }
       100% { transform: translateY(0px) scale(1); }
+    }
+
+    .splash-text {
+      position: absolute;
+      right: 25%; 
+      bottom: 10%; 
+      color: #ffff00; 
+      font-family: 'DotGothic16', 'Press Start 2P', sans-serif;
+      font-size: 20px;
+      font-weight: bold;
+      text-shadow: 2px 2px 0 #3f3f00; 
+      transform: rotate(-20deg);
+      animation: splash-pulse 0.4s alternate infinite ease-in-out;
+      z-index: 50; 
+      pointer-events: none; 
+      white-space: nowrap; 
+    }
+    @keyframes splash-pulse {
+      from { transform: rotate(-20deg) scale(1); }
+      to   { transform: rotate(-20deg) scale(1.15); }
     }
   </style>
 </head>
@@ -66,20 +154,18 @@
 
   <div class="container">
     
-    <div id="main-logo" class="w-full flex justify-center mt-10 mb-4">
+    <div id="main-logo" class="w-full flex justify-center mt-10 mb-4 relative">
       <img src="logo.png" alt="AI Bank Wallet" class="floating-logo w-auto max-w-full sm:max-w-xl md:max-w-2xl px-4">
+      <div id="splash-text" class="splash-text">Machine Learning!</div>
     </div>
 
     <div id="page-register" class="mc-panel variant-stone max-w-md mx-auto mt-4 p-8 flex-col gap-4 hidden relative-panel">
       <div class="panel-badge badge-stone">Register</div>
       <h2 class="text-center text-xl font-bold mb-4 drop-shadow-black text-white">建立新帳號</h2>
-      
       <label class="text-white text-sm text-shadow-sm">帳號 (Username)</label>
       <input type="text" id="reg-account" class="mc-input-pixel mb-4" placeholder="輸入想使用的帳號">
-      
       <label class="text-white text-sm text-shadow-sm">密碼 (Password)</label>
       <input type="password" id="reg-password" class="mc-input-pixel mb-6" placeholder="輸入密碼">
-      
       <button id="btn-submit-register" class="btn-pixel bg-yellow text-black w-full font-bold">確認註冊</button>
       <button id="btn-back-to-login" class="btn-pixel bg-gray text-black w-full mt-4 font-bold">返回登入</button>
     </div>
@@ -87,10 +173,8 @@
     <div id="page-login" class="mc-panel variant-stone max-w-md mx-auto mt-4 p-8 flex-col gap-4 relative-panel">
       <div class="panel-badge badge-stone">Login</div>
       <h2 class="text-center text-xl font-bold mb-4 drop-shadow-black text-white">登入</h2>
-      
       <input type="text" id="login-account" class="mc-input-pixel mb-4" placeholder="輸入帳號">
       <input type="password" id="login-password" class="mc-input-pixel mb-6" placeholder="輸入密碼">
-      
       <button id="btn-login" class="btn-pixel bg-green text-black w-full font-bold">登入 (Login)</button>
       <button id="btn-register" class="btn-pixel variant-obsidian text-white w-full mt-4 font-bold">註冊新帳號</button>
     </div>
@@ -99,13 +183,10 @@
       <div class="panel-badge badge-dirt">Setup</div>
       <h2 class="text-center text-xl font-bold mb-4 text-white drop-shadow-black">設定初始財務狀況</h2>
       <p class="text-sm text-gray-200 mb-4">請輸入您的真實資料以進行準確的 AI 模擬：</p>
-      
       <label class="text-white text-sm text-shadow-sm">目前資產總額 ($)</label>
       <input type="number" id="setup-balance" class="mc-input mb-4" placeholder="例如: 1250000">
-      
       <label class="text-white text-sm text-shadow-sm">每月固定收入 ($)</label>
       <input type="number" id="setup-income" class="mc-input mb-6" placeholder="例如: 45000">
-      
       <button id="btn-start-sim" class="btn-pixel bg-yellow text-black w-full font-bold">開始財務模擬 🚀</button>
     </div>
 
@@ -115,17 +196,11 @@
         <div class="hud-content">
           <div class="hud-item">
             <svg class="icon text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            <div class="hud-text">
-              <span class="hud-label">資產總額 (Balance)</span>
-              <span id="total-balance" class="hud-value text-green">$ 0</span>
-            </div>
+            <div class="hud-text"><span class="hud-label">資產總額 (Balance)</span><span id="total-balance" class="hud-value text-green">$ 0</span></div>
           </div>
           <div class="hud-item">
             <svg class="icon text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
-            <div class="hud-text">
-              <span class="hud-label">月收入 (Income)</span>
-              <span id="monthly-income" class="hud-value text-green">+ 0</span>
-            </div>
+            <div class="hud-text"><span class="hud-label">月收入 (Income)</span><span id="monthly-income" class="hud-value text-green">+ 0</span></div>
           </div>
           <div class="hud-item credit-score">
             <span class="hud-label">信用評分 (Credit)</span>
@@ -141,14 +216,10 @@
       </header>
 
       <main class="grid-layout">
-        
         <div class="col-left">
-
           <section id="panel-default" class="mc-panel variant-stone relative-panel">
             <div class="panel-badge badge-stone">財務圖表 (Finance)</div>
-            <div class="chart-container">
-              <canvas id="financeChart"></canvas>
-            </div>
+            <div class="chart-container"><canvas id="financeChart"></canvas></div>
           </section>
 
           <section class="mc-panel variant-obsidian relative-panel chat-section flex-col">
@@ -167,7 +238,6 @@
               <button id="btn-send-chat" class="btn-pixel bg-yellow text-black font-bold">送出</button>
             </div>
           </section>
-
         </div>
 
         <div class="col-right">
@@ -195,13 +265,10 @@
 
             <div id="history-panel" class="hidden flex-col h-full mt-4">
               <button id="btn-back-to-form" class="btn-pixel bg-gray text-black mb-4 w-full font-bold">⬅ 返回記帳</button>
-              <div id="history-list" class="flex-col gap-2 overflow-y-auto flex-1 text-white">
-                </div>
+              <div id="history-list" class="flex-col gap-2 overflow-y-auto flex-1 text-white"></div>
             </div>
-
           </section>
         </div>
-
       </main>
 
     </div>
@@ -209,17 +276,35 @@
 
   <script>
     // ==========================================
-    // 1. 頁面切換控制與正式 API 串接
+    // 🌟 全局變數與元件抓取
     // ==========================================
     const pageRegister = document.getElementById('page-register'); 
     const pageLogin = document.getElementById('page-login');
     const pageSetup = document.getElementById('page-setup');
     const pageDashboard = document.getElementById('page-dashboard');
-    const mainLogo = document.getElementById('main-logo'); // 抓取標題 Logo
-
+    const mainLogo = document.getElementById('main-logo'); 
     let currentBalance = 0; 
 
-    // --- 註冊與登入的切換 ---
+    // ==========================================
+    // 🌟 Minecraft 黃色標語輪替邏輯
+    // ==========================================
+    const splashTextEl = document.getElementById('splash-text');
+    const splashMessages = [
+      "Machine Learning!", 
+      "Artificial Intelligence!", 
+      "Shout out to Minecraft!"
+    ];
+    let splashIndex = Math.floor(Math.random() * splashMessages.length);
+    splashTextEl.textContent = splashMessages[splashIndex];
+
+    setInterval(() => {
+      splashIndex = (splashIndex + 1) % splashMessages.length;
+      splashTextEl.textContent = splashMessages[splashIndex];
+    }, 3000);
+
+    // ==========================================
+    // 🌟 登入/註冊畫面切換
+    // ==========================================
     document.getElementById('btn-register').addEventListener('click', () => {
       pageLogin.classList.add('hidden');
       pageRegister.classList.remove('hidden');
@@ -230,11 +315,18 @@
       pageLogin.classList.remove('hidden');
     });
 
-    // 🌟 正式版：註冊 API 串接
+    document.getElementById('btn-login').addEventListener('click', () => {
+      pageLogin.classList.add('hidden');
+      pageSetup.classList.remove('hidden');
+    });
+
+    // ==========================================
+    // 🌟 正式 API 串接：註冊 (/user/create)
+    // ==========================================
     document.getElementById('btn-submit-register').addEventListener('click', async () => {
       const acc = document.getElementById('reg-account').value;
       const pass = document.getElementById('reg-password').value;
-      const registerBtn = document.getElementById('btn-submit-register');
+      const registerBtn = document.getElementById('btn-submit-register'); 
 
       if(!acc || !pass) {
         alert("⚠️ 請完整輸入帳號與密碼！");
@@ -246,8 +338,7 @@
       registerBtn.disabled = true;
 
       try {
-        // 使用相對路徑連線
-        const response = await fetch('/user/create', { 
+        const response = await fetch('http://127.0.0.1:8000/user/create', { 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: acc, password: pass })
@@ -262,24 +353,20 @@
           pageRegister.classList.add('hidden');
           pageLogin.classList.remove('hidden');
         } else {
-          alert("❌ 註冊失敗：" + JSON.stringify(data.detail || data));
+          alert("❌ 註冊失敗：" + (data.detail || "發生未知錯誤"));
         }
       } catch (error) {
         console.error("連線錯誤:", error);
-        alert("🚨 無法連線到伺服器，請確認後端是否已啟動！");
+        alert("🚨 無法連線到伺服器，請確認後端 Python FastAPI 是否已啟動！");
       } finally {
         registerBtn.textContent = originalBtnText;
         registerBtn.disabled = false;
       }
     });
 
-    // --- 登入 -> 設定 的切換 ---
-    document.getElementById('btn-login').addEventListener('click', () => {
-      pageLogin.classList.add('hidden');
-      pageSetup.classList.remove('hidden');
-    });
-
-    // 🌟 正式版：開始模擬 API 串接 (/simulate)
+    // ==========================================
+    // 🌟 正式 API 串接：開始模擬 (/simulate)
+    // ==========================================
     document.getElementById('btn-start-sim').addEventListener('click', async () => {
       const initBalance = document.getElementById('setup-balance').value;
       const initIncome = document.getElementById('setup-income').value;
@@ -300,15 +387,14 @@
             salary: Number(initIncome),
             fixed_expense: 0,
             variable_expense: 0,
-            balance: Number(initBalance)
+            current_balance: Number(initBalance)
           },
           months: 12,
           events: [],
           loans: []
         };
 
-        // 使用相對路徑連線
-        const response = await fetch('/simulate', {
+        const response = await fetch('http://127.0.0.1:8000/simulate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -335,7 +421,7 @@
             financeChart.resize();
           }
         } else {
-          alert("❌ 模擬失敗：" + JSON.stringify(data.detail || data));
+          alert("❌ 模擬失敗：" + (data.detail || "發生未知錯誤"));
         }
       } catch (error) {
         console.error("連線錯誤:", error);
@@ -347,30 +433,27 @@
     });
 
     // ==========================================
-    // 2. 記帳與歷史紀錄切換邏輯
+    // 🌟 記帳系統切換邏輯
     // ==========================================
     const accountingForm = document.getElementById('accounting-form');
     const historyPanel = document.getElementById('history-panel');
-    const btnViewHistory = document.getElementById('btn-view-history');
-    const btnBackToForm = document.getElementById('btn-back-to-form');
     
-    btnViewHistory.addEventListener('click', () => {
+    document.getElementById('btn-view-history').addEventListener('click', () => {
       accountingForm.classList.add('hidden');
       historyPanel.classList.remove('hidden');
     });
 
-    btnBackToForm.addEventListener('click', () => {
+    document.getElementById('btn-back-to-form').addEventListener('click', () => {
       historyPanel.classList.add('hidden');
       accountingForm.classList.remove('hidden');
     });
 
     // ==========================================
-    // 3. 記帳收集與畫面渲染邏輯
+    // 🌟 記帳系統新增紀錄邏輯
     // ==========================================
-    const btnSubmitRecord = document.getElementById('btn-submit-record');
     const historyList = document.getElementById('history-list');
     
-    btnSubmitRecord.addEventListener('click', () => {
+    document.getElementById('btn-submit-record').addEventListener('click', () => {
       const amount = document.getElementById('record-amount').value;
       const note = document.getElementById('record-note').value;
       const date = document.getElementById('record-date').value;
@@ -413,10 +496,9 @@
     });
 
     // ==========================================
-    // 4. 實作 Chart.js 動態財務圖表
+    // 🌟 Chart.js 動態財務圖表初始化
     // ==========================================
     const ctx = document.getElementById('financeChart').getContext('2d');
-    
     const financeChart = new Chart(ctx, {
       type: 'line',
       data: {
@@ -439,9 +521,7 @@
         maintainAspectRatio: false,
         layout: { padding: { left: 45, right: 20 } },
         plugins: {
-          legend: { 
-            labels: { color: 'white', font: { family: "'DotGothic16', sans-serif", size: 14 } } 
-          }
+          legend: { labels: { color: 'white', font: { family: "'DotGothic16', sans-serif", size: 14 } } }
         },
         scales: {
           y: { ticks: { color: '#9ca3af', font: { family: "'Press Start 2P', cursive", size: 10 } }, grid: { color: '#333' } },
@@ -451,17 +531,15 @@
     });
 
     // ==========================================
-    // 5. AI 對話框互動邏輯
+    // 🌟 AI 對話框互動邏輯
     // ==========================================
     const chatInput = document.getElementById('chat-input');
-    const btnSendChat = document.getElementById('btn-send-chat');
     const chatMessages = document.getElementById('chat-messages');
 
-    async function sendMessage() {
+    function sendMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
 
-      // 1. 顯示使用者的訊息
       const playerHtml = `
         <div class="message-player flex items-start gap-2">
           <div class="text-2xl drop-shadow-black">🧑‍🌾</div>
@@ -475,7 +553,6 @@
       chatInput.value = '';
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
-      // 2. 顯示 AI 正在思考的動畫
       const typingId = 'typing-' + Date.now();
       const typingHtml = `
         <div id="${typingId}" class="message-ai flex items-start gap-2 opacity-70">
@@ -488,126 +565,27 @@
       chatMessages.insertAdjacentHTML('beforeend', typingHtml);
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
-      try {
-        // 3. 準備傳給後端的資料
-        const initIncome = document.getElementById('setup-income').value || 0;
-
-        const payload = {
-          profile: {
-             salary: Number(initIncome),
-             fixed_expense: 0,
-             variable_expense: 0,
-             balance: currentBalance // 使用全域變數，這樣 AI 會知道最新餘額
-          },
-          options: [
-            {
-               name: "使用者提問",
-               description: text,
-               events: []
-            }
-          ],
-          months: 12,
-          mc_runs: 100
-        };
-
-        // 4. 呼叫後端 API
-        const response = await fetch('/ai/advice', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        // 5. 移除「思考中」的動畫
-        const typingElement = document.getElementById(typingId);
-        if (typingElement) typingElement.remove();
-
-        if (response.ok) {
-           // 🌟 6. 解析後端回傳的 JSON 並美化排版
-           let aiResponseText = "";
-           
-           if (typeof data === 'string') {
-               aiResponseText = data; // 如果後端只傳字串，直接印出
-           } 
-           else if (data.summary || data.best_option) {
-               // 將 JSON 資料轉化為有條理的 HTML 報告
-               const riskLabel = data.risk_level === 'low' ? '🟢 低風險' : data.risk_level === 'medium' ? '🟡 中風險' : '🔴 高風險';
-               const reasonsHtml = data.reason ? data.reason.map(r => `<li>${r}</li>`).join('') : '';
-               const suggestionsHtml = data.suggestions ? data.suggestions.map(s => `<li>${s}</li>`).join('') : '';
-
-               aiResponseText = `
-                   <strong style="color:#fde047;">📊 顧問分析報告：</strong><br>
-                   ${data.summary || "分析完成。"}<br><br>
-                   
-                   <strong style="color:#4ade80;">🏆 最佳建議方案：</strong><br>
-                   ▶ 方案名稱：${data.best_option || "無"}<br>
-                   ▶ 風險評估：${riskLabel}<br><br>
-                   
-                   <strong style="color:#60a5fa;">💡 詳細說明與建議：</strong><br>
-                   <ul style="list-style-type: disc; margin-left: 20px;">
-                       ${reasonsHtml}
-                       ${suggestionsHtml}
-                   </ul>
-               `;
-           }
-           else {
-               // 如果格式都不是上面兩種，就直接印出 JSON 字串
-               aiResponseText = JSON.stringify(data);
-           }
-           
-           const aiHtml = `
-            <div class="message-ai flex items-start gap-2">
-              <div class="text-2xl drop-shadow-black">🧙‍♂️</div>
-              <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-2 text-white text-sm">
-                ${aiResponseText}
-              </div>
+      // 未來可將此處替換為真正的 fetch('/ai/advice') 串接
+      setTimeout(() => {
+        document.getElementById(typingId).remove();
+        const aiResponse = "這是個好問題！我目前正在等後端的 Python 系統連線上線。等組員把 API 寫好，我就能針對您的收支狀況給出神準的預測！";
+        const aiHtml = `
+          <div class="message-ai flex items-start gap-2">
+            <div class="text-2xl drop-shadow-black">🧙‍♂️</div>
+            <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-2 text-white text-sm">
+              ${aiResponse}
             </div>
-          `;
-          chatMessages.insertAdjacentHTML('beforeend', aiHtml);
-
-        } else {
-           // 處理後端報錯
-           const errorHtml = `
-            <div class="message-ai flex items-start gap-2">
-              <div class="text-2xl drop-shadow-black">🧙‍♂️</div>
-              <div class="msg-bubble bg-red-800 border-2 border-red-600 p-2 text-white text-sm">
-                抱歉，我的魔法水晶球出錯了。(${JSON.stringify(data.detail || data)})
-              </div>
-            </div>
-          `;
-          chatMessages.insertAdjacentHTML('beforeend', errorHtml);
-        }
-
-      } catch (error) {
-         console.error("對話連線錯誤:", error);
-         
-         const typingElement = document.getElementById(typingId);
-         if (typingElement) typingElement.remove();
-         
-         const errorHtml = `
-            <div class="message-ai flex items-start gap-2">
-              <div class="text-2xl drop-shadow-black">🧙‍♂️</div>
-              <div class="msg-bubble bg-red-800 border-2 border-red-600 p-2 text-white text-sm">
-                連線失敗，請確認後端伺服器是否正常運作。
-              </div>
-            </div>
-          `;
-          chatMessages.insertAdjacentHTML('beforeend', errorHtml);
-      } finally {
-         chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
+          </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', aiHtml);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 1500); 
     }
 
-    // 🌟 這裡補上了按鈕與鍵盤監聽事件 🌟
-    btnSendChat.addEventListener('click', sendMessage);
-
+    document.getElementById('btn-send-chat').addEventListener('click', sendMessage);
     chatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendMessage();
-      }
+      if (e.key === 'Enter') sendMessage();
     });
-
   </script>
 </body>
 </html>
