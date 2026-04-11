@@ -326,26 +326,30 @@
     document.getElementById('btn-submit-register').addEventListener('click', async () => {
       const acc = document.getElementById('reg-account').value;
       const pass = document.getElementById('reg-password').value;
-      const registerBtn = document.getElementById('btn-submit-register'); 
-
-      if(!acc || !pass) {
+      const registerBtn = document.getElementById('btn-submit-register');
+    
+      if (!acc || !pass) {
         alert("⚠️ 請完整輸入帳號與密碼！");
         return;
       }
-
+    
       const originalBtnText = registerBtn.textContent;
       registerBtn.textContent = "註冊中...";
       registerBtn.disabled = true;
-
+    
       try {
-        const response = await fetch('http://127.0.0.1:8000/user/create', { 
+        const response = await fetch('/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: acc, password: pass })
+          body: JSON.stringify({
+            name: acc,
+            email: `${acc}@test.com`,
+            password: pass
+          })
         });
-
+    
         const data = await response.json();
-
+    
         if (response.ok && data.status === "success") {
           alert("✅ 註冊成功！請使用新帳號登入。");
           document.getElementById('reg-account').value = '';
@@ -353,17 +357,17 @@
           pageRegister.classList.add('hidden');
           pageLogin.classList.remove('hidden');
         } else {
-          alert("❌ 註冊失敗：" + (data.detail || "發生未知錯誤"));
+          alert("❌ 註冊失敗：" + (data.detail || data.message || "發生未知錯誤"));
         }
       } catch (error) {
         console.error("連線錯誤:", error);
-        alert("🚨 無法連線到伺服器，請確認後端 Python FastAPI 是否已啟動！");
+        alert("🚨 無法連線到伺服器！");
       } finally {
         registerBtn.textContent = originalBtnText;
         registerBtn.disabled = false;
       }
     });
-
+    
     // ==========================================
     // 🌟 正式 API 串接：開始模擬 (/simulate)
     // ==========================================
@@ -371,52 +375,55 @@
       const initBalance = document.getElementById('setup-balance').value;
       const initIncome = document.getElementById('setup-income').value;
       const startBtn = document.getElementById('btn-start-sim');
-
-      if(!initBalance || !initIncome) {
+    
+      if (!initBalance || !initIncome) {
         alert("請輸入資產與收入才能進行模擬喔！");
         return;
       }
-
+    
       const originalText = startBtn.textContent;
       startBtn.textContent = "AI 運算中... ⏳";
       startBtn.disabled = true;
-
+    
       try {
         const payload = {
           profile: {
             salary: Number(initIncome),
             fixed_expense: 0,
             variable_expense: 0,
-            current_balance: Number(initBalance)
+            balance: Number(initBalance),
+            raise_rate: 0.03,
+            inflation_rate: 0.02,
+            target_emergency_months: 3
           },
           months: 12,
           events: [],
           loans: []
         };
-
-        const response = await fetch('http://127.0.0.1:8000/simulate', {
+    
+        const response = await fetch('/simulate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-
+    
         const data = await response.json();
-
+    
         if (response.ok) {
           console.log("【後端 AI 模擬結果】:", data);
-          
-          currentBalance = Number(initBalance); 
+    
+          currentBalance = Number(initBalance);
           document.getElementById('total-balance').textContent = '$ ' + currentBalance.toLocaleString();
           document.getElementById('monthly-income').textContent = '+ ' + Number(initIncome).toLocaleString();
-
+    
           financeChart.data.datasets[0].data = [currentBalance];
           financeChart.data.labels = ['初始'];
           financeChart.update();
-
+    
           pageSetup.classList.add('hidden');
-          mainLogo.classList.add('hidden'); 
+          mainLogo.classList.add('hidden');
           pageDashboard.classList.remove('hidden');
-          
+    
           if (typeof financeChart !== 'undefined') {
             financeChart.resize();
           }
@@ -425,7 +432,7 @@
         }
       } catch (error) {
         console.error("連線錯誤:", error);
-        alert("🚨 無法連線到後端，請確認 FastAPI 伺服器已啟動！");
+        alert("🚨 無法連線到後端！");
       } finally {
         startBtn.textContent = originalText;
         startBtn.disabled = false;
