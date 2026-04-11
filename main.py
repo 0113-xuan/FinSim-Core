@@ -126,7 +126,7 @@ async def login_user(req: LoginRequest):
         stored_hash = user.get("password_hash")
 
         if not stored_hash:
-            raise HTTPException(status_code=500, detail="資料庫中沒有 password_hash 欄位或資料")
+            raise HTTPException(status_code=500, detail="資料庫中沒有 password_hash")
 
         if not pwd_context.verify(req.password, stored_hash):
             raise HTTPException(status_code=401, detail="密碼錯誤")
