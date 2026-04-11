@@ -90,7 +90,6 @@ def home():
 @app.post("/auth/register")
 async def register_user(req: RegisterRequest):
     try:
-        # 檢查 email 是否已存在
         existing = supabase.table("users").select("*").eq("email", req.email).execute()
         if existing.data:
             raise HTTPException(status_code=400, detail="此 Email 已被註冊")
