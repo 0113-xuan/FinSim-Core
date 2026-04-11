@@ -72,6 +72,13 @@ class FinancialProfileCreate(BaseModel):
 # =========================
 # 基本 API
 # =========================
+@app.get("/api/version")
+def version():
+    return {
+        "app": "FinSim-Core",
+        "version": "render-check-001"
+    }
+    
 @app.get("/api")
 def home():
     return {
