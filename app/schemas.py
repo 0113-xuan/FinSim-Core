@@ -68,3 +68,13 @@ class CompareRequest(BaseModel):
     options: List[OptionInput]
     months: int = Field(default=60, gt=0)
     mc_runs: int = Field(default=300, gt=0)
+
+class RegisterRequest(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
