@@ -1,11 +1,9 @@
 from fastapi import FastAPI, HTTPException
-from typing import Optional
 import uvicorn
 from pathlib import Path
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from supabase import create_client
-from pydantic import BaseModel, EmailStr
 from passlib.context import CryptContext
 
 from app.schemas import (
@@ -13,6 +11,9 @@ from app.schemas import (
     MonteCarloRequest,
     CompareRequest,
     FinanceEvent,
+    RegisterRequest,
+    LoginRequest,
+    FinancialProfileCreate,
 )
 from app.core.simulation import simulate_finance
 from app.core.monte_carlo import run_monte_carlo
@@ -46,39 +47,9 @@ app.add_middleware(
 
 BASE_DIR = Path(__file__).resolve().parent
 
-
-# =========================
-# Pydantic Models
-# =========================
-class RegisterRequest(BaseModel):
-    name: str
-    email: EmailStr
-    password: str
-
-
-class LoginRequest(BaseModel):
-    email: EmailStr
-    password: str
-
-
-class FinancialProfileCreate(BaseModel):
-    user_id: str
-    current_savings: int
-    monthly_income: int
-    has_loan: bool
-    loan_amount: int = 0
-
-
 # =========================
 # 基本 API
 # =========================
-@app.get("/api/version")
-def version():
-    return {
-        "app": "FinSim-Core",
-        "version": "render-check-001"
-    }
-    
 @app.get("/api")
 def home():
     return {
