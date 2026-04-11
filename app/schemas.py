@@ -1,11 +1,5 @@
 from typing import List, Optional, Literal
-from pydantic import BaseModel, Field
-
-
-class UserCreate(BaseModel):
-    username: str
-    age: int
-    initial_savings: float
+from pydantic import BaseModel, Field, EmailStr
 
 
 class FinanceEvent(BaseModel):
@@ -69,6 +63,7 @@ class CompareRequest(BaseModel):
     months: int = Field(default=60, gt=0)
     mc_runs: int = Field(default=300, gt=0)
 
+
 class RegisterRequest(BaseModel):
     name: str
     email: EmailStr
@@ -78,3 +73,11 @@ class RegisterRequest(BaseModel):
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
+
+
+class FinancialProfileCreate(BaseModel):
+    user_id: str
+    current_savings: int
+    monthly_income: int
+    has_loan: bool
+    loan_amount: int = 0
