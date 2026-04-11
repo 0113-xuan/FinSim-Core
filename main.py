@@ -75,7 +75,7 @@ class FinancialProfileCreate(BaseModel):
 # =========================
 # 基本 API
 # =========================
-@app.get("/apiiiiiiiiiiiii")
+@app.get("/api")
 def home():
     return {
         "message": "後端系統運作中",
