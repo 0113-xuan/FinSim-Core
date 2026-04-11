@@ -26,6 +26,8 @@ SUPABASE_URL = "https://tpgtuairychavuzfgifc.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwZ3R1YWlyeWNoYXZ1emZnaWZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NjY2ODQsImV4cCI6MjA5MTA0MjY4NH0.W-BQ7HijWcGnqRlQQSRyaT4GDdLCKMaYYBtL7LFFz-I"
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+BASE_DIR = Path(__file__).resolve().parent
 
 # =========================
 # 密碼加密
