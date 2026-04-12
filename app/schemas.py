@@ -65,13 +65,13 @@ class CompareRequest(BaseModel):
 
 
 class RegisterRequest(BaseModel):
-    name: str
+    username: str
     email: EmailStr
     password: str
 
 
 class LoginRequest(BaseModel):
-    name: str
+    username: str
     password: str
 
 
