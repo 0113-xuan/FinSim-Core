@@ -120,7 +120,7 @@ async def login_user(
             "message": "登入成功",
             "user": {
                 "id": user["id"],
-                "name": user["name"],
+                "username": user["name"],
                 "email": user["email"]
             }
         }
