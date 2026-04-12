@@ -24,7 +24,7 @@ from app.core.advisor import compare_options, generate_advice
 # Supabase 連線
 # =========================
 SUPABASE_URL = "https://tpgtuairychavuzfgifc.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwZ3R1YWlyeWNoYXZ1emZnaWZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NjY2ODQsImV4cCI6MjA5MTA0MjY4NH0.W-BQ7HijWcGnqRlQQSRyaT4GDdLCKMaYYBtL7LFFz-I"
+SUPABASE_KEY = "你的 key"
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # =========================
@@ -47,6 +47,7 @@ app.add_middleware(
 
 BASE_DIR = Path(__file__).resolve().parent
 
+
 # =========================
 # 基本 API
 # =========================
@@ -59,18 +60,26 @@ def home():
     }
 
 
+@app.get("/api/version")
+def version():
+    return {
+        "app": "FinSim-Core",
+        "version": "render-check-001"
+    }
+
+
 # =========================
 # 註冊 / 登入 API
 # =========================
 @app.post("/auth/register")
 async def register_user(req: RegisterRequest):
     try:
-        # 先檢查 username 是否存在
-        existing_name = supabase.table("users").select("*").eq("username", req.username).execute()
-        if existing_name.data:
+        # 檢查 username 是否存在
+        existing_username = supabase.table("users").select("*").eq("username", req.username).execute()
+        if existing_username.data:
             raise HTTPException(status_code=400, detail="此帳號已被註冊")
 
-        # 再檢查 email 是否存在
+        # 檢查 email 是否存在
         existing_email = supabase.table("users").select("*").eq("email", req.email).execute()
         if existing_email.data:
             raise HTTPException(status_code=400, detail="此 Email 已被註冊")
@@ -78,7 +87,7 @@ async def register_user(req: RegisterRequest):
         password_hash = pwd_context.hash(req.password)
 
         response = supabase.table("users").insert({
-            "username": req.username,          # 前端的 username 對應資料庫的 name
+            "username": req.username,
             "email": req.email,
             "password_hash": password_hash
         }).execute()
@@ -94,6 +103,7 @@ async def register_user(req: RegisterRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"註冊失敗: {str(e)}")
 
+
 @app.post("/auth/login")
 async def login_user(
     username: str = Form(...),
@@ -101,7 +111,13 @@ async def login_user(
     password: str = Form(...)
 ):
     try:
-        response = supabase.table("users").select("*").eq("username", username).eq("email", email).execute()
+        response = (
+            supabase.table("users")
+            .select("*")
+            .eq("username", username)
+            .eq("email", email)
+            .execute()
+        )
 
         if not response.data:
             raise HTTPException(status_code=404, detail="查無此使用者，請確認帳號或電子郵件")
@@ -120,7 +136,7 @@ async def login_user(
             "message": "登入成功",
             "user": {
                 "id": user["id"],
-                "username": user["name"],
+                "username": user["username"],
                 "email": user["email"]
             }
         }
@@ -129,13 +145,6 @@ async def login_user(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"登入失敗: {str(e)}")
-        
-@app.get("/api/version")
-def version():
-    return {
-        "app": "FinSim-Core",
-        "version": "render-check-001"
-    }
 
 
 # =========================
