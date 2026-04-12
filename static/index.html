@@ -303,7 +303,7 @@
     }, 3000);
 
     // ==========================================
-    // 🌟 登入/註冊畫面切換
+    // 🌟 登入/註冊畫面純切換 (按下方按鈕切換畫面)
     // ==========================================
     document.getElementById('btn-register').addEventListener('click', () => {
       pageLogin.classList.add('hidden');
@@ -315,115 +315,144 @@
       pageLogin.classList.remove('hidden');
     });
 
-    document.getElementById('btn-login').addEventListener('click', () => {
-      pageLogin.classList.add('hidden');
-      pageSetup.classList.remove('hidden');
-    });
-
     // ==========================================
-    // 🌟 正式 API 串接：註冊 (/user/create)
+    // 🌟 流程 1：註冊 API 串接 (/user/create)
     // ==========================================
     document.getElementById('btn-submit-register').addEventListener('click', async () => {
       const acc = document.getElementById('reg-account').value;
       const pass = document.getElementById('reg-password').value;
-      const registerBtn = document.getElementById('btn-submit-register');
-    
-      if (!acc || !pass) {
-        alert("⚠️ 請完整輸入帳號與密碼！");
-        return;
+      const registerBtn = document.getElementById('btn-submit-register'); 
+
+      if(!acc || !pass) { 
+        alert("⚠️ 請完整輸入想要註冊的帳號與密碼！"); 
+        return; 
       }
-    
+      
       const originalBtnText = registerBtn.textContent;
-      registerBtn.textContent = "註冊中...";
+      registerBtn.textContent = "資料庫寫入中..."; 
       registerBtn.disabled = true;
-    
+
       try {
-        const response = await fetch('https://finsim-core.onrender.com/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: acc,
-            email: `${acc}@test.com`,
-            password: pass
-          })
+        const response = await fetch('http://127.0.0.1:8000/user/create', { 
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: acc, password: pass })
         });
-    
         const data = await response.json();
-    
+
+        // 🎯 註冊成功：跳回登入介面，並清空輸入框
         if (response.ok && data.status === "success") {
-          alert("✅ 註冊成功！請使用新帳號登入。");
+          alert("✅ 註冊成功！請在登入畫面輸入剛剛的帳密。");
           document.getElementById('reg-account').value = '';
           document.getElementById('reg-password').value = '';
-          pageRegister.classList.add('hidden');
-          pageLogin.classList.remove('hidden');
+          pageRegister.classList.add('hidden'); // 隱藏註冊
+          pageLogin.classList.remove('hidden'); // 跳回登入
         } else {
-          alert("❌ 註冊失敗：" + (data.detail || data.message || "發生未知錯誤"));
+          // 註冊失敗 (例如：帳號已經被別人用過了)
+          alert("❌ 註冊失敗：" + (data.detail || "帳號可能已存在"));
         }
       } catch (error) {
-        console.error("連線錯誤:", error);
-        alert("🚨 無法連線到伺服器！");
+        alert("🚨 無法連線，請確認後端 Python 伺服器已啟動！");
       } finally {
-        registerBtn.textContent = originalBtnText;
+        registerBtn.textContent = originalBtnText; 
         registerBtn.disabled = false;
       }
     });
-    
+
     // ==========================================
-    // 🌟 正式 API 串接：開始模擬 (/simulate)
+    // 🌟 流程 2：登入驗證 API 串接 (/user/login)
+    // ==========================================
+    document.getElementById('btn-login').addEventListener('click', async () => {
+      const acc = document.getElementById('login-account').value;
+      const pass = document.getElementById('login-password').value;
+      const loginBtn = document.getElementById('btn-login');
+
+      // 🎯 沒輸入資料就按登入：擋下來
+      if (!acc || !pass) { 
+        alert("⚠️ 請輸入帳號與密碼！\n(如果還沒註冊，請點擊下方的『註冊新帳號』)"); 
+        return; 
+      }
+
+      const originalBtnText = loginBtn.textContent;
+      loginBtn.textContent = "資料庫驗證中..."; 
+      loginBtn.disabled = true;
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/user/login', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: acc, password: pass })
+        });
+        const data = await response.json();
+
+        // 🎯 驗證成功：代表資料庫有這個人且密碼正確，放行進入設定畫面
+        if (response.ok && data.status === "success") {
+          alert("✅ 登入成功！");
+          pageLogin.classList.add('hidden');
+          pageSetup.classList.remove('hidden'); // 進入設定初始資金畫面
+        } else {
+          // 🎯 驗證失敗：可能是沒註冊過，或是密碼打錯
+          alert("❌ 登入失敗：" + (data.detail || "該帳號尚未註冊，或密碼輸入錯誤！"));
+        }
+      } catch (error) {
+        alert("🚨 無法連線到資料庫，請確認後端已啟動！");
+      } finally {
+        loginBtn.textContent = originalBtnText; 
+        loginBtn.disabled = false;
+      }
+    });
+
+    // ==========================================
+    // 🌟 流程 3：開始模擬 API 串接 (/simulate)
     // ==========================================
     document.getElementById('btn-start-sim').addEventListener('click', async () => {
       const initBalance = document.getElementById('setup-balance').value;
       const initIncome = document.getElementById('setup-income').value;
       const startBtn = document.getElementById('btn-start-sim');
-    
-      if (!initBalance || !initIncome) {
+
+      if(!initBalance || !initIncome) {
         alert("請輸入資產與收入才能進行模擬喔！");
         return;
       }
-    
+
       const originalText = startBtn.textContent;
       startBtn.textContent = "AI 運算中... ⏳";
       startBtn.disabled = true;
-    
+
       try {
         const payload = {
           profile: {
             salary: Number(initIncome),
             fixed_expense: 0,
             variable_expense: 0,
-            balance: Number(initBalance),
-            raise_rate: 0.03,
-            inflation_rate: 0.02,
-            target_emergency_months: 3
+            current_balance: Number(initBalance)
           },
           months: 12,
           events: [],
           loans: []
         };
-    
-        const response = await fetch('https://finsim-core.onrender.com/simulate', {
+
+        const response = await fetch('http://127.0.0.1:8000/simulate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-    
+
         const data = await response.json();
-    
+
         if (response.ok) {
           console.log("【後端 AI 模擬結果】:", data);
-    
-          currentBalance = Number(initBalance);
+          
+          currentBalance = Number(initBalance); 
           document.getElementById('total-balance').textContent = '$ ' + currentBalance.toLocaleString();
           document.getElementById('monthly-income').textContent = '+ ' + Number(initIncome).toLocaleString();
-    
+
           financeChart.data.datasets[0].data = [currentBalance];
           financeChart.data.labels = ['初始'];
           financeChart.update();
-    
+
           pageSetup.classList.add('hidden');
-          mainLogo.classList.add('hidden');
+          mainLogo.classList.add('hidden'); 
           pageDashboard.classList.remove('hidden');
-    
+          
           if (typeof financeChart !== 'undefined') {
             financeChart.resize();
           }
@@ -432,7 +461,7 @@
         }
       } catch (error) {
         console.error("連線錯誤:", error);
-        alert("🚨 無法連線到後端！");
+        alert("🚨 無法連線到後端，請確認 FastAPI 伺服器已啟動！");
       } finally {
         startBtn.textContent = originalText;
         startBtn.disabled = false;
