@@ -93,7 +93,7 @@ async def register_user(req: RegisterRequest):
 @app.post("/auth/login")
 async def login_user(req: LoginRequest):
     try:
-        response = supabase.table("users").select("*").eq("email", req.email).execute()
+        existing = supabase.table("users").select("*").eq("name", req.username).execute()
 
         if not response.data:
             raise HTTPException(status_code=404, detail="查無此使用者")
