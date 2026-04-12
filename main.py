@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Form
 import uvicorn
 from pathlib import Path
 from fastapi.middleware.cors import CORSMiddleware
@@ -65,15 +65,20 @@ def home():
 @app.post("/auth/register")
 async def register_user(req: RegisterRequest):
     try:
-        # 檢查 email 是否已存在
-        existing = supabase.table("users").select("*").eq("email", req.email).execute()
-        if existing.data:
+        # 先檢查 username 是否存在
+        existing_name = supabase.table("users").select("*").eq("name", req.username).execute()
+        if existing_name.data:
+            raise HTTPException(status_code=400, detail="此帳號已被註冊")
+
+        # 再檢查 email 是否存在
+        existing_email = supabase.table("users").select("*").eq("email", req.email).execute()
+        if existing_email.data:
             raise HTTPException(status_code=400, detail="此 Email 已被註冊")
 
         password_hash = pwd_context.hash(req.password)
 
         response = supabase.table("users").insert({
-            "name": req.name,
+            "name": req.username,          # 前端的 username 對應資料庫的 name
             "email": req.email,
             "password_hash": password_hash
         }).execute()
@@ -89,14 +94,17 @@ async def register_user(req: RegisterRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"註冊失敗: {str(e)}")
 
-
 @app.post("/auth/login")
-async def login_user(req: LoginRequest):
+async def login_user(
+    username: str = Form(...),
+    email: str = Form(...),
+    password: str = Form(...)
+):
     try:
-        existing = supabase.table("users").select("*").eq("name", req.username).execute()
+        response = supabase.table("users").select("*").eq("name", username).eq("email", email).execute()
 
         if not response.data:
-            raise HTTPException(status_code=404, detail="查無此使用者")
+            raise HTTPException(status_code=404, detail="查無此使用者，請確認帳號或電子郵件")
 
         user = response.data[0]
         stored_hash = user.get("password_hash")
@@ -104,7 +112,7 @@ async def login_user(req: LoginRequest):
         if not stored_hash:
             raise HTTPException(status_code=500, detail="資料庫中沒有 password_hash 欄位或資料")
 
-        if not pwd_context.verify(req.password, stored_hash):
+        if not pwd_context.verify(password, stored_hash):
             raise HTTPException(status_code=401, detail="密碼錯誤")
 
         return {
