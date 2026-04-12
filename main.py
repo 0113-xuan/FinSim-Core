@@ -66,7 +66,7 @@ def home():
 async def register_user(req: RegisterRequest):
     try:
         # 先檢查 username 是否存在
-        existing_name = supabase.table("users").select("*").eq("name", req.username).execute()
+        existing_name = supabase.table("users").select("*").eq("username", req.username).execute()
         if existing_name.data:
             raise HTTPException(status_code=400, detail="此帳號已被註冊")
 
@@ -78,7 +78,7 @@ async def register_user(req: RegisterRequest):
         password_hash = pwd_context.hash(req.password)
 
         response = supabase.table("users").insert({
-            "name": req.username,          # 前端的 username 對應資料庫的 name
+            "username": req.username,          # 前端的 username 對應資料庫的 name
             "email": req.email,
             "password_hash": password_hash
         }).execute()
@@ -101,7 +101,7 @@ async def login_user(
     password: str = Form(...)
 ):
     try:
-        response = supabase.table("users").select("*").eq("name", username).eq("email", email).execute()
+        response = supabase.table("users").select("*").eq("username", username).eq("email", email).execute()
 
         if not response.data:
             raise HTTPException(status_code=404, detail="查無此使用者，請確認帳號或電子郵件")
