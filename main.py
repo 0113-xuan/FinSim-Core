@@ -56,7 +56,7 @@ def home():
     return {
         "message": "後端系統運作中",
         "docs": "/docs",
-        "version": "30.0.0"
+        "version": "3.0.0"
     }
 
 
@@ -64,7 +64,7 @@ def home():
 def version():
     return {
         "app": "FinSim-Core",
-        "version": "render-check-003"
+        "version": "render-check-00300"
     }
 
 
