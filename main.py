@@ -35,7 +35,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # =========================
 # FastAPI 初始化
 # =========================
-app = FastAPI(title="AI 財務模擬系統 API", version="3.0.0")
+app = FastAPI(title="AI 財務模擬系統 API", version="4.0.0")
 
 app.add_middleware(
     CORSMiddleware,
