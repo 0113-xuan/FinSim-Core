@@ -60,13 +60,6 @@ def home():
     }
 
 
-@app.get("/api/version")
-def version():
-    return {
-        "app": "FinSim-Core",
-        "version": "render-check-00300"
-    }
-
 
 # =========================
 # 註冊 / 登入 API
