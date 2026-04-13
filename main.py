@@ -1,3 +1,5 @@
+print("🔥 DEPLOY TEST 999 🔥")
+
 from fastapi import FastAPI, HTTPException, Form
 import uvicorn
 from pathlib import Path
