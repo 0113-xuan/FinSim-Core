@@ -64,7 +64,7 @@ def home():
 def version():
     return {
         "app": "FinSim-Core",
-        "version": "render-check-001"
+        "version": "render-check-003"
     }
 
 
