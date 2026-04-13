@@ -1,5 +1,3 @@
-print("🔥 DEPLOY TEST 999 🔥")
-
 from fastapi import FastAPI, HTTPException, Form
 import os
 import uvicorn
