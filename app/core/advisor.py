@@ -111,10 +111,10 @@ def generate_advice(compare_result: Dict[str, Any]) -> Dict[str, Any]:
     if sim["min_balance"] < 0:
         suggestions.append("此方案曾出現資產轉負，建議降低支出或延後高額決策。")
 
-    if sim["max_fsi"] >= 0.90:
+    else if sim["max_fsi"] >= 0.90:
         suggestions.append("財務壓力偏高，建議增加緊急預備金或降低貸款負擔。")
 
-    if mc["bankrupt_probability"] >= 0.15:
+    else if mc["bankrupt_probability"] >= 0.15:
         suggestions.append("情境風險偏高，建議保守規劃並預留更高安全邊際。")
 
     if not suggestions:
