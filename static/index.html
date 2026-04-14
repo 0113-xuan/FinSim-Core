@@ -465,7 +465,9 @@
       }
     });
 
-    // 🌟 正式版：開始模擬 API 串接 (/simulate)
+    // ==========================================
+    // 🌟 流程 3：開始模擬 API 串接 (/simulate)
+    // ==========================================
     document.getElementById('btn-start-sim').addEventListener('click', async () => {
       const initBalance = document.getElementById('setup-balance').value;
       const initIncome = document.getElementById('setup-income').value;
@@ -486,14 +488,14 @@
             salary: Number(initIncome),
             fixed_expense: 0,
             variable_expense: 0,
-            current_balance: Number(initBalance)
+            balance: Number(initBalance)
           },
           months: 12,
           events: [],
           loans: []
         };
 
-        const response = await fetch('http://127.0.0.1:8000/simulate', {
+        const response = await fetch(`${API_BASE}/simulate`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -504,15 +506,17 @@
         if (response.ok) {
           console.log("【後端 AI 模擬結果】:", data);
           
-          currentBalance = Number(initBalance); 
+          currentBalance = Number(initBalance);
+          currentIncome = Number(initIncome);
           document.getElementById('total-balance').textContent = '$ ' + currentBalance.toLocaleString();
-          document.getElementById('monthly-income').textContent = '+ ' + Number(initIncome).toLocaleString();
+          document.getElementById('monthly-income').textContent = '+ ' + currentIncome.toLocaleString();
 
           financeChart.data.datasets[0].data = [currentBalance];
           financeChart.data.labels = ['初始'];
           financeChart.update();
 
           pageSetup.classList.add('hidden');
+          mainLogo.classList.add('hidden'); 
           pageDashboard.classList.remove('hidden');
           
           if (typeof financeChart !== 'undefined') {
@@ -531,30 +535,27 @@
     });
 
     // ==========================================
-    // 2. 記帳與歷史紀錄切換邏輯
+    // 🌟 記帳系統切換邏輯
     // ==========================================
     const accountingForm = document.getElementById('accounting-form');
     const historyPanel = document.getElementById('history-panel');
-    const btnViewHistory = document.getElementById('btn-view-history');
-    const btnBackToForm = document.getElementById('btn-back-to-form');
     
-    btnViewHistory.addEventListener('click', () => {
+    document.getElementById('btn-view-history').addEventListener('click', () => {
       accountingForm.classList.add('hidden');
       historyPanel.classList.remove('hidden');
     });
 
-    btnBackToForm.addEventListener('click', () => {
+    document.getElementById('btn-back-to-form').addEventListener('click', () => {
       historyPanel.classList.add('hidden');
       accountingForm.classList.remove('hidden');
     });
 
     // ==========================================
-    // 3. 記帳收集與畫面渲染邏輯
+    // 🌟 記帳系統新增紀錄邏輯
     // ==========================================
-    const btnSubmitRecord = document.getElementById('btn-submit-record');
     const historyList = document.getElementById('history-list');
     
-    btnSubmitRecord.addEventListener('click', () => {
+    document.getElementById('btn-submit-record').addEventListener('click', () => {
       const amount = document.getElementById('record-amount').value;
       const note = document.getElementById('record-note').value;
       const date = document.getElementById('record-date').value;
@@ -569,6 +570,12 @@
       const colorClass = isIncome ? 'text-green' : 'text-red';
       const sign = isIncome ? '+ ' : '- ';
       const displayAmount = Math.abs(numAmount).toLocaleString(); 
+
+      accountingRecords.unshift({
+        amount: numAmount,
+        note,
+        date
+      });
 
       currentBalance += numAmount; 
       document.getElementById('total-balance').textContent = '$ ' + currentBalance.toLocaleString();
@@ -597,10 +604,9 @@
     });
 
     // ==========================================
-    // 4. 實作 Chart.js 動態財務圖表
+    // 🌟 Chart.js 動態財務圖表初始化
     // ==========================================
     const ctx = document.getElementById('financeChart').getContext('2d');
-    
     const financeChart = new Chart(ctx, {
       type: 'line',
       data: {
@@ -623,9 +629,7 @@
         maintainAspectRatio: false,
         layout: { padding: { left: 45, right: 20 } },
         plugins: {
-          legend: { 
-            labels: { color: 'white', font: { family: "'DotGothic16', sans-serif", size: 14 } } 
-          }
+          legend: { labels: { color: 'white', font: { family: "'DotGothic16', sans-serif", size: 14 } } }
         },
         scales: {
           y: { ticks: { color: '#9ca3af', font: { family: "'Press Start 2P', cursive", size: 10 } }, grid: { color: '#333' } },
@@ -635,11 +639,137 @@
     });
 
     // ==========================================
-    // 5. AI 對話框互動邏輯
+    // 🌟 AI 對話框互動邏輯
     // ==========================================
     const chatInput = document.getElementById('chat-input');
-    const btnSendChat = document.getElementById('btn-send-chat');
     const chatMessages = document.getElementById('chat-messages');
+
+    function appendAiMessage(message, extraLines = []) {
+      const extraHtml = extraLines.length
+        ? `<div class="mt-2">${extraLines.map(line => `<div>• ${line}</div>`).join('')}</div>`
+        : '';
+
+      const aiHtml = `
+        <div class="message-ai flex items-start gap-2">
+          <div class="text-2xl drop-shadow-black">🧙‍♂️</div>
+          <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-2 text-white text-sm">
+            <div>${message}</div>
+            ${extraHtml}
+          </div>
+        </div>
+      `;
+      chatMessages.insertAdjacentHTML('beforeend', aiHtml);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function buildAdvisorPayload(userMessage) {
+      const negativeRecords = accountingRecords.filter(record => record.amount < 0);
+      const totalExpense = negativeRecords.reduce((sum, record) => sum + Math.abs(record.amount), 0);
+      const baselineExpense = totalExpense > 0 ? totalExpense : Math.max(Math.round(currentIncome * 0.3), 1000);
+      const savingBoost = Math.max(Math.round(baselineExpense * 0.15), 1000);
+      const incomeBoost = Math.max(Math.round(currentIncome * 0.08), 2000);
+      const concernAboutLargeSpend = /(買|購|花|支出|大筆|裝備|投資)/.test(userMessage);
+      const concernAboutIncome = /(收入|加薪|工作|薪水|兼職)/.test(userMessage);
+
+      const options = [
+        {
+          name: "維持目前收支",
+          events: [],
+          loans: []
+        },
+        {
+          name: "減少非必要支出",
+          events: [
+            {
+              type: "range",
+              start_month: 1,
+              end_month: 12,
+              amount: savingBoost,
+              note: "reduce_optional_spending"
+            }
+          ],
+          loans: []
+        },
+        {
+          name: "增加收入來源",
+          events: [
+            {
+              type: "salary_change",
+              start_month: 2,
+              new_salary: currentIncome + incomeBoost,
+              note: "income_growth_plan"
+            }
+          ],
+          loans: []
+        }
+      ];
+
+      if (concernAboutLargeSpend) {
+        options.push({
+          name: "延後大額支出並先存緊急預備金",
+          events: [
+            {
+              type: "range",
+              start_month: 1,
+              end_month: 6,
+              amount: Math.max(Math.round(baselineExpense * 0.2), 1500),
+              note: "delay_large_purchase"
+            }
+          ],
+          loans: []
+        });
+      }
+
+      if (concernAboutIncome) {
+        options.push({
+          name: "短期兼職提高現金流",
+          events: [
+            {
+              type: "range",
+              start_month: 1,
+              end_month: 6,
+              amount: Math.max(Math.round(currentIncome * 0.12), 3000),
+              note: "short_term_side_income"
+            }
+          ],
+          loans: []
+        });
+      }
+
+      return {
+        profile: {
+          salary: currentIncome,
+          fixed_expense: 0,
+          variable_expense: baselineExpense,
+          balance: currentBalance,
+          raise_rate: 0.03,
+          inflation_rate: 0.02,
+          target_emergency_months: 3
+        },
+        options,
+        months: 12,
+        mc_runs: 120
+      };
+    }
+
+    async function fetchAdvisorReply(userMessage) {
+      if (currentIncome <= 0) {
+        throw new Error('請先完成登入並開始模擬，AI 顧問才能根據你的財務資料分析。');
+      }
+
+      const response = await fetch(`${API_BASE}/ai/advice`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(buildAdvisorPayload(userMessage))
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.detail || 'AI 顧問暫時無法分析，請稍後再試。');
+      }
+
+      return data;
+    }
 
     function sendMessage() {
       const text = chatInput.value.trim();
@@ -670,31 +800,26 @@
       chatMessages.insertAdjacentHTML('beforeend', typingHtml);
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
-      // 這裡暫時用 setTimeout 模擬後端回覆，未來可接上 /ai/advice API
-      setTimeout(() => {
-        document.getElementById(typingId).remove();
-        
-        const aiResponse = "這是個好問題！但我目前還在跟後端的 Python 系統連線中。等組員把 `/ai/advice` API 寫好，我就能針對您的收支狀況給出神準的預測！";
-
-        const aiHtml = `
-          <div class="message-ai flex items-start gap-2">
-            <div class="text-2xl drop-shadow-black">🧙‍♂️</div>
-            <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-2 text-white text-sm">
-              ${aiResponse}
-            </div>
-          </div>
-        `;
-        chatMessages.insertAdjacentHTML('beforeend', aiHtml);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }, 1500); 
+      fetchAdvisorReply(text)
+        .then((advice) => {
+          document.getElementById(typingId).remove();
+          const lines = [
+            `風險等級：${advice.risk_level}`,
+            `建議方案：${advice.best_option}`,
+            ...(advice.reason || []),
+            ...(advice.suggestions || [])
+          ];
+          appendAiMessage(advice.summary || "我已經根據目前資料完成分析。", lines);
+        })
+        .catch((error) => {
+          document.getElementById(typingId).remove();
+          appendAiMessage(error.message || "AI 顧問暫時無法回覆。");
+        });
     }
 
-    btnSendChat.addEventListener('click', sendMessage);
-
+    document.getElementById('btn-send-chat').addEventListener('click', sendMessage);
     chatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendMessage();
-      }
+      if (e.key === 'Enter') sendMessage();
     });
   </script>
 </body>
