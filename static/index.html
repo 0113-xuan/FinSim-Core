@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
@@ -11,111 +11,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <style>
-    :root {
-      --mc-sky: #87CEEB;
-      --mc-dirt-bg: #86592d;
-      --mc-grass-bg: #5c9e31;
-      --mc-stone-bg: #c6c6c6;
-      --mc-stone-border-light: #ffffff;
-      --mc-stone-border-dark: #555555;
-      --mc-dirt-border-light: #c69c6d;
-      --mc-dirt-border-dark: #4d3319;
-      --mc-obsidian-bg: #1e1e1e;
-      --mc-obsidian-border-light: #4a4a4a;
-      --mc-obsidian-border-dark: #111111;
-      --text-green: #5c9e31;
-      --text-red: #f87171;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html, body {
-      height: 100%;
-      background-color: var(--mc-sky);
-    }
-
-    body {
-      font-family: 'Press Start 2P', 'DotGothic16', sans-serif;
-      color: #000;
-      line-height: 1.5;
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* 🌟 修復背景破圖：z-index 設為 0，避免被天空底色吃掉 🌟 */
-    .bg-cloud { position: fixed; background-color: rgba(255, 255, 255, 0.8); border: 4px solid rgba(255, 255, 255, 0.9); box-shadow: 4px 4px 0 rgba(0,0,0,0.1); z-index: 0; }
-    .cloud-1 { top: 40px; left: 10%; width: 128px; height: 64px; }
-    .cloud-2 { top: 96px; right: 20%; width: 192px; height: 80px; }
-    
-    .bg-ground-dirt { position: fixed; bottom: 0; left: 0; right: 0; height: 35vh; background-color: var(--mc-dirt-bg); z-index: 0; }
-    .bg-ground-grass { position: fixed; bottom: 35vh; left: 0; right: 0; height: 16px; background-color: var(--mc-grass-bg); z-index: 0; }
-
-    /* 主容器：寬度 900px，z-index 為 10 (在背景之上) */
-    .container { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; flex: 1; }
-
-    /* Minecraft 面板與按鈕 */
-    .mc-panel { border: 4px solid; padding: 20px; } 
-    .variant-stone { background-color: var(--mc-stone-bg); border-top-color: var(--mc-stone-border-light); border-left-color: var(--mc-stone-border-light); border-bottom-color: var(--mc-stone-border-dark); border-right-color: var(--mc-stone-border-dark); }
-    .variant-dirt { background-color: var(--mc-dirt-bg); border-top-color: var(--mc-dirt-border-light); border-left-color: var(--mc-dirt-border-light); border-bottom-color: var(--mc-dirt-border-dark); border-right-color: var(--mc-dirt-border-dark); }
-    .variant-obsidian { background-color: var(--mc-obsidian-bg); border-top-color: var(--mc-obsidian-border-light); border-left-color: var(--mc-obsidian-border-light); border-bottom-color: var(--mc-obsidian-border-dark); border-right-color: var(--mc-obsidian-border-dark); color: white; }
-
-    .relative-panel { position: relative; }
-    .panel-badge { position: absolute; top: -28px; left: 16px; border: 4px solid; border-bottom: none; padding: 4px 12px; font-size: 12px; z-index: 10; }
-    .badge-dirt { background-color: var(--mc-dirt-bg); border-color: var(--mc-dirt-border-light) var(--mc-dirt-border-dark) transparent var(--mc-dirt-border-light); color: white; text-shadow: 2px 2px 0 #000; }
-    .badge-stone { background-color: var(--mc-stone-bg); border-color: var(--mc-stone-border-light) var(--mc-stone-border-dark) transparent var(--mc-stone-border-light); color: black; }
-    .badge-obsidian { background-color: #2b2b2b; border-color: var(--mc-obsidian-border-light) var(--mc-obsidian-border-dark) transparent var(--mc-obsidian-border-light); color: white; text-shadow: 2px 2px 0 #000; }
-
-    /* 像素風 UI */
-    .btn-pixel { border: 4px solid #000; padding: 10px 16px; font-family: inherit; cursor: pointer; text-align: center; border-radius: 0; box-shadow: 4px 4px 0px 0px #000; transition: transform 0.1s, box-shadow 0.1s; }
-    .btn-pixel:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px #000; }
-    .mc-input-pixel { background-color: #fff; border: 4px solid #000; color: #000; padding: 10px; font-family: inherit; font-size: 14px; outline: none; width: 100%; border-radius: 0; box-shadow: inset 3px 3px 0px rgba(0,0,0,0.1); }
-    .mc-input-pixel:focus { border-color: #3b82f6; }
-    .mc-input { background-color: rgba(0, 0, 0, 0.6); border: 2px solid #555555; color: white; padding: 10px; font-family: inherit; font-size: 14px; outline: none; box-shadow: inset 3px 3px 0 rgba(0, 0, 0, 0.8); width: 100%; }
-    .mc-input:focus { border-color: #85db49; }
-    .bg-yellow { background-color: #fde047 !important; }
-    .bg-gray { background-color: #9ca3af !important; }
-    .bg-green { background-color: #4ade80 !important; }
-
-    .text-green { color: var(--text-green); }
-    .text-red { color: var(--text-red); }
-
-    /* 網格排版 (左 7 : 右 5) */
-    .grid-layout { display: grid; grid-template-columns: 7fr 5fr; gap: 20px; flex: 1; align-items: stretch; padding-bottom: 24px; }
-    @media (max-width: 800px) { .grid-layout { grid-template-columns: 1fr; } }
-    .col-left, .col-right { display: flex; flex-direction: column; gap: 20px; height: 100%; }
-
-    /* 圖表與對話框 */
-    #panel-default { flex: 3; display: flex; flex-direction: column; margin-top: 0 !important; }
-    .chart-container { flex: 1; width: 100%; position: relative; background-color: var(--mc-obsidian-bg); padding: 10px; border: 4px solid; border-color: #111 #444 #444 #111; box-shadow: inset 4px 4px 0 rgba(0,0,0,0.5); }
-    .chat-section { flex: 2; display: flex; flex-direction: column; margin-top: 0 !important; }
-    .chat-messages { flex: 1; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 12px; }
-    .msg-bubble { border-radius: 0; box-shadow: 3px 3px 0 rgba(0,0,0,0.6); line-height: 1.6; max-width: 95%; white-space: pre-line; } 
-    .chat-messages::-webkit-scrollbar { width: 12px; }
-    .chat-messages::-webkit-scrollbar-track { background: #1e1e1e; border-left: 2px solid #000; }
-    .chat-messages::-webkit-scrollbar-thumb { background: #555; border: 2px solid #000; box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2); }
-    .chat-messages::-webkit-scrollbar-thumb:hover { background: #777; }
-    
-    /* 記帳系統右側 */
-    .col-right > section { margin-top: 0 !important; flex: 1; display: flex; flex-direction: column; }
-
-    /* 視覺特效動畫 */
-    .floating-logo {
-      animation: float 4s ease-in-out infinite;
-      filter: drop-shadow(0 10px 8px rgba(0,0,0,0.5));
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-    }
-    .splash-text {
-      position: absolute; right: -5%; bottom: 0%; color: #ffff00; font-family: 'Press Start 2P', sans-serif;
-      font-size: 16px; font-weight: bold; text-shadow: 2px 2px 0 #3f3f00; transform: rotate(-20deg);
-      animation: splash-pulse 0.4s alternate infinite ease-in-out; z-index: 50; pointer-events: none; white-space: nowrap; 
-    }
-    @keyframes splash-pulse { from { transform: rotate(-20deg) scale(1); } to { transform: rotate(-20deg) scale(1.1); } }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="bg-cloud cloud-1"></div>
@@ -234,8 +130,24 @@
     const pageSetup2 = document.getElementById('page-setup-2'); 
     const pageDashboard = document.getElementById('page-dashboard');
     const mainLogo = document.getElementById('main-logo'); 
+    const API_BASE = window.location.origin;
+    let currentUser = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
     let currentBalance = 0; 
     let monthlyNetFlow = 0; 
+
+    async function apiRequest(path, options = {}) {
+      const response = await fetch(`${API_BASE}${path}`, options);
+      const data = await response.json();
+      if (!response.ok) {
+        const detail = typeof data.detail === 'object' ? JSON.stringify(data.detail, null, 2) : data.detail;
+        throw new Error(detail || `${path} 請求失敗`);
+      }
+      return data;
+    }
+
+    function renderApiError(prefix, error) {
+      alert(`${prefix}\n${error.message || '請稍後再試'}`);
+    }
 
     // ==========================================
     // 🌟 Minecraft 黃色標語輪替邏輯
@@ -274,7 +186,7 @@
     });
 
     // ==========================================
-    // 🌟 正式連線版：流程 1 註冊 API (/user/create)
+    // 🌟 正式連線版：流程 1 註冊 API (/auth/register)
     // ==========================================
     document.getElementById('btn-submit-register').addEventListener('click', async () => {
       const acc = document.getElementById('reg-account').value;
@@ -292,27 +204,20 @@
       registerBtn.disabled = true;
 
       try {
-        const response = await fetch('http://127.0.0.1:8000/user/create', { 
+        const data = await apiRequest('/auth/register', { 
           method: 'POST', 
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: acc, email: email, password: pass })
         });
-        const data = await response.json();
 
-        if (response.ok && data.status === "success") {
-          alert("✅ 註冊成功！請在登入畫面輸入剛剛的資料。");
-          document.getElementById('reg-account').value = '';
-          document.getElementById('reg-email').value = ''; 
-          document.getElementById('reg-password').value = '';
-          pageRegister.classList.add('hidden'); 
-          pageLogin.classList.remove('hidden'); 
-        } else {
-          let errorMsg = data.detail;
-          if (typeof errorMsg === 'object') errorMsg = JSON.stringify(errorMsg, null, 2);
-          alert("❌ 註冊失敗：\n" + (errorMsg || "發生未知錯誤"));
-        }
+        alert(data.message || "✅ 註冊成功！請在登入畫面輸入剛剛的資料。");
+        document.getElementById('reg-account').value = '';
+        document.getElementById('reg-email').value = ''; 
+        document.getElementById('reg-password').value = '';
+        pageRegister.classList.add('hidden'); 
+        pageLogin.classList.remove('hidden'); 
       } catch (error) {
-        alert("🚨 無法連線，請確認後端 Python 伺服器已啟動！");
+        renderApiError("❌ 註冊失敗：", error);
       } finally {
         registerBtn.textContent = originalBtnText; 
         registerBtn.disabled = false;
@@ -320,7 +225,7 @@
     });
 
     // ==========================================
-    // 🌟 正式連線版：流程 2 登入 API (/user/login)
+    // 🌟 正式連線版：流程 2 登入 API (/auth/login)
     // ==========================================
     document.getElementById('btn-login').addEventListener('click', async () => {
       const acc = document.getElementById('login-account').value;
@@ -343,27 +248,21 @@
         formData.append('email', email); 
         formData.append('password', pass);
 
-        const response = await fetch('http://127.0.0.1:8000/user/login', {
+        const data = await apiRequest('/auth/login', {
           method: 'POST', 
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: formData 
         });
-        
-        const data = await response.json();
 
-        if (response.ok && (data.status === "success" || data.access_token)) {
-          alert("✅ 登入成功！");
-          pageLogin.classList.add('hidden');
-          pageSetup1.classList.remove('hidden'); 
-        } else {
-          let errorMsg = data.detail;
-          if (typeof errorMsg === 'object') {
-            errorMsg = JSON.stringify(errorMsg, null, 2);
-          }
-          alert("❌ 登入失敗：\n" + (errorMsg || "該帳號尚未註冊，或密碼輸入錯誤！"));
+        currentUser = data.user || null;
+        if (currentUser) {
+          sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
         }
+        alert(data.message || "✅ 登入成功！");
+        pageLogin.classList.add('hidden');
+        pageSetup1.classList.remove('hidden'); 
       } catch (error) {
-        alert("🚨 無法連線到資料庫，請確認後端已啟動！");
+        renderApiError("❌ 登入失敗：", error);
       } finally {
         loginBtn.textContent = originalBtnText; 
         loginBtn.disabled = false;
@@ -389,61 +288,65 @@
       startBtn.disabled = true;
 
       try {
+        if (!currentUser || !currentUser.id) {
+          throw new Error("請先登入，系統才能把財務資料綁定到你的帳號。");
+        }
+
+        await apiRequest('/financial-profile/create', {
+          user_id: currentUser.id,
+          current_savings: initBalance,
+          monthly_income: initIncome,
+          has_loan: false,
+          loan_amount: 0
+        });
+
         const payload = {
           profile: {
             salary: initIncome,
             fixed_expense: initFixedExp,
             variable_expense: initVarExp,
-            current_balance: initBalance
+            balance: initBalance
           },
           months: 60,
           events: [],
-          loans: []
+          loans: [],
+          user_id: currentUser.id
         };
 
-        const response = await fetch('http://127.0.0.1:8000/simulate', {
+        const data = await apiRequest('/simulate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
-          console.log("【後端 AI 模擬結果】:", data);
+        console.log("【後端 AI 模擬結果】:", data);
           
-          currentBalance = initBalance;
-          monthlyNetFlow = initIncome - initFixedExp - initVarExp;
+        currentBalance = initBalance;
+        monthlyNetFlow = initIncome - initFixedExp - initVarExp;
 
-          const labelsArray = ['今日'];
-          const dataArray = [currentBalance];
-          let simBalance = currentBalance;
+        const labelsArray = ['今日'];
+        const dataArray = [currentBalance];
+        let simBalance = currentBalance;
 
-          for (let i = 1; i <= 60; i++) {
-            simBalance += monthlyNetFlow; 
-            if (i % 6 === 0) labelsArray.push(`第${i}個月`);
-            else labelsArray.push('');
-            dataArray.push(simBalance);
-          }
-
-          financeChart.data.labels = labelsArray;
-          financeChart.data.datasets[0].data = dataArray;
-          financeChart.update();
-
-          // 隱藏設定面板，顯示主控台
-          pageSetup2.classList.add('hidden');
-          mainLogo.classList.add('hidden'); 
-          pageDashboard.classList.remove('hidden');
-          if (typeof financeChart !== 'undefined') financeChart.resize();
-
-        } else {
-          let errorMsg = data.detail;
-          if (typeof errorMsg === 'object') errorMsg = JSON.stringify(errorMsg, null, 2);
-          alert("❌ 模擬失敗，後端回傳錯誤：\n" + (errorMsg || "發生未知錯誤"));
+        for (let i = 1; i <= 60; i++) {
+          simBalance += monthlyNetFlow; 
+          if (i % 6 === 0) labelsArray.push(`第${i}個月`);
+          else labelsArray.push('');
+          dataArray.push(simBalance);
         }
+
+        financeChart.data.labels = labelsArray;
+        financeChart.data.datasets[0].data = dataArray;
+        financeChart.update();
+
+        // 隱藏設定面板，顯示主控台
+        pageSetup2.classList.add('hidden');
+        mainLogo.classList.add('hidden'); 
+        pageDashboard.classList.remove('hidden');
+        if (typeof financeChart !== 'undefined') financeChart.resize();
       } catch (error) {
         console.error("連線錯誤:", error);
-        alert("🚨 無法連線到後端，請確認 FastAPI 伺服器已啟動！");
+        renderApiError("❌ 模擬或財務資料儲存失敗：", error);
       } finally {
         startBtn.textContent = "啟動 60 個月模擬 🚀"; 
         startBtn.disabled = false;
@@ -472,7 +375,7 @@
     const historyList = document.getElementById('history-list');
     const aiInsights = document.getElementById('ai-insights'); 
     
-    document.getElementById('btn-submit-record').addEventListener('click', () => {
+    document.getElementById('btn-submit-record').addEventListener('click', async () => {
       const amount = document.getElementById('record-amount').value;
       const note = document.getElementById('record-note').value;
       const date = document.getElementById('record-date').value;
@@ -488,9 +391,26 @@
       const sign = isIncome ? '+ ' : '- ';
       const displayAmount = Math.abs(numAmount).toLocaleString(); 
 
+      try {
+        if (!currentUser || !currentUser.id) {
+          throw new Error("請先登入，系統才能把記帳資料綁定到你的帳號。");
+        }
+
+        await apiRequest('/event/add', {
+          user_id: currentUser.id,
+          event_type: note,
+          amount: numAmount
+        });
+      } catch (error) {
+        renderApiError("❌ 記帳紀錄沒有寫入後端：", error);
+        return;
+      }
+
       currentBalance += numAmount; 
 
-      financeChart.data.datasets[0].data[0] = currentBalance;
+      financeChart.data.datasets[0].data = financeChart.data.datasets[0].data.map((value, index) => (
+        index === 0 ? currentBalance : value + numAmount
+      ));
       financeChart.update();
 
       const recordHTML = `
@@ -560,3 +480,4 @@
   </script>
 </body>
 </html>
+

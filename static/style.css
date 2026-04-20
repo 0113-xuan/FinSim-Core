@@ -1,369 +1,103 @@
-/* =========================================
-   全局設定與變數 (Global & CSS Variables)
-========================================= */
-:root {
-  /* 顏色變數 */
-  --mc-sky: #87CEEB;
-  --mc-dirt-bg: #86592d;
-  --mc-grass-bg: #5c9e31;
-  
-  /* 石頭面板 Border 顏色 */
-  --mc-stone-bg: #c6c6c6;
-  --mc-stone-border-light: #ffffff;
-  --mc-stone-border-dark: #555555;
-  
-  /* 泥土面板 Border 顏色 */
-  --mc-dirt-border-light: #c69c6d;
-  --mc-dirt-border-dark: #4d3319;
-  
-  /* 黑曜石面板 Border 顏色 */
-  --mc-obsidian-bg: #1e1e1e;
-  --mc-obsidian-border-light: #4a4a4a;
-  --mc-obsidian-border-dark: #111111;
+﻿    :root {
+      --mc-sky: #87CEEB;
+      --mc-dirt-bg: #86592d;
+      --mc-grass-bg: #5c9e31;
+      --mc-stone-bg: #c6c6c6;
+      --mc-stone-border-light: #ffffff;
+      --mc-stone-border-dark: #555555;
+      --mc-dirt-border-light: #c69c6d;
+      --mc-dirt-border-dark: #4d3319;
+      --mc-obsidian-bg: #1e1e1e;
+      --mc-obsidian-border-light: #4a4a4a;
+      --mc-obsidian-border-dark: #111111;
+      --text-green: #5c9e31;
+      --text-red: #f87171;
+    }
 
-  /* 文字顏色 */
-  --text-green: #5c9e31;
-  --text-red: #f87171;
-  --text-yellow: #fde047;
-  --text-gray: #4b5563;
-  --text-light-gray: #9ca3af;
-}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+    html, body {
+      height: 100%;
+      background-color: var(--mc-sky);
+    }
 
-body {
-  background-color: var(--mc-sky);
-  /* 使用 Press Start 2P 處理英文/數字，DotGothic16 處理中文 */
-  font-family: 'Press Start 2P', 'DotGothic16', sans-serif;
-  color: #000;
-  line-height: 1.5;
-  overflow-x: hidden;
-  position: relative;
-  min-height: 100vh;
-}
+    body {
+      font-family: 'Press Start 2P', 'DotGothic16', sans-serif;
+      color: #000;
+      line-height: 1.5;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
 
-/* =========================================
-   背景裝飾 (Background Elements)
-========================================= */
-.bg-cloud {
-  position: absolute;
-  background-color: rgba(255, 255, 255, 0.8);
-  border: 4px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
-}
-.cloud-1 { top: 40px; left: 10%; width: 128px; height: 64px; }
-.cloud-2 { top: 96px; right: 20%; width: 192px; height: 80px; }
+    /* 🌟 修復背景破圖：z-index 設為 0，避免被天空底色吃掉 🌟 */
+    .bg-cloud { position: fixed; background-color: rgba(255, 255, 255, 0.8); border: 4px solid rgba(255, 255, 255, 0.9); box-shadow: 4px 4px 0 rgba(0,0,0,0.1); z-index: 0; }
+    .cloud-1 { top: 40px; left: 10%; width: 128px; height: 64px; }
+    .cloud-2 { top: 96px; right: 20%; width: 192px; height: 80px; }
+    
+    .bg-ground-dirt { position: fixed; bottom: 0; left: 0; right: 0; height: 35vh; background-color: var(--mc-dirt-bg); z-index: 0; }
+    .bg-ground-grass { position: fixed; bottom: 35vh; left: 0; right: 0; height: 16px; background-color: var(--mc-grass-bg); z-index: 0; }
 
-.bg-ground-dirt {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 35vh;
-  background-color: var(--mc-dirt-bg);
-  z-index: 0;
-}
-.bg-ground-grass {
-  position: absolute;
-  bottom: 35vh;
-  left: 0;
-  right: 0;
-  height: 16px;
-  background-color: var(--mc-grass-bg);
-  z-index: 0;
-}
+    /* 主容器：寬度 900px，z-index 為 10 (在背景之上) */
+    .container { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; flex: 1; }
 
-.container {
-  position: relative;
-  z-index: 10;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+    /* Minecraft 面板與按鈕 */
+    .mc-panel { border: 4px solid; padding: 20px; } 
+    .variant-stone { background-color: var(--mc-stone-bg); border-top-color: var(--mc-stone-border-light); border-left-color: var(--mc-stone-border-light); border-bottom-color: var(--mc-stone-border-dark); border-right-color: var(--mc-stone-border-dark); }
+    .variant-dirt { background-color: var(--mc-dirt-bg); border-top-color: var(--mc-dirt-border-light); border-left-color: var(--mc-dirt-border-light); border-bottom-color: var(--mc-dirt-border-dark); border-right-color: var(--mc-dirt-border-dark); }
+    .variant-obsidian { background-color: var(--mc-obsidian-bg); border-top-color: var(--mc-obsidian-border-light); border-left-color: var(--mc-obsidian-border-light); border-bottom-color: var(--mc-obsidian-border-dark); border-right-color: var(--mc-obsidian-border-dark); color: white; }
 
-/* =========================================
-   Minecraft UI 共用元件 (Reusable UI)
-========================================= */
-.mc-panel {
-  border: 4px solid;
-  padding: 16px;
-}
-.mc-button {
-  border: 4px solid;
-  padding: 12px 16px;
-  font-family: inherit;
-  cursor: pointer;
-  background: none;
-  text-align: center;
-  transition: transform 0.1s;
-}
-.mc-button:hover { filter: brightness(1.1); }
-.mc-button:active { filter: brightness(0.95); }
+    .relative-panel { position: relative; }
+    .panel-badge { position: absolute; top: -28px; left: 16px; border: 4px solid; border-bottom: none; padding: 4px 12px; font-size: 12px; z-index: 10; }
+    .badge-dirt { background-color: var(--mc-dirt-bg); border-color: var(--mc-dirt-border-light) var(--mc-dirt-border-dark) transparent var(--mc-dirt-border-light); color: white; text-shadow: 2px 2px 0 #000; }
+    .badge-stone { background-color: var(--mc-stone-bg); border-color: var(--mc-stone-border-light) var(--mc-stone-border-dark) transparent var(--mc-stone-border-light); color: black; }
+    .badge-obsidian { background-color: #2b2b2b; border-color: var(--mc-obsidian-border-light) var(--mc-obsidian-border-dark) transparent var(--mc-obsidian-border-light); color: white; text-shadow: 2px 2px 0 #000; }
 
-/* Variant 樣式 */
-.variant-stone {
-  background-color: var(--mc-stone-bg);
-  border-top-color: var(--mc-stone-border-light);
-  border-left-color: var(--mc-stone-border-light);
-  border-bottom-color: var(--mc-stone-border-dark);
-  border-right-color: var(--mc-stone-border-dark);
-}
-.variant-dirt {
-  background-color: var(--mc-dirt-bg);
-  border-top-color: var(--mc-dirt-border-light);
-  border-left-color: var(--mc-dirt-border-light);
-  border-bottom-color: var(--mc-dirt-border-dark);
-  border-right-color: var(--mc-dirt-border-dark);
-}
-.variant-obsidian {
-  background-color: var(--mc-obsidian-bg);
-  border-top-color: var(--mc-obsidian-border-light);
-  border-left-color: var(--mc-obsidian-border-light);
-  border-bottom-color: var(--mc-obsidian-border-dark);
-  border-right-color: var(--mc-obsidian-border-dark);
-  color: white;
-}
-.variant-glass {
-  background-color: rgba(255, 255, 255, 0.2);
-  border: none;
-  box-shadow: inset 4px 4px 0 rgba(255, 255, 255, 0.3);
-}
-.variant-green {
-  background-color: #5c9e31;
-  border-top-color: #85db49;
-  border-left-color: #85db49;
-  border-bottom-color: #38611d;
-  border-right-color: #38611d;
-}
+    /* 像素風 UI */
+    .btn-pixel { border: 4px solid #000; padding: 10px 16px; font-family: inherit; cursor: pointer; text-align: center; border-radius: 0; box-shadow: 4px 4px 0px 0px #000; transition: transform 0.1s, box-shadow 0.1s; }
+    .btn-pixel:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px #000; }
+    .mc-input-pixel { background-color: #fff; border: 4px solid #000; color: #000; padding: 10px; font-family: inherit; font-size: 14px; outline: none; width: 100%; border-radius: 0; box-shadow: inset 3px 3px 0px rgba(0,0,0,0.1); }
+    .mc-input-pixel:focus { border-color: #3b82f6; }
+    .mc-input { background-color: rgba(0, 0, 0, 0.6); border: 2px solid #555555; color: white; padding: 10px; font-family: inherit; font-size: 14px; outline: none; box-shadow: inset 3px 3px 0 rgba(0, 0, 0, 0.8); width: 100%; }
+    .mc-input:focus { border-color: #85db49; }
+    .bg-yellow { background-color: #fde047 !important; }
+    .bg-gray { background-color: #9ca3af !important; }
+    .bg-green { background-color: #4ade80 !important; }
 
-/* =========================================
-   標籤樣式 (Badges for panels)
-========================================= */
-.relative-panel { position: relative; }
-.panel-badge {
-  position: absolute;
-  top: -28px;
-  left: 16px;
-  border: 4px solid;
-  border-bottom: none;
-  padding: 4px 12px;
-  font-size: 12px;
-  z-index: 10;
-}
-.badge-dirt {
-  background-color: var(--mc-dirt-bg);
-  border-top-color: var(--mc-dirt-border-light);
-  border-left-color: var(--mc-dirt-border-light);
-  border-right-color: var(--mc-dirt-border-dark);
-  color: white;
-  text-shadow: 2px 2px 0 rgba(0,0,0,1);
-}
-.badge-stone {
-  background-color: var(--mc-stone-bg);
-  border-top-color: var(--mc-stone-border-light);
-  border-left-color: var(--mc-stone-border-light);
-  border-right-color: var(--mc-stone-border-dark);
-  color: black;
-}
-.badge-obsidian {
-  background-color: #2b2b2b;
-  border-top-color: var(--mc-obsidian-border-light);
-  border-left-color: var(--mc-obsidian-border-light);
-  border-right-color: var(--mc-obsidian-border-dark);
-  color: white;
-  text-shadow: 2px 2px 0 rgba(0,0,0,1);
-}
+    .text-green { color: var(--text-green); }
+    .text-red { color: var(--text-red); }
 
-/* =========================================
-   排版工具 (Utility Classes)
-========================================= */
-.flex-col { display: flex; flex-direction: column; }
-.text-white { color: white; }
-.text-green { color: var(--text-green); }
-.text-red { color: var(--text-red); }
-.text-yellow { color: var(--text-yellow); }
-.text-gray { color: var(--text-gray); }
-.drop-shadow-black { text-shadow: 2px 2px 0 rgba(0,0,0,1); }
-.text-shadow-sm { text-shadow: 1px 1px 0 rgba(0,0,0,1); }
-.w-full { width: 100%; }
-.icon { width: 24px; height: 24px; }
+    /* 網格排版 (左 7 : 右 5) */
+    .grid-layout { display: grid; grid-template-columns: 7fr 5fr; gap: 20px; flex: 1; align-items: stretch; padding-bottom: 24px; }
+    @media (max-width: 800px) { .grid-layout { grid-template-columns: 1fr; } }
+    .col-left, .col-right { display: flex; flex-direction: column; gap: 20px; height: 100%; }
 
-/* =========================================
-   模塊詳細樣式 (Components Styles)
-========================================= */
+    /* 圖表與對話框 */
+    #panel-default { flex: 3; display: flex; flex-direction: column; margin-top: 0 !important; }
+    .chart-container { flex: 1; width: 100%; position: relative; background-color: var(--mc-obsidian-bg); padding: 10px; border: 4px solid; border-color: #111 #444 #444 #111; box-shadow: inset 4px 4px 0 rgba(0,0,0,0.5); }
+    .chat-section { flex: 2; display: flex; flex-direction: column; margin-top: 0 !important; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 12px; }
+    .msg-bubble { border-radius: 0; box-shadow: 3px 3px 0 rgba(0,0,0,0.6); line-height: 1.6; max-width: 95%; white-space: pre-line; } 
+    .chat-messages::-webkit-scrollbar { width: 12px; }
+    .chat-messages::-webkit-scrollbar-track { background: #1e1e1e; border-left: 2px solid #000; }
+    .chat-messages::-webkit-scrollbar-thumb { background: #555; border: 2px solid #000; box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2); }
+    .chat-messages::-webkit-scrollbar-thumb:hover { background: #777; }
+    
+    /* 記帳系統右側 */
+    .col-right > section { margin-top: 0 !important; flex: 1; display: flex; flex-direction: column; }
 
-/* HUD 狀態列 */
-.hud-panel { margin-bottom: 24px; }
-.hud-content { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; color: white; text-shadow: 2px 2px 0 rgba(0,0,0,1); }
-.hud-item { display: flex; align-items: center; gap: 8px; }
-.hud-text { display: flex; flex-direction: column; }
-.hud-label { font-size: 10px; color: #e5e7eb; margin-bottom: 4px; }
-.hud-value { font-size: 16px; }
-.credit-score { margin-left: auto; align-items: flex-end; flex-direction: column;}
-.hearts { display: flex; gap: 4px; }
-.icon-heart { width: 16px; height: 16px; fill: #ef4444; }
-.icon-shield { width: 16px; height: 16px; fill: #facc15; margin-left: 4px; }
-
-/* =========================================
-   網格排版 (Main Layout) - 完美的左二右一
-========================================= */
-.grid-layout { 
-  display: grid; 
-  grid-template-columns: 7fr 5fr; /* 左邊佔 7 份，右邊佔 5 份 */
-  gap: 24px; 
-  flex: 1; 
-  align-items: stretch; /* 強迫左右兩大欄等高 */
-  padding-bottom: 16px; 
-}
-
-@media (max-width: 768px) {
-  .grid-layout { grid-template-columns: 1fr; } 
-  .credit-score { margin-left: 0; align-items: flex-start; }
-}
-
-/* 左側欄：直向容器 */
-.col-left { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 24px; 
-  height: 100%; 
-}
-
-/* 右側欄：填滿高度 */
-.col-right {
-  height: 100%;
-}
-
-/* =========================================
-   左上：財務圖表 (Finance Chart)
-========================================= */
-#panel-default {
-  flex: 6; /* 佔據左側 60% 空間 */
-  display: flex; 
-  flex-direction: column; 
-  margin-top: 0 !important; /* 與右側對齊 */
-}
-.chart-container {
-  width: 100%; flex: 1; min-height: 200px; position: relative; 
-  background-color: var(--mc-obsidian-bg); border: 4px solid;
-  border-top-color: #111; border-left-color: #111; border-bottom-color: #444; border-right-color: #444;
-  box-shadow: inset 4px 4px 0 rgba(0,0,0,0.5); padding: 16px 16px 16px 4px; 
-}
-
-/* =========================================
-   左下：AI 對話框 (Chat Window)
-========================================= */
-.chat-section { 
-  flex: 4; /* 佔據左側 40% 空間 */
-  display: flex; 
-  flex-direction: column; 
-  margin-top: 0 !important; 
-  height: auto; /* 取消固定高度，讓 flex 自動分配 */
-}
-.chat-messages { 
-  flex: 1; 
-  overflow-y: auto; 
-  display: flex; 
-  flex-direction: column; 
-  gap: 12px; 
-  padding: 8px;
-}
-
-/* 對話泡泡 */
-.msg-bubble {
-  border-radius: 0; 
-  box-shadow: 3px 3px 0 rgba(0,0,0,0.6);
-  line-height: 1.6;
-  max-width: 85%;
-}
-.message-player { flex-direction: row-reverse; }
-.message-player .msg-bubble { background-color: #2563eb; border-color: #1e3a8a; }
-
-/* 麥塊風格自訂捲軸 */
-.chat-messages::-webkit-scrollbar { width: 12px; }
-.chat-messages::-webkit-scrollbar-track { background: #1e1e1e; border-left: 2px solid #000; }
-.chat-messages::-webkit-scrollbar-thumb { background: #555; border: 2px solid #000; box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2); }
-.chat-messages::-webkit-scrollbar-thumb:hover { background: #777; }
-
-/* 聊天輸入區 */
-.chat-input-area { display: flex; gap: 8px; border-top: 1px solid #444; padding-top: 12px; }
-.chat-input {
-  flex: 1; background-color: rgba(0,0,0,0.6); border: 2px solid #555; color: white; padding: 8px;
-  font-family: inherit; font-size: 14px; outline: none; box-shadow: inset 2px 2px 0 rgba(0,0,0,0.8);
-}
-.chat-input:focus { border-color: white; }
-.chat-send-btn { padding: 8px 12px; }
-
-/* =========================================
-   右側：記帳系統 (Accounting)
-========================================= */
-.col-right > section {
-  margin-top: 0 !important; 
-  height: 100%; /* 填滿右邊全部高度 */
-  display: flex;
-  flex-direction: column;
-}
-
-/* 麥塊輸入框 (記帳用，之前漏掉的補回在這裡) */
-.mc-input {
-  background-color: rgba(0, 0, 0, 0.6); border: 2px solid #555555; color: white; padding: 10px;
-  font-family: inherit; font-size: 14px; outline: none; box-shadow: inset 3px 3px 0 rgba(0, 0, 0, 0.8); width: 100%;
-}
-.mc-input:focus { border-color: #85db49; }
-
-/* =========================================
-   像素復古風元件 (Retro Pixel UI - 登入註冊專用)
-========================================= */
-/* 實心粗框按鈕 */
-.btn-pixel {
-  border: 4px solid #000; padding: 12px 16px; font-family: inherit; cursor: pointer; text-align: center;
-  border-radius: 0; box-shadow: 4px 4px 0px 0px #000; transition: transform 0.1s, box-shadow 0.1s;
-}
-.btn-pixel:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px #000; }
-
-/* 實心粗框輸入框 */
-.mc-input-pixel {
-  background-color: #fff; border: 4px solid #000; color: #000; padding: 12px;
-  font-family: inherit; font-size: 14px; outline: none; width: 100%; border-radius: 0;
-  box-shadow: inset 3px 3px 0px rgba(0,0,0,0.1); 
-}
-.mc-input-pixel:focus { border-color: #3b82f6; }
-
-/* 顏色小幫手 (給按鈕用的) */
-.bg-yellow { background-color: #fde047; }
-.bg-gray { background-color: #9ca3af; }
-.bg-green { background-color: #4ade80; }
-/* 🌟 Minecraft 黃色閃爍標語特效 🌟 */
+    /* 視覺特效動畫 */
+    .floating-logo {
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 10px 8px rgba(0,0,0,0.5));
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
     .splash-text {
-      position: absolute;
-      /* 定位在 Logo 的右下方，你可以微調這兩個數字來對齊你的圖片 */
-      right: 25%; 
-      bottom: 15%; 
-      
-      color: #ffff00; /* 經典麥塊黃 */
-      font-family: 'DotGothic16', 'Press Start 2P', sans-serif; /* 像素字體 */
-      font-size: 20px;
-      font-weight: bold;
-      text-shadow: 2px 2px 0 #3f3f00; /* 深褐色立體陰影 */
-      
-      /* 傾斜並加上無限縮放動畫 */
-      transform: rotate(-20deg);
-      animation: splash-pulse 0.4s alternate infinite ease-in-out;
-      
-      z-index: 50; /* 確保它浮在圖片最上層 */
-      pointer-events: none; /* 讓滑鼠點擊可以穿透它 */
-      white-space: nowrap; /* 確保字不會斷行 */
+      position: absolute; right: -5%; bottom: 0%; color: #ffff00; font-family: 'Press Start 2P', sans-serif;
+      font-size: 16px; font-weight: bold; text-shadow: 2px 2px 0 #3f3f00; transform: rotate(-20deg);
+      animation: splash-pulse 0.4s alternate infinite ease-in-out; z-index: 50; pointer-events: none; white-space: nowrap; 
     }
-
-    /* 標語跳動的動畫關鍵影格 */
-    @keyframes splash-pulse {
-      from { transform: rotate(-20deg) scale(1); }
-      to   { transform: rotate(-20deg) scale(1.15); }
-    }
+    @keyframes splash-pulse { from { transform: rotate(-20deg) scale(1); } to { transform: rotate(-20deg) scale(1.1); } }
