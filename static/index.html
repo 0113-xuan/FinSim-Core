@@ -237,6 +237,11 @@
     let currentBalance = 0; 
     let monthlyNetFlow = 0; 
 
+   // ==========================================
+    // 🌟 在這裡統一切換本地端或線上端網址
+    // ==========================================
+    // const BASE_URL = 'http://127.0.0.1:8000'; // 本地端開發測試用
+    const BASE_URL = 'https://finsim-core.onrender.com'; // 🌟 正式線上版 (請把這串換成組員給你的網址)
     // ==========================================
     // 🌟 Minecraft 黃色標語輪替邏輯
     // ==========================================
@@ -292,7 +297,7 @@
       registerBtn.disabled = true;
 
       try {
-        const response = await fetch('http://127.0.0.1:8000/user/create', { 
+        const response = await fetch(`${BASE_URL}/user/create`, { 
           method: 'POST', 
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: acc, email: email, password: pass })
@@ -343,7 +348,7 @@
         formData.append('email', email); 
         formData.append('password', pass);
 
-        const response = await fetch('http://127.0.0.1:8000/user/login', {
+        const response = await fetch(`${BASE_URL}/user/login`, {
           method: 'POST', 
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: formData 
@@ -401,7 +406,7 @@
           loans: []
         };
 
-        const response = await fetch('http://127.0.0.1:8000/simulate', {
+        const response = await fetch(`${BASE_URL}/simulate`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
