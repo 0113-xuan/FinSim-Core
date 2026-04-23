@@ -234,8 +234,9 @@
     const pageSetup2 = document.getElementById('page-setup-2'); 
     const pageDashboard = document.getElementById('page-dashboard');
     const mainLogo = document.getElementById('main-logo'); 
+    let currentUser = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
     let currentBalance = 0; 
-    let monthlyNetFlow = 0; 
+    let monthlyNetFlow = 0;
 
    // ==========================================
     // 🌟 在這裡統一切換本地端或線上端網址
@@ -356,7 +357,12 @@
         
         const data = await response.json();
 
-        if (response.ok && (data.status === "success" || data.access_token)) {
+        if (response.ok && data.status === "success") {
+          currentUser = data.user || null;
+          if (currentUser) {
+            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+          }
+        
           alert("✅ 登入成功！");
           pageLogin.classList.add('hidden');
           pageSetup1.classList.remove('hidden'); 
@@ -394,16 +400,24 @@
       startBtn.disabled = true;
 
       try {
+        if (!currentUser || !currentUser.id) {
+          alert("請先登入，系統才能把模擬結果綁定到你的帳號。");
+          startBtn.textContent = "啟動 60 個月模擬 🚀";
+          startBtn.disabled = false;
+          return;
+        }
+        
         const payload = {
           profile: {
             salary: initIncome,
             fixed_expense: initFixedExp,
             variable_expense: initVarExp,
-            current_balance: initBalance
+            balance: initBalance
           },
           months: 60,
           events: [],
-          loans: []
+          loans: [],
+          user_id: currentUser.id
         };
 
         const response = await fetch(`${BASE_URL}/simulate`, {
