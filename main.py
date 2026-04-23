@@ -252,6 +252,11 @@ async def simulate_api(req: SimulationRequest):
         user_id = data.get("user_id")
         session_id = None
 
+        print("=== SIMULATE START ===")
+        print("收到資料:", data)
+        print("user_id =", user_id)
+        print("result =", result)
+
         if user_id:
             try:
                 session = supabase.table("simulation_sessions").insert({
@@ -259,23 +264,49 @@ async def simulate_api(req: SimulationRequest):
                     "simulation_name": "AI財務模擬"
                 }).execute()
 
+                print("session response =", session.data)
+
                 if session.data:
                     session_id = session.data[0]["id"]
 
-                    summary = result["summary"]
-                    supabase.table("simulation_results").insert({
+                    summary = result.get("summary", {})
+                    print("summary =", summary)
+
+                    # 容錯抓值：避免 summary key 名不一致直接炸掉
+                    projected_savings = (
+                        summary.get("final_balance")
+                        or summary.get("ending_balance")
+                        or summary.get("projected_savings")
+                        or data["profile"].get("balance")
+                        or 0
+                    )
+
+                    financial_stress_score = (
+                        summary.get("max_fsi")
+                        or summary.get("fsi")
+                        or summary.get("financial_stress_score")
+                        or 0
+                    )
+
+                    insert_payload = {
                         "session_id": session_id,
                         "simulation_year": int(data["months"] / 12),
-                        "projected_income": data["profile"]["salary"],
-                        "projected_expense": (
+                        "projected_income": int(data["profile"]["salary"]),
+                        "projected_expense": int(
                             data["profile"]["fixed_expense"]
                             + data["profile"]["variable_expense"]
                         ),
-                        "projected_savings": summary["final_balance"],
-                        "financial_stress_score": summary["max_fsi"]
-                    }).execute()
+                        "projected_savings": int(projected_savings),
+                        "financial_stress_score": float(financial_stress_score)
+                    }
+
+                    print("simulation_results insert payload =", insert_payload)
+
+                    result_insert = supabase.table("simulation_results").insert(insert_payload).execute()
+                    print("simulation_results insert response =", result_insert.data)
 
             except Exception as db_error:
+                print("DB ERROR =", str(db_error))
                 return {
                     "result": result,
                     "warning": f"模擬成功，但資料庫儲存失敗: {str(db_error)}"
@@ -287,8 +318,8 @@ async def simulate_api(req: SimulationRequest):
         }
 
     except Exception as e:
+        print("SIMULATE ERROR =", str(e))
         raise HTTPException(status_code=400, detail=str(e))
-
 
 @app.post("/monte-carlo")
 async def monte_carlo_api(req: MonteCarloRequest):
