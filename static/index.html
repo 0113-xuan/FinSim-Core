@@ -263,7 +263,7 @@
         <div>最低資產水位：${formatCurrency(summary.min_balance)}</div>
         <div>Monte Carlo 破產機率：${formatPercent(mcData.bankrupt_probability)}</div>
         <div>最差情境結餘：${formatCurrency(mcData.worst_case_balance)}</div>
-        <div>AI 建議方案：${adviceData.best_option || 'N/A'}（${adviceData.risk_level || 'unknown'} risk）</div>
+        <div>AI 建議方案：${adviceData.best_option || 'N/A'}（${formatRiskLevel(adviceData.risk_level)}）</div>
         <div class="mt-2">${(adviceData.suggestions || []).join('<br>')}</div>
       `);
 
