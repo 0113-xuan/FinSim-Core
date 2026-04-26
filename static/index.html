@@ -268,12 +268,12 @@
       `);
 
       const syncSummaryHtml = [
-        '<div class="font-bold text-cyan-300 mb-2">補充風險資訊</div>',
-        `<div>高風險月份數：${summary.high_risk_months ?? 0}</div>`,
-        `<div>首次高風險月份：${summary.first_risk_month ?? '無'}</div>`,
-        `<div>Monte Carlo 最佳情境：${formatCurrency(mcData.best_case_balance)}</div>`,
-        `<div>Monte Carlo 最差情境：${formatCurrency(mcData.worst_case_balance)}</div>`,
-        `<div>Monte Carlo 平均期末餘額：${formatCurrency(mcData.avg_final_balance)}</div>`
+        '<div class="font-bold text-cyan-300 mb-2">指標說明</div>',
+        '<div>FSI（財務壓力指數）：用來衡量你目前收支壓力，數值越高代表財務越緊。</div>',
+        `<div>你目前最高 FSI 為 ${summary.max_fsi ?? 'N/A'}，平均 FSI 為 ${summary.avg_fsi ?? 'N/A'}。</div>`,
+        '<div class="mt-2">Monte Carlo：用大量隨機情境模擬未來財務變化，用來估計風險範圍。</div>',
+        `<div>這次模擬顯示最佳情境為 ${formatCurrency(mcData.best_case_balance)}，最差情境為 ${formatCurrency(mcData.worst_case_balance)}。</div>`,
+        `<div>平均期末餘額為 ${formatCurrency(mcData.avg_final_balance)}，高風險月份數為 ${summary.high_risk_months ?? 0}，首次高風險月份為 ${summary.first_risk_month ?? '無'}。</div>`
       ].join('');
 
       appendAiInsight(syncSummaryHtml);
