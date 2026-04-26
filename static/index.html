@@ -269,11 +269,12 @@
 
       const syncSummaryHtml = [
         '<div class="font-bold text-cyan-300 mb-2">指標說明</div>',
-        '<div>FSI（財務壓力指數）：用來衡量你目前收支壓力，數值越高代表財務越緊。</div>',
-        `<div>你目前最高 FSI 為 ${summary.max_fsi ?? 'N/A'}，平均 FSI 為 ${summary.avg_fsi ?? 'N/A'}。</div>`,
-        '<div class="mt-2">Monte Carlo：用大量隨機情境模擬未來財務變化，用來估計風險範圍。</div>',
-        `<div>這次模擬顯示最佳情境為 ${formatCurrency(mcData.best_case_balance)}，最差情境為 ${formatCurrency(mcData.worst_case_balance)}。</div>`,
-        `<div>平均期末餘額為 ${formatCurrency(mcData.avg_final_balance)}，高風險月份數為 ${summary.high_risk_months ?? 0}，首次高風險月份為 ${summary.first_risk_month ?? '無'}。</div>`
+        '<div>FSI（財務壓力指數）可以理解成「你目前的收支有多緊」。這個數值會根據收入、支出與資產變化來判斷壓力程度，通常數值越高，代表現金流越吃緊、可承受風險越低。</div>',
+        `<div class="mt-2">以你這次結果來看，最高 FSI 為 ${summary.max_fsi ?? 'N/A'}，平均 FSI 為 ${summary.avg_fsi ?? 'N/A'}，代表系統觀察你在整段模擬期間的壓力高點與整體平均狀況。</div>`,
+        `<div class="mt-2">如果高風險月份數為 ${summary.high_risk_months ?? 0}，表示未來可能出現財務壓力偏高的月份；首次高風險月份為 ${summary.first_risk_month ?? '無'}，可以幫助你提早準備現金或調整支出。</div>`,
+        '<div class="mt-3">Monte Carlo 模擬則是在同一組財務條件下，加入大量不同的隨機情境，反覆推演未來結果。它不是只告訴你「最可能發生什麼」，而是幫你看出「最好、最差，以及大致平均會落在哪裡」。</div>',
+        `<div class="mt-2">這次模擬中，最佳情境為 ${formatCurrency(mcData.best_case_balance)}，最差情境為 ${formatCurrency(mcData.worst_case_balance)}，平均期末餘額為 ${formatCurrency(mcData.avg_final_balance)}。</div>`,
+        `<div class="mt-2">Monte Carlo 破產機率為 ${formatPercent(mcData.bankrupt_probability)}，這個數字越高，代表在不同未來情境下出現資金不足的風險越高；越低則代表整體財務結構相對穩定。</div>`
       ].join('');
 
       appendAiInsight(syncSummaryHtml);
