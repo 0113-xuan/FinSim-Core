@@ -88,12 +88,14 @@ def generate_advice(compare_result: Dict[str, Any]) -> Dict[str, Any]:
     sim = best["simulation_summary"]
     mc = best["monte_carlo_summary"]
 
-    if mc["bankrupt_probability"] < 0.05 and sim["max_fsi"] < 0.75:
+    if mc["bankrupt_probability"] < 0.05 and sim["max_fsi"] < 0.30:
         risk_level = "low"
-    elif mc["bankrupt_probability"] < 0.15 and sim["max_fsi"] < 0.90:
+    elif mc["bankrupt_probability"] < 0.15 and sim["max_fsi"] < 0.60:
         risk_level = "medium"
-    else:
+    elif mc["bankrupt_probability"] < 0.30 and sim["max_fsi"] < 0.90:
         risk_level = "high"
+    else:
+        risk_level = "crisis"
 
     summary = (
         f"綜合現金流模擬、FSI 與 Monte Carlo 分析後，"
@@ -111,7 +113,7 @@ def generate_advice(compare_result: Dict[str, Any]) -> Dict[str, Any]:
     if sim["min_balance"] < 0:
         suggestions.append("此方案曾出現資產轉負，建議降低支出或延後高額決策。")
 
-    elif sim["max_fsi"] >= 0.90:
+    elif sim["max_fsi"] >= 0.60:
         suggestions.append("財務壓力偏高，建議增加緊急預備金或降低貸款負擔。")
 
     elif mc["bankrupt_probability"] >= 0.15:

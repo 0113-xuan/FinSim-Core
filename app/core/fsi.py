@@ -44,14 +44,17 @@ def classify_risk(fsi: float, balance: float) -> Literal["low", "medium", "high"
 
     規則：
     - balance < 0 => crisis
-    - fsi < 0.60 => low
-    - fsi < 0.85 => medium
-    - 其他 => high
+    - fsi < 0.30 => low
+    - fsi < 0.60 => medium
+    - fsi < 0.90 => high
+    - 其他 => crisis
     """
     if balance < 0:
         return "crisis"
-    if fsi < 0.60:
+    if fsi < 0.30:
         return "low"
-    if fsi < 0.85:
+    if fsi < 0.60:
         return "medium"
-    return "high"
+    if fsi < 0.90:
+        return "high"
+    return "crisis"
