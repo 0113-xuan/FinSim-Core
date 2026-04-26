@@ -169,11 +169,12 @@
 
     function formatRiskLevel(value) {
       const level = String(value || 'unknown').toLowerCase();
-      if (level === 'low') return 'Low';
-      if (level === 'medium') return 'Medium';
-      if (level === 'high') return 'High';
-      if (level === 'crisis') return 'Crisis';
-      return level.charAt(0).toUpperCase() + level.slice(1);
+      if (level === 'low') return '低風險';
+      if (level === 'medium') return '中風險';
+      if (level === 'high') return '高風險';
+      if (level === 'crisis') return '危機';
+      if (level === 'unknown') return '未知';
+      return level;
     }
 
     function escapeHtml(value) {
@@ -267,15 +268,15 @@
       `);
 
       const syncSummaryHtml = [
-        '<div class="font-bold text-cyan-300 mb-2">Risk + Monte Carlo dashboard</div>',
-        `<div>Max FSI: ${summary.max_fsi ?? 'N/A'} | Avg FSI: ${summary.avg_fsi ?? 'N/A'}</div>`,
-        `<div>Minimum balance: ${formatCurrency(summary.min_balance)}</div>`,
-        `<div>High-risk months: ${summary.high_risk_months ?? 0}</div>`,
-        `<div>First high-risk month: ${summary.first_risk_month ?? 'None'}</div>`,
-        `<div>Monte Carlo bankruptcy probability: ${formatPercent(mcData.bankrupt_probability)}</div>`,
-        `<div>Monte Carlo best / worst case: ${formatCurrency(mcData.best_case_balance)} / ${formatCurrency(mcData.worst_case_balance)}</div>`,
-        `<div>Monte Carlo average final balance: ${formatCurrency(mcData.avg_final_balance)}</div>`,
-        `<div>AI recommendation: ${adviceData.best_option || 'N/A'} (${formatRiskLevel(adviceData.risk_level)})</div>`
+        '<div class="font-bold text-cyan-300 mb-2">風險與蒙地卡羅分析儀表板</div>',
+        `<div>最高 FSI：${summary.max_fsi ?? 'N/A'} ｜ 平均 FSI：${summary.avg_fsi ?? 'N/A'}</div>`,
+        `<div>最低資產餘額：${formatCurrency(summary.min_balance)}</div>`,
+        `<div>高風險月份數：${summary.high_risk_months ?? 0}</div>`,
+        `<div>首次高風險月份：${summary.first_risk_month ?? '無'}</div>`,
+        `<div>Monte Carlo 破產機率：${formatPercent(mcData.bankrupt_probability)}</div>`,
+        `<div>Monte Carlo 最佳 / 最差結果：${formatCurrency(mcData.best_case_balance)} / ${formatCurrency(mcData.worst_case_balance)}</div>`,
+        `<div>Monte Carlo 平均期末餘額：${formatCurrency(mcData.avg_final_balance)}</div>`,
+        `<div>AI 建議方案：${adviceData.best_option || 'N/A'}（${formatRiskLevel(adviceData.risk_level)}）</div>`
       ].join('');
 
       appendAiInsight(syncSummaryHtml);
