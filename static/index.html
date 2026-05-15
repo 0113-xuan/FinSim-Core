@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FutureWallet 模擬平台</title>
-  
+  <title>FutureWallet &#36001;&#21209;&#27169;&#25836;&#24179;&#21488;</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,577 +17,200 @@
   <div class="bg-ground-dirt"></div>
   <div class="bg-ground-grass"></div>
 
-  <div class="container">
-    
-    <div id="main-logo" class="w-full flex justify-center mt-6 mb-6 shrink-0">
+  <div class="container max-w-7xl">
+    <div class="w-full flex justify-center mt-6 mb-6 shrink-0">
       <div class="relative inline-flex justify-center">
-        <img src="logo.png" alt="AI Bank Wallet" class="floating-logo w-auto max-w-full max-h-[15vh] md:max-h-[20vh] object-contain px-4">
-        <div id="splash-text" class="splash-text">Financial Future!</div>
+        <img src="logo.png" alt="FutureWallet" class="floating-logo w-auto max-w-full max-h-[14vh] md:max-h-[18vh] object-contain px-4">
+        <div id="splash-text" class="splash-text">&#36001;&#21209;&#26410;&#20358;!</div>
       </div>
     </div>
 
-    <div id="page-register" class="mc-panel variant-stone max-w-md mx-auto mb-12 flex flex-col gap-4 hidden relative-panel w-full shrink-0">
-      <div class="panel-badge badge-stone">Register</div>
-      <h2 class="text-center text-lg font-bold drop-shadow-black text-white mb-2">建立新帳號</h2>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">帳號 (Username)</label><input type="text" id="reg-account" class="mc-input-pixel"></div>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">電子郵件 (Email)</label><input type="email" id="reg-email" class="mc-input-pixel"></div>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">密碼 (Password)</label><input type="password" id="reg-password" class="mc-input-pixel"></div>
-      <div class="mt-2 flex flex-col gap-3">
-        <button id="btn-submit-register" class="btn-pixel bg-yellow text-black font-bold w-full">確認註冊</button>
-        <button id="btn-back-to-login" class="btn-pixel bg-gray text-black font-bold w-full">返回登入</button>
-      </div>
-    </div>
-
-    <div id="page-login" class="mc-panel variant-stone max-w-md mx-auto mb-12 flex flex-col gap-4 relative-panel w-full shrink-0">
-      <div class="panel-badge badge-stone">Login</div>
-      <h2 class="text-center text-lg font-bold drop-shadow-black text-white mb-2">登入</h2>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">帳號 (Username)</label><input type="text" id="login-account" class="mc-input-pixel"></div>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">電子郵件 (Email)</label><input type="email" id="login-email" class="mc-input-pixel"></div>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">密碼 (Password)</label><input type="password" id="login-password" class="mc-input-pixel"></div>
-      <div class="mt-2 flex flex-col gap-3">
-        <button id="btn-login" class="btn-pixel bg-green text-black font-bold w-full">登入 (Login)</button>
-        <button id="btn-register" class="btn-pixel variant-obsidian text-white font-bold w-full">註冊新帳號</button>
-      </div>
-    </div>
-
-    <div id="page-setup-1" class="mc-panel variant-dirt max-w-md mx-auto mb-12 flex flex-col gap-4 hidden relative-panel w-full shrink-0">
-      <div class="panel-badge badge-dirt">Setup 1/2</div>
-      <h2 class="text-center text-lg font-bold text-white mb-2" style="text-shadow: 2px 2px 0 #000;">初始財務設定</h2>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">目前資產總額 ($)</label><input type="number" id="setup-balance" class="mc-input"></div>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">每月固定收入 ($)</label><input type="number" id="setup-income" class="mc-input"></div>
-      <div class="mt-2 flex flex-col gap-3">
-        <button id="btn-next-to-expenses" class="btn-pixel bg-yellow text-black font-bold w-full">下一步 ➡</button>
-        <button id="btn-back-to-login-from-setup" class="btn-pixel bg-gray text-black font-bold w-full">⬅ 返回登入</button>
-      </div>
-    </div>
-
-    <div id="page-setup-2" class="mc-panel variant-dirt max-w-md mx-auto mb-12 flex flex-col gap-4 hidden relative-panel w-full shrink-0">
-      <div class="panel-badge badge-dirt">Setup 2/2</div>
-      <h2 class="text-center text-lg font-bold text-white mb-2" style="text-shadow: 2px 2px 0 #000;">支出估算</h2>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">每月固定支出 ($)</label><input type="number" id="setup-fixed-expenses" class="mc-input"></div>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">每月變動支出預估 ($)</label><input type="number" id="setup-var-expenses" class="mc-input"></div>
-      <div class="mt-2 flex flex-col gap-3">
-        <button id="btn-start-sim" class="btn-pixel bg-green text-black font-bold w-full">啟動 60 個月模擬 🚀</button>
-        <button id="btn-back-to-setup-1" class="btn-pixel bg-gray text-black font-bold w-full">⬅ 返回修改</button>
-      </div>
-    </div>
-
-    <div id="page-dashboard" class="hidden flex-col flex-1 pb-4 mt-4">
-      <main class="grid-layout">
-        <div class="col-left">
-          <section id="panel-default" class="mc-panel variant-stone relative-panel">
-            <div class="panel-badge badge-stone text-xs">60-Month Projection</div>
-            <div class="chart-container"><canvas id="financeChart"></canvas></div>
-          </section>
-
-          <section class="mc-panel variant-obsidian relative-panel chat-section flex-col">
-            <div class="panel-badge badge-obsidian text-xs">💡 AI Synchronizer</div>
-            <div id="ai-insights" class="chat-messages">
-              <div class="text-center text-gray-400 text-xs my-2">-- System Online --</div>
-              <div class="message-ai flex items-start gap-2">
-                <div class="text-xl">🧙‍♂️</div>
-                <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-3 text-white text-xs">
-                  我是 AI 顧問。我已同步你的初始資料，接下來你每一筆記帳，我都會在此即時結算！
-                </div>
-              </div>
-            </div>
-          </section>
+    <main class="grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-5 pb-8">
+      <section class="flex flex-col gap-5">
+        <div class="mc-panel variant-stone relative-panel">
+          <div class="panel-badge badge-stone">Auth</div>
+          <h2 class="text-base mb-4 font-bold">&#24115;&#34399;</h2>
+          <div id="auth-status" class="text-xs mb-3">&#23578;&#26410;&#30331;&#20837;&#12290;</div>
+          <div class="grid grid-cols-1 gap-3">
+            <label class="text-xs font-bold">&#24115;&#34399;<input id="auth-username" type="text" class="mc-input-pixel mt-1"></label>
+            <label class="text-xs font-bold">&#38651;&#23376;&#37109;&#20214;<input id="auth-email" type="email" class="mc-input-pixel mt-1"></label>
+            <label class="text-xs font-bold">&#23494;&#30908;<input id="auth-password" type="password" class="mc-input-pixel mt-1"></label>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+            <button id="btn-login" class="btn-pixel bg-green text-black font-bold">&#30331;&#20837;</button>
+            <button id="btn-register" class="btn-pixel bg-yellow text-black font-bold">&#35387;&#20874;</button>
+            <button id="btn-logout" class="btn-pixel bg-gray text-black font-bold">&#30331;&#20986;</button>
+          </div>
         </div>
 
-        <div class="col-right">
-          <section class="mc-panel variant-stone relative-panel flex-col">
-            <div class="panel-badge badge-stone text-xs">Accounting</div>
-            <div id="accounting-form" class="flex flex-col gap-4 mt-2 flex-1">
-              <div class="flex flex-col gap-1"><label class="text-xs font-bold">金額 (Amount)</label><input type="number" id="record-amount" class="mc-input-pixel" placeholder="支出請加負號"></div>
-              <div class="flex flex-col gap-1"><label class="text-xs font-bold">備註 (Note)</label><input type="text" id="record-note" class="mc-input-pixel" placeholder="例如: 購買物品"></div>
-              <div class="flex flex-col gap-1"><label class="text-xs font-bold">日期 (Date)</label><input type="date" id="record-date" class="mc-input-pixel"></div>
-              
-              <div class="flex flex-col gap-3 mt-auto">
-                <button id="btn-submit-record" class="btn-pixel bg-green text-black font-bold w-full">➕ 新增紀錄</button>
-                <button id="btn-view-history" class="btn-pixel bg-gray text-black font-bold w-full">📜 歷史紀錄</button>
-              </div>
-            </div>
-            
-            <div id="history-panel" class="hidden flex-col h-full mt-2">
-              <button id="btn-back-to-form" class="btn-pixel bg-gray text-black font-bold mb-4 w-full">⬅ 返回</button>
-              <div id="history-list" class="flex flex-col gap-2 overflow-y-auto flex-1"></div>
-            </div>
-          </section>
+        <div class="mc-panel variant-dirt relative-panel">
+          <div class="panel-badge badge-dirt">Profile</div>
+          <h1 class="text-white text-lg mb-4" style="text-shadow:2px 2px 0 #000;">&#36001;&#21209;&#36039;&#26009;</h1>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="text-white text-xs">&#30446;&#21069;&#36039;&#29986;<input id="profile-balance" type="number" class="mc-input mt-1" value="50000"></label>
+            <label class="text-white text-xs">&#27599;&#26376;&#25910;&#20837;<input id="profile-salary" type="number" class="mc-input mt-1" value="25000"></label>
+            <label class="text-white text-xs">&#22266;&#23450;&#25903;&#20986;<input id="profile-fixed" type="number" class="mc-input mt-1" value="12000"></label>
+            <label class="text-white text-xs">&#35722;&#21205;&#25903;&#20986;<input id="profile-variable" type="number" class="mc-input mt-1" value="6000"></label>
+          </div>
         </div>
-      </main>
-    </div>
+
+        <div class="mc-panel variant-stone relative-panel">
+          <div class="panel-badge badge-stone">Model</div>
+          <h2 class="text-base mb-4 font-bold">&#27169;&#22411;&#21443;&#25976;</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="text-xs font-bold">&#27169;&#25836;&#26376;&#25976;<input id="model-months" type="number" class="mc-input-pixel mt-1" value="60" min="1"></label>
+            <label class="text-xs font-bold">Monte Carlo &#27425;&#25976;<input id="model-mc-runs" type="number" class="mc-input-pixel mt-1" value="300" min="1"></label>
+            <label class="text-xs font-bold">&#24180;&#21152;&#34218;&#29575; %<input id="model-raise" type="number" class="mc-input-pixel mt-1" value="3" step="0.1" min="0"></label>
+            <label class="text-xs font-bold">&#24180;&#36890;&#33192;&#29575; %<input id="model-inflation" type="number" class="mc-input-pixel mt-1" value="2" step="0.1" min="0"></label>
+            <label class="text-xs font-bold sm:col-span-2">&#32202;&#24613;&#38928;&#20633;&#37329;&#30446;&#27161;&#65288;&#26376;&#65289;<input id="model-emergency" type="number" class="mc-input-pixel mt-1" value="3" step="0.5" min="0.5"></label>
+          </div>
+        </div>
+
+        <div class="mc-panel variant-stone relative-panel">
+          <div class="panel-badge badge-stone">Loans</div>
+          <h2 class="text-base mb-4 font-bold">&#36024;&#27454;&#27169;&#25836;</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="text-xs font-bold">&#36024;&#27454;&#26412;&#37329;<input id="loan-principal" type="number" class="mc-input-pixel mt-1" placeholder="600000"></label>
+            <label class="text-xs font-bold">&#24180;&#21033;&#29575; %<input id="loan-apr" type="number" class="mc-input-pixel mt-1" placeholder="3" step="0.1"></label>
+            <label class="text-xs font-bold">&#36996;&#27454;&#26376;&#25976;<input id="loan-months" type="number" class="mc-input-pixel mt-1" placeholder="60"></label>
+            <label class="text-xs font-bold">&#38283;&#22987;&#26376;&#20221;<input id="loan-start" type="number" class="mc-input-pixel mt-1" placeholder="1"></label>
+          </div>
+          <button id="btn-add-loan" class="btn-pixel bg-yellow text-black font-bold w-full mt-4">&#21152;&#20837;&#36024;&#27454;</button>
+          <div id="loan-list" class="mt-4 flex flex-col gap-2"></div>
+        </div>
+
+        <div class="mc-panel variant-stone relative-panel">
+          <div class="panel-badge badge-stone">Events</div>
+          <h2 class="text-base mb-4 font-bold">&#20154;&#29983;&#20107;&#20214;</h2>
+          <label class="text-xs font-bold">&#20107;&#20214;&#39006;&#22411;
+            <select id="event-type" class="mc-input-pixel mt-1">
+              <option value="one_time">&#19968;&#27425;&#24615;&#25910;&#20837;/&#25903;&#20986;</option>
+              <option value="range">&#26399;&#38291;&#25910;&#20837;/&#25903;&#20986;</option>
+              <option value="salary_change">&#34218;&#36039;&#35722;&#21205;</option>
+            </select>
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+            <label class="text-xs font-bold event-field one-time-field">&#30332;&#29983;&#26376;&#20221;<input id="event-month" type="number" class="mc-input-pixel mt-1" placeholder="6"></label>
+            <label class="text-xs font-bold event-field range-field hidden">&#38283;&#22987;&#26376;&#20221;<input id="event-start" type="number" class="mc-input-pixel mt-1" placeholder="3"></label>
+            <label class="text-xs font-bold event-field range-end-field hidden">&#32080;&#26463;&#26376;&#20221;<input id="event-end" type="number" class="mc-input-pixel mt-1" placeholder="12"></label>
+            <label class="text-xs font-bold event-field amount-field">&#37329;&#38989;<input id="event-amount" type="number" class="mc-input-pixel mt-1" placeholder="&#25903;&#20986;&#35531;&#36664;&#20837;&#36000;&#25976;"></label>
+            <label class="text-xs font-bold event-field salary-field hidden">&#26032;&#26376;&#34218;<input id="event-new-salary" type="number" class="mc-input-pixel mt-1" placeholder="32000"></label>
+            <label class="text-xs font-bold sm:col-span-2">&#20633;&#35387;<input id="event-note" type="text" class="mc-input-pixel mt-1" placeholder="&#36023;&#36554;&#38957;&#26399;&#27454;&#12289;&#31199;&#23627;&#12289;&#25563;&#24037;&#20316;"></label>
+          </div>
+          <button id="btn-add-event" class="btn-pixel bg-yellow text-black font-bold w-full mt-4">&#21152;&#20837;&#20107;&#20214;</button>
+          <div id="event-list" class="mt-4 flex flex-col gap-2"></div>
+        </div>
+
+        <div class="mc-panel variant-obsidian relative-panel">
+          <div class="panel-badge badge-obsidian">Actions</div>
+          <button id="btn-run-analysis" class="btn-pixel bg-green text-black font-bold w-full">&#22519;&#34892;&#23436;&#25972;&#20998;&#26512;</button>
+          <button id="btn-save-option" class="btn-pixel bg-yellow text-black font-bold w-full mt-3">&#25226;&#30446;&#21069;&#35373;&#23450;&#23384;&#25104;&#26041;&#26696;</button>
+          <button id="btn-run-compare" class="btn-pixel bg-gray text-black font-bold w-full mt-3">&#22519;&#34892;&#26041;&#26696;&#27604;&#36611;</button>
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-5 min-w-0">
+        <div class="mc-panel variant-stone relative-panel min-h-[360px]">
+          <div class="panel-badge badge-stone">Projection</div>
+          <div class="chart-container h-[320px]"><canvas id="financeChart"></canvas></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div class="mc-panel variant-obsidian relative-panel">
+            <div class="panel-badge badge-obsidian">Summary</div>
+            <div id="summary-panel" class="text-xs leading-7 text-white">&#23578;&#26410;&#22519;&#34892;&#20998;&#26512;&#12290;</div>
+          </div>
+          <div class="mc-panel variant-obsidian relative-panel">
+            <div class="panel-badge badge-obsidian">Monte Carlo + Advice</div>
+            <div id="advice-panel" class="text-xs leading-7 text-white">&#23578;&#26410;&#29986;&#29983;&#24314;&#35696;&#12290;</div>
+          </div>
+        </div>
+
+        <div class="mc-panel variant-stone relative-panel">
+          <div class="panel-badge badge-stone">Monthly Details</div>
+          <div class="overflow-auto max-h-[360px]">
+            <table class="w-full text-xs border-collapse">
+              <thead class="sticky top-0 bg-[#c6c6c6]">
+                <tr>
+                  <th class="p-2 text-left">&#26376;</th>
+                  <th class="p-2 text-right">&#25910;&#20837;</th>
+                  <th class="p-2 text-right">&#25903;&#20986;</th>
+                  <th class="p-2 text-right">&#36024;&#27454;</th>
+                  <th class="p-2 text-right">&#20107;&#20214;</th>
+                  <th class="p-2 text-right">&#28136;&#29694;&#37329;&#27969;</th>
+                  <th class="p-2 text-right">&#36039;&#29986;</th>
+                  <th class="p-2 text-right">FSI</th>
+                  <th class="p-2 text-left">&#39080;&#38570;</th>
+                </tr>
+              </thead>
+              <tbody id="detail-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="mc-panel variant-stone relative-panel">
+          <div class="panel-badge badge-stone">Compare</div>
+          <div id="option-list" class="flex flex-col gap-2 mb-4"></div>
+          <div id="compare-panel" class="text-xs leading-7">&#23578;&#26410;&#22519;&#34892;&#26041;&#26696;&#27604;&#36611;&#12290;</div>
+        </div>
+      </section>
+    </main>
   </div>
 
   <script>
-    // ==========================================
-    // 🌟 全局變數與元件抓取
-    // ==========================================
-    const pageRegister = document.getElementById('page-register'); 
-    const pageLogin = document.getElementById('page-login');
-    const pageSetup1 = document.getElementById('page-setup-1'); 
-    const pageSetup2 = document.getElementById('page-setup-2'); 
-    const pageDashboard = document.getElementById('page-dashboard');
-    const mainLogo = document.getElementById('main-logo'); 
     const API_BASE = window.location.origin;
     let currentUser = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
-    let currentBalance = 0; 
-    let monthlyNetFlow = 0; 
-    let currentProfile = null;
     let currentEvents = [];
+    let currentLoans = [];
+    let savedOptions = [];
+    const $ = (id) => document.getElementById(id);
 
-    async function apiRequest(path, options = {}) {
-      const response = await fetch(`${API_BASE}${path}`, options);
-      const data = await response.json();
-      if (!response.ok) {
-        const detail = typeof data.detail === 'object' ? JSON.stringify(data.detail, null, 2) : data.detail;
-        throw new Error(detail || `${path} 請求失敗`);
-      }
-      return data;
+    const T = {
+      notLoggedIn: '\u5c1a\u672a\u767b\u5165\u3002', loggedIn: '\u5df2\u767b\u5165\uff1a', noLoans: '\u5c1a\u672a\u52a0\u5165\u8cb8\u6b3e\u3002', noEvents: '\u5c1a\u672a\u52a0\u5165\u4e8b\u4ef6\u3002', noOptions: '\u5c1a\u672a\u5132\u5b58\u65b9\u6848\u3002', remove: '\u522a\u9664', principal: '\u672c\u91d1', apr: '\u5e74\u5229\u7387', months: '\u500b\u6708', starts: '\u7b2c', month: '\u6708', start: '\u8d77\u9ede', finalBalance: '\u6700\u7d42\u8cc7\u7522', minBalance: '\u671f\u9593\u6700\u4f4e\u8cc7\u7522', maxFsi: '\u6700\u9ad8 FSI', avgFsi: '\u5e73\u5747 FSI', highRiskMonths: '\u9ad8\u98a8\u96aa\u6708\u4efd', firstRiskMonth: '\u7b2c\u4e00\u6b21\u9ad8\u98a8\u96aa\u6708\u4efd', none: '\u7121', income: '\u6536\u5165', fixedExpense: '\u56fa\u5b9a\u652f\u51fa', variableExpense: '\u8b8a\u52d5\u652f\u51fa', bankruptcy: '\u7834\u7522\u6a5f\u7387', avgFinal: '\u5e73\u5747\u6700\u7d42\u8cc7\u7522', bestCase: '\u6700\u4f73\u60c5\u5883', worstCase: '\u6700\u5dee\u60c5\u5883', avgMaxFsi: '\u5e73\u5747\u6700\u9ad8 FSI', bestOption: '\u5efa\u8b70\u65b9\u6848', riskLevel: '\u98a8\u96aa\u7b49\u7d1a', optionBest: '\u6700\u4f73\u65b9\u6848', score: '\u5206\u6578', final: '\u6700\u7d42\u8cc7\u7522', minimum: '\u6700\u4f4e\u8cc7\u7522', saveOptionPrompt: '\u8acb\u8f38\u5165\u65b9\u6848\u540d\u7a31\uff0c\u4f8b\u5982\uff1a\u73fe\u5728\u8cb7\u8eca\u3001\u5ef6\u5f8c 6 \u500b\u6708\u3001\u79df\u5c4b\u65b9\u6848'
+    };
+
+    function numberValue(id, fallback = 0) { const value = Number($(id).value); return Number.isFinite(value) ? value : fallback; }
+    function escapeHtml(value) { return String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;'); }
+    function formatCurrency(value) { return '$' + Number(value || 0).toLocaleString(undefined, { maximumFractionDigits: 2 }); }
+    function formatPercent(value) { return (Number(value || 0) * 100).toFixed(2) + '%'; }
+    function riskClass(level) { if (level === 'crisis' || level === 'high') return 'text-red'; if (level === 'medium') return 'text-yellow-700'; return 'text-green'; }
+
+    async function postJson(path, payload) { const response = await fetch(API_BASE + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const data = await response.json(); if (!response.ok) { const detail = typeof data.detail === 'object' ? JSON.stringify(data.detail) : data.detail; throw new Error(detail || path + ' failed'); } return data; }
+    async function apiRequest(path, options = {}) { const response = await fetch(API_BASE + path, options); const data = await response.json(); if (!response.ok) { const detail = typeof data.detail === 'object' ? JSON.stringify(data.detail) : data.detail; throw new Error(detail || path + ' failed'); } return data; }
+    function updateAuthStatus() { $('auth-status').textContent = currentUser ? T.loggedIn + currentUser.username + '\uff08' + currentUser.email + '\uff09' : T.notLoggedIn; }
+    function buildProfile() { return { balance: numberValue('profile-balance'), salary: numberValue('profile-salary'), fixed_expense: numberValue('profile-fixed'), variable_expense: numberValue('profile-variable'), raise_rate: numberValue('model-raise', 3) / 100, inflation_rate: numberValue('model-inflation', 2) / 100, target_emergency_months: numberValue('model-emergency', 3) }; }
+    function buildPayload() { const payload = { profile: buildProfile(), months: Math.max(1, Math.round(numberValue('model-months', 60))), events: currentEvents, loans: currentLoans }; if (currentUser && currentUser.id) payload.user_id = currentUser.id; return payload; }
+    function describeEvent(event) { if (event.type === 'one_time') return T.starts + ' ' + event.month + ' ' + T.month + '\uff0c' + formatCurrency(event.amount) + ' ' + (event.note || ''); if (event.type === 'range') return T.starts + ' ' + event.start_month + ' \u5230 ' + event.end_month + ' ' + T.month + '\uff0c\u6bcf\u6708 ' + formatCurrency(event.amount) + ' ' + (event.note || ''); return T.starts + ' ' + event.start_month + ' ' + T.month + '\u8d77\uff0c\u6708\u85aa\u6539\u70ba ' + formatCurrency(event.new_salary) + ' ' + (event.note || ''); }
+
+    function renderLists() {
+      $('loan-list').innerHTML = currentLoans.length ? currentLoans.map((loan, index) => `<div class="variant-obsidian p-3 text-white text-xs border-2 border-black flex justify-between gap-3"><span>${T.principal} ${formatCurrency(loan.principal)}?${T.apr} ${(loan.apr * 100).toFixed(2)}%?${loan.months} ${T.months}?${T.starts} ${loan.start_month} ${T.month}\u958b\u59cb</span><button class="text-red font-bold" onclick="removeLoan(${index})">${T.remove}</button></div>`).join('') : '<div class="text-xs text-gray-700">' + T.noLoans + '</div>';
+      $('event-list').innerHTML = currentEvents.length ? currentEvents.map((event, index) => `<div class="variant-obsidian p-3 text-white text-xs border-2 border-black flex justify-between gap-3"><span>${escapeHtml(describeEvent(event))}</span><button class="text-red font-bold" onclick="removeEvent(${index})">${T.remove}</button></div>`).join('') : '<div class="text-xs text-gray-700">' + T.noEvents + '</div>';
+      $('option-list').innerHTML = savedOptions.length ? savedOptions.map((option, index) => `<div class="variant-obsidian p-3 text-white text-xs border-2 border-black flex justify-between gap-3"><span>${escapeHtml(option.name)}?\u4e8b\u4ef6 ${option.events.length}?\u8cb8\u6b3e ${option.loans.length}</span><button class="text-red font-bold" onclick="removeOption(${index})">${T.remove}</button></div>`).join('') : '<div class="text-xs text-gray-700">' + T.noOptions + '</div>';
     }
 
-    function renderApiError(prefix, error) {
-      alert(`${prefix}\n${error.message || '請稍後再試'}`);
-    }
+    window.removeLoan = (index) => { currentLoans.splice(index, 1); renderLists(); };
+    window.removeEvent = (index) => { currentEvents.splice(index, 1); renderLists(); };
+    window.removeOption = (index) => { savedOptions.splice(index, 1); renderLists(); };
+    function updateEventFields() { const type = $('event-type').value; document.querySelectorAll('.one-time-field').forEach(el => el.classList.toggle('hidden', type !== 'one_time')); document.querySelectorAll('.range-field').forEach(el => el.classList.toggle('hidden', type !== 'range' && type !== 'salary_change')); document.querySelectorAll('.range-end-field').forEach(el => el.classList.toggle('hidden', type !== 'range')); document.querySelectorAll('.amount-field').forEach(el => el.classList.toggle('hidden', type === 'salary_change')); document.querySelectorAll('.salary-field').forEach(el => el.classList.toggle('hidden', type !== 'salary_change')); }
+    function buildAdviceOptions(profile, events, loans) { const months = Math.max(1, Math.round(numberValue('model-months', 60))); const monthlySavingsBoost = Math.max(500, Math.round(profile.variable_expense * 0.1)); const incomeBoost = Math.max(1000, Math.round(profile.salary * 0.08)); return [{ name: '\u7dad\u6301\u76ee\u524d\u8a2d\u5b9a', events, loans }, { name: '\u6e1b\u5c11\u8b8a\u52d5\u652f\u51fa 10%', events: [...events, { type: 'range', start_month: 1, end_month: months, amount: monthlySavingsBoost, note: 'reduce_variable_expense' }], loans }, { name: '\u589e\u52a0\u6536\u5165 8%', events: [...events, { type: 'salary_change', start_month: 1, new_salary: profile.salary + incomeBoost, note: 'income_growth_plan' }], loans }]; }
 
-    function postJson(path, payload) {
-      return apiRequest(path, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    }
+    function renderSummary(summary, profile, mcData) { $('summary-panel').innerHTML = `<div>${T.finalBalance}\uff1a<strong>${formatCurrency(summary.final_balance)}</strong></div><div>${T.minBalance}\uff1a<strong>${formatCurrency(summary.min_balance)}</strong></div><div>${T.maxFsi}\uff1a<strong>${summary.max_fsi ?? 'N/A'}</strong></div><div>${T.avgFsi}\uff1a<strong>${summary.avg_fsi ?? 'N/A'}</strong></div><div>${T.highRiskMonths}\uff1a<strong>${summary.high_risk_months ?? 0}</strong></div><div>${T.firstRiskMonth}\uff1a<strong>${summary.first_risk_month ?? T.none}</strong></div><hr class="my-3 border-gray-600"><div>${T.income} ${formatCurrency(profile.salary)}?${T.fixedExpense} ${formatCurrency(profile.fixed_expense)}</div><div>${T.variableExpense} ${formatCurrency(profile.variable_expense)}</div>`; $('advice-panel').innerHTML = `<div>${T.bankruptcy}\uff1a<strong>${formatPercent(mcData.bankrupt_probability)}</strong></div><div>${T.avgFinal}\uff1a<strong>${formatCurrency(mcData.avg_final_balance)}</strong></div><div>${T.bestCase}\uff1a<strong>${formatCurrency(mcData.best_case_balance)}</strong></div><div>${T.worstCase}\uff1a<strong>${formatCurrency(mcData.worst_case_balance)}</strong></div><div>${T.avgMaxFsi}\uff1a<strong>${mcData.avg_max_fsi ?? 'N/A'}</strong></div>`; }
+    function renderDetails(curve) { $('detail-body').innerHTML = curve.map(item => `<tr class="border-t border-gray-500"><td class="p-2">${item.month}</td><td class="p-2 text-right">${formatCurrency(item.income)}</td><td class="p-2 text-right">${formatCurrency(item.expense)}</td><td class="p-2 text-right">${formatCurrency(item.debt_payment)}</td><td class="p-2 text-right">${formatCurrency(item.event_net)}</td><td class="p-2 text-right">${formatCurrency(item.net_cashflow)}</td><td class="p-2 text-right">${formatCurrency(item.balance)}</td><td class="p-2 text-right">${item.fsi}</td><td class="p-2 ${riskClass(item.risk_level)}">${item.risk_level}</td></tr>`).join(''); }
+    function updateChart(profile, curve) { financeChart.data.labels = [T.start, ...curve.map(item => item.month % 6 === 0 ? T.starts + item.month + T.month : '')]; financeChart.data.datasets[0].data = [profile.balance, ...curve.map(item => item.balance)]; financeChart.update(); }
 
-    function formatCurrency(value) {
-      return `$${Number(value || 0).toLocaleString()}`;
-    }
+    async function runAnalysis() { const button = $('btn-run-analysis'); button.disabled = true; button.textContent = '\u5206\u6790\u4e2d...'; try { const payload = buildPayload(); const mcRuns = Math.max(1, Math.round(numberValue('model-mc-runs', 300))); const [simData, mcData, adviceData] = await Promise.all([postJson('/simulate', payload), postJson('/monte-carlo', { ...payload, simulations: mcRuns }), postJson('/ai/advice', { profile: payload.profile, options: buildAdviceOptions(payload.profile, payload.events, payload.loans), months: payload.months, mc_runs: mcRuns })]); const simResult = simData.result || simData; updateChart(payload.profile, simResult.simulation_curve || []); renderDetails(simResult.simulation_curve || []); renderSummary(simResult.summary || {}, payload.profile, mcData); $('advice-panel').innerHTML += `<hr class="my-3 border-gray-600"><div>${T.bestOption}\uff1a<strong>${escapeHtml(adviceData.best_option || 'N/A')}</strong></div><div>${T.riskLevel}\uff1a<strong>${escapeHtml(adviceData.risk_level || 'unknown')}</strong></div><div class="mt-2">${(adviceData.reason || []).map(escapeHtml).join('<br>')}</div><div class="mt-2 text-yellow-300">${(adviceData.suggestions || []).map(escapeHtml).join('<br>')}</div>`; } catch (error) { alert('\u5206\u6790\u5931\u6557\uff1a' + error.message); } finally { button.disabled = false; button.textContent = '\u57f7\u884c\u5b8c\u6574\u5206\u6790'; } }
+    async function runCompare() { if (!savedOptions.length) { alert('\u8acb\u5148\u5132\u5b58\u81f3\u5c11\u4e00\u500b\u65b9\u6848\u3002'); return; } const button = $('btn-run-compare'); button.disabled = true; button.textContent = '\u6bd4\u8f03\u4e2d...'; try { const payload = buildPayload(); const data = await postJson('/compare', { profile: payload.profile, options: savedOptions, months: payload.months, mc_runs: Math.max(1, Math.round(numberValue('model-mc-runs', 300))) }); const compare = data.compare_result || {}; $('compare-panel').innerHTML = `<div class="mb-3">${T.optionBest}\uff1a<strong>${escapeHtml(compare.best_option || 'N/A')}</strong></div><div class="overflow-auto"><table class="w-full text-xs"><thead><tr><th class="p-2 text-left">\u65b9\u6848</th><th class="p-2 text-right">${T.score}</th><th class="p-2 text-right">${T.final}</th><th class="p-2 text-right">${T.minimum}</th><th class="p-2 text-right">${T.maxFsi}</th><th class="p-2 text-right">${T.bankruptcy}</th></tr></thead><tbody>${(compare.options || []).map(option => `<tr class="border-t border-gray-500"><td class="p-2">${escapeHtml(option.name)}</td><td class="p-2 text-right">${option.score}</td><td class="p-2 text-right">${formatCurrency(option.simulation_summary.final_balance)}</td><td class="p-2 text-right">${formatCurrency(option.simulation_summary.min_balance)}</td><td class="p-2 text-right">${option.simulation_summary.max_fsi}</td><td class="p-2 text-right">${formatPercent(option.monte_carlo_summary.bankrupt_probability)}</td></tr>`).join('')}</tbody></table></div><div class="mt-4 text-yellow-900">${escapeHtml((data.advice?.suggestions || []).join(' '))}</div>`; } catch (error) { alert('\u6bd4\u8f03\u5931\u6557\uff1a' + error.message); } finally { button.disabled = false; button.textContent = '\u57f7\u884c\u65b9\u6848\u6bd4\u8f03'; } }
 
-    function formatPercent(value) {
-      return `${((Number(value) || 0) * 100).toFixed(2)}%`;
-    }
-
-    function formatRiskLevel(value) {
-      const level = String(value || 'unknown').toLowerCase();
-      if (level === 'low') return '低風險';
-      if (level === 'medium') return '中風險';
-      if (level === 'high') return '高風險';
-      if (level === 'crisis') return '危機';
-      if (level === 'unknown') return '未知';
-      return level;
-    }
-
-    function escapeHtml(value) {
-      return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    function appendAiInsight(html) {
-      aiInsights.insertAdjacentHTML('beforeend', `
-        <div class="message-ai flex items-start gap-2 mt-4">
-          <div class="text-xl">💡</div>
-          <div class="msg-bubble bg-gray-800 border-2 border-blue-500 p-3 text-white text-xs whitespace-pre-line">
-            ${html}
-          </div>
-        </div>
-      `);
-      aiInsights.scrollTop = aiInsights.scrollHeight;
-    }
-
-    function buildAdviceOptions(profile, events = []) {
-      const monthlySavingsBoost = Math.max(500, Math.round(profile.variable_expense * 0.1));
-      const incomeBoost = Math.max(1000, Math.round(profile.salary * 0.08));
-
-      return [
-        { name: '維持目前收支', events, loans: [] },
-        {
-          name: '降低變動支出10%',
-          events: [
-            ...events,
-            { type: 'range', start_month: 1, end_month: 60, amount: monthlySavingsBoost, note: 'reduce_variable_expense' }
-          ],
-          loans: []
-        },
-        {
-          name: '增加收入來源8%',
-          events: [
-            ...events,
-            { type: 'salary_change', start_month: 1, new_salary: profile.salary + incomeBoost, note: 'income_growth_plan' }
-          ],
-          loans: []
-        }
-      ];
-    }
-
-    async function syncAiAnalysis(profile, events = [], persistSimulation = false) {
-      const [simData, mcData, adviceData] = await Promise.all([
-        postJson('/simulate', {
-          profile,
-          months: 60,
-          events,
-          loans: [],
-          user_id: persistSimulation ? (currentUser?.id || null) : null
-        }),
-        postJson('/monte-carlo', {
-          profile,
-          months: 60,
-          events,
-          loans: [],
-          simulations: 300
-        }),
-        postJson('/ai/advice', {
-          profile,
-          options: buildAdviceOptions(profile, events),
-          months: 60,
-          mc_runs: 300
-        })
-      ]);
-
-      const simResult = simData.result || simData;
-      const summary = simResult.summary || {};
-      const curve = simResult.simulation_curve || [];
-
-      if (curve.length) {
-        financeChart.data.labels = ['今日', ...curve.map(item => item.month % 6 === 0 ? `第${item.month}個月` : '')];
-        financeChart.data.datasets[0].data = [profile.balance, ...curve.map(item => item.balance)];
-        financeChart.update();
-      }
-
-      appendAiInsight(`
-        <div class="font-bold text-yellow-300 mb-2">AI Synchronizer 已接上後端運算</div>
-        <div>FSI 最高值：${summary.max_fsi ?? 'N/A'}，平均 FSI：${summary.avg_fsi ?? 'N/A'}</div>
-        <div>最低資產水位：${formatCurrency(summary.min_balance)}</div>
-        <div>Monte Carlo 破產機率：${formatPercent(mcData.bankrupt_probability)}</div>
-        <div>最差情境結餘：${formatCurrency(mcData.worst_case_balance)}</div>
-        <div>AI 建議方案：${adviceData.best_option || 'N/A'}（${formatRiskLevel(adviceData.risk_level)}）</div>
-        <div class="mt-2">${(adviceData.suggestions || []).join('<br>')}</div>
-      `);
-
-      const syncSummaryHtml = [
-        '<div class="font-bold text-cyan-300 mb-2">指標說明</div>',
-        '<div>FSI（財務壓力指數）可以理解成「你目前的收支有多緊」。這個數值會根據收入、支出與資產變化來判斷壓力程度，通常數值越高，代表現金流越吃緊、可承受風險越低。</div>',
-        `<div class="mt-2">以你這次結果來看，最高 FSI 為 ${summary.max_fsi ?? 'N/A'}，平均 FSI 為 ${summary.avg_fsi ?? 'N/A'}，代表系統觀察你在整段模擬期間的壓力高點與整體平均狀況。</div>`,
-        `<div class="mt-2">如果高風險月份數為 ${summary.high_risk_months ?? 0}，表示未來可能出現財務壓力偏高的月份；首次高風險月份為 ${summary.first_risk_month ?? '無'}，可以幫助你提早準備現金或調整支出。</div>`,
-        '<div class="mt-3">Monte Carlo 模擬則是在同一組財務條件下，加入大量不同的隨機情境，反覆推演未來結果。它不是只告訴你「最可能發生什麼」，而是幫你看出「最好、最差，以及大致平均會落在哪裡」。</div>',
-        `<div class="mt-2">這次模擬中，最佳情境為 ${formatCurrency(mcData.best_case_balance)}，最差情境為 ${formatCurrency(mcData.worst_case_balance)}，平均期末餘額為 ${formatCurrency(mcData.avg_final_balance)}。</div>`,
-        `<div class="mt-2">Monte Carlo 破產機率為 ${formatPercent(mcData.bankrupt_probability)}，這個數字越高，代表在不同未來情境下出現資金不足的風險越高；越低則代表整體財務結構相對穩定。</div>`
-      ].join('');
-
-      appendAiInsight(syncSummaryHtml);
-
-      return { simData, mcData, adviceData };
-    }
-
-    // ==========================================
-    // 🌟 Minecraft 黃色標語輪替邏輯
-    // ==========================================
-    const splashTextEl = document.getElementById('splash-text');
-    const splashMessages = ["Machine Learning!", "Artificial Intelligence!", "Shout out to Minecraft!"];
-    let splashIndex = Math.floor(Math.random() * splashMessages.length);
-    splashTextEl.textContent = splashMessages[splashIndex];
-    setInterval(() => {
-      splashIndex = (splashIndex + 1) % splashMessages.length;
-      splashTextEl.textContent = splashMessages[splashIndex];
-    }, 3000);
-
-    // ==========================================
-    // 🌟 頁面導覽邏輯 (返回上頁/下一步)
-    // ==========================================
-    document.getElementById('btn-register').addEventListener('click', () => { pageLogin.classList.add('hidden'); pageRegister.classList.remove('hidden'); });
-    document.getElementById('btn-back-to-login').addEventListener('click', () => { pageRegister.classList.add('hidden'); pageLogin.classList.remove('hidden'); });
-
-    document.getElementById('btn-next-to-expenses').addEventListener('click', () => {
-      if(!document.getElementById('setup-balance').value || !document.getElementById('setup-income').value) {
-        alert("請先輸入您的資產與收入！"); return;
-      }
-      pageSetup1.classList.add('hidden');
-      pageSetup2.classList.remove('hidden');
-    });
-
-    document.getElementById('btn-back-to-login-from-setup').addEventListener('click', () => {
-      pageSetup1.classList.add('hidden');
-      pageLogin.classList.remove('hidden');
-    });
-
-    document.getElementById('btn-back-to-setup-1').addEventListener('click', () => {
-      pageSetup2.classList.add('hidden');
-      pageSetup1.classList.remove('hidden');
-    });
-
-    // ==========================================
-    // 🌟 正式連線版：流程 1 註冊 API (/auth/register)
-    // ==========================================
-    document.getElementById('btn-submit-register').addEventListener('click', async () => {
-      const acc = document.getElementById('reg-account').value;
-      const email = document.getElementById('reg-email').value; 
-      const pass = document.getElementById('reg-password').value;
-      const registerBtn = document.getElementById('btn-submit-register'); 
-
-      if(!acc || !email || !pass) { 
-        alert("⚠️ 請完整輸入想註冊的帳號、電子郵件與密碼！"); 
-        return; 
-      }
-      
-      const originalBtnText = registerBtn.textContent;
-      registerBtn.textContent = "資料庫寫入中..."; 
-      registerBtn.disabled = true;
-
-      try {
-        const data = await apiRequest('/auth/register', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: acc, email: email, password: pass })
-        });
-
-        alert(data.message || "✅ 註冊成功！請在登入畫面輸入剛剛的資料。");
-        document.getElementById('reg-account').value = '';
-        document.getElementById('reg-email').value = ''; 
-        document.getElementById('reg-password').value = '';
-        pageRegister.classList.add('hidden'); 
-        pageLogin.classList.remove('hidden'); 
-      } catch (error) {
-        renderApiError("❌ 註冊失敗：", error);
-      } finally {
-        registerBtn.textContent = originalBtnText; 
-        registerBtn.disabled = false;
-      }
-    });
-
-    // ==========================================
-    // 🌟 正式連線版：流程 2 登入 API (/auth/login)
-    // ==========================================
-    document.getElementById('btn-login').addEventListener('click', async () => {
-      const acc = document.getElementById('login-account').value;
-      const email = document.getElementById('login-email').value; 
-      const pass = document.getElementById('login-password').value;
-      const loginBtn = document.getElementById('btn-login');
-
-      if (!acc || !email || !pass) { 
-        alert("⚠️ 請完整填寫帳號、電子郵件與密碼！\n(如果還沒註冊，請點擊下方的『註冊新帳號』)"); 
-        return; 
-      }
-
-      const originalBtnText = loginBtn.textContent;
-      loginBtn.textContent = "資料庫驗證中..."; 
-      loginBtn.disabled = true;
-
-      try {
-        const formData = new URLSearchParams();
-        formData.append('username', acc);
-        formData.append('email', email); 
-        formData.append('password', pass);
-
-        const data = await apiRequest('/auth/login', {
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: formData 
-        });
-
-        currentUser = data.user || null;
-        if (currentUser) {
-          sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-        }
-        alert(data.message || "✅ 登入成功！");
-        pageLogin.classList.add('hidden');
-        pageSetup1.classList.remove('hidden'); 
-      } catch (error) {
-        renderApiError("❌ 登入失敗：", error);
-      } finally {
-        loginBtn.textContent = originalBtnText; 
-        loginBtn.disabled = false;
-      }
-    });
-
-    // ==========================================
-    // 🌟 正式連線版：流程 3 開始模擬 API (/simulate)
-    // ==========================================
-    document.getElementById('btn-start-sim').addEventListener('click', async () => {
-      const initBalance = Number(document.getElementById('setup-balance').value);
-      const initIncome = Number(document.getElementById('setup-income').value);
-      const initFixedExp = Number(document.getElementById('setup-fixed-expenses').value);
-      const initVarExp = Number(document.getElementById('setup-var-expenses').value);
-      const startBtn = document.getElementById('btn-start-sim');
-
-      if(isNaN(initBalance) || isNaN(initIncome) || isNaN(initFixedExp) || isNaN(initVarExp)) { 
-        alert("請完整輸入所有欄位數值才能進行模擬喔！"); 
-        return; 
-      }
-
-      startBtn.textContent = "AI 運算 60 個月數據中... ⏳"; 
-      startBtn.disabled = true;
-
-      try {
-        if (!currentUser || !currentUser.id) {
-          throw new Error("請先登入，系統才能把財務資料綁定到你的帳號。");
-        }
-
-        await postJson('/financial-profile/create', {
-          user_id: currentUser.id,
-          current_savings: initBalance,
-          monthly_income: initIncome,
-          has_loan: false,
-          loan_amount: 0
-        });
-
-        const payload = {
-          profile: {
-            salary: initIncome,
-            fixed_expense: initFixedExp,
-            variable_expense: initVarExp,
-            balance: initBalance
-          },
-          months: 60,
-          events: [],
-          loans: [],
-          user_id: currentUser.id
-        };
-
-        currentProfile = payload.profile;
-        currentEvents = [];
-        const analysis = await syncAiAnalysis(currentProfile, currentEvents, true);
-        console.log("【後端 AI 分析結果】:", analysis);
-          
-        currentBalance = initBalance;
-        monthlyNetFlow = initIncome - initFixedExp - initVarExp;
-
-        // 隱藏設定面板，顯示主控台
-        pageSetup2.classList.add('hidden');
-        mainLogo.classList.add('hidden'); 
-        pageDashboard.classList.remove('hidden');
-        if (typeof financeChart !== 'undefined') financeChart.resize();
-      } catch (error) {
-        console.error("連線錯誤:", error);
-        renderApiError("❌ 模擬或財務資料儲存失敗：", error);
-      } finally {
-        startBtn.textContent = "啟動 60 個月模擬 🚀"; 
-        startBtn.disabled = false;
-      }
-    });
-
-    // ==========================================
-    // 🌟 記帳系統切換邏輯
-    // ==========================================
-    const accountingForm = document.getElementById('accounting-form');
-    const historyPanel = document.getElementById('history-panel');
-    
-    document.getElementById('btn-view-history').addEventListener('click', () => { 
-      accountingForm.classList.add('hidden'); 
-      historyPanel.classList.remove('hidden'); 
-    });
-
-    document.getElementById('btn-back-to-form').addEventListener('click', () => { 
-      historyPanel.classList.add('hidden'); 
-      accountingForm.classList.remove('hidden'); 
-    });
-
-    // ==========================================
-    // 🌟 記帳系統 ＆ AI 財務狀況即時播報
-    // ==========================================
-    const historyList = document.getElementById('history-list');
-    const aiInsights = document.getElementById('ai-insights'); 
-    
-    document.getElementById('btn-submit-record').addEventListener('click', async () => {
-      const amount = document.getElementById('record-amount').value;
-      const note = document.getElementById('record-note').value;
-      const date = document.getElementById('record-date').value;
-
-      if (!amount || !note || !date) { 
-        alert("⚠️ 請完整填寫金額、備註與日期！"); 
-        return; 
-      }
-
-      const numAmount = Number(amount);
-      const isIncome = numAmount >= 0;
-      const colorClass = isIncome ? 'text-green' : 'text-red';
-      const sign = isIncome ? '+ ' : '- ';
-      const displayAmount = Math.abs(numAmount).toLocaleString(); 
-
-      try {
-        if (!currentUser || !currentUser.id) {
-          throw new Error("請先登入，系統才能把記帳資料綁定到你的帳號。");
-        }
-
-        await postJson('/event/add', {
-          user_id: currentUser.id,
-          event_type: note,
-          amount: numAmount
-        });
-      } catch (error) {
-        renderApiError("❌ 記帳紀錄沒有寫入後端：", error);
-        return;
-      }
-
-      currentBalance += numAmount; 
-
-      const safeNote = escapeHtml(note);
-      const safeDate = escapeHtml(date);
-      const recordHTML = `
-        <div class="mc-panel variant-obsidian p-2 text-xs border-2 mb-2">
-          <div class="text-gray text-xs">${safeDate}</div>
-          <div class="flex justify-between mt-1">
-            <span>${safeNote}</span>
-            <span class="${colorClass}">${sign}$ ${displayAmount}</span>
-          </div>
-        </div>
-      `;
-      historyList.insertAdjacentHTML('afterbegin', recordHTML);
-
-      const insightText = isIncome
-        ? `💰 收到一筆收入：+ $${displayAmount} (${safeNote})\n\n📊 【最新財務狀態更新】\n目前總資產：$${currentBalance.toLocaleString()}\n正在重新同步 Monte Carlo 與 FSI...`
-        : `💸 記下一筆支出：- $${displayAmount} (${safeNote})\n\n📊 【最新財務狀態更新】\n目前總資產降至：$${currentBalance.toLocaleString()}\n正在重新同步 Monte Carlo 與 FSI...`;
-
-      appendAiInsight(insightText);
-
-      if (currentProfile) {
-        currentProfile = { ...currentProfile, balance: currentBalance };
-
-        try {
-          await syncAiAnalysis(currentProfile, currentEvents);
-        } catch (error) {
-          appendAiInsight(`⚠️ 後端 AI 重新分析失敗：${escapeHtml(error.message || '請稍後再試')}`);
-        }
-      }
-
-      document.getElementById('record-amount').value = '';
-      document.getElementById('record-note').value = '';
-      document.getElementById('record-date').value = '';
-    });
-
-    // ==========================================
-    // 🌟 Chart.js 動態財務圖表初始化
-    // ==========================================
-    const ctx = document.getElementById('financeChart').getContext('2d');
-    const financeChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: [], 
-        datasets: [{
-          label: '總資產變化 (60個月預測)',
-          data: [], 
-          borderColor: '#5c9e31', 
-          backgroundColor: 'rgba(92, 158, 49, 0.2)',
-          borderWidth: 3,
-          stepped: true, 
-          pointBackgroundColor: '#85db49',
-          pointBorderColor: '#111',
-          pointRadius: 4,
-          pointHoverRadius: 8
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: { padding: { left: 45, right: 20, top: 10 } },
-        plugins: { legend: { labels: { color: 'white', font: { family: "'DotGothic16', sans-serif", size: 14 } } } },
-        scales: {
-          y: { ticks: { color: '#9ca3af', font: { family: "'Press Start 2P', cursive", size: 10 } }, grid: { color: '#333' } },
-          x: { ticks: { color: '#9ca3af', font: { family: "'DotGothic16', sans-serif", size: 12 }, maxRotation: 45, minRotation: 45 }, grid: { color: '#333' } }
-        }
-      }
-    });
-
+    $('btn-add-loan').addEventListener('click', () => { const loan = { principal: numberValue('loan-principal'), apr: numberValue('loan-apr') / 100, months: Math.round(numberValue('loan-months')), start_month: Math.round(numberValue('loan-start')) }; if (loan.principal < 0 || loan.apr < 0 || loan.months <= 0 || loan.start_month <= 0) { alert('\u8acb\u8f38\u5165\u6709\u6548\u7684\u8cb8\u6b3e\u8cc7\u6599\u3002'); return; } currentLoans.push(loan); ['loan-principal', 'loan-apr', 'loan-months', 'loan-start'].forEach(id => $(id).value = ''); renderLists(); });
+    $('btn-login').addEventListener('click', async () => { try { const formData = new URLSearchParams(); formData.append('username', $('auth-username').value.trim()); formData.append('email', $('auth-email').value.trim()); formData.append('password', $('auth-password').value); const data = await apiRequest('/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formData }); currentUser = data.user || null; if (currentUser) sessionStorage.setItem('currentUser', JSON.stringify(currentUser)); updateAuthStatus(); alert('\u767b\u5165\u6210\u529f\u3002'); } catch (error) { alert('\u767b\u5165\u5931\u6557\uff1a' + error.message); } });
+    $('btn-register').addEventListener('click', async () => { try { const data = await postJson('/auth/register', { username: $('auth-username').value.trim(), email: $('auth-email').value.trim(), password: $('auth-password').value }); alert(data.message || '\u8a3b\u518a\u6210\u529f\u3002'); } catch (error) { alert('\u8a3b\u518a\u5931\u6557\uff1a' + error.message); } });
+    $('btn-logout').addEventListener('click', () => { currentUser = null; sessionStorage.removeItem('currentUser'); updateAuthStatus(); });
+    $('btn-add-event').addEventListener('click', () => { const type = $('event-type').value; const note = $('event-note').value.trim(); let event; if (type === 'one_time') { event = { type, month: Math.round(numberValue('event-month')), amount: numberValue('event-amount'), note }; if (event.month <= 0) return alert('\u8acb\u8f38\u5165\u6709\u6548\u7684\u6708\u4efd\u3002'); } else if (type === 'range') { event = { type, start_month: Math.round(numberValue('event-start')), end_month: Math.round(numberValue('event-end')), amount: numberValue('event-amount'), note }; if (event.start_month <= 0 || event.end_month < event.start_month) return alert('\u8acb\u8f38\u5165\u6709\u6548\u7684\u6708\u4efd\u5340\u9593\u3002'); } else { event = { type, start_month: Math.round(numberValue('event-start')), new_salary: numberValue('event-new-salary'), note }; if (event.start_month <= 0 || event.new_salary < 0) return alert('\u8acb\u8f38\u5165\u6709\u6548\u7684\u85aa\u8cc7\u8b8a\u52d5\u3002'); } currentEvents.push(event); ['event-month', 'event-start', 'event-end', 'event-amount', 'event-new-salary', 'event-note'].forEach(id => $(id).value = ''); renderLists(); });
+    $('btn-save-option').addEventListener('click', () => { const name = prompt(T.saveOptionPrompt); if (!name) return; savedOptions.push({ name, events: JSON.parse(JSON.stringify(currentEvents)), loans: JSON.parse(JSON.stringify(currentLoans)) }); renderLists(); });
+    $('btn-run-analysis').addEventListener('click', runAnalysis); $('btn-run-compare').addEventListener('click', runCompare); $('event-type').addEventListener('change', updateEventFields);
+    const splashTextEl = $('splash-text'); const splashMessages = ['\u60c5\u5883\u6a21\u64ec!', 'FSI \u98a8\u96aa\u6a21\u578b!', 'Monte Carlo Ready!']; let splashIndex = 0; setInterval(() => { splashIndex = (splashIndex + 1) % splashMessages.length; splashTextEl.textContent = splashMessages[splashIndex]; }, 3000);
+    const ctx = $('financeChart').getContext('2d'); const financeChart = new Chart(ctx, { type: 'line', data: { labels: [], datasets: [{ label: '\u8cc7\u7522\u9918\u984d', data: [], borderColor: '#5c9e31', backgroundColor: 'rgba(92, 158, 49, 0.2)', borderWidth: 3, stepped: true, pointBackgroundColor: '#85db49', pointBorderColor: '#111', pointRadius: 3, pointHoverRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: 'white' } } }, scales: { y: { ticks: { color: '#9ca3af' }, grid: { color: '#333' } }, x: { ticks: { color: '#9ca3af', maxRotation: 45, minRotation: 45 }, grid: { color: '#333' } } } } });
+    updateEventFields(); renderLists(); updateAuthStatus();
   </script>
 </body>
 </html>
