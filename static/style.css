@@ -185,6 +185,7 @@ body {
    排版工具 (Utility Classes)
 ========================================= */
 .flex-col { display: flex; flex-direction: column; }
+.hidden { display: none !important; }
 .text-white { color: white; }
 .text-green { color: var(--text-green); }
 .text-red { color: var(--text-red); }
@@ -239,6 +240,9 @@ body {
 /* 右側欄：填滿高度 */
 .col-right {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 /* =========================================
@@ -304,11 +308,29 @@ body {
 /* =========================================
    右側：記帳系統 (Accounting)
 ========================================= */
-.col-right > section {
+.col-right > section.side-interface {
   margin-top: 0 !important; 
-  height: 100%; /* 填滿右邊全部高度 */
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+.col-right > section.side-interface.hidden { display: none !important; }
+.scenario-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.side-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.btn-pixel.active-side {
+  box-shadow: inset 3px 3px 0 rgba(255,255,255,0.35), 4px 4px 0 #000;
 }
 
 /* 麥塊輸入框 (記帳用，之前漏掉的補回在這裡) */
