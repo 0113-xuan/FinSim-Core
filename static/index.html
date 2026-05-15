@@ -115,6 +115,40 @@
               <div id="history-list" class="flex flex-col gap-2 overflow-y-auto flex-1"></div>
             </div>
           </section>
+
+          <section class="mc-panel variant-stone relative-panel flex-col mt-5">
+            <div class="panel-badge badge-stone text-xs">Scenario</div>
+            <div class="flex flex-col gap-4 mt-2">
+              <div class="text-xs font-bold">貸款模擬</div>
+              <div class="grid grid-cols-2 gap-2">
+                <input type="number" id="loan-principal" class="mc-input-pixel" placeholder="本金">
+                <input type="number" id="loan-apr" class="mc-input-pixel" placeholder="年利率%">
+                <input type="number" id="loan-months" class="mc-input-pixel" placeholder="期數(月)">
+                <input type="number" id="loan-start" class="mc-input-pixel" placeholder="開始月份">
+              </div>
+              <button id="btn-add-loan" class="btn-pixel bg-yellow text-black font-bold w-full">加入貸款</button>
+              <div id="loan-list" class="flex flex-col gap-2 text-xs"></div>
+
+              <div class="text-xs font-bold mt-3">人生事件</div>
+              <select id="event-type" class="mc-input-pixel">
+                <option value="one_time">一次收入/支出</option>
+                <option value="range">期間收入/支出</option>
+                <option value="salary_change">薪資改變</option>
+              </select>
+              <div class="grid grid-cols-2 gap-2">
+                <input type="number" id="event-month" class="mc-input-pixel" placeholder="發生月份">
+                <input type="number" id="event-start" class="mc-input-pixel" placeholder="開始月份">
+                <input type="number" id="event-end" class="mc-input-pixel" placeholder="結束月份">
+                <input type="number" id="event-amount" class="mc-input-pixel" placeholder="金額(收入為正)">
+                <input type="number" id="event-new-salary" class="mc-input-pixel" placeholder="新薪資">
+                <input type="text" id="event-note" class="mc-input-pixel" placeholder="備註">
+              </div>
+              <button id="btn-add-event" class="btn-pixel bg-yellow text-black font-bold w-full">加入事件</button>
+              <div id="event-list" class="flex flex-col gap-2 text-xs"></div>
+              <button id="btn-rerun-scenario" class="btn-pixel bg-green text-black font-bold w-full mt-3">用貸款與事件重新分析</button>
+            </div>
+          </section>
+
         </div>
       </main>
     </div>
@@ -136,6 +170,7 @@
     let monthlyNetFlow = 0; 
     let currentProfile = null;
     let currentEvents = [];
+    let currentLoans = [];
 
     async function apiRequest(path, options = {}) {
       const response = await fetch(`${API_BASE}${path}`, options);
@@ -198,19 +233,19 @@
       aiInsights.scrollTop = aiInsights.scrollHeight;
     }
 
-    function buildAdviceOptions(profile, events = []) {
+    function buildAdviceOptions(profile, events = [], loans = []) {
       const monthlySavingsBoost = Math.max(500, Math.round(profile.variable_expense * 0.1));
       const incomeBoost = Math.max(1000, Math.round(profile.salary * 0.08));
 
       return [
-        { name: '維持目前收支', events, loans: [] },
+        { name: '維持目前收支', events, loans },
         {
           name: '降低變動支出10%',
           events: [
             ...events,
             { type: 'range', start_month: 1, end_month: 60, amount: monthlySavingsBoost, note: 'reduce_variable_expense' }
           ],
-          loans: []
+          loans
         },
         {
           name: '增加收入來源8%',
@@ -218,30 +253,30 @@
             ...events,
             { type: 'salary_change', start_month: 1, new_salary: profile.salary + incomeBoost, note: 'income_growth_plan' }
           ],
-          loans: []
+          loans
         }
       ];
     }
 
-    async function syncAiAnalysis(profile, events = [], persistSimulation = false) {
+    async function syncAiAnalysis(profile, events = [], persistSimulation = false, loans = []) {
       const [simData, mcData, adviceData] = await Promise.all([
         postJson('/simulate', {
           profile,
           months: 60,
           events,
-          loans: [],
+          loans,
           user_id: persistSimulation ? (currentUser?.id || null) : null
         }),
         postJson('/monte-carlo', {
           profile,
           months: 60,
           events,
-          loans: [],
+          loans,
           simulations: 300
         }),
         postJson('/ai/advice', {
           profile,
-          options: buildAdviceOptions(profile, events),
+          options: buildAdviceOptions(profile, events, loans),
           months: 60,
           mc_runs: 300
         })
@@ -281,6 +316,128 @@
 
       return { simData, mcData, adviceData };
     }
+
+    function numberValue(id) {
+      const value = Number(document.getElementById(id).value);
+      return Number.isFinite(value) ? value : null;
+    }
+
+    function describeEvent(event) {
+      if (event.type === 'one_time') {
+        return `第 ${event.month} 月，${formatCurrency(event.amount)}，${escapeHtml(event.note || '一次事件')}`;
+      }
+      if (event.type === 'range') {
+        return `第 ${event.start_month}-${event.end_month} 月，每月 ${formatCurrency(event.amount)}，${escapeHtml(event.note || '期間事件')}`;
+      }
+      return `第 ${event.start_month} 月起，薪資改為 ${formatCurrency(event.new_salary)}，${escapeHtml(event.note || '薪資改變')}`;
+    }
+
+    function renderScenarioLists() {
+      const loanList = document.getElementById('loan-list');
+      const eventList = document.getElementById('event-list');
+
+      loanList.innerHTML = currentLoans.length
+        ? currentLoans.map((loan, index) => `
+          <div class="mc-panel variant-obsidian p-2 border-2">
+            <div>本金 ${formatCurrency(loan.principal)}，年利率 ${(loan.apr * 100).toFixed(2)}%，${loan.months} 期，第 ${loan.start_month} 月開始</div>
+            <button type="button" class="btn-pixel bg-red text-white mt-2" onclick="removeLoan(${index})">移除</button>
+          </div>
+        `).join('')
+        : '<div class="text-gray">尚未加入貸款</div>';
+
+      eventList.innerHTML = currentEvents.length
+        ? currentEvents.map((event, index) => `
+          <div class="mc-panel variant-obsidian p-2 border-2">
+            <div>${describeEvent(event)}</div>
+            <button type="button" class="btn-pixel bg-red text-white mt-2" onclick="removeScenarioEvent(${index})">移除</button>
+          </div>
+        `).join('')
+        : '<div class="text-gray">尚未加入事件</div>';
+    }
+
+    function removeLoan(index) {
+      currentLoans.splice(index, 1);
+      renderScenarioLists();
+    }
+
+    function removeScenarioEvent(index) {
+      currentEvents.splice(index, 1);
+      renderScenarioLists();
+    }
+
+    document.getElementById('btn-add-loan').addEventListener('click', () => {
+      const principal = numberValue('loan-principal');
+      const aprInput = numberValue('loan-apr');
+      const months = numberValue('loan-months');
+      const startMonth = numberValue('loan-start');
+
+      if (principal === null || aprInput === null || months === null || startMonth === null || principal < 0 || aprInput < 0 || months <= 0 || startMonth <= 0) {
+        alert('請輸入完整且有效的貸款資料');
+        return;
+      }
+
+      currentLoans.push({
+        principal,
+        apr: aprInput > 1 ? aprInput / 100 : aprInput,
+        months: Math.round(months),
+        start_month: Math.round(startMonth)
+      });
+
+      ['loan-principal', 'loan-apr', 'loan-months', 'loan-start'].forEach(id => document.getElementById(id).value = '');
+      renderScenarioLists();
+    });
+
+    document.getElementById('btn-add-event').addEventListener('click', () => {
+      const type = document.getElementById('event-type').value;
+      const note = document.getElementById('event-note').value.trim();
+      let event = { type, note };
+
+      if (type === 'one_time') {
+        const month = numberValue('event-month');
+        const amount = numberValue('event-amount');
+        if (month === null || amount === null || month <= 0) {
+          alert('一次事件需要發生月份與金額');
+          return;
+        }
+        event = { ...event, month: Math.round(month), amount };
+      } else if (type === 'range') {
+        const startMonth = numberValue('event-start');
+        const endMonth = numberValue('event-end');
+        const amount = numberValue('event-amount');
+        if (startMonth === null || endMonth === null || amount === null || startMonth <= 0 || endMonth < startMonth) {
+          alert('期間事件需要開始月份、結束月份與金額');
+          return;
+        }
+        event = { ...event, start_month: Math.round(startMonth), end_month: Math.round(endMonth), amount };
+      } else {
+        const startMonth = numberValue('event-start');
+        const newSalary = numberValue('event-new-salary');
+        if (startMonth === null || newSalary === null || startMonth <= 0 || newSalary < 0) {
+          alert('薪資改變需要開始月份與新薪資');
+          return;
+        }
+        event = { ...event, start_month: Math.round(startMonth), new_salary: newSalary };
+      }
+
+      currentEvents.push(event);
+      ['event-month', 'event-start', 'event-end', 'event-amount', 'event-new-salary', 'event-note'].forEach(id => document.getElementById(id).value = '');
+      renderScenarioLists();
+    });
+
+    document.getElementById('btn-rerun-scenario').addEventListener('click', async () => {
+      if (!currentProfile) {
+        alert('請先完成原本的固定收入、固定支出與變動支出設定');
+        return;
+      }
+
+      try {
+        await syncAiAnalysis(currentProfile, currentEvents, false, currentLoans);
+      } catch (error) {
+        appendAiInsight(`⚠️ 情境重新分析失敗：${escapeHtml(error.message || '請稍後再試')}`);
+      }
+    });
+
+    renderScenarioLists();
 
     // ==========================================
     // 🌟 Minecraft 黃色標語輪替邏輯
@@ -441,14 +598,13 @@
             balance: initBalance
           },
           months: 60,
-          events: [],
-          loans: [],
+          events: currentEvents,
+          loans: currentLoans,
           user_id: currentUser.id
         };
 
         currentProfile = payload.profile;
-        currentEvents = [];
-        const analysis = await syncAiAnalysis(currentProfile, currentEvents, true);
+        const analysis = await syncAiAnalysis(currentProfile, currentEvents, true, currentLoans);
         console.log("【後端 AI 分析結果】:", analysis);
           
         currentBalance = initBalance;
@@ -546,7 +702,7 @@
         currentProfile = { ...currentProfile, balance: currentBalance };
 
         try {
-          await syncAiAnalysis(currentProfile, currentEvents);
+          await syncAiAnalysis(currentProfile, currentEvents, false, currentLoans);
         } catch (error) {
           appendAiInsight(`⚠️ 後端 AI 重新分析失敗：${escapeHtml(error.message || '請稍後再試')}`);
         }
