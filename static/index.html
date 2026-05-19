@@ -11,7 +11,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=dashboard-left-fill-20260519">
+  <link rel="stylesheet" href="style.css?v=dashboard-risk-widgets-20260519">
 </head>
 <body>
   <div class="bg-cloud cloud-1"></div>
@@ -79,7 +79,35 @@
         <div class="col-left">
           <section id="panel-default" class="mc-panel variant-stone relative-panel">
             <div class="panel-badge badge-stone text-xs">60-Month Projection</div>
-            <div class="chart-container"><canvas id="financeChart"></canvas></div>
+            <div class="chart-dashboard">
+              <div class="chart-container"><canvas id="financeChart"></canvas></div>
+              <aside class="risk-sidebar" aria-label="財務風險指標">
+                <div class="risk-card">
+                  <div class="risk-card-title">FSI 燈號</div>
+                  <div class="risk-card-body">
+                    <div id="fsi-signal" class="traffic-signal signal-low" aria-hidden="true">
+                      <span class="light light-red"></span>
+                      <span class="light light-yellow"></span>
+                      <span class="light light-green"></span>
+                    </div>
+                    <div>
+                      <div id="fsi-value" class="risk-value">--</div>
+                      <div id="fsi-status" class="risk-status">等待分析</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="risk-card">
+                  <div class="risk-card-title">破產機率</div>
+                  <div class="risk-card-body">
+                    <div id="bankruptcy-signal" class="warning-badge risk-low" aria-hidden="true">!</div>
+                    <div>
+                      <div id="bankruptcy-value" class="risk-value">--</div>
+                      <div id="bankruptcy-status" class="risk-status">Monte Carlo</div>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </div>
           </section>
 
           <section class="mc-panel variant-obsidian relative-panel chat-section flex-col">
@@ -177,6 +205,12 @@
     const aiInsights = document.getElementById('ai-insights');
     const aiScrollbar = document.getElementById('ai-scrollbar');
     const aiScrollThumb = document.getElementById('ai-scroll-thumb');
+    const fsiSignal = document.getElementById('fsi-signal');
+    const fsiValue = document.getElementById('fsi-value');
+    const fsiStatus = document.getElementById('fsi-status');
+    const bankruptcySignal = document.getElementById('bankruptcy-signal');
+    const bankruptcyValue = document.getElementById('bankruptcy-value');
+    const bankruptcyStatus = document.getElementById('bankruptcy-status');
     const API_BASE = window.location.origin;
     let currentUser = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
     let currentBalance = 0; 
@@ -223,6 +257,36 @@
       if (level === 'crisis') return '危機';
       if (level === 'unknown') return '未知';
       return level;
+    }
+
+    function updateRiskWidgets(summary = {}, mcData = {}) {
+      const fsi = Number(summary.max_fsi);
+      const minBalance = Number(summary.min_balance);
+      const bankruptProbability = Number(mcData.bankrupt_probability);
+
+      let fsiLevel = 'low';
+      if (Number.isFinite(minBalance) && minBalance < 0) {
+        fsiLevel = 'crisis';
+      } else if (Number.isFinite(fsi) && fsi >= 0.85) {
+        fsiLevel = 'high';
+      } else if (Number.isFinite(fsi) && fsi >= 0.6) {
+        fsiLevel = 'medium';
+      }
+
+      fsiSignal.className = `traffic-signal signal-${fsiLevel}`;
+      fsiValue.textContent = Number.isFinite(fsi) ? fsi.toFixed(3) : '--';
+      fsiStatus.textContent = formatRiskLevel(fsiLevel);
+
+      let bankruptcyLevel = 'low';
+      if (Number.isFinite(bankruptProbability) && bankruptProbability >= 0.15) {
+        bankruptcyLevel = 'high';
+      } else if (Number.isFinite(bankruptProbability) && bankruptProbability >= 0.05) {
+        bankruptcyLevel = 'medium';
+      }
+
+      bankruptcySignal.className = `warning-badge risk-${bankruptcyLevel}`;
+      bankruptcyValue.textContent = Number.isFinite(bankruptProbability) ? formatPercent(bankruptProbability) : '--';
+      bankruptcyStatus.textContent = formatRiskLevel(bankruptcyLevel);
     }
 
     function escapeHtml(value) {
@@ -362,6 +426,7 @@
       const simResult = simData.result || simData;
       const summary = simResult.summary || {};
       const curve = simResult.simulation_curve || [];
+      updateRiskWidgets(summary, mcData);
 
       if (curve.length) {
         financeChart.data.labels = ['今日', ...curve.map(item => item.month % 6 === 0 ? `第${item.month}個月` : '')];
