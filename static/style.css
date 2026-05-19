@@ -90,8 +90,8 @@ body {
 
 #page-dashboard {
   min-height: 0;
-  height: calc(100vh - 64px);
-  max-height: 760px;
+  height: calc(100vh - 48px);
+  max-height: none;
   overflow: hidden;
 }
 
@@ -228,7 +228,7 @@ body {
   gap: 24px;
   flex: 1;
   align-items: stretch; /* 強迫左右兩大欄等高 */
-  padding-bottom: 16px;
+  padding-bottom: 0;
   min-height: 0;
   height: 100%;
   overflow: hidden;
@@ -398,12 +398,12 @@ body {
    左下：AI 對話框 (Chat Window)
 ========================================= */
 .chat-section {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
   margin-top: 0 !important;
   height: auto;
-  min-height: 0;
+  min-height: 280px;
   max-height: none;
   overflow: hidden;
 }
