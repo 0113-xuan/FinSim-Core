@@ -11,7 +11,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=dashboard-risk-widgets-20260519">
+  <link rel="stylesheet" href="style.css?v=event-start-month-20260520">
 </head>
 <body>
   <div class="bg-cloud cloud-1"></div>
@@ -164,12 +164,11 @@
 
               <div class="text-xs font-bold mt-3">人生事件</div>
               <select id="event-type" class="mc-input-pixel">
-                <option value="one_time">一次收入/支出</option>
+                <option value="one_time">單月收入/支出</option>
                 <option value="range">期間收入/支出</option>
                 <option value="salary_change">薪資改變</option>
               </select>
               <div class="grid grid-cols-2 gap-2">
-                <input type="number" id="event-month" class="mc-input-pixel" placeholder="發生月份">
                 <input type="number" id="event-start" class="mc-input-pixel" placeholder="開始月份">
                 <input type="number" id="event-end" class="mc-input-pixel" placeholder="結束月份">
                 <input type="number" id="event-amount" class="mc-input-pixel" placeholder="金額(收入為正)">
@@ -466,7 +465,7 @@
 
     function describeEvent(event) {
       if (event.type === 'one_time') {
-        return `第 ${event.month} 月，${formatCurrency(event.amount)}，${escapeHtml(event.note || '一次事件')}`;
+        return `第 ${event.month} 月，${formatCurrency(event.amount)}，${escapeHtml(event.note || '單月事件')}`;
       }
       if (event.type === 'range') {
         return `第 ${event.start_month}-${event.end_month} 月，每月 ${formatCurrency(event.amount)}，${escapeHtml(event.note || '期間事件')}`;
@@ -535,10 +534,10 @@
       let event = { type, note };
 
       if (type === 'one_time') {
-        const month = numberValue('event-month');
+        const month = numberValue('event-start');
         const amount = numberValue('event-amount');
         if (month === null || amount === null || month <= 0) {
-          alert('一次事件需要發生月份與金額');
+          alert('單月事件需要開始月份與金額');
           return;
         }
         event = { ...event, month: Math.round(month), amount };
@@ -562,7 +561,7 @@
       }
 
       currentEvents.push(event);
-      ['event-month', 'event-start', 'event-end', 'event-amount', 'event-new-salary', 'event-note'].forEach(id => document.getElementById(id).value = '');
+      ['event-start', 'event-end', 'event-amount', 'event-new-salary', 'event-note'].forEach(id => document.getElementById(id).value = '');
       renderScenarioLists();
     });
 
