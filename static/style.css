@@ -244,8 +244,8 @@ body {
     height: auto;
   }
   #panel-default {
-    flex: 0 0 360px;
-    height: 360px;
+    flex: 0 0 300px;
+    height: 300px;
   }
   .credit-score { margin-left: 0; align-items: flex-start; }
 }
@@ -277,7 +277,7 @@ body {
   display: flex;
   flex-direction: column;
   margin-top: 0 !important; /* 與右側對齊 */
-  min-height: 220px;
+  min-height: 160px;
   overflow: hidden;
 }
 .chart-container {
@@ -299,12 +299,12 @@ body {
    左下：AI 對話框 (Chat Window)
 ========================================= */
 .chat-section {
-  flex: 0 0 clamp(360px, 46vh, 540px);
+  flex: 0 0 clamp(420px, 55vh, 650px);
   display: flex;
   flex-direction: column;
   margin-top: 0 !important;
-  height: clamp(360px, 46vh, 540px);
-  max-height: 540px;
+  height: clamp(420px, 55vh, 650px);
+  max-height: 650px;
   min-height: 0;
   overflow: hidden;
 }
