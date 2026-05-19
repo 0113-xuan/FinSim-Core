@@ -11,7 +11,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=event-range-salary-20260520">
+  <link rel="stylesheet" href="style.css?v=demo-mode-20260520">
 </head>
 <body>
   <div class="bg-cloud cloud-1"></div>
@@ -210,6 +210,13 @@
     const bankruptcyValue = document.getElementById('bankruptcy-value');
     const bankruptcyStatus = document.getElementById('bankruptcy-status');
     const API_BASE = window.location.origin;
+    const DEMO_MODE = true;
+    const DEMO_PROFILE = {
+      salary: 42000,
+      fixed_expense: 18000,
+      variable_expense: 9000,
+      balance: 120000
+    };
     let currentUser = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
     let currentBalance = 0; 
     let monthlyNetFlow = 0; 
@@ -287,6 +294,50 @@
       bankruptcyStatus.textContent = formatRiskLevel(bankruptcyLevel);
     }
 
+    function applyFallbackAnalysis(profile) {
+      const curve = [];
+      let balance = Number(profile.balance || 0);
+      const monthlySavings = Number(profile.salary || 0)
+        - Number(profile.fixed_expense || 0)
+        - Number(profile.variable_expense || 0);
+
+      for (let month = 1; month <= 60; month++) {
+        balance += monthlySavings;
+        curve.push({
+          month,
+          balance: Math.round(balance)
+        });
+      }
+
+      const finalBalance = curve[curve.length - 1]?.balance || balance;
+      const minBalance = Math.min(profile.balance, ...curve.map(item => item.balance));
+      const expense = Number(profile.fixed_expense || 0) + Number(profile.variable_expense || 0);
+      const fsi = Number(profile.salary) > 0
+        ? Math.min(0.99, (expense / Number(profile.salary)) + (minBalance < 0 ? 0.25 : 0))
+        : 0.99;
+      const bankruptProbability = minBalance < 0 ? 0.25 : 0;
+
+      financeChart.data.labels = ['今日', ...curve.map(item => item.month % 6 === 0 ? `第${item.month}個月` : '')];
+      financeChart.data.datasets[0].data = [profile.balance, ...curve.map(item => item.balance)];
+      financeChart.update();
+      updateRiskWidgets(
+        {
+          final_balance: finalBalance,
+          min_balance: minBalance,
+          max_fsi: fsi,
+          avg_fsi: fsi,
+          high_risk_months: fsi >= 0.85 ? 60 : 0,
+          first_risk_month: fsi >= 0.85 ? 1 : null
+        },
+        {
+          bankrupt_probability: bankruptProbability,
+          worst_case_balance: minBalance,
+          best_case_balance: finalBalance,
+          avg_final_balance: finalBalance
+        }
+      );
+    }
+
     function escapeHtml(value) {
       return String(value)
         .replace(/&/g, '&amp;')
@@ -344,6 +395,52 @@
         Math.max(0, clientY - trackRect.top - thumbHeight / 2)
       );
       aiInsights.scrollTop = (targetThumbTop / maxThumbTop) * maxScrollTop;
+    }
+
+    function showDashboard() {
+      pageRegister.classList.add('hidden');
+      pageLogin.classList.add('hidden');
+      pageSetup1.classList.add('hidden');
+      pageSetup2.classList.add('hidden');
+      mainLogo.classList.add('hidden');
+      pageDashboard.classList.remove('hidden');
+      pageDashboard.classList.add('flex');
+      refreshDashboardLayout();
+    }
+
+    async function startSimulationFromProfile(profile, persistSimulation = false) {
+      currentProfile = { ...profile };
+      currentBalance = profile.balance;
+      monthlyNetFlow = profile.salary - profile.fixed_expense - profile.variable_expense;
+
+      const analysis = await syncAiAnalysis(currentProfile, currentEvents, persistSimulation, currentLoans);
+      console.log("【後端 AI 分析結果】:", analysis);
+      showDashboard();
+      return analysis;
+    }
+
+    async function startDemoMode() {
+      currentUser = { id: 'demo-user', username: 'demo', email: 'demo@example.com' };
+      sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+      document.getElementById('setup-balance').value = DEMO_PROFILE.balance;
+      document.getElementById('setup-income').value = DEMO_PROFILE.salary;
+      document.getElementById('setup-fixed-expenses').value = DEMO_PROFILE.fixed_expense;
+      document.getElementById('setup-var-expenses').value = DEMO_PROFILE.variable_expense;
+
+      try {
+        await startSimulationFromProfile(DEMO_PROFILE, false);
+      } catch (error) {
+        console.error("展示模式初始化失敗:", error);
+        currentProfile = { ...DEMO_PROFILE };
+        currentBalance = DEMO_PROFILE.balance;
+        monthlyNetFlow = DEMO_PROFILE.salary - DEMO_PROFILE.fixed_expense - DEMO_PROFILE.variable_expense;
+        applyFallbackAnalysis(DEMO_PROFILE);
+        showDashboard();
+        appendAiInsight(`
+          <div class="font-bold text-yellow-300 mb-2">展示模式已啟用</div>
+          <div>目前暫停登入與初始設定流程，系統已套用預設財務資料：資產 ${formatCurrency(DEMO_PROFILE.balance)}、月收入 ${formatCurrency(DEMO_PROFILE.salary)}、月支出 ${formatCurrency(DEMO_PROFILE.fixed_expense + DEMO_PROFILE.variable_expense)}。</div>
+        `);
+      }
     }
 
     aiInsights.addEventListener('scroll', updateAiScrollbar);
@@ -738,11 +835,11 @@
       startBtn.disabled = true;
 
       try {
-        if (!currentUser || !currentUser.id) {
+        if (!DEMO_MODE && (!currentUser || !currentUser.id)) {
           throw new Error("請先登入，系統才能把財務資料綁定到你的帳號。");
         }
 
-        await postJson('/financial-profile/create', {
+        if (!DEMO_MODE) await postJson('/financial-profile/create', {
           user_id: currentUser.id,
           current_savings: initBalance,
           monthly_income: initIncome,
@@ -763,18 +860,7 @@
           user_id: currentUser.id
         };
 
-        currentProfile = payload.profile;
-        const analysis = await syncAiAnalysis(currentProfile, currentEvents, true, currentLoans);
-        console.log("【後端 AI 分析結果】:", analysis);
-          
-        currentBalance = initBalance;
-        monthlyNetFlow = initIncome - initFixedExp - initVarExp;
-
-        // 隱藏設定面板，顯示主控台
-        pageSetup2.classList.add('hidden');
-        mainLogo.classList.add('hidden'); 
-        pageDashboard.classList.remove('hidden');
-        refreshDashboardLayout();
+        await startSimulationFromProfile(payload.profile, !DEMO_MODE);
       } catch (error) {
         console.error("連線錯誤:", error);
         renderApiError("❌ 模擬或財務資料儲存失敗：", error);
@@ -825,7 +911,7 @@
           throw new Error("請先登入，系統才能把記帳資料綁定到你的帳號。");
         }
 
-        await postJson('/event/add', {
+        if (!DEMO_MODE) await postJson('/event/add', {
           user_id: currentUser.id,
           event_type: note,
           amount: numAmount
@@ -916,6 +1002,10 @@
     }
 
     window.addEventListener('resize', refreshDashboardLayout);
+
+    if (DEMO_MODE) {
+      startDemoMode();
+    }
 
   </script>
 </body>
