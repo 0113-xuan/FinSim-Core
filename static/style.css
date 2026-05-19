@@ -265,6 +265,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* =========================================
@@ -413,7 +415,11 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+  order: -1;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 .btn-pixel.active-side {
   box-shadow: inset 3px 3px 0 rgba(255,255,255,0.35), 4px 4px 0 #000;
