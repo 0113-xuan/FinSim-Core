@@ -88,6 +88,13 @@ body {
   min-height: 100vh;
 }
 
+#page-dashboard {
+  min-height: 0;
+  height: calc(100vh - 64px);
+  max-height: 760px;
+  overflow: hidden;
+}
+
 /* =========================================
    Minecraft UI 共用元件 (Reusable UI)
 ========================================= */
@@ -215,26 +222,41 @@ body {
 /* =========================================
    網格排版 (Main Layout) - 完美的左二右一
 ========================================= */
-.grid-layout { 
-  display: grid; 
+.grid-layout {
+  display: grid;
   grid-template-columns: 7fr 5fr; /* 左邊佔 7 份，右邊佔 5 份 */
-  gap: 24px; 
-  flex: 1; 
+  gap: 24px;
+  flex: 1;
   align-items: stretch; /* 強迫左右兩大欄等高 */
-  padding-bottom: 16px; 
+  padding-bottom: 16px;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 @media (max-width: 768px) {
-  .grid-layout { grid-template-columns: 1fr; } 
+  .grid-layout {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+    align-items: start;
+  }
+  .col-left {
+    height: auto;
+  }
+  #panel-default {
+    flex: 0 0 360px;
+    height: 360px;
+  }
   .credit-score { margin-left: 0; align-items: flex-start; }
 }
 
 /* 左側欄：直向容器 */
-.col-left { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 24px; 
-  height: 100%; 
+.col-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100%;
+  min-height: 0;
 }
 
 /* 右側欄：填滿高度 */
@@ -249,10 +271,11 @@ body {
    左上：財務圖表 (Finance Chart)
 ========================================= */
 #panel-default {
-  flex: 6; /* 佔據左側 60% 空間 */
-  display: flex; 
-  flex-direction: column; 
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
   margin-top: 0 !important; /* 與右側對齊 */
+  min-height: 220px;
 }
 .chart-container {
   width: 100%; flex: 1; min-height: 200px; position: relative; 
@@ -264,20 +287,34 @@ body {
 /* =========================================
    左下：AI 對話框 (Chat Window)
 ========================================= */
-.chat-section { 
-  flex: 4; /* 佔據左側 40% 空間 */
-  display: flex; 
-  flex-direction: column; 
-  margin-top: 0 !important; 
-  height: auto; /* 取消固定高度，讓 flex 自動分配 */
+.chat-section {
+  flex: 0 0 clamp(190px, 28vh, 270px);
+  display: flex;
+  flex-direction: column;
+  margin-top: 0 !important;
+  height: clamp(190px, 28vh, 270px);
+  max-height: 270px;
+  min-height: 0;
+  overflow: hidden;
 }
-.chat-messages { 
-  flex: 1; 
-  overflow-y: auto; 
-  display: flex; 
-  flex-direction: column; 
-  gap: 12px; 
+.chat-scroll-wrap {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18px;
+  gap: 8px;
+  align-items: stretch;
+}
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding: 8px;
+  min-height: 0;
 }
 
 /* 對話泡泡 */
@@ -290,11 +327,38 @@ body {
 .message-player { flex-direction: row-reverse; }
 .message-player .msg-bubble { background-color: #2563eb; border-color: #1e3a8a; }
 
-/* 麥塊風格自訂捲軸 */
-.chat-messages::-webkit-scrollbar { width: 12px; }
-.chat-messages::-webkit-scrollbar-track { background: #1e1e1e; border-left: 2px solid #000; }
-.chat-messages::-webkit-scrollbar-thumb { background: #555; border: 2px solid #000; box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2); }
-.chat-messages::-webkit-scrollbar-thumb:hover { background: #777; }
+/* 麥塊風格拖曳捲軸 */
+.chat-messages::-webkit-scrollbar { width: 0; height: 0; }
+.chat-drag-scrollbar {
+  position: relative;
+  height: 100%;
+  min-height: 80px;
+  background: #101010;
+  border: 4px solid #000;
+  border-top-color: #2d2d2d;
+  border-left-color: #2d2d2d;
+  border-bottom-color: #050505;
+  border-right-color: #050505;
+  box-shadow: inset 3px 3px 0 rgba(255,255,255,0.08);
+  cursor: pointer;
+  touch-action: none;
+}
+.chat-drag-thumb {
+  position: absolute;
+  top: 0;
+  left: 2px;
+  right: 2px;
+  min-height: 34px;
+  background: #6b7280;
+  border: 3px solid #000;
+  box-shadow: inset 2px 2px 0 rgba(255,255,255,0.28), 2px 2px 0 rgba(0,0,0,0.55);
+  cursor: grab;
+}
+.chat-drag-thumb:active { cursor: grabbing; }
+.chat-drag-scrollbar.is-disabled {
+  opacity: 0.45;
+  cursor: default;
+}
 
 /* 聊天輸入區 */
 .chat-input-area { display: flex; gap: 8px; border-top: 1px solid #444; padding-top: 12px; }

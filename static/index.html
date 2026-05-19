@@ -84,13 +84,18 @@
 
           <section class="mc-panel variant-obsidian relative-panel chat-section flex-col">
             <div class="panel-badge badge-obsidian text-xs">💡 AI Synchronizer</div>
-            <div id="ai-insights" class="chat-messages">
-              <div class="text-center text-gray-400 text-xs my-2">-- System Online --</div>
-              <div class="message-ai flex items-start gap-2">
-                <div class="text-xl">🧙‍♂️</div>
-                <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-3 text-white text-xs">
-                  我是 AI 顧問。我已同步你的初始資料，接下來你每一筆記帳，我都會在此即時結算！
+            <div class="chat-scroll-wrap">
+              <div id="ai-insights" class="chat-messages">
+                <div class="text-center text-gray-400 text-xs my-2">-- System Online --</div>
+                <div class="message-ai flex items-start gap-2">
+                  <div class="text-xl">🧙‍♂️</div>
+                  <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-3 text-white text-xs">
+                    我是 AI 顧問。我已同步你的初始資料，接下來你每一筆記帳，我都會在此即時結算！
+                  </div>
                 </div>
+              </div>
+              <div id="ai-scrollbar" class="chat-drag-scrollbar" aria-hidden="true">
+                <div id="ai-scroll-thumb" class="chat-drag-thumb"></div>
               </div>
             </div>
           </section>
@@ -169,6 +174,9 @@
     const pageSetup2 = document.getElementById('page-setup-2'); 
     const pageDashboard = document.getElementById('page-dashboard');
     const mainLogo = document.getElementById('main-logo'); 
+    const aiInsights = document.getElementById('ai-insights');
+    const aiScrollbar = document.getElementById('ai-scrollbar');
+    const aiScrollThumb = document.getElementById('ai-scroll-thumb');
     const API_BASE = window.location.origin;
     let currentUser = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
     let currentBalance = 0; 
@@ -236,7 +244,71 @@
         </div>
       `);
       aiInsights.scrollTop = aiInsights.scrollHeight;
+      updateAiScrollbar();
     }
+
+    function updateAiScrollbar() {
+      if (!aiInsights || !aiScrollbar || !aiScrollThumb) return;
+
+      const { scrollTop, scrollHeight, clientHeight } = aiInsights;
+      const trackHeight = aiScrollbar.clientHeight;
+      const canScroll = scrollHeight > clientHeight + 1;
+
+      aiScrollbar.classList.toggle('is-disabled', !canScroll);
+      if (!canScroll || trackHeight <= 0) {
+        aiScrollThumb.style.height = '100%';
+        aiScrollThumb.style.transform = 'translateY(0)';
+        return;
+      }
+
+      const thumbHeight = Math.max(34, Math.round((clientHeight / scrollHeight) * trackHeight));
+      const maxThumbTop = trackHeight - thumbHeight;
+      const maxScrollTop = scrollHeight - clientHeight;
+      const thumbTop = Math.round((scrollTop / maxScrollTop) * maxThumbTop);
+
+      aiScrollThumb.style.height = `${thumbHeight}px`;
+      aiScrollThumb.style.transform = `translateY(${thumbTop}px)`;
+    }
+
+    function scrollAiMessagesFromPointer(clientY) {
+      const maxScrollTop = aiInsights.scrollHeight - aiInsights.clientHeight;
+      if (maxScrollTop <= 0) return;
+
+      const trackRect = aiScrollbar.getBoundingClientRect();
+      const thumbHeight = aiScrollThumb.offsetHeight;
+      const maxThumbTop = Math.max(1, trackRect.height - thumbHeight);
+      const targetThumbTop = Math.min(
+        maxThumbTop,
+        Math.max(0, clientY - trackRect.top - thumbHeight / 2)
+      );
+      aiInsights.scrollTop = (targetThumbTop / maxThumbTop) * maxScrollTop;
+    }
+
+    aiInsights.addEventListener('scroll', updateAiScrollbar);
+    aiInsights.addEventListener('wheel', (event) => {
+      event.preventDefault();
+      aiInsights.scrollTop += event.deltaY;
+    }, { passive: false });
+    aiScrollbar.addEventListener('wheel', (event) => {
+      event.preventDefault();
+      aiInsights.scrollTop += event.deltaY;
+    }, { passive: false });
+    aiScrollbar.addEventListener('mousedown', (event) => {
+      event.preventDefault();
+      scrollAiMessagesFromPointer(event.clientY);
+
+      const handleDrag = (moveEvent) => {
+        moveEvent.preventDefault();
+        scrollAiMessagesFromPointer(moveEvent.clientY);
+      };
+      const stopDrag = () => {
+        document.removeEventListener('mousemove', handleDrag);
+        document.removeEventListener('mouseup', stopDrag);
+      };
+
+      document.addEventListener('mousemove', handleDrag);
+      document.addEventListener('mouseup', stopDrag);
+    });
 
     function buildAdviceOptions(profile, events = [], loans = []) {
       const monthlySavingsBoost = Math.max(500, Math.round(profile.variable_expense * 0.1));
@@ -639,7 +711,7 @@
         pageSetup2.classList.add('hidden');
         mainLogo.classList.add('hidden'); 
         pageDashboard.classList.remove('hidden');
-        if (typeof financeChart !== 'undefined') financeChart.resize();
+        refreshDashboardLayout();
       } catch (error) {
         console.error("連線錯誤:", error);
         renderApiError("❌ 模擬或財務資料儲存失敗：", error);
@@ -669,8 +741,6 @@
     // 🌟 記帳系統 ＆ AI 財務狀況即時播報
     // ==========================================
     const historyList = document.getElementById('history-list');
-    const aiInsights = document.getElementById('ai-insights'); 
-    
     document.getElementById('btn-submit-record').addEventListener('click', async () => {
       const amount = document.getElementById('record-amount').value;
       const note = document.getElementById('record-note').value;
@@ -770,6 +840,19 @@
         }
       }
     });
+
+    function refreshDashboardLayout() {
+      requestAnimationFrame(() => {
+        financeChart.resize();
+        updateAiScrollbar();
+        requestAnimationFrame(() => {
+          financeChart.resize();
+          updateAiScrollbar();
+        });
+      });
+    }
+
+    window.addEventListener('resize', refreshDashboardLayout);
 
   </script>
 </body>
