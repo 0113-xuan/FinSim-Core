@@ -297,12 +297,12 @@ body {
    左下：AI 對話框 (Chat Window)
 ========================================= */
 .chat-section {
-  flex: 0 0 clamp(190px, 28vh, 270px);
+  flex: 0 0 clamp(300px, 38vh, 420px);
   display: flex;
   flex-direction: column;
   margin-top: 0 !important;
-  height: clamp(190px, 28vh, 270px);
-  max-height: 270px;
+  height: clamp(300px, 38vh, 420px);
+  max-height: 420px;
   min-height: 0;
   overflow: hidden;
 }
