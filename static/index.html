@@ -559,6 +559,13 @@
       return Number.isFinite(value) ? value : null;
     }
 
+    function updateEventFieldVisibility() {
+      const type = document.getElementById('event-type').value;
+      document.getElementById('event-end').classList.toggle('hidden', type !== 'range');
+      document.getElementById('event-amount').classList.toggle('hidden', type !== 'range');
+      document.getElementById('event-new-salary').classList.toggle('hidden', type !== 'salary_change');
+    }
+
     function describeEvent(event) {
       if (event.type === 'one_time') {
         return `第 ${event.month} 月，${formatCurrency(event.amount)}，${escapeHtml(event.note || '單月事件')}`;
@@ -623,6 +630,9 @@
       ['loan-principal', 'loan-apr', 'loan-months', 'loan-start'].forEach(id => document.getElementById(id).value = '');
       renderScenarioLists();
     });
+
+    document.getElementById('event-type').addEventListener('change', updateEventFieldVisibility);
+    updateEventFieldVisibility();
 
     document.getElementById('btn-add-event').addEventListener('click', () => {
       const type = document.getElementById('event-type').value;
