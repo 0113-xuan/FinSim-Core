@@ -11,7 +11,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=demo-mode-20260520">
+  <link rel="stylesheet" href="style.css?v=manual-setup-demo-20260520">
 </head>
 <body>
   <div class="bg-cloud cloud-1"></div>
@@ -211,12 +211,6 @@
     const bankruptcyStatus = document.getElementById('bankruptcy-status');
     const API_BASE = window.location.origin;
     const DEMO_MODE = true;
-    const DEMO_PROFILE = {
-      salary: 42000,
-      fixed_expense: 18000,
-      variable_expense: 9000,
-      balance: 120000
-    };
     let currentUser = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
     let currentBalance = 0; 
     let monthlyNetFlow = 0; 
@@ -493,34 +487,35 @@
       currentBalance = profile.balance;
       monthlyNetFlow = profile.salary - profile.fixed_expense - profile.variable_expense;
 
-      const analysis = await syncAiAnalysis(currentProfile, currentEvents, persistSimulation, currentLoans);
-      console.log("【後端 AI 分析結果】:", analysis);
-      showDashboard();
-      return analysis;
-    }
-
-    async function startDemoMode() {
-      currentUser = { id: 'demo-user', username: 'demo', email: 'demo@example.com' };
-      sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-      document.getElementById('setup-balance').value = DEMO_PROFILE.balance;
-      document.getElementById('setup-income').value = DEMO_PROFILE.salary;
-      document.getElementById('setup-fixed-expenses').value = DEMO_PROFILE.fixed_expense;
-      document.getElementById('setup-var-expenses').value = DEMO_PROFILE.variable_expense;
-
       try {
-        await startSimulationFromProfile(DEMO_PROFILE, false);
+        const analysis = await syncAiAnalysis(currentProfile, currentEvents, persistSimulation, currentLoans);
+        console.log("【後端 AI 分析結果】:", analysis);
+        showDashboard();
+        return analysis;
       } catch (error) {
-        console.error("展示模式初始化失敗:", error);
-        currentProfile = { ...DEMO_PROFILE };
-        currentBalance = DEMO_PROFILE.balance;
-        monthlyNetFlow = DEMO_PROFILE.salary - DEMO_PROFILE.fixed_expense - DEMO_PROFILE.variable_expense;
-        applyFallbackAnalysis(DEMO_PROFILE, currentEvents, currentLoans);
+        if (!DEMO_MODE) throw error;
+
+        console.warn("展示模式改用前端模擬備援:", error);
+        applyFallbackAnalysis(currentProfile, currentEvents, currentLoans);
         showDashboard();
         appendAiInsight(`
           <div class="font-bold text-yellow-300 mb-2">展示模式已啟用</div>
-          <div>目前暫停登入與初始設定流程，系統已套用預設財務資料：資產 ${formatCurrency(DEMO_PROFILE.balance)}、月收入 ${formatCurrency(DEMO_PROFILE.salary)}、月支出 ${formatCurrency(DEMO_PROFILE.fixed_expense + DEMO_PROFILE.variable_expense)}。</div>
+          <div>目前跳過登入流程，並使用你輸入的初始財務資料進行 60 個月模擬。</div>
         `);
+        return null;
       }
+    }
+
+    function startDemoMode() {
+      currentUser = { id: 'demo-user', username: 'demo', email: 'demo@example.com' };
+      sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+      pageRegister.classList.add('hidden');
+      pageLogin.classList.add('hidden');
+      pageSetup2.classList.add('hidden');
+      pageDashboard.classList.add('hidden');
+      pageDashboard.classList.remove('flex');
+      pageSetup1.classList.remove('hidden');
+      document.getElementById('btn-back-to-login-from-setup').classList.add('hidden');
     }
 
     aiInsights.addEventListener('scroll', updateAiScrollbar);
