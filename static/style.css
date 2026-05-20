@@ -271,9 +271,9 @@ body {
     height: 100%;
   }
   #panel-default {
-    flex: 0 0 clamp(420px, 58vh, 560px);
-    height: clamp(420px, 58vh, 560px);
-    min-height: 420px;
+    flex: 0 0 clamp(380px, 48vh, 500px);
+    height: clamp(380px, 48vh, 500px);
+    min-height: 380px;
   }
   .credit-score { margin-left: 0; align-items: flex-start; }
 }
@@ -310,13 +310,13 @@ body {
    左上：財務圖表 (Finance Chart)
 ========================================= */
 #panel-default {
-  flex: 0 0 clamp(520px, 58vh, 640px);
+  flex: 0 0 clamp(440px, 50vh, 560px);
   display: flex;
   flex-direction: column;
   margin-top: 0 !important; /* 與右側對齊 */
-  height: clamp(520px, 58vh, 640px);
-  min-height: 520px;
-  max-height: 640px;
+  height: clamp(440px, 50vh, 560px);
+  min-height: 440px;
+  max-height: 560px;
   overflow: hidden;
 }
 .chart-container {
@@ -438,12 +438,12 @@ body {
    左下：AI 對話框 (Chat Window)
 ========================================= */
 .chat-section {
-  flex: 1 1 0;
+  flex: 1 1 360px;
   display: flex;
   flex-direction: column;
   margin-top: 0 !important;
   height: auto;
-  min-height: 280px;
+  min-height: 360px;
   max-height: none;
   overflow: hidden;
 }
