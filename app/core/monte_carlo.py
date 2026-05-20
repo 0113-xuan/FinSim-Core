@@ -6,11 +6,11 @@ from app.core.simulation import simulate_finance
 def generate_random_shock_event(months: int) -> List[Dict[str, Any]]:
     """
     隨機產生一次性突發支出
-    機率 10%，金額 5000 ~ 50000
+    機率 25%，金額 5000 ~ 50000
     """
     events: List[Dict[str, Any]] = []
 
-    if random.random() < 0.10:
+    if random.random() < 0.25:
         shock_month = random.randint(1, months)
         shock_amount = random.randint(5000, 50000)
         events.append({
