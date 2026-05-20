@@ -252,13 +252,13 @@ body {
 ========================================= */
 .grid-layout {
   display: grid;
-  grid-template-columns: minmax(720px, 1.35fr) minmax(420px, 0.9fr);
+  grid-template-columns: minmax(360px, 0.95fr) minmax(420px, 1.12fr) minmax(300px, 0.72fr);
   gap: 18px;
   flex: 1;
   align-items: stretch; /* 強迫左右兩大欄等高 */
   padding-bottom: 0;
   min-height: 0;
-  height: 100%;
+  height: auto;
   overflow: hidden;
 }
 
@@ -281,24 +281,23 @@ body {
 
 @media (max-width: 1280px) {
   .grid-layout {
-    grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.85fr);
+    grid-template-columns: minmax(320px, 0.95fr) minmax(360px, 1.08fr) minmax(280px, 0.72fr);
   }
   .chart-dashboard {
-    grid-template-columns: minmax(0, 1fr) minmax(200px, 220px);
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
   }
+  .risk-sidebar { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
 }
 
 /* 左側欄：直向容器 */
 .col-left {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  height: 100%;
-  min-height: 0;
+  display: contents;
 }
 
 /* 右側欄：填滿高度 */
 .col-right {
+  grid-column: 3;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -311,13 +310,14 @@ body {
    左上：財務圖表 (Finance Chart)
 ========================================= */
 #panel-default {
-  flex: 0 0 clamp(440px, 50vh, 560px);
+  grid-column: 1;
+  flex: initial;
   display: flex;
   flex-direction: column;
   margin-top: 0 !important; /* 與右側對齊 */
-  height: clamp(440px, 50vh, 560px);
-  min-height: 440px;
-  max-height: 560px;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
   overflow: hidden;
 }
 .chart-container {
@@ -338,13 +338,14 @@ body {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 250px);
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(0, 1fr) auto;
   gap: 16px;
 }
 .risk-sidebar {
   min-height: 0;
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 .risk-card {
@@ -439,12 +440,13 @@ body {
    左下：AI 對話框 (Chat Window)
 ========================================= */
 .chat-section {
-  flex: 1 1 360px;
+  grid-column: 2;
+  flex: initial;
   display: flex;
   flex-direction: column;
   margin-top: 0 !important;
-  height: auto;
-  min-height: 360px;
+  height: 100%;
+  min-height: 0;
   max-height: none;
   overflow: hidden;
 }
@@ -466,6 +468,22 @@ body {
   gap: 12px;
   padding: 8px;
   min-height: 0;
+}
+
+@media (max-width: 768px) {
+  #panel-default,
+  .chat-section,
+  .col-right {
+    grid-column: 1;
+  }
+  #panel-default {
+    height: clamp(380px, 48vh, 500px);
+    min-height: 380px;
+  }
+  .chat-section {
+    height: 420px;
+    min-height: 420px;
+  }
 }
 
 /* 對話泡泡 */
