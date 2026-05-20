@@ -1162,14 +1162,14 @@
         responsive: true,
         maintainAspectRatio: false,
         interaction: { mode: 'index', intersect: false },
-        layout: { padding: { left: 22, right: 26, top: 14, bottom: 4 } },
+        layout: { padding: { left: 8, right: 12, top: 4, bottom: 0 } },
         plugins: {
           legend: {
             labels: {
               color: 'white',
-              boxWidth: 32,
-              padding: 18,
-              font: { family: "'DotGothic16', sans-serif", size: 18, weight: 'bold' }
+              boxWidth: 20,
+              padding: 8,
+              font: { family: "'DotGothic16', sans-serif", size: 12, weight: 'bold' }
             }
           },
           tooltip: {
@@ -1191,37 +1191,37 @@
         scales: {
           y: {
             title: {
-              display: true,
+              display: false,
               text: '資產金額',
               color: '#fde047',
-              font: { family: "'DotGothic16', sans-serif", size: 16, weight: 'bold' }
+              font: { family: "'DotGothic16', sans-serif", size: 11, weight: 'bold' }
             },
             ticks: {
               color: '#e5e7eb',
-              padding: 8,
+              padding: 4,
               callback: value => formatCompactCurrency(value),
-              font: { family: "'DotGothic16', sans-serif", size: 14, weight: 'bold' }
+              font: { family: "'DotGothic16', sans-serif", size: 10, weight: 'bold' }
             },
             grid: { color: 'rgba(255,255,255,0.12)' }
           },
           x: {
             title: {
-              display: true,
+              display: false,
               text: '月份',
               color: '#fde047',
-              font: { family: "'DotGothic16', sans-serif", size: 16, weight: 'bold' }
+              font: { family: "'DotGothic16', sans-serif", size: 11, weight: 'bold' }
             },
             ticks: {
               color: '#e5e7eb',
-              padding: 8,
+              padding: 4,
               autoSkip: false,
               callback: function(value, index) {
                 const label = this.getLabelForValue(value);
                 return index === 0 || index % 6 === 0 ? label : '';
               },
-              font: { family: "'DotGothic16', sans-serif", size: 14, weight: 'bold' },
-              maxRotation: 35,
-              minRotation: 35
+              font: { family: "'DotGothic16', sans-serif", size: 10, weight: 'bold' },
+              maxRotation: 0,
+              minRotation: 0
             },
             grid: { color: 'rgba(255,255,255,0.08)' }
           }
