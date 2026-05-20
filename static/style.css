@@ -94,6 +94,8 @@ body {
   height: calc(100vh - 28px);
   max-height: none;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 .dashboard-topbar {
   display: flex;
@@ -258,7 +260,7 @@ body {
   align-items: stretch; /* 強迫左右兩大欄等高 */
   padding-bottom: 0;
   min-height: 0;
-  height: auto;
+  height: calc(100% - 38px);
   overflow: hidden;
 }
 
