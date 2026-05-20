@@ -1152,7 +1152,7 @@
           pointBackgroundColor: '#85db49',
           pointBorderColor: '#111',
           pointBorderWidth: 2,
-          pointRadius: 3,
+          pointRadius: context => context.dataIndex % 6 === 0 ? 4 : 0,
           pointHoverRadius: 8,
           pointHitRadius: 12
         }]
@@ -1213,6 +1213,11 @@
             ticks: {
               color: '#e5e7eb',
               padding: 8,
+              autoSkip: false,
+              callback: function(value, index) {
+                const label = this.getLabelForValue(value);
+                return index === 0 || index % 6 === 0 ? label : '';
+              },
               font: { family: "'DotGothic16', sans-serif", size: 14, weight: 'bold' },
               maxRotation: 35,
               minRotation: 35
