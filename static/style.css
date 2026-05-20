@@ -6,16 +6,16 @@
   --mc-sky: #87CEEB;
   --mc-dirt-bg: #86592d;
   --mc-grass-bg: #5c9e31;
-  
+
   /* 石頭面板 Border 顏色 */
   --mc-stone-bg: #c6c6c6;
   --mc-stone-border-light: #ffffff;
   --mc-stone-border-dark: #555555;
-  
+
   /* 泥土面板 Border 顏色 */
   --mc-dirt-border-light: #c69c6d;
   --mc-dirt-border-dark: #4d3319;
-  
+
   /* 黑曜石面板 Border 顏色 */
   --mc-obsidian-bg: #1e1e1e;
   --mc-obsidian-border-light: #4a4a4a;
@@ -35,13 +35,6 @@
   padding: 0;
 }
 
-html,
-body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
 body {
   background-color: var(--mc-sky);
   /* 使用 Press Start 2P 處理英文/數字，DotGothic16 處理中文 */
@@ -49,8 +42,9 @@ body {
   font-size: 16px;
   color: #000;
   line-height: 1.65;
+  overflow-x: hidden;
   position: relative;
-  min-height: 0;
+  min-height: 100vh;
 }
 
 /* =========================================
@@ -89,37 +83,33 @@ body {
   z-index: 10;
   max-width: min(1880px, 100vw);
   margin: 0 auto;
-  padding: 6px 8px 8px;
+  padding: 10px 12px 16px;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  min-height: 0;
-  overflow: hidden;
+  min-height: 100vh;
 }
 
 #page-dashboard {
   min-height: 0;
-  height: 100%;
+  height: calc(100vh - 28px);
   max-height: none;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 .dashboard-topbar {
   display: flex;
   align-items: center;
-  height: 26px;
+  height: 34px;
   flex-shrink: 0;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 .dashboard-back-button {
-  width: 28px;
-  height: 28px;
-  border: 3px solid #000;
+  width: 34px;
+  height: 34px;
+  border: 4px solid #000;
   background: #9ca3af;
   color: #000;
   font-family: inherit;
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
@@ -262,13 +252,13 @@ body {
 ========================================= */
 .grid-layout {
   display: grid;
-  grid-template-columns: minmax(360px, 0.95fr) minmax(420px, 1.12fr) minmax(300px, 0.72fr);
-  gap: 12px;
+  grid-template-columns: minmax(720px, 1.35fr) minmax(420px, 0.9fr);
+  gap: 18px;
   flex: 1;
   align-items: stretch; /* 強迫左右兩大欄等高 */
   padding-bottom: 0;
   min-height: 0;
-  height: auto;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -291,23 +281,24 @@ body {
 
 @media (max-width: 1280px) {
   .grid-layout {
-    grid-template-columns: minmax(320px, 0.95fr) minmax(360px, 1.08fr) minmax(280px, 0.72fr);
+    grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.85fr);
   }
   .chart-dashboard {
-    grid-template-columns: 1fr;
-    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) minmax(200px, 220px);
   }
-  .risk-sidebar { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
 }
 
 /* 左側欄：直向容器 */
 .col-left {
-  display: contents;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  height: 100%;
+  min-height: 0;
 }
 
 /* 右側欄：填滿高度 */
 .col-right {
-  grid-column: 3;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -320,14 +311,13 @@ body {
    左上：財務圖表 (Finance Chart)
 ========================================= */
 #panel-default {
-  grid-column: 1;
-  flex: initial;
+  flex: 0 0 clamp(440px, 50vh, 560px);
   display: flex;
   flex-direction: column;
   margin-top: 0 !important; /* 與右側對齊 */
-  height: 100%;
-  min-height: 0;
-  max-height: none;
+  height: clamp(440px, 50vh, 560px);
+  min-height: 440px;
+  max-height: 560px;
   overflow: hidden;
 }
 .chart-container {
@@ -348,14 +338,13 @@ body {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 250px);
   gap: 16px;
 }
 .risk-sidebar {
   min-height: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   gap: 12px;
 }
 .risk-card {
@@ -450,13 +439,12 @@ body {
    左下：AI 對話框 (Chat Window)
 ========================================= */
 .chat-section {
-  grid-column: 2;
-  flex: initial;
+  flex: 1 1 360px;
   display: flex;
   flex-direction: column;
   margin-top: 0 !important;
-  height: 100%;
-  min-height: 0;
+  height: auto;
+  min-height: 360px;
   max-height: none;
   overflow: hidden;
 }
@@ -480,25 +468,9 @@ body {
   min-height: 0;
 }
 
-@media (max-width: 768px) {
-  #panel-default,
-  .chat-section,
-  .col-right {
-    grid-column: 1;
-  }
-  #panel-default {
-    height: clamp(380px, 48vh, 500px);
-    min-height: 380px;
-  }
-  .chat-section {
-    height: 420px;
-    min-height: 420px;
-  }
-}
-
 /* 對話泡泡 */
 .msg-bubble {
-  border-radius: 0; 
+  border-radius: 0;
   box-shadow: 3px 3px 0 rgba(0,0,0,0.6);
   line-height: 1.6;
   max-width: 85%;
@@ -565,7 +537,7 @@ body {
    右側：記帳系統 (Accounting)
 ========================================= */
 .col-right > section.side-interface {
-  margin-top: 0 !important; 
+  margin-top: 0 !important;
   flex: 1;
   min-height: 0;
   overflow: hidden;
@@ -593,26 +565,7 @@ body {
   line-height: 1.55;
 }
 #page-dashboard .msg-bubble {
-  font-size: 13px !important;
-  line-height: 1.45;
-}
-#page-dashboard .chat-messages {
-  gap: 8px;
-  padding: 6px;
-}
-#page-dashboard .chat-scroll-wrap {
-  grid-template-columns: minmax(0, 1fr) 26px;
-  gap: 8px;
-}
-#page-dashboard .chat-drag-scrollbar {
-  border-width: 3px;
-  min-height: 60px;
-}
-#page-dashboard .chat-drag-thumb {
-  left: 2px;
-  right: 2px;
-  min-height: 42px;
-  border-width: 2px;
+  font-size: 15px !important;
 }
 .side-switcher {
   display: grid;
@@ -627,88 +580,6 @@ body {
 }
 .btn-pixel.active-side {
   box-shadow: inset 3px 3px 0 rgba(255,255,255,0.35), 4px 4px 0 #000;
-}
-
-#page-dashboard .mc-panel {
-  padding: 12px;
-}
-#page-dashboard .panel-badge {
-  top: -22px;
-  left: 12px;
-  padding: 3px 8px;
-  font-size: 11px;
-  border-width: 3px;
-}
-#page-dashboard .chart-container {
-  padding: 10px 10px 8px 4px;
-}
-#page-dashboard .chart-dashboard {
-  gap: 8px;
-}
-#page-dashboard .risk-sidebar {
-  gap: 8px;
-}
-#page-dashboard .risk-card {
-  padding: 8px;
-  border-width: 3px;
-  box-shadow: inset 2px 2px 0 rgba(255,255,255,0.8), 3px 3px 0 rgba(0,0,0,0.35);
-}
-#page-dashboard .risk-card-title {
-  font-size: 10px;
-  margin-bottom: 4px;
-}
-#page-dashboard .risk-card-body {
-  gap: 8px;
-}
-#page-dashboard .risk-value {
-  font-size: clamp(13px, 1.1vw, 17px);
-}
-#page-dashboard .risk-status {
-  font-size: 10px;
-  margin-top: 3px;
-}
-#page-dashboard .traffic-signal {
-  width: 34px;
-  min-width: 34px;
-  height: 60px;
-  border-width: 3px;
-  gap: 3px;
-}
-#page-dashboard .light {
-  width: 12px;
-  height: 12px;
-  border-width: 2px;
-}
-#page-dashboard .warning-badge {
-  width: 38px;
-  min-width: 38px;
-  height: 38px;
-  border-width: 3px;
-  font-size: 18px;
-}
-#page-dashboard .side-interface {
-  gap: 8px;
-}
-#page-dashboard .side-switcher {
-  gap: 8px;
-}
-#page-dashboard .btn-pixel {
-  padding: 8px 10px;
-  font-size: 12px;
-  border-width: 3px;
-  box-shadow: 3px 3px 0 #000;
-}
-#page-dashboard .mc-input-pixel {
-  padding: 8px;
-  font-size: 12px;
-  border-width: 3px;
-}
-#page-dashboard .scenario-body {
-  gap: 8px;
-  font-size: 12px;
-}
-#page-dashboard #accounting-form {
-  gap: 8px !important;
 }
 
 /* 麥塊輸入框 (記帳用，之前漏掉的補回在這裡) */
@@ -745,19 +616,19 @@ body {
     .splash-text {
       position: absolute;
       /* 定位在 Logo 的右下方，你可以微調這兩個數字來對齊你的圖片 */
-      right: 25%; 
-      bottom: 15%; 
-      
+      right: 25%;
+      bottom: 15%;
+
       color: #ffff00; /* 經典麥塊黃 */
       font-family: 'DotGothic16', 'Press Start 2P', sans-serif; /* 像素字體 */
       font-size: 20px;
       font-weight: bold;
       text-shadow: 2px 2px 0 #3f3f00; /* 深褐色立體陰影 */
-      
+
       /* 傾斜並加上無限縮放動畫 */
       transform: rotate(-20deg);
       animation: splash-pulse 0.4s alternate infinite ease-in-out;
-      
+
       z-index: 50; /* 確保它浮在圖片最上層 */
       pointer-events: none; /* 讓滑鼠點擊可以穿透它 */
       white-space: nowrap; /* 確保字不會斷行 */
