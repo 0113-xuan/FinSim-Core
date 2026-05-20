@@ -13,6 +13,7 @@ class LoanInput(BaseModel):
     apr: float = Field(..., ge=0)
     months: int = Field(..., gt=0)
     start_month: int = Field(..., gt=0)
+    note: Optional[str] = None
 
 
 class EventInput(BaseModel):

@@ -161,6 +161,7 @@
                 <input type="number" id="loan-apr" class="mc-input-pixel" placeholder="年利率%">
                 <input type="number" id="loan-months" class="mc-input-pixel" placeholder="期數(月)">
                 <input type="number" id="loan-start" class="mc-input-pixel" placeholder="開始月份">
+                <input type="text" id="loan-note" class="mc-input-pixel col-span-2" placeholder="備註，例如：學貸、車貸、房貸">
               </div>
               <button id="btn-add-loan" class="btn-pixel bg-yellow text-black font-bold w-full">加入貸款</button>
               <div id="loan-list" class="flex flex-col gap-2 text-xs"></div>
@@ -245,6 +246,15 @@
 
     function formatCurrency(value) {
       return `$${Number(value || 0).toLocaleString()}`;
+    }
+
+    function formatCompactCurrency(value) {
+      const amount = Number(value || 0);
+      const sign = amount < 0 ? '-' : '';
+      const absAmount = Math.abs(amount);
+      if (absAmount >= 1000000) return `${sign}$${(absAmount / 1000000).toFixed(1)}M`;
+      if (absAmount >= 10000) return `${sign}$${Math.round(absAmount / 1000)}K`;
+      return `${sign}$${Math.round(absAmount).toLocaleString()}`;
     }
 
     function formatPercent(value) {
@@ -466,6 +476,7 @@
         'loan-apr',
         'loan-months',
         'loan-start',
+        'loan-note',
         'event-start',
         'event-end',
         'event-amount',
@@ -730,6 +741,7 @@
         ? currentLoans.map((loan, index) => `
           <div class="mc-panel variant-obsidian p-2 border-2">
             <div>本金 ${formatCurrency(loan.principal)}，年利率 ${(loan.apr * 100).toFixed(2)}%，${loan.months} 期，第 ${loan.start_month} 月開始</div>
+            <div class="scenario-note">備註：${escapeHtml(loan.note || '未填寫')}</div>
             <button type="button" class="btn-pixel bg-red text-white mt-2" onclick="removeLoan(${index})">移除</button>
           </div>
         `).join('')
@@ -760,6 +772,7 @@
       const aprInput = numberValue('loan-apr');
       const months = numberValue('loan-months');
       const startMonth = numberValue('loan-start');
+      const note = document.getElementById('loan-note').value.trim();
 
       if (principal === null || aprInput === null || months === null || startMonth === null || principal < 0 || aprInput < 0 || months <= 0 || startMonth <= 0) {
         alert('請輸入完整且有效的貸款資料');
@@ -770,10 +783,11 @@
         principal,
         apr: aprInput > 1 ? aprInput / 100 : aprInput,
         months: Math.round(months),
-        start_month: Math.round(startMonth)
+        start_month: Math.round(startMonth),
+        note
       });
 
-      ['loan-principal', 'loan-apr', 'loan-months', 'loan-start'].forEach(id => document.getElementById(id).value = '');
+      ['loan-principal', 'loan-apr', 'loan-months', 'loan-start', 'loan-note'].forEach(id => document.getElementById(id).value = '');
       renderScenarioLists();
     });
 
@@ -1129,25 +1143,82 @@
         labels: [], 
         datasets: [{
           label: '總資產變化 (60個月預測)',
-          data: [], 
-          borderColor: '#5c9e31', 
-          backgroundColor: 'rgba(92, 158, 49, 0.2)',
-          borderWidth: 3,
-          stepped: true, 
+          data: [],
+          borderColor: '#85db49',
+          backgroundColor: 'rgba(133, 219, 73, 0.18)',
+          borderWidth: 4,
+          fill: true,
+          tension: 0.24,
           pointBackgroundColor: '#85db49',
           pointBorderColor: '#111',
-          pointRadius: 4,
-          pointHoverRadius: 8
+          pointBorderWidth: 2,
+          pointRadius: 3,
+          pointHoverRadius: 8,
+          pointHitRadius: 12
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        layout: { padding: { left: 45, right: 20, top: 10 } },
-        plugins: { legend: { labels: { color: 'white', font: { family: "'DotGothic16', sans-serif", size: 14 } } } },
+        interaction: { mode: 'index', intersect: false },
+        layout: { padding: { left: 22, right: 26, top: 14, bottom: 4 } },
+        plugins: {
+          legend: {
+            labels: {
+              color: 'white',
+              boxWidth: 32,
+              padding: 18,
+              font: { family: "'DotGothic16', sans-serif", size: 18, weight: 'bold' }
+            }
+          },
+          tooltip: {
+            backgroundColor: '#111827',
+            titleColor: '#fde047',
+            bodyColor: '#ffffff',
+            borderColor: '#85db49',
+            borderWidth: 2,
+            padding: 12,
+            displayColors: false,
+            titleFont: { family: "'DotGothic16', sans-serif", size: 16, weight: 'bold' },
+            bodyFont: { family: "'DotGothic16', sans-serif", size: 15 },
+            callbacks: {
+              title: items => items[0]?.label || '',
+              label: context => `資產：${formatCurrency(context.parsed.y)}`
+            }
+          }
+        },
         scales: {
-          y: { ticks: { color: '#9ca3af', font: { family: "'Press Start 2P', cursive", size: 10 } }, grid: { color: '#333' } },
-          x: { ticks: { color: '#9ca3af', font: { family: "'DotGothic16', sans-serif", size: 12 }, maxRotation: 45, minRotation: 45 }, grid: { color: '#333' } }
+          y: {
+            title: {
+              display: true,
+              text: '資產金額',
+              color: '#fde047',
+              font: { family: "'DotGothic16', sans-serif", size: 16, weight: 'bold' }
+            },
+            ticks: {
+              color: '#e5e7eb',
+              padding: 8,
+              callback: value => formatCompactCurrency(value),
+              font: { family: "'DotGothic16', sans-serif", size: 14, weight: 'bold' }
+            },
+            grid: { color: 'rgba(255,255,255,0.12)' }
+          },
+          x: {
+            title: {
+              display: true,
+              text: '月份',
+              color: '#fde047',
+              font: { family: "'DotGothic16', sans-serif", size: 16, weight: 'bold' }
+            },
+            ticks: {
+              color: '#e5e7eb',
+              padding: 8,
+              font: { family: "'DotGothic16', sans-serif", size: 14, weight: 'bold' },
+              maxRotation: 35,
+              minRotation: 35
+            },
+            grid: { color: 'rgba(255,255,255,0.08)' }
+          }
         }
       }
     });
