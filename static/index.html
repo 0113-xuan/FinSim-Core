@@ -294,48 +294,128 @@
       bankruptcyStatus.textContent = formatRiskLevel(bankruptcyLevel);
     }
 
-    function applyFallbackAnalysis(profile) {
+    function randomBetween(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function calculateClientLoanPayment(principal, apr, months) {
+      if (!principal || !months) return 0;
+      const monthlyRate = Number(apr || 0) / 12;
+      if (monthlyRate === 0) return principal / months;
+      return principal * monthlyRate / (1 - Math.pow(1 + monthlyRate, -months));
+    }
+
+    function getClientDebtPayment(month, loans = []) {
+      return loans.reduce((total, loan) => {
+        const startMonth = Number(loan.start_month || 1);
+        const months = Number(loan.months || 0);
+        const endMonth = startMonth + months - 1;
+        if (month < startMonth || month > endMonth) return total;
+        return total + calculateClientLoanPayment(Number(loan.principal || 0), Number(loan.apr || 0), months);
+      }, 0);
+    }
+
+    function getClientEventNet(month, events = []) {
+      return events.reduce((total, event) => {
+        if (event.type === 'one_time' && Number(event.month) === month) {
+          return total + Number(event.amount || 0);
+        }
+        if (event.type === 'range' && month >= Number(event.start_month) && month <= Number(event.end_month)) {
+          return total + Number(event.amount || 0);
+        }
+        return total;
+      }, 0);
+    }
+
+    function getClientSalary(month, baseSalary, events = []) {
+      return events.reduce((salary, event) => {
+        if (event.type === 'salary_change' && month >= Number(event.start_month || 1)) {
+          return Number(event.new_salary || salary);
+        }
+        return salary;
+      }, baseSalary);
+    }
+
+    function runClientScenario(profile, events = [], loans = [], months = 60, stochastic = true) {
+      const raiseRate = stochastic ? randomBetween(0.02, 0.05) : 0.03;
+      const inflationRate = stochastic ? randomBetween(0.01, 0.04) : 0.02;
+      const shockMonth = stochastic && Math.random() < 0.10 ? Math.ceil(Math.random() * months) : null;
+      const shockAmount = shockMonth ? Math.round(randomBetween(5000, 50000)) : 0;
       const curve = [];
       let balance = Number(profile.balance || 0);
-      const monthlySavings = Number(profile.salary || 0)
-        - Number(profile.fixed_expense || 0)
-        - Number(profile.variable_expense || 0);
 
-      for (let month = 1; month <= 60; month++) {
-        balance += monthlySavings;
+      for (let month = 1; month <= months; month++) {
+        const yearsPassed = Math.floor((month - 1) / 12);
+        const baseIncome = Number(profile.salary || 0) * Math.pow(1 + raiseRate, yearsPassed);
+        const income = getClientSalary(month, baseIncome, events);
+        const expense = Number(profile.fixed_expense || 0)
+          + Number(profile.variable_expense || 0) * Math.pow(1 + inflationRate, yearsPassed);
+        const debtPayment = getClientDebtPayment(month, loans);
+        const eventNet = getClientEventNet(month, events) - (month === shockMonth ? shockAmount : 0);
+        const netCashflow = income - expense - debtPayment + eventNet;
+
+        balance += netCashflow;
+        const pressure = income > 0 ? (expense + debtPayment) / income : 0.99;
+        const fsi = Math.min(0.99, pressure + (balance < 0 ? 0.25 : 0));
         curve.push({
           month,
-          balance: Math.round(balance)
+          balance: Math.round(balance),
+          fsi
         });
       }
 
-      const finalBalance = curve[curve.length - 1]?.balance || balance;
-      const minBalance = Math.min(profile.balance, ...curve.map(item => item.balance));
-      const expense = Number(profile.fixed_expense || 0) + Number(profile.variable_expense || 0);
-      const fsi = Number(profile.salary) > 0
-        ? Math.min(0.99, (expense / Number(profile.salary)) + (minBalance < 0 ? 0.25 : 0))
-        : 0.99;
-      const bankruptProbability = minBalance < 0 ? 0.25 : 0;
-
-      financeChart.data.labels = ['今日', ...curve.map(item => item.month % 6 === 0 ? `第${item.month}個月` : '')];
-      financeChart.data.datasets[0].data = [profile.balance, ...curve.map(item => item.balance)];
-      financeChart.update();
-      updateRiskWidgets(
-        {
-          final_balance: finalBalance,
-          min_balance: minBalance,
-          max_fsi: fsi,
-          avg_fsi: fsi,
-          high_risk_months: fsi >= 0.85 ? 60 : 0,
-          first_risk_month: fsi >= 0.85 ? 1 : null
-        },
-        {
-          bankrupt_probability: bankruptProbability,
-          worst_case_balance: minBalance,
-          best_case_balance: finalBalance,
-          avg_final_balance: finalBalance
+      const balances = curve.map(item => item.balance);
+      const fsiValues = curve.map(item => item.fsi);
+      return {
+        curve,
+        summary: {
+          final_balance: balances[balances.length - 1] || Number(profile.balance || 0),
+          min_balance: Math.min(Number(profile.balance || 0), ...balances),
+          max_fsi: Math.max(...fsiValues),
+          avg_fsi: fsiValues.reduce((sum, value) => sum + value, 0) / fsiValues.length,
+          high_risk_months: fsiValues.filter(value => value >= 0.85).length,
+          first_risk_month: curve.find(item => item.fsi >= 0.85)?.month || null
         }
+      };
+    }
+
+    function applyFallbackAnalysis(profile, events = [], loans = [], appendSummary = false) {
+      const chartScenario = runClientScenario(profile, events, loans, 60, true);
+      const monteCarloRuns = Array.from(
+        { length: 300 },
+        () => runClientScenario(profile, events, loans, 60, true).summary
       );
+
+      const finalBalances = monteCarloRuns.map(item => item.final_balance);
+      const minBalances = monteCarloRuns.map(item => item.min_balance);
+      const mcData = {
+        bankrupt_probability: monteCarloRuns.filter(item => item.min_balance < 0).length / monteCarloRuns.length,
+        worst_case_balance: Math.min(...finalBalances),
+        best_case_balance: Math.max(...finalBalances),
+        avg_final_balance: finalBalances.reduce((sum, value) => sum + value, 0) / finalBalances.length
+      };
+      const summary = {
+        ...chartScenario.summary,
+        min_balance: Math.min(...minBalances),
+        max_fsi: chartScenario.summary.max_fsi,
+        avg_fsi: chartScenario.summary.avg_fsi
+      };
+
+      financeChart.data.labels = ['今日', ...chartScenario.curve.map(item => item.month % 6 === 0 ? `第${item.month}個月` : '')];
+      financeChart.data.datasets[0].data = [profile.balance, ...chartScenario.curve.map(item => item.balance)];
+      financeChart.update();
+      updateRiskWidgets(summary, mcData);
+
+      if (appendSummary) {
+        appendAiInsight(`
+          <div class="font-bold text-green-300 mb-2">已重新執行情境模擬</div>
+          <div>這次加入隨機薪資成長、通膨變動與突發支出抽樣，所以每次重新分析的結果可能不同。</div>
+          <div class="mt-2">本次圖表期末資產：${formatCurrency(summary.final_balance)}</div>
+          <div>Monte Carlo 平均期末資產：${formatCurrency(mcData.avg_final_balance)}</div>
+          <div>最差情境：${formatCurrency(mcData.worst_case_balance)}，最佳情境：${formatCurrency(mcData.best_case_balance)}</div>
+          <div>破產機率：${formatPercent(mcData.bankrupt_probability)}</div>
+        `);
+      }
     }
 
     function escapeHtml(value) {
@@ -434,7 +514,7 @@
         currentProfile = { ...DEMO_PROFILE };
         currentBalance = DEMO_PROFILE.balance;
         monthlyNetFlow = DEMO_PROFILE.salary - DEMO_PROFILE.fixed_expense - DEMO_PROFILE.variable_expense;
-        applyFallbackAnalysis(DEMO_PROFILE);
+        applyFallbackAnalysis(DEMO_PROFILE, currentEvents, currentLoans);
         showDashboard();
         appendAiInsight(`
           <div class="font-bold text-yellow-300 mb-2">展示模式已啟用</div>
@@ -674,6 +754,11 @@
     document.getElementById('btn-rerun-scenario').addEventListener('click', async () => {
       if (!currentProfile) {
         alert('請先完成原本的固定收入、固定支出與變動支出設定');
+        return;
+      }
+
+      if (DEMO_MODE) {
+        applyFallbackAnalysis(currentProfile, currentEvents, currentLoans, true);
         return;
       }
 
