@@ -183,6 +183,7 @@
           <div class="side-switcher">
             <button id="btn-open-accounting" class="btn-pixel bg-green text-black font-bold w-full active-side">記帳介面</button>
             <button id="btn-open-scenario" class="btn-pixel bg-gray text-black font-bold w-full">情境模擬</button>
+            <button id="btn-reset-setup" class="btn-pixel bg-gray text-black font-bold w-full">返回重新設定</button>
           </div>
 
         </div>
@@ -432,6 +433,74 @@
       `);
       aiInsights.scrollTop = aiInsights.scrollHeight;
       updateAiScrollbar();
+    }
+
+    function resetAiConversation() {
+      aiInsights.innerHTML = `
+        <div class="text-center text-gray-400 text-xs my-2">-- System Online --</div>
+        <div class="message-ai flex items-start gap-2">
+          <div class="text-xl">🧙‍♂️</div>
+          <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-3 text-white text-xs">
+            我是 AI 顧問。我已同步你的初始資料，接下來你每一筆記帳，我都會在此即時結算！
+          </div>
+        </div>
+      `;
+      updateAiScrollbar();
+    }
+
+    function resetFinancialSetup() {
+      currentProfile = null;
+      currentBalance = 0;
+      monthlyNetFlow = 0;
+      currentEvents = [];
+      currentLoans = [];
+
+      [
+        'setup-balance',
+        'setup-income',
+        'setup-fixed-expenses',
+        'setup-var-expenses',
+        'loan-principal',
+        'loan-apr',
+        'loan-months',
+        'loan-start',
+        'event-start',
+        'event-end',
+        'event-amount',
+        'event-new-salary',
+        'event-note',
+        'record-amount',
+        'record-note',
+        'record-date'
+      ].forEach(id => {
+        const field = document.getElementById(id);
+        if (field) field.value = '';
+      });
+
+      financeChart.data.labels = [];
+      financeChart.data.datasets[0].data = [];
+      financeChart.update();
+
+      fsiSignal.className = 'traffic-signal signal-low';
+      fsiValue.textContent = '--';
+      fsiStatus.textContent = '等待分析';
+      bankruptcySignal.className = 'warning-badge risk-low';
+      bankruptcyValue.textContent = '--';
+      bankruptcyStatus.textContent = 'Monte Carlo';
+
+      renderScenarioLists();
+      resetAiConversation();
+      showSideInterface('accounting');
+      historyPanel.classList.add('hidden');
+      accountingForm.classList.remove('hidden');
+
+      pageDashboard.classList.add('hidden');
+      pageDashboard.classList.remove('flex');
+      pageSetup2.classList.add('hidden');
+      pageRegister.classList.add('hidden');
+      pageLogin.classList.add('hidden');
+      mainLogo.classList.remove('hidden');
+      pageSetup1.classList.remove('hidden');
     }
 
     function updateAiScrollbar() {
@@ -785,6 +854,7 @@
 
     document.getElementById('btn-open-accounting').addEventListener('click', () => showSideInterface('accounting'));
     document.getElementById('btn-open-scenario').addEventListener('click', () => showSideInterface('scenario'));
+    document.getElementById('btn-reset-setup').addEventListener('click', resetFinancialSetup);
 
     // ==========================================
     // 🌟 Minecraft 黃色標語輪替邏輯
