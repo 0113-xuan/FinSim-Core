@@ -94,6 +94,32 @@ body {
   max-height: none;
   overflow: hidden;
 }
+.dashboard-topbar {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  flex-shrink: 0;
+}
+.dashboard-back-button {
+  width: 44px;
+  height: 44px;
+  border: 4px solid #000;
+  background: #9ca3af;
+  color: #000;
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 #000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.dashboard-back-button:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
 
 /* =========================================
    Minecraft UI 共用元件 (Reusable UI)
