@@ -100,18 +100,18 @@ body {
 .dashboard-topbar {
   display: flex;
   align-items: center;
-  height: 34px;
+  height: 26px;
   flex-shrink: 0;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 .dashboard-back-button {
-  width: 34px;
-  height: 34px;
-  border: 4px solid #000;
+  width: 28px;
+  height: 28px;
+  border: 3px solid #000;
   background: #9ca3af;
   color: #000;
   font-family: inherit;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
@@ -255,12 +255,12 @@ body {
 .grid-layout {
   display: grid;
   grid-template-columns: minmax(360px, 0.95fr) minmax(420px, 1.12fr) minmax(300px, 0.72fr);
-  gap: 18px;
+  gap: 12px;
   flex: 1;
   align-items: stretch; /* 強迫左右兩大欄等高 */
   padding-bottom: 0;
   min-height: 0;
-  height: calc(100% - 38px);
+  height: calc(100% - 28px);
   overflow: hidden;
 }
 
@@ -585,7 +585,26 @@ body {
   line-height: 1.55;
 }
 #page-dashboard .msg-bubble {
-  font-size: 15px !important;
+  font-size: 13px !important;
+  line-height: 1.45;
+}
+#page-dashboard .chat-messages {
+  gap: 8px;
+  padding: 6px;
+}
+#page-dashboard .chat-scroll-wrap {
+  grid-template-columns: minmax(0, 1fr) 26px;
+  gap: 8px;
+}
+#page-dashboard .chat-drag-scrollbar {
+  border-width: 3px;
+  min-height: 60px;
+}
+#page-dashboard .chat-drag-thumb {
+  left: 2px;
+  right: 2px;
+  min-height: 42px;
+  border-width: 2px;
 }
 .side-switcher {
   display: grid;
@@ -600,6 +619,88 @@ body {
 }
 .btn-pixel.active-side {
   box-shadow: inset 3px 3px 0 rgba(255,255,255,0.35), 4px 4px 0 #000;
+}
+
+#page-dashboard .mc-panel {
+  padding: 12px;
+}
+#page-dashboard .panel-badge {
+  top: -22px;
+  left: 12px;
+  padding: 3px 8px;
+  font-size: 11px;
+  border-width: 3px;
+}
+#page-dashboard .chart-container {
+  padding: 10px 10px 8px 4px;
+}
+#page-dashboard .chart-dashboard {
+  gap: 8px;
+}
+#page-dashboard .risk-sidebar {
+  gap: 8px;
+}
+#page-dashboard .risk-card {
+  padding: 8px;
+  border-width: 3px;
+  box-shadow: inset 2px 2px 0 rgba(255,255,255,0.8), 3px 3px 0 rgba(0,0,0,0.35);
+}
+#page-dashboard .risk-card-title {
+  font-size: 10px;
+  margin-bottom: 4px;
+}
+#page-dashboard .risk-card-body {
+  gap: 8px;
+}
+#page-dashboard .risk-value {
+  font-size: clamp(13px, 1.1vw, 17px);
+}
+#page-dashboard .risk-status {
+  font-size: 10px;
+  margin-top: 3px;
+}
+#page-dashboard .traffic-signal {
+  width: 34px;
+  min-width: 34px;
+  height: 60px;
+  border-width: 3px;
+  gap: 3px;
+}
+#page-dashboard .light {
+  width: 12px;
+  height: 12px;
+  border-width: 2px;
+}
+#page-dashboard .warning-badge {
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  border-width: 3px;
+  font-size: 18px;
+}
+#page-dashboard .side-interface {
+  gap: 8px;
+}
+#page-dashboard .side-switcher {
+  gap: 8px;
+}
+#page-dashboard .btn-pixel {
+  padding: 8px 10px;
+  font-size: 12px;
+  border-width: 3px;
+  box-shadow: 3px 3px 0 #000;
+}
+#page-dashboard .mc-input-pixel {
+  padding: 8px;
+  font-size: 12px;
+  border-width: 3px;
+}
+#page-dashboard .scenario-body {
+  gap: 8px;
+  font-size: 12px;
+}
+#page-dashboard #accounting-form {
+  gap: 8px !important;
 }
 
 /* 麥塊輸入框 (記帳用，之前漏掉的補回在這裡) */
