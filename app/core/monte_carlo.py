@@ -5,20 +5,20 @@ from app.core.simulation import simulate_finance
 
 def generate_random_shock_event(months: int) -> List[Dict[str, Any]]:
     """
-    隨機產生一次性突發支出
-    機率 25%，金額 5000 ~ 50000
+    逐月隨機產生突發支出
+    每個月發生機率 25%，金額 5000 ~ 50000
     """
     events: List[Dict[str, Any]] = []
 
-    if random.random() < 0.25:
-        shock_month = random.randint(1, months)
-        shock_amount = random.randint(5000, 50000)
-        events.append({
-            "type": "one_time",
-            "month": shock_month,
-            "amount": -shock_amount,
-            "note": "random_shock"
-        })
+    for month in range(1, months + 1):
+        if random.random() < 0.25:
+            shock_amount = random.randint(5000, 50000)
+            events.append({
+                "type": "one_time",
+                "month": month,
+                "amount": -shock_amount,
+                "note": "random_shock"
+            })
 
     return events
 
@@ -36,7 +36,7 @@ def run_monte_carlo(
     每次模擬會：
     - 隨機抽樣薪資成長率
     - 隨機抽樣通膨率
-    - 可能加入一次突發支出
+    - 每個月可能加入突發支出
     """
     if months <= 0:
         raise ValueError("months must be > 0")
