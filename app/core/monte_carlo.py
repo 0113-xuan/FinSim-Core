@@ -28,7 +28,7 @@ def run_monte_carlo(
     base_events: Optional[List[Dict[str, Any]]] = None,
     loans: Optional[List[Dict[str, Any]]] = None,
     months: int = 60,
-    simulations: int = 1000
+    simulations: int = 5000
 ) -> Dict[str, Any]:
     """
     Monte Carlo 多情境模擬
