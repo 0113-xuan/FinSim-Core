@@ -1,1251 +1,309 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FutureWallet 模擬平台</title>
-  
+  <title>FinSim Core | 生活決策財務模擬</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <link rel="stylesheet" href="style.css?v=manual-setup-demo-20260520">
+  <script src="transparency.js?v=transparent-results-20260718"></script>
+  <link rel="stylesheet" href="style.css?v=transparent-results-20260718">
 </head>
 <body>
-  <div class="bg-cloud cloud-1"></div>
-  <div class="bg-cloud cloud-2"></div>
-  <div class="bg-ground-dirt"></div>
-  <div class="bg-ground-grass"></div>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><span>F</span><strong>FinSim Core</strong></div>
+      <p>AI 輔助生活決策模擬與財務風險分析平台</p>
+      <nav aria-label="主要區塊">
+        <a href="#profile">基本資料</a>
+        <a href="#scenario">AI 情境</a>
+        <a href="#results">模擬結果</a>
+        <a href="#advanced">進階設定</a>
+        <a href="#report">報告</a>
+      </nav>
+      <section class="note-card">
+        <h2>展示模式</h2>
+        <small>目前不需要登入。輸入基本資料、描述未來計畫，就可以執行後端模擬。</small>
+      </section>
+    </aside>
 
-  <div class="container">
-    
-    <div id="main-logo" class="w-full flex justify-center mt-6 mb-6 shrink-0">
-      <div class="relative inline-flex justify-center">
-        <img src="logo.png" alt="AI Bank Wallet" class="floating-logo w-auto max-w-full max-h-[15vh] md:max-h-[20vh] object-contain px-4">
-        <div id="splash-text" class="splash-text">Financial Future!</div>
-      </div>
-    </div>
-
-    <div id="page-register" class="mc-panel variant-stone max-w-md mx-auto mb-12 flex flex-col gap-4 hidden relative-panel w-full shrink-0">
-      <div class="panel-badge badge-stone">Register</div>
-      <h2 class="text-center text-lg font-bold drop-shadow-black text-white mb-2">建立新帳號</h2>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">帳號 (Username)</label><input type="text" id="reg-account" class="mc-input-pixel"></div>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">電子郵件 (Email)</label><input type="email" id="reg-email" class="mc-input-pixel"></div>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">密碼 (Password)</label><input type="password" id="reg-password" class="mc-input-pixel"></div>
-      <div class="mt-2 flex flex-col gap-3">
-        <button id="btn-submit-register" class="btn-pixel bg-yellow text-black font-bold w-full">確認註冊</button>
-        <button id="btn-back-to-login" class="btn-pixel bg-gray text-black font-bold w-full">返回登入</button>
-      </div>
-    </div>
-
-    <div id="page-login" class="mc-panel variant-stone max-w-md mx-auto mb-12 flex flex-col gap-4 relative-panel w-full shrink-0">
-      <div class="panel-badge badge-stone">Login</div>
-      <h2 class="text-center text-lg font-bold drop-shadow-black text-white mb-2">登入</h2>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">帳號 (Username)</label><input type="text" id="login-account" class="mc-input-pixel"></div>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">電子郵件 (Email)</label><input type="email" id="login-email" class="mc-input-pixel"></div>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">密碼 (Password)</label><input type="password" id="login-password" class="mc-input-pixel"></div>
-      <div class="mt-2 flex flex-col gap-3">
-        <button id="btn-login" class="btn-pixel bg-green text-black font-bold w-full">登入 (Login)</button>
-        <button id="btn-register" class="btn-pixel variant-obsidian text-white font-bold w-full">註冊新帳號</button>
-      </div>
-    </div>
-
-    <div id="page-setup-1" class="mc-panel variant-dirt max-w-md mx-auto mb-12 flex flex-col gap-4 hidden relative-panel w-full shrink-0">
-      <div class="panel-badge badge-dirt">Setup 1/2</div>
-      <h2 class="text-center text-lg font-bold text-white mb-2" style="text-shadow: 2px 2px 0 #000;">初始財務設定</h2>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">目前資產總額 ($)</label><input type="number" id="setup-balance" class="mc-input"></div>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">每月固定收入 ($)</label><input type="number" id="setup-income" class="mc-input"></div>
-      <div class="mt-2 flex flex-col gap-3">
-        <button id="btn-next-to-expenses" class="btn-pixel bg-yellow text-black font-bold w-full">下一步 ➡</button>
-        <button id="btn-back-to-login-from-setup" class="btn-pixel bg-gray text-black font-bold w-full">⬅ 返回登入</button>
-      </div>
-    </div>
-
-    <div id="page-setup-2" class="mc-panel variant-dirt max-w-md mx-auto mb-12 flex flex-col gap-4 hidden relative-panel w-full shrink-0">
-      <div class="panel-badge badge-dirt">Setup 2/2</div>
-      <h2 class="text-center text-lg font-bold text-white mb-2" style="text-shadow: 2px 2px 0 #000;">支出估算</h2>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">每月固定支出 ($)</label><input type="number" id="setup-fixed-expenses" class="mc-input"></div>
-      <div class="flex flex-col gap-1"><label class="text-white text-xs text-shadow-sm">每月變動支出預估 ($)</label><input type="number" id="setup-var-expenses" class="mc-input"></div>
-      <div class="mt-2 flex flex-col gap-3">
-        <button id="btn-start-sim" class="btn-pixel bg-green text-black font-bold w-full">啟動 60 個月模擬 🚀</button>
-        <button id="btn-back-to-setup-1" class="btn-pixel bg-gray text-black font-bold w-full">⬅ 返回修改</button>
-      </div>
-    </div>
-
-    <div id="page-dashboard" class="hidden flex-col flex-1">
-      <div class="dashboard-topbar">
-        <button id="btn-reset-setup" class="dashboard-back-button" type="button" aria-label="返回重新設定">←</button>
-      </div>
-      <main class="grid-layout">
-        <div class="col-left">
-          <section id="panel-default" class="mc-panel variant-stone relative-panel">
-            <div class="panel-badge badge-stone text-xs">60-Month Projection</div>
-            <div class="chart-dashboard">
-              <div class="chart-container"><canvas id="financeChart"></canvas></div>
-              <aside class="risk-sidebar" aria-label="財務風險指標">
-                <div class="risk-card">
-                  <div class="risk-card-title">FSI 燈號</div>
-                  <div class="risk-card-body">
-                    <div id="fsi-signal" class="traffic-signal signal-low" aria-hidden="true">
-                      <span class="light light-red"></span>
-                      <span class="light light-yellow"></span>
-                      <span class="light light-green"></span>
-                    </div>
-                    <div>
-                      <div id="fsi-value" class="risk-value">--</div>
-                      <div id="fsi-status" class="risk-status">等待分析</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="risk-card">
-                  <div class="risk-card-title">破產機率</div>
-                  <div class="risk-card-body">
-                    <div id="bankruptcy-signal" class="warning-badge risk-low" aria-hidden="true">!</div>
-                    <div>
-                      <div id="bankruptcy-value" class="risk-value">--</div>
-                      <div id="bankruptcy-status" class="risk-status">Monte Carlo</div>
-                    </div>
-                  </div>
-                </div>
-              </aside>
-            </div>
-          </section>
-
-          <section class="mc-panel variant-obsidian relative-panel chat-section flex-col">
-            <div class="panel-badge badge-obsidian text-xs">💡 AI Synchronizer</div>
-            <div class="chat-scroll-wrap">
-              <div id="ai-insights" class="chat-messages">
-                <div class="text-center text-gray-400 text-xs my-2">-- System Online --</div>
-                <div class="message-ai flex items-start gap-2">
-                  <div class="text-xl">🧙‍♂️</div>
-                  <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-3 text-white text-xs">
-                    我是 AI 顧問。我已同步你的初始資料，接下來你每一筆記帳，我都會在此即時結算！
-                  </div>
-                </div>
-              </div>
-              <div id="ai-scrollbar" class="chat-drag-scrollbar" aria-hidden="true">
-                <div id="ai-scroll-thumb" class="chat-drag-thumb"></div>
-              </div>
-            </div>
-          </section>
+    <main>
+      <header class="topbar">
+        <div>
+          <h1>用一句話描述計畫，快速看見財務風險</h1>
+          <p>主要流程保持簡單；進階模型、隨機衝擊、Monte Carlo 與限制條件都收在進階設定裡。</p>
         </div>
+        <button id="runBtn" class="primary" type="button">執行模擬</button>
+      </header>
 
-        <div class="col-right">
-          <section id="accounting-interface" class="mc-panel variant-stone relative-panel flex-col side-interface">
-            <div class="panel-badge badge-stone text-xs">Accounting</div>
-            <div id="accounting-form" class="flex flex-col gap-4 mt-2 flex-1">
-              <div class="flex flex-col gap-1"><label class="text-xs font-bold">金額 (Amount)</label><input type="number" id="record-amount" class="mc-input-pixel" placeholder="支出請加負號"></div>
-              <div class="flex flex-col gap-1"><label class="text-xs font-bold">備註 (Note)</label><input type="text" id="record-note" class="mc-input-pixel" placeholder="例如: 購買物品"></div>
-              <div class="flex flex-col gap-1"><label class="text-xs font-bold">日期 (Date)</label><input type="date" id="record-date" class="mc-input-pixel"></div>
-              
-              <div class="flex flex-col gap-3 mt-auto">
-                <button id="btn-submit-record" class="btn-pixel bg-green text-black font-bold w-full">➕ 新增紀錄</button>
-                <button id="btn-view-history" class="btn-pixel bg-gray text-black font-bold w-full">📜 歷史紀錄</button>
-              </div>
-            </div>
-            
-            <div id="history-panel" class="hidden flex-col h-full mt-2">
-              <button id="btn-back-to-form" class="btn-pixel bg-gray text-black font-bold mb-4 w-full">⬅ 返回</button>
-              <div id="history-list" class="flex flex-col gap-2 overflow-y-auto flex-1"></div>
-            </div>
-          </section>
-
-          <section id="scenario-interface" class="mc-panel variant-stone relative-panel flex-col side-interface hidden">
-            <div class="panel-badge badge-stone text-xs">Scenario</div>
-            <div class="scenario-body flex flex-col gap-4 mt-2">
-              <div class="text-xs font-bold">貸款模擬</div>
-              <div class="grid grid-cols-2 gap-2">
-                <input type="number" id="loan-principal" class="mc-input-pixel" placeholder="本金">
-                <input type="number" id="loan-apr" class="mc-input-pixel" placeholder="年利率%">
-                <input type="number" id="loan-months" class="mc-input-pixel" placeholder="期數(月)">
-                <input type="number" id="loan-start" class="mc-input-pixel" placeholder="開始月份">
-                <input type="text" id="loan-note" class="mc-input-pixel col-span-2" placeholder="備註，例如：學貸、車貸、房貸">
-              </div>
-              <button id="btn-add-loan" class="btn-pixel bg-yellow text-black font-bold w-full">加入貸款</button>
-              <div id="loan-list" class="flex flex-col gap-2 text-xs"></div>
-
-              <div class="text-xs font-bold mt-3">人生事件</div>
-              <select id="event-type" class="mc-input-pixel">
-                <option value="range">期間收入/支出</option>
-                <option value="salary_change">薪資改變</option>
-              </select>
-              <div class="grid grid-cols-2 gap-2">
-                <input type="number" id="event-start" class="mc-input-pixel" placeholder="開始月份">
-                <input type="number" id="event-end" class="mc-input-pixel" placeholder="結束月份">
-                <input type="number" id="event-amount" class="mc-input-pixel" placeholder="金額(收入為正)">
-                <input type="number" id="event-new-salary" class="mc-input-pixel" placeholder="新薪資">
-                <input type="text" id="event-note" class="mc-input-pixel" placeholder="備註">
-              </div>
-              <button id="btn-add-event" class="btn-pixel bg-yellow text-black font-bold w-full">加入事件</button>
-              <div id="event-list" class="flex flex-col gap-2 text-xs"></div>
-              <button id="btn-rerun-scenario" class="btn-pixel bg-green text-black font-bold w-full mt-3">用貸款與事件重新分析</button>
-            </div>
-          </section>
-
-          <div class="side-switcher">
-            <button id="btn-open-accounting" class="btn-pixel bg-green text-black font-bold w-full active-side">記帳介面</button>
-            <button id="btn-open-scenario" class="btn-pixel bg-gray text-black font-bold w-full">情境模擬</button>
+      <section id="profile" class="panel">
+        <div class="panel-title">
+          <div>
+            <h2>基本資料</h2>
+            <p>只需要先填常見財務欄位。分類支出、季節性與風險假設可到進階設定調整。</p>
           </div>
-
         </div>
-      </main>
-    </div>
+        <div class="grid three">
+          <label>目前資產 <input id="balance" type="number" value="1000000" inputmode="decimal"></label>
+          <label>每月收入 <input id="salary" type="number" value="60000" inputmode="decimal"></label>
+          <label>每月固定支出 <input id="fixedExpense" type="number" value="20000" inputmode="decimal"></label>
+          <label>每月變動支出總額 <input id="variableExpense" type="number" value="15000" inputmode="decimal"></label>
+          <label>每月貸款 / 債務付款 <input id="monthlyDebtPayment" type="number" value="0" inputmode="decimal"></label>
+          <label>模擬期間（月） <input id="months" type="number" value="60" min="1" max="360"></label>
+        </div>
+      </section>
+
+      <section id="scenario" class="panel">
+        <div class="panel-title">
+          <div>
+            <h2>和 AI 討論未來計畫</h2>
+            <p>像聊天一樣描述你的打算。內容不清楚時，AI 會直接回覆並告訴你還需要什麼資訊。</p>
+          </div>
+        </div>
+        <div id="chatLog" class="chat-log" role="log" aria-live="polite" aria-label="AI 情境對話">
+          <div class="chat-message assistant">
+            <span class="chat-avatar" aria-hidden="true">AI</span>
+            <div class="chat-bubble">
+              <strong>你最近有什麼計畫？</strong>
+              <p>例如：「半年後搬家，每月房租增加 8,000 元」或「明年換工作，預計空窗兩個月」。</p>
+            </div>
+          </div>
+        </div>
+        <div class="chat-composer">
+          <textarea id="scenarioText" rows="2" aria-label="輸入訊息" placeholder="輸入你的計畫，按 Enter 送出"></textarea>
+          <button id="parseScenarioBtn" class="primary send-button" type="button" aria-label="送出訊息" title="送出訊息">
+            <span aria-hidden="true">↑</span>
+          </button>
+        </div>
+        <small class="composer-hint">Enter 送出，Shift + Enter 換行</small>
+        <div class="button-row">
+          <button id="clearScenarioBtn" type="button">重新開始對話</button>
+        </div>
+      </section>
+
+      <section id="scenarioSummary" class="panel">
+        <div class="panel-title">
+          <div>
+            <h2>AI 模擬情境摘要</h2>
+            <p>每個情境都會標示狀態、估算範圍與信心程度；估算值需經你確認才會加入模擬。</p>
+          </div>
+        </div>
+        <div id="scenarioSummaryList" class="scenario-summary-list empty-state">
+          尚無 AI 情境。請先在上方描述你的未來計畫。
+        </div>
+        <div id="scenarioEventsList" class="event-ledger"></div>
+      </section>
+
+      <section id="scenarioReview" class="panel" hidden>
+        <div class="panel-title">
+          <div>
+            <h2>情境確認與編輯</h2>
+            <p>以下仍是草稿。日期、金額、分類與假設可修改，按「加入模擬」後才會執行。</p>
+          </div>
+        </div>
+        <div class="review-grid">
+          <label>情境名稱 <input id="reviewTitle"></label>
+          <label>情境類型 <input id="reviewType"></label>
+          <label>開始月份 <input id="reviewStartMonth" type="number" min="1"></label>
+          <label>持續月數 <input id="reviewDuration" type="number" min="1"></label>
+          <label>一次性成本 <input id="reviewOneTime" type="number" min="0"></label>
+          <label>每月週期成本 <input id="reviewRecurring" type="number" min="0"></label>
+          <label>低估成本 <input id="reviewLow" type="number" min="0"></label>
+          <label>預期成本 <input id="reviewExpected" type="number" min="0"></label>
+          <label>高估成本 <input id="reviewHigh" type="number" min="0"></label>
+        </div>
+        <div class="detail-grid review-details">
+          <div>
+            <h3>財務事件</h3>
+            <div id="eventEditor" class="editor-list empty">尚無事件。</div>
+          </div>
+          <div>
+            <h3>分類支出調整</h3>
+            <div id="adjustmentEditor" class="editor-list empty">尚無支出調整。</div>
+          </div>
+        </div>
+        <div class="button-row review-actions">
+          <button id="modifyScenarioBtn" type="button">修改情境</button>
+          <button id="modifyAllocationBtn" type="button">修改支出分配</button>
+          <button id="restoreScenarioBtn" type="button">恢復建議值</button>
+          <button id="confirmScenarioBtn" class="primary" type="button">加入模擬</button>
+          <button id="cancelScenarioBtn" type="button">取消</button>
+        </div>
+      </section>
+
+      <section id="results" class="panel">
+        <div class="panel-title">
+          <div>
+            <h2>情境對財務的影響</h2>
+            <p id="resultMessage">尚無模擬資料。財務影響只會使用後端引擎的基準與情境模擬結果。</p>
+          </div>
+        </div>
+        <div id="financialImpact" class="empty-state">請先確認情境並執行模擬。</div>
+      </section>
+
+      <section class="panel asset-panel">
+        <div class="panel-title">
+          <div>
+            <h2>資產走勢圖</h2>
+            <p>事件標記會指出發生月份、成本、分類、來源與對資產的影響。</p>
+          </div>
+        </div>
+        <div class="chart-box asset-chart-box" data-chart-shell>
+          <div id="balanceChartEmpty" class="chart-empty">尚無模擬資料，請先確認 AI 建立的情境並執行模擬。</div>
+          <canvas id="balanceChart" hidden></canvas>
+        </div>
+      </section>
+
+      <details class="panel transparency-panel">
+        <summary>AI 執行內容</summary>
+        <div id="aiActionTimeline" class="details-body empty-state">尚未執行模擬。</div>
+      </details>
+
+      <details id="expenseAllocationPanel" class="panel transparency-panel">
+        <summary>查看變動支出分配</summary>
+        <div class="details-body">
+          <p id="allocationNotice" class="notice">目前尚無分配資料。若沒有詳細分類，系統會使用可調整的預設比例並清楚標示。</p>
+          <div id="draftAllocationEditor" class="allocation-editor" hidden></div>
+          <div id="variableExpenseAllocation"></div>
+          <h3>原始支出與情境後支出</h3>
+          <div id="expenseComparison"></div>
+          <h3>成本拆分與抵銷</h3>
+          <div id="costBreakdown" class="cost-breakdown empty-state">尚未執行模擬。</div>
+        </div>
+      </details>
+
+      <details id="assumptionPanel" class="panel transparency-panel">
+        <summary>AI 使用的假設</summary>
+        <div class="details-body">
+          <div id="assumptionList" class="empty-state">尚無假設資料。</div>
+          <div class="button-row">
+            <button id="editAssumptionsBtn" type="button">修改假設</button>
+            <button id="restoreAssumptionsBtn" type="button">恢復建議值</button>
+            <button id="rerunSimulationBtn" type="button">重新模擬</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="panel transparency-panel">
+        <summary>資料來源與估算依據</summary>
+        <div id="sourceList" class="details-body empty-state">尚無資料來源。</div>
+      </details>
+
+      <details class="panel transparency-panel">
+        <summary>進階模擬資訊</summary>
+        <div class="details-body charts">
+          <div class="chart-card">
+            <h3>收入與支出</h3>
+            <div class="chart-box" data-chart-shell>
+              <div id="cashflowChartEmpty" class="chart-empty">尚無模擬資料。</div>
+              <canvas id="cashflowChart" hidden></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <h3>FSI 風險指數</h3>
+            <div class="chart-box" data-chart-shell>
+              <div id="fsiChartEmpty" class="chart-empty">尚無模擬資料。</div>
+              <canvas id="fsiChart" hidden></canvas>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details id="advanced" class="panel advanced-panel">
+        <summary>
+          <span>
+            <strong>Advanced Settings</strong>
+            <small>分類支出、隨機衝擊、Monte Carlo、seed 與風險限制</small>
+          </span>
+        </summary>
+        <div class="advanced-layout">
+          <section>
+            <div class="section-row">
+              <h2>支出分類</h2>
+              <button id="categorizeBtn" type="button">依總額產生分類</button>
+            </div>
+            <label class="toggle"><input id="advancedMode" type="checkbox"> 使用進階分類支出模型</label>
+            <div id="categoryList" class="category-list empty">分類支出預設隱藏。需要調整 volatility、inflation、seasonality、elasticity 時再產生分類。</div>
+            <div class="chart-card">
+              <h3>支出分類圖</h3>
+              <div class="chart-box small" data-chart-shell>
+                <canvas id="categoryChart"></canvas>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>模擬假設</h2>
+            <div class="grid two">
+              <label>年調薪率 <input id="raiseRate" type="number" step="0.01" value="0.03"></label>
+              <label>通膨率 <input id="inflationRate" type="number" step="0.01" value="0.02"></label>
+              <label>緊急備用金（月） <input id="emergencyMonths" type="number" value="6"></label>
+              <label>Random seed <input id="seed" type="number" value="42"></label>
+              <label>Monte Carlo 次數 <input id="iterations" type="number" value="300" min="1" max="5000"></label>
+              <label>Sample paths <input id="samplePaths" type="number" value="8" min="0" max="25"></label>
+            </div>
+            <label class="toggle"><input id="enableShocks" type="checkbox" checked> 啟用隨機財務衝擊</label>
+            <h3>進階風險限制</h3>
+            <div class="grid two">
+              <label>破產機率低於 <input id="limitBankrupt" type="number" step="0.01" value="0.1"></label>
+              <label>最高 FSI 低於 <input id="limitFsi" type="number" step="0.01" value="0.6"></label>
+              <label>最低備用金月數 <input id="limitEmergency" type="number" value="3"></label>
+              <label class="toggle"><input id="limitNoNegative" type="checkbox" checked> 資產不可跌破零</label>
+            </div>
+          </section>
+        </div>
+      </details>
+
+      <section class="panel">
+        <div class="panel-title">
+          <div>
+            <h2>Monte Carlo 與最佳化</h2>
+            <p>進階參數收在上方 Advanced Settings。這裡只呈現結果。</p>
+          </div>
+          <div class="button-row">
+            <button id="runMcBtn" type="button">執行 Monte Carlo</button>
+            <button id="optimizeBtn" type="button">執行最佳化</button>
+          </div>
+        </div>
+        <div class="metric-grid compact">
+          <article><span>P5 / P50 / P95</span><strong id="mcPercentiles">--</strong></article>
+          <article><span>破產機率</span><strong id="mcBankrupt">--</strong></article>
+          <article><span>平均最高 FSI</span><strong id="mcFsi">--</strong></article>
+        </div>
+        <div class="charts">
+          <div class="chart-card">
+            <h3>Monte Carlo sample paths</h3>
+            <div class="chart-box" data-chart-shell>
+              <canvas id="mcChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <h3>方案比較</h3>
+            <div class="chart-box" data-chart-shell>
+              <canvas id="comparisonChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <pre id="optimizeOutput" class="json-box collapsed-json">尚未執行最佳化。</pre>
+      </section>
+
+      <section id="report" class="panel">
+        <div class="panel-title">
+          <div>
+            <h2>AI / 模板財務報告</h2>
+            <p>報告只引用後端模擬數字，不讓 AI 編造計算結果。</p>
+          </div>
+          <button id="reportBtn" type="button">生成報告</button>
+        </div>
+        <div id="reportOutput" class="report empty">尚未生成報告。</div>
+      </section>
+
+      <div id="toast" role="status" aria-live="polite"></div>
+    </main>
   </div>
 
-  <script>
-    // ==========================================
-    // 🌟 全局變數與元件抓取
-    // ==========================================
-    const pageRegister = document.getElementById('page-register'); 
-    const pageLogin = document.getElementById('page-login');
-    const pageSetup1 = document.getElementById('page-setup-1'); 
-    const pageSetup2 = document.getElementById('page-setup-2'); 
-    const pageDashboard = document.getElementById('page-dashboard');
-    const mainLogo = document.getElementById('main-logo'); 
-    const aiInsights = document.getElementById('ai-insights');
-    const aiScrollbar = document.getElementById('ai-scrollbar');
-    const aiScrollThumb = document.getElementById('ai-scroll-thumb');
-    const fsiSignal = document.getElementById('fsi-signal');
-    const fsiValue = document.getElementById('fsi-value');
-    const fsiStatus = document.getElementById('fsi-status');
-    const bankruptcySignal = document.getElementById('bankruptcy-signal');
-    const bankruptcyValue = document.getElementById('bankruptcy-value');
-    const bankruptcyStatus = document.getElementById('bankruptcy-status');
-    const API_BASE = window.location.origin;
-    const DEMO_MODE = true;
-    let currentUser = JSON.parse(sessionStorage.getItem('currentUser') || 'null');
-    let currentBalance = 0; 
-    let monthlyNetFlow = 0; 
-    let currentProfile = null;
-    let currentEvents = [];
-    let currentLoans = [];
-
-    async function apiRequest(path, options = {}) {
-      const response = await fetch(`${API_BASE}${path}`, options);
-      const data = await response.json();
-      if (!response.ok) {
-        const detail = typeof data.detail === 'object' ? JSON.stringify(data.detail, null, 2) : data.detail;
-        throw new Error(detail || `${path} 請求失敗`);
-      }
-      return data;
-    }
-
-    function renderApiError(prefix, error) {
-      alert(`${prefix}\n${error.message || '請稍後再試'}`);
-    }
-
-    function postJson(path, payload) {
-      return apiRequest(path, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    }
-
-    function formatCurrency(value) {
-      return `$${Number(value || 0).toLocaleString()}`;
-    }
-
-    function formatCompactCurrency(value) {
-      const amount = Number(value || 0);
-      const sign = amount < 0 ? '-' : '';
-      const absAmount = Math.abs(amount);
-      if (absAmount >= 1000000) return `${sign}$${(absAmount / 1000000).toFixed(1)}M`;
-      if (absAmount >= 10000) return `${sign}$${Math.round(absAmount / 1000)}K`;
-      return `${sign}$${Math.round(absAmount).toLocaleString()}`;
-    }
-
-    function formatPercent(value) {
-      return `${((Number(value) || 0) * 100).toFixed(2)}%`;
-    }
-
-    function formatRiskLevel(value) {
-      const level = String(value || 'unknown').toLowerCase();
-      if (level === 'low') return '低風險';
-      if (level === 'medium') return '中風險';
-      if (level === 'high') return '高風險';
-      if (level === 'crisis') return '危機';
-      if (level === 'unknown') return '未知';
-      return level;
-    }
-
-    function updateRiskWidgets(summary = {}, mcData = {}) {
-      const fsi = Number(summary.max_fsi);
-      const minBalance = Number(summary.min_balance);
-      const bankruptProbability = Number(mcData.bankrupt_probability);
-
-      let fsiLevel = 'low';
-      if (Number.isFinite(minBalance) && minBalance < 0) {
-        fsiLevel = 'crisis';
-      } else if (Number.isFinite(fsi) && fsi >= 0.85) {
-        fsiLevel = 'high';
-      } else if (Number.isFinite(fsi) && fsi >= 0.6) {
-        fsiLevel = 'medium';
-      }
-
-      fsiSignal.className = `traffic-signal signal-${fsiLevel}`;
-      fsiValue.textContent = Number.isFinite(fsi) ? fsi.toFixed(3) : '--';
-      fsiStatus.textContent = formatRiskLevel(fsiLevel);
-
-      let bankruptcyLevel = 'low';
-      if (Number.isFinite(bankruptProbability) && bankruptProbability >= 0.15) {
-        bankruptcyLevel = 'high';
-      } else if (Number.isFinite(bankruptProbability) && bankruptProbability >= 0.05) {
-        bankruptcyLevel = 'medium';
-      }
-
-      bankruptcySignal.className = `warning-badge risk-${bankruptcyLevel}`;
-      bankruptcyValue.textContent = Number.isFinite(bankruptProbability) ? formatPercent(bankruptProbability) : '--';
-      bankruptcyStatus.textContent = formatRiskLevel(bankruptcyLevel);
-    }
-
-    function randomBetween(min, max) {
-      return min + Math.random() * (max - min);
-    }
-
-    function calculateClientLoanPayment(principal, apr, months) {
-      if (!principal || !months) return 0;
-      const monthlyRate = Number(apr || 0) / 12;
-      if (monthlyRate === 0) return principal / months;
-      return principal * monthlyRate / (1 - Math.pow(1 + monthlyRate, -months));
-    }
-
-    function getClientDebtPayment(month, loans = []) {
-      return loans.reduce((total, loan) => {
-        const startMonth = Number(loan.start_month || 1);
-        const months = Number(loan.months || 0);
-        const endMonth = startMonth + months - 1;
-        if (month < startMonth || month > endMonth) return total;
-        return total + calculateClientLoanPayment(Number(loan.principal || 0), Number(loan.apr || 0), months);
-      }, 0);
-    }
-
-    function getClientEventNet(month, events = []) {
-      return events.reduce((total, event) => {
-        if (event.type === 'one_time' && Number(event.month) === month) {
-          return total + Number(event.amount || 0);
-        }
-        if (event.type === 'range' && month >= Number(event.start_month) && month <= Number(event.end_month)) {
-          return total + Number(event.amount || 0);
-        }
-        return total;
-      }, 0);
-    }
-
-    function getClientSalary(month, baseSalary, events = []) {
-      return events.reduce((salary, event) => {
-        if (event.type === 'salary_change' && month >= Number(event.start_month || 1)) {
-          return Number(event.new_salary || salary);
-        }
-        return salary;
-      }, baseSalary);
-    }
-
-    function runClientScenario(profile, events = [], loans = [], months = 60, stochastic = true) {
-      const raiseRate = stochastic ? randomBetween(0.02, 0.05) : 0.03;
-      const inflationRate = stochastic ? randomBetween(0.01, 0.04) : 0.02;
-      const monthlyShockAmounts = Array.from({ length: months + 1 }, () => (
-        stochastic && Math.random() < 0.25 ? Math.round(randomBetween(5000, 50000)) : 0
-      ));
-      const curve = [];
-      let balance = Number(profile.balance || 0);
-
-      for (let month = 1; month <= months; month++) {
-        const yearsPassed = Math.floor((month - 1) / 12);
-        const baseIncome = Number(profile.salary || 0) * Math.pow(1 + raiseRate, yearsPassed);
-        const income = getClientSalary(month, baseIncome, events);
-        const expense = Number(profile.fixed_expense || 0)
-          + Number(profile.variable_expense || 0) * Math.pow(1 + inflationRate, yearsPassed);
-        const debtPayment = getClientDebtPayment(month, loans);
-        const eventNet = getClientEventNet(month, events) - monthlyShockAmounts[month];
-        const netCashflow = income - expense - debtPayment + eventNet;
-
-        balance += netCashflow;
-        const pressure = income > 0 ? (expense + debtPayment) / income : 0.99;
-        const fsi = Math.min(0.99, pressure + (balance < 0 ? 0.25 : 0));
-        curve.push({
-          month,
-          balance: Math.round(balance),
-          fsi
-        });
-      }
-
-      const balances = curve.map(item => item.balance);
-      const fsiValues = curve.map(item => item.fsi);
-      return {
-        curve,
-        summary: {
-          final_balance: balances[balances.length - 1] || Number(profile.balance || 0),
-          min_balance: Math.min(Number(profile.balance || 0), ...balances),
-          max_fsi: Math.max(...fsiValues),
-          avg_fsi: fsiValues.reduce((sum, value) => sum + value, 0) / fsiValues.length,
-          high_risk_months: fsiValues.filter(value => value >= 0.85).length,
-          first_risk_month: curve.find(item => item.fsi >= 0.85)?.month || null
-        }
-      };
-    }
-
-    function applyFallbackAnalysis(profile, events = [], loans = [], appendSummary = false) {
-      const chartScenario = runClientScenario(profile, events, loans, 60, true);
-      const monteCarloRuns = Array.from(
-        { length: 300 },
-        () => runClientScenario(profile, events, loans, 60, true).summary
-      );
-
-      const finalBalances = monteCarloRuns.map(item => item.final_balance);
-      const minBalances = monteCarloRuns.map(item => item.min_balance);
-      const mcData = {
-        bankrupt_probability: monteCarloRuns.filter(item => item.min_balance < 0).length / monteCarloRuns.length,
-        worst_case_balance: Math.min(...finalBalances),
-        best_case_balance: Math.max(...finalBalances),
-        avg_final_balance: finalBalances.reduce((sum, value) => sum + value, 0) / finalBalances.length
-      };
-      const summary = {
-        ...chartScenario.summary,
-        min_balance: Math.min(...minBalances),
-        max_fsi: chartScenario.summary.max_fsi,
-        avg_fsi: chartScenario.summary.avg_fsi
-      };
-
-      financeChart.data.labels = ['今日', ...chartScenario.curve.map(item => item.month % 6 === 0 ? `第${item.month}個月` : '')];
-      financeChart.data.datasets[0].data = [profile.balance, ...chartScenario.curve.map(item => item.balance)];
-      financeChart.update();
-      updateRiskWidgets(summary, mcData);
-
-      if (appendSummary) {
-        appendAiInsight(`
-          <div class="font-bold text-green-300 mb-2">已重新執行情境模擬</div>
-          <div>這次加入隨機薪資成長、通膨變動與突發支出抽樣，所以每次重新分析的結果可能不同。</div>
-          <div class="mt-2">本次圖表期末資產：${formatCurrency(summary.final_balance)}</div>
-          <div>Monte Carlo 平均期末資產：${formatCurrency(mcData.avg_final_balance)}</div>
-          <div>最差情境：${formatCurrency(mcData.worst_case_balance)}，最佳情境：${formatCurrency(mcData.best_case_balance)}</div>
-          <div>破產機率：${formatPercent(mcData.bankrupt_probability)}</div>
-        `);
-      }
-    }
-
-    function escapeHtml(value) {
-      return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    function appendAiInsight(html) {
-      aiInsights.insertAdjacentHTML('beforeend', `
-        <div class="message-ai flex items-start gap-2 mt-4">
-          <div class="text-xl">💡</div>
-          <div class="msg-bubble bg-gray-800 border-2 border-blue-500 p-3 text-white text-xs whitespace-pre-line">
-            ${html}
-          </div>
-        </div>
-      `);
-      aiInsights.scrollTop = aiInsights.scrollHeight;
-      updateAiScrollbar();
-    }
-
-    function resetAiConversation() {
-      aiInsights.innerHTML = `
-        <div class="text-center text-gray-400 text-xs my-2">-- System Online --</div>
-        <div class="message-ai flex items-start gap-2">
-          <div class="text-xl">🧙‍♂️</div>
-          <div class="msg-bubble bg-gray-800 border-2 border-gray-600 p-3 text-white text-xs">
-            我是 AI 顧問。我已同步你的初始資料，接下來你每一筆記帳，我都會在此即時結算！
-          </div>
-        </div>
-      `;
-      updateAiScrollbar();
-    }
-
-    function resetFinancialSetup() {
-      currentProfile = null;
-      currentBalance = 0;
-      monthlyNetFlow = 0;
-      currentEvents = [];
-      currentLoans = [];
-
-      [
-        'setup-balance',
-        'setup-income',
-        'setup-fixed-expenses',
-        'setup-var-expenses',
-        'loan-principal',
-        'loan-apr',
-        'loan-months',
-        'loan-start',
-        'loan-note',
-        'event-start',
-        'event-end',
-        'event-amount',
-        'event-new-salary',
-        'event-note',
-        'record-amount',
-        'record-note',
-        'record-date'
-      ].forEach(id => {
-        const field = document.getElementById(id);
-        if (field) field.value = '';
-      });
-
-      financeChart.data.labels = [];
-      financeChart.data.datasets[0].data = [];
-      financeChart.update();
-
-      fsiSignal.className = 'traffic-signal signal-low';
-      fsiValue.textContent = '--';
-      fsiStatus.textContent = '等待分析';
-      bankruptcySignal.className = 'warning-badge risk-low';
-      bankruptcyValue.textContent = '--';
-      bankruptcyStatus.textContent = 'Monte Carlo';
-
-      renderScenarioLists();
-      resetAiConversation();
-      showSideInterface('accounting');
-      historyPanel.classList.add('hidden');
-      accountingForm.classList.remove('hidden');
-
-      pageDashboard.classList.add('hidden');
-      pageDashboard.classList.remove('flex');
-      pageSetup2.classList.add('hidden');
-      pageRegister.classList.add('hidden');
-      pageLogin.classList.add('hidden');
-      mainLogo.classList.remove('hidden');
-      pageSetup1.classList.remove('hidden');
-    }
-
-    function updateAiScrollbar() {
-      if (!aiInsights || !aiScrollbar || !aiScrollThumb) return;
-
-      const { scrollTop, scrollHeight, clientHeight } = aiInsights;
-      const trackHeight = aiScrollbar.clientHeight;
-      const canScroll = scrollHeight > clientHeight + 1;
-
-      aiScrollbar.classList.toggle('is-disabled', !canScroll);
-      if (!canScroll || trackHeight <= 0) {
-        aiScrollThumb.style.height = '100%';
-        aiScrollThumb.style.transform = 'translateY(0)';
-        return;
-      }
-
-      const thumbHeight = Math.max(34, Math.round((clientHeight / scrollHeight) * trackHeight));
-      const maxThumbTop = trackHeight - thumbHeight;
-      const maxScrollTop = scrollHeight - clientHeight;
-      const thumbTop = Math.round((scrollTop / maxScrollTop) * maxThumbTop);
-
-      aiScrollThumb.style.height = `${thumbHeight}px`;
-      aiScrollThumb.style.transform = `translateY(${thumbTop}px)`;
-    }
-
-    function scrollAiMessagesFromPointer(clientY) {
-      const maxScrollTop = aiInsights.scrollHeight - aiInsights.clientHeight;
-      if (maxScrollTop <= 0) return;
-
-      const trackRect = aiScrollbar.getBoundingClientRect();
-      const thumbHeight = aiScrollThumb.offsetHeight;
-      const maxThumbTop = Math.max(1, trackRect.height - thumbHeight);
-      const targetThumbTop = Math.min(
-        maxThumbTop,
-        Math.max(0, clientY - trackRect.top - thumbHeight / 2)
-      );
-      aiInsights.scrollTop = (targetThumbTop / maxThumbTop) * maxScrollTop;
-    }
-
-    function showDashboard() {
-      pageRegister.classList.add('hidden');
-      pageLogin.classList.add('hidden');
-      pageSetup1.classList.add('hidden');
-      pageSetup2.classList.add('hidden');
-      mainLogo.classList.add('hidden');
-      pageDashboard.classList.remove('hidden');
-      pageDashboard.classList.add('flex');
-      refreshDashboardLayout();
-    }
-
-    async function startSimulationFromProfile(profile, persistSimulation = false) {
-      currentProfile = { ...profile };
-      currentBalance = profile.balance;
-      monthlyNetFlow = profile.salary - profile.fixed_expense - profile.variable_expense;
-
-      try {
-        const analysis = await syncAiAnalysis(currentProfile, currentEvents, persistSimulation, currentLoans);
-        console.log("【後端 AI 分析結果】:", analysis);
-        showDashboard();
-        return analysis;
-      } catch (error) {
-        if (!DEMO_MODE) throw error;
-
-        console.warn("展示模式改用前端模擬備援:", error);
-        applyFallbackAnalysis(currentProfile, currentEvents, currentLoans);
-        showDashboard();
-        appendAiInsight(`
-          <div class="font-bold text-yellow-300 mb-2">展示模式已啟用</div>
-          <div>目前跳過登入流程，並使用你輸入的初始財務資料進行 60 個月模擬。</div>
-        `);
-        return null;
-      }
-    }
-
-    function startDemoMode() {
-      currentUser = { id: 'demo-user', username: 'demo', email: 'demo@example.com' };
-      sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-      pageRegister.classList.add('hidden');
-      pageLogin.classList.add('hidden');
-      pageSetup2.classList.add('hidden');
-      pageDashboard.classList.add('hidden');
-      pageDashboard.classList.remove('flex');
-      pageSetup1.classList.remove('hidden');
-      document.getElementById('btn-back-to-login-from-setup').classList.add('hidden');
-    }
-
-    aiInsights.addEventListener('scroll', updateAiScrollbar);
-    aiInsights.addEventListener('wheel', (event) => {
-      event.preventDefault();
-      aiInsights.scrollTop += event.deltaY;
-    }, { passive: false });
-    aiScrollbar.addEventListener('wheel', (event) => {
-      event.preventDefault();
-      aiInsights.scrollTop += event.deltaY;
-    }, { passive: false });
-    aiScrollbar.addEventListener('mousedown', (event) => {
-      event.preventDefault();
-      scrollAiMessagesFromPointer(event.clientY);
-
-      const handleDrag = (moveEvent) => {
-        moveEvent.preventDefault();
-        scrollAiMessagesFromPointer(moveEvent.clientY);
-      };
-      const stopDrag = () => {
-        document.removeEventListener('mousemove', handleDrag);
-        document.removeEventListener('mouseup', stopDrag);
-      };
-
-      document.addEventListener('mousemove', handleDrag);
-      document.addEventListener('mouseup', stopDrag);
-    });
-
-    function buildAdviceOptions(profile, events = [], loans = []) {
-      const monthlySavingsBoost = Math.max(500, Math.round(profile.variable_expense * 0.1));
-      const incomeBoost = Math.max(1000, Math.round(profile.salary * 0.08));
-
-      return [
-        { name: '維持目前收支', events, loans },
-        {
-          name: '降低變動支出10%',
-          events: [
-            ...events,
-            { type: 'range', start_month: 1, end_month: 60, amount: monthlySavingsBoost, note: 'reduce_variable_expense' }
-          ],
-          loans
-        },
-        {
-          name: '增加收入來源8%',
-          events: [
-            ...events,
-            { type: 'salary_change', start_month: 1, new_salary: profile.salary + incomeBoost, note: 'income_growth_plan' }
-          ],
-          loans
-        }
-      ];
-    }
-
-    async function syncAiAnalysis(profile, events = [], persistSimulation = false, loans = []) {
-      const [simData, mcData, adviceData] = await Promise.all([
-        postJson('/simulate', {
-          profile,
-          months: 60,
-          events,
-          loans,
-          user_id: persistSimulation ? (currentUser?.id || null) : null
-        }),
-        postJson('/monte-carlo', {
-          profile,
-          months: 60,
-          events,
-          loans,
-          simulations: 300
-        }),
-        postJson('/ai/advice', {
-          profile,
-          options: buildAdviceOptions(profile, events, loans),
-          months: 60,
-          mc_runs: 300
-        })
-      ]);
-
-      const simResult = simData.result || simData;
-      const summary = simResult.summary || {};
-      const curve = simResult.simulation_curve || [];
-      updateRiskWidgets(summary, mcData);
-
-      if (curve.length) {
-        financeChart.data.labels = ['今日', ...curve.map(item => item.month % 6 === 0 ? `第${item.month}個月` : '')];
-        financeChart.data.datasets[0].data = [profile.balance, ...curve.map(item => item.balance)];
-        financeChart.update();
-      }
-
-      appendAiInsight(`
-        <div class="font-bold text-yellow-300 mb-2">AI Synchronizer 已接上後端運算</div>
-        <div>FSI 最高值：${summary.max_fsi ?? 'N/A'}，平均 FSI：${summary.avg_fsi ?? 'N/A'}</div>
-        <div>最低資產水位：${formatCurrency(summary.min_balance)}</div>
-        <div>Monte Carlo 破產機率：${formatPercent(mcData.bankrupt_probability)}</div>
-        <div>最差情境結餘：${formatCurrency(mcData.worst_case_balance)}</div>
-        <div>AI 建議方案：${adviceData.best_option || 'N/A'}（${formatRiskLevel(adviceData.risk_level)}）</div>
-        <div class="mt-2">${(adviceData.suggestions || []).join('<br>')}</div>
-      `);
-
-      const syncSummaryHtml = [
-        '<div class="font-bold text-cyan-300 mb-2">指標說明</div>',
-        '<div>FSI（財務壓力指數）可以理解成「你目前的收支有多緊」。這個數值會根據收入、支出與資產變化來判斷壓力程度，通常數值越高，代表現金流越吃緊、可承受風險越低。</div>',
-        `<div class="mt-2">以你這次結果來看，最高 FSI 為 ${summary.max_fsi ?? 'N/A'}，平均 FSI 為 ${summary.avg_fsi ?? 'N/A'}，代表系統觀察你在整段模擬期間的壓力高點與整體平均狀況。</div>`,
-        `<div class="mt-2">如果高風險月份數為 ${summary.high_risk_months ?? 0}，表示未來可能出現財務壓力偏高的月份；首次高風險月份為 ${summary.first_risk_month ?? '無'}，可以幫助你提早準備現金或調整支出。</div>`,
-        '<div class="mt-3">Monte Carlo 模擬則是在同一組財務條件下，加入大量不同的隨機情境，反覆推演未來結果。它不是只告訴你「最可能發生什麼」，而是幫你看出「最好、最差，以及大致平均會落在哪裡」。</div>',
-        `<div class="mt-2">這次模擬中，最佳情境為 ${formatCurrency(mcData.best_case_balance)}，最差情境為 ${formatCurrency(mcData.worst_case_balance)}，平均期末餘額為 ${formatCurrency(mcData.avg_final_balance)}。</div>`,
-        `<div class="mt-2">Monte Carlo 破產機率為 ${formatPercent(mcData.bankrupt_probability)}，這個數字越高，代表在不同未來情境下出現資金不足的風險越高；越低則代表整體財務結構相對穩定。</div>`
-      ].join('');
-
-      appendAiInsight(syncSummaryHtml);
-
-      return { simData, mcData, adviceData };
-    }
-
-    function numberValue(id) {
-      const value = Number(document.getElementById(id).value);
-      return Number.isFinite(value) ? value : null;
-    }
-
-    function updateEventFieldVisibility() {
-      const type = document.getElementById('event-type').value;
-      document.getElementById('event-end').classList.toggle('hidden', type !== 'range');
-      document.getElementById('event-amount').classList.toggle('hidden', type !== 'range');
-      document.getElementById('event-new-salary').classList.toggle('hidden', type !== 'salary_change');
-    }
-
-    function describeEvent(event) {
-      if (event.type === 'one_time') {
-        return `第 ${event.month} 月，${formatCurrency(event.amount)}，${escapeHtml(event.note || '單月事件')}`;
-      }
-      if (event.type === 'range') {
-        return `第 ${event.start_month}-${event.end_month} 月，每月 ${formatCurrency(event.amount)}，${escapeHtml(event.note || '期間事件')}`;
-      }
-      return `第 ${event.start_month} 月起，薪資改為 ${formatCurrency(event.new_salary)}，${escapeHtml(event.note || '薪資改變')}`;
-    }
-
-    function renderScenarioLists() {
-      const loanList = document.getElementById('loan-list');
-      const eventList = document.getElementById('event-list');
-
-      loanList.innerHTML = currentLoans.length
-        ? currentLoans.map((loan, index) => `
-          <div class="mc-panel variant-obsidian p-2 border-2">
-            <div>本金 ${formatCurrency(loan.principal)}，年利率 ${(loan.apr * 100).toFixed(2)}%，${loan.months} 期，第 ${loan.start_month} 月開始</div>
-            <div class="scenario-note">備註：${escapeHtml(loan.note || '未填寫')}</div>
-            <button type="button" class="btn-pixel bg-red text-white mt-2" onclick="removeLoan(${index})">移除</button>
-          </div>
-        `).join('')
-        : '<div class="text-gray">尚未加入貸款</div>';
-
-      eventList.innerHTML = currentEvents.length
-        ? currentEvents.map((event, index) => `
-          <div class="mc-panel variant-obsidian p-2 border-2">
-            <div>${describeEvent(event)}</div>
-            <button type="button" class="btn-pixel bg-red text-white mt-2" onclick="removeScenarioEvent(${index})">移除</button>
-          </div>
-        `).join('')
-        : '<div class="text-gray">尚未加入事件</div>';
-    }
-
-    function removeLoan(index) {
-      currentLoans.splice(index, 1);
-      renderScenarioLists();
-    }
-
-    function removeScenarioEvent(index) {
-      currentEvents.splice(index, 1);
-      renderScenarioLists();
-    }
-
-    document.getElementById('btn-add-loan').addEventListener('click', () => {
-      const principal = numberValue('loan-principal');
-      const aprInput = numberValue('loan-apr');
-      const months = numberValue('loan-months');
-      const startMonth = numberValue('loan-start');
-      const note = document.getElementById('loan-note').value.trim();
-
-      if (principal === null || aprInput === null || months === null || startMonth === null || principal < 0 || aprInput < 0 || months <= 0 || startMonth <= 0) {
-        alert('請輸入完整且有效的貸款資料');
-        return;
-      }
-
-      currentLoans.push({
-        principal,
-        apr: aprInput > 1 ? aprInput / 100 : aprInput,
-        months: Math.round(months),
-        start_month: Math.round(startMonth),
-        note
-      });
-
-      ['loan-principal', 'loan-apr', 'loan-months', 'loan-start', 'loan-note'].forEach(id => document.getElementById(id).value = '');
-      renderScenarioLists();
-    });
-
-    document.getElementById('event-type').addEventListener('change', updateEventFieldVisibility);
-    updateEventFieldVisibility();
-
-    document.getElementById('btn-add-event').addEventListener('click', () => {
-      const type = document.getElementById('event-type').value;
-      const note = document.getElementById('event-note').value.trim();
-      let event = { type, note };
-
-      if (type === 'one_time') {
-        const month = numberValue('event-start');
-        const amount = numberValue('event-amount');
-        if (month === null || amount === null || month <= 0) {
-          alert('單月事件需要開始月份與金額');
-          return;
-        }
-        event = { ...event, month: Math.round(month), amount };
-      } else if (type === 'range') {
-        const startMonth = numberValue('event-start');
-        const endMonth = numberValue('event-end');
-        const amount = numberValue('event-amount');
-        if (startMonth === null || endMonth === null || amount === null || startMonth <= 0 || endMonth < startMonth) {
-          alert('期間事件需要開始月份、結束月份與金額');
-          return;
-        }
-        event = { ...event, start_month: Math.round(startMonth), end_month: Math.round(endMonth), amount };
-      } else {
-        const startMonth = numberValue('event-start');
-        const newSalary = numberValue('event-new-salary');
-        if (startMonth === null || newSalary === null || startMonth <= 0 || newSalary < 0) {
-          alert('薪資改變需要開始月份與新薪資');
-          return;
-        }
-        event = { ...event, start_month: Math.round(startMonth), new_salary: newSalary };
-      }
-
-      currentEvents.push(event);
-      ['event-start', 'event-end', 'event-amount', 'event-new-salary', 'event-note'].forEach(id => document.getElementById(id).value = '');
-      renderScenarioLists();
-    });
-
-    document.getElementById('btn-rerun-scenario').addEventListener('click', async () => {
-      if (!currentProfile) {
-        alert('請先完成原本的固定收入、固定支出與變動支出設定');
-        return;
-      }
-
-      if (DEMO_MODE) {
-        applyFallbackAnalysis(currentProfile, currentEvents, currentLoans, true);
-        return;
-      }
-
-      try {
-        await syncAiAnalysis(currentProfile, currentEvents, false, currentLoans);
-      } catch (error) {
-        appendAiInsight(`⚠️ 情境重新分析失敗：${escapeHtml(error.message || '請稍後再試')}`);
-      }
-    });
-
-    renderScenarioLists();
-
-    function showSideInterface(target) {
-      const accountingInterface = document.getElementById('accounting-interface');
-      const scenarioInterface = document.getElementById('scenario-interface');
-      const accountingButton = document.getElementById('btn-open-accounting');
-      const scenarioButton = document.getElementById('btn-open-scenario');
-      const isScenario = target === 'scenario';
-
-      accountingInterface.classList.toggle('hidden', isScenario);
-      scenarioInterface.classList.toggle('hidden', !isScenario);
-      accountingButton.classList.toggle('active-side', !isScenario);
-      scenarioButton.classList.toggle('active-side', isScenario);
-      accountingButton.classList.toggle('bg-green', !isScenario);
-      accountingButton.classList.toggle('bg-gray', isScenario);
-      scenarioButton.classList.toggle('bg-green', isScenario);
-      scenarioButton.classList.toggle('bg-gray', !isScenario);
-    }
-
-    document.getElementById('btn-open-accounting').addEventListener('click', () => showSideInterface('accounting'));
-    document.getElementById('btn-open-scenario').addEventListener('click', () => showSideInterface('scenario'));
-    document.getElementById('btn-reset-setup').addEventListener('click', resetFinancialSetup);
-
-    // ==========================================
-    // 🌟 Minecraft 黃色標語輪替邏輯
-    // ==========================================
-    const splashTextEl = document.getElementById('splash-text');
-    const splashMessages = ["Machine Learning!", "Artificial Intelligence!", "Shout out to Minecraft!"];
-    let splashIndex = Math.floor(Math.random() * splashMessages.length);
-    splashTextEl.textContent = splashMessages[splashIndex];
-    setInterval(() => {
-      splashIndex = (splashIndex + 1) % splashMessages.length;
-      splashTextEl.textContent = splashMessages[splashIndex];
-    }, 3000);
-
-    // ==========================================
-    // 🌟 頁面導覽邏輯 (返回上頁/下一步)
-    // ==========================================
-    document.getElementById('btn-register').addEventListener('click', () => { pageLogin.classList.add('hidden'); pageRegister.classList.remove('hidden'); });
-    document.getElementById('btn-back-to-login').addEventListener('click', () => { pageRegister.classList.add('hidden'); pageLogin.classList.remove('hidden'); });
-
-    document.getElementById('btn-next-to-expenses').addEventListener('click', () => {
-      if(!document.getElementById('setup-balance').value || !document.getElementById('setup-income').value) {
-        alert("請先輸入您的資產與收入！"); return;
-      }
-      pageSetup1.classList.add('hidden');
-      pageSetup2.classList.remove('hidden');
-    });
-
-    document.getElementById('btn-back-to-login-from-setup').addEventListener('click', () => {
-      pageSetup1.classList.add('hidden');
-      pageLogin.classList.remove('hidden');
-    });
-
-    document.getElementById('btn-back-to-setup-1').addEventListener('click', () => {
-      pageSetup2.classList.add('hidden');
-      pageSetup1.classList.remove('hidden');
-    });
-
-    // ==========================================
-    // 🌟 正式連線版：流程 1 註冊 API (/auth/register)
-    // ==========================================
-    document.getElementById('btn-submit-register').addEventListener('click', async () => {
-      const acc = document.getElementById('reg-account').value;
-      const email = document.getElementById('reg-email').value; 
-      const pass = document.getElementById('reg-password').value;
-      const registerBtn = document.getElementById('btn-submit-register'); 
-
-      if(!acc || !email || !pass) { 
-        alert("⚠️ 請完整輸入想註冊的帳號、電子郵件與密碼！"); 
-        return; 
-      }
-      
-      const originalBtnText = registerBtn.textContent;
-      registerBtn.textContent = "資料庫寫入中..."; 
-      registerBtn.disabled = true;
-
-      try {
-        const data = await apiRequest('/auth/register', { 
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: acc, email: email, password: pass })
-        });
-
-        alert(data.message || "✅ 註冊成功！請在登入畫面輸入剛剛的資料。");
-        document.getElementById('reg-account').value = '';
-        document.getElementById('reg-email').value = ''; 
-        document.getElementById('reg-password').value = '';
-        pageRegister.classList.add('hidden'); 
-        pageLogin.classList.remove('hidden'); 
-      } catch (error) {
-        renderApiError("❌ 註冊失敗：", error);
-      } finally {
-        registerBtn.textContent = originalBtnText; 
-        registerBtn.disabled = false;
-      }
-    });
-
-    // ==========================================
-    // 🌟 正式連線版：流程 2 登入 API (/auth/login)
-    // ==========================================
-    document.getElementById('btn-login').addEventListener('click', async () => {
-      const acc = document.getElementById('login-account').value;
-      const email = document.getElementById('login-email').value; 
-      const pass = document.getElementById('login-password').value;
-      const loginBtn = document.getElementById('btn-login');
-
-      if (!acc || !email || !pass) { 
-        alert("⚠️ 請完整填寫帳號、電子郵件與密碼！\n(如果還沒註冊，請點擊下方的『註冊新帳號』)"); 
-        return; 
-      }
-
-      const originalBtnText = loginBtn.textContent;
-      loginBtn.textContent = "資料庫驗證中..."; 
-      loginBtn.disabled = true;
-
-      try {
-        const formData = new URLSearchParams();
-        formData.append('username', acc);
-        formData.append('email', email); 
-        formData.append('password', pass);
-
-        const data = await apiRequest('/auth/login', {
-          method: 'POST', 
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: formData 
-        });
-
-        currentUser = data.user || null;
-        if (currentUser) {
-          sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
-        }
-        alert(data.message || "✅ 登入成功！");
-        pageLogin.classList.add('hidden');
-        pageSetup1.classList.remove('hidden'); 
-      } catch (error) {
-        renderApiError("❌ 登入失敗：", error);
-      } finally {
-        loginBtn.textContent = originalBtnText; 
-        loginBtn.disabled = false;
-      }
-    });
-
-    // ==========================================
-    // 🌟 正式連線版：流程 3 開始模擬 API (/simulate)
-    // ==========================================
-    document.getElementById('btn-start-sim').addEventListener('click', async () => {
-      const initBalance = Number(document.getElementById('setup-balance').value);
-      const initIncome = Number(document.getElementById('setup-income').value);
-      const initFixedExp = Number(document.getElementById('setup-fixed-expenses').value);
-      const initVarExp = Number(document.getElementById('setup-var-expenses').value);
-      const startBtn = document.getElementById('btn-start-sim');
-
-      if(isNaN(initBalance) || isNaN(initIncome) || isNaN(initFixedExp) || isNaN(initVarExp)) { 
-        alert("請完整輸入所有欄位數值才能進行模擬喔！"); 
-        return; 
-      }
-
-      startBtn.textContent = "AI 運算 60 個月數據中... ⏳"; 
-      startBtn.disabled = true;
-
-      try {
-        if (!DEMO_MODE && (!currentUser || !currentUser.id)) {
-          throw new Error("請先登入，系統才能把財務資料綁定到你的帳號。");
-        }
-
-        if (!DEMO_MODE) await postJson('/financial-profile/create', {
-          user_id: currentUser.id,
-          current_savings: initBalance,
-          monthly_income: initIncome,
-          has_loan: false,
-          loan_amount: 0
-        });
-
-        const payload = {
-          profile: {
-            salary: initIncome,
-            fixed_expense: initFixedExp,
-            variable_expense: initVarExp,
-            balance: initBalance
-          },
-          months: 60,
-          events: currentEvents,
-          loans: currentLoans,
-          user_id: currentUser.id
-        };
-
-        await startSimulationFromProfile(payload.profile, !DEMO_MODE);
-      } catch (error) {
-        console.error("連線錯誤:", error);
-        renderApiError("❌ 模擬或財務資料儲存失敗：", error);
-      } finally {
-        startBtn.textContent = "啟動 60 個月模擬 🚀"; 
-        startBtn.disabled = false;
-      }
-    });
-
-    // ==========================================
-    // 🌟 記帳系統切換邏輯
-    // ==========================================
-    const accountingForm = document.getElementById('accounting-form');
-    const historyPanel = document.getElementById('history-panel');
-    
-    document.getElementById('btn-view-history').addEventListener('click', () => { 
-      accountingForm.classList.add('hidden'); 
-      historyPanel.classList.remove('hidden'); 
-    });
-
-    document.getElementById('btn-back-to-form').addEventListener('click', () => { 
-      historyPanel.classList.add('hidden'); 
-      accountingForm.classList.remove('hidden'); 
-    });
-
-    // ==========================================
-    // 🌟 記帳系統 ＆ AI 財務狀況即時播報
-    // ==========================================
-    const historyList = document.getElementById('history-list');
-    document.getElementById('btn-submit-record').addEventListener('click', async () => {
-      const amount = document.getElementById('record-amount').value;
-      const note = document.getElementById('record-note').value;
-      const date = document.getElementById('record-date').value;
-
-      if (!amount || !note || !date) { 
-        alert("⚠️ 請完整填寫金額、備註與日期！"); 
-        return; 
-      }
-
-      const numAmount = Number(amount);
-      const isIncome = numAmount >= 0;
-      const colorClass = isIncome ? 'text-green' : 'text-red';
-      const sign = isIncome ? '+ ' : '- ';
-      const displayAmount = Math.abs(numAmount).toLocaleString(); 
-
-      try {
-        if (!currentUser || !currentUser.id) {
-          throw new Error("請先登入，系統才能把記帳資料綁定到你的帳號。");
-        }
-
-        if (!DEMO_MODE) await postJson('/event/add', {
-          user_id: currentUser.id,
-          event_type: note,
-          amount: numAmount
-        });
-      } catch (error) {
-        renderApiError("❌ 記帳紀錄沒有寫入後端：", error);
-        return;
-      }
-
-      currentBalance += numAmount; 
-
-      const safeNote = escapeHtml(note);
-      const safeDate = escapeHtml(date);
-      const recordHTML = `
-        <div class="mc-panel variant-obsidian p-2 text-xs border-2 mb-2">
-          <div class="text-gray text-xs">${safeDate}</div>
-          <div class="flex justify-between mt-1">
-            <span>${safeNote}</span>
-            <span class="${colorClass}">${sign}$ ${displayAmount}</span>
-          </div>
-        </div>
-      `;
-      historyList.insertAdjacentHTML('afterbegin', recordHTML);
-
-      const insightText = isIncome
-        ? `💰 收到一筆收入：+ $${displayAmount} (${safeNote})\n\n📊 【最新財務狀態更新】\n目前總資產：$${currentBalance.toLocaleString()}\n正在重新同步 Monte Carlo 與 FSI...`
-        : `💸 記下一筆支出：- $${displayAmount} (${safeNote})\n\n📊 【最新財務狀態更新】\n目前總資產降至：$${currentBalance.toLocaleString()}\n正在重新同步 Monte Carlo 與 FSI...`;
-
-      appendAiInsight(insightText);
-
-      if (currentProfile) {
-        currentProfile = { ...currentProfile, balance: currentBalance };
-
-        try {
-          await syncAiAnalysis(currentProfile, currentEvents, false, currentLoans);
-        } catch (error) {
-          appendAiInsight(`⚠️ 後端 AI 重新分析失敗：${escapeHtml(error.message || '請稍後再試')}`);
-        }
-      }
-
-      document.getElementById('record-amount').value = '';
-      document.getElementById('record-note').value = '';
-      document.getElementById('record-date').value = '';
-    });
-
-    // ==========================================
-    // 🌟 Chart.js 動態財務圖表初始化
-    // ==========================================
-    const ctx = document.getElementById('financeChart').getContext('2d');
-    const financeChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: [], 
-        datasets: [{
-          label: '總資產變化 (60個月預測)',
-          data: [],
-          borderColor: '#85db49',
-          backgroundColor: 'rgba(133, 219, 73, 0.18)',
-          borderWidth: 4,
-          fill: true,
-          tension: 0.24,
-          pointBackgroundColor: '#85db49',
-          pointBorderColor: '#111',
-          pointBorderWidth: 2,
-          pointRadius: context => context.dataIndex % 6 === 0 ? 4 : 0,
-          pointHoverRadius: 8,
-          pointHitRadius: 12
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        layout: { padding: { left: 22, right: 26, top: 14, bottom: 4 } },
-        plugins: {
-          legend: {
-            labels: {
-              color: 'white',
-              boxWidth: 32,
-              padding: 18,
-              font: { family: "'DotGothic16', sans-serif", size: 18, weight: 'bold' }
-            }
-          },
-          tooltip: {
-            backgroundColor: '#111827',
-            titleColor: '#fde047',
-            bodyColor: '#ffffff',
-            borderColor: '#85db49',
-            borderWidth: 2,
-            padding: 12,
-            displayColors: false,
-            titleFont: { family: "'DotGothic16', sans-serif", size: 16, weight: 'bold' },
-            bodyFont: { family: "'DotGothic16', sans-serif", size: 15 },
-            callbacks: {
-              title: items => items[0]?.label || '',
-              label: context => `資產：${formatCurrency(context.parsed.y)}`
-            }
-          }
-        },
-        scales: {
-          y: {
-            title: {
-              display: true,
-              text: '資產金額',
-              color: '#fde047',
-              font: { family: "'DotGothic16', sans-serif", size: 16, weight: 'bold' }
-            },
-            ticks: {
-              color: '#e5e7eb',
-              padding: 8,
-              callback: value => formatCompactCurrency(value),
-              font: { family: "'DotGothic16', sans-serif", size: 14, weight: 'bold' }
-            },
-            grid: { color: 'rgba(255,255,255,0.12)' }
-          },
-          x: {
-            title: {
-              display: true,
-              text: '月份',
-              color: '#fde047',
-              font: { family: "'DotGothic16', sans-serif", size: 16, weight: 'bold' }
-            },
-            ticks: {
-              color: '#e5e7eb',
-              padding: 8,
-              autoSkip: false,
-              callback: function(value, index) {
-                const label = this.getLabelForValue(value);
-                return index === 0 || index % 6 === 0 ? label : '';
-              },
-              font: { family: "'DotGothic16', sans-serif", size: 14, weight: 'bold' },
-              maxRotation: 35,
-              minRotation: 35
-            },
-            grid: { color: 'rgba(255,255,255,0.08)' }
-          }
-        }
-      }
-    });
-
-    function refreshDashboardLayout() {
-      requestAnimationFrame(() => {
-        financeChart.resize();
-        updateAiScrollbar();
-        requestAnimationFrame(() => {
-          financeChart.resize();
-          updateAiScrollbar();
-        });
-      });
-    }
-
-    window.addEventListener('resize', refreshDashboardLayout);
-
-    if (DEMO_MODE) {
-      startDemoMode();
-    }
-
-  </script>
+  <script src="app.js?v=transparent-results-20260718"></script>
 </body>
 </html>
