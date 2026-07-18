@@ -1,131 +1,95 @@
-from typing import Dict, Any, List
-from app.core.simulation import simulate_finance
+from __future__ import annotations
+
+from copy import deepcopy
+from typing import Any, Dict, List
+
 from app.core.monte_carlo import run_monte_carlo
+from app.core.simulation import simulate_finance
 
 
 def score_option(sim_summary: Dict[str, Any], mc_summary: Dict[str, Any]) -> float:
-    """
-    方案評分函式
-    分數越低越好
-
-    權重邏輯：
-    - max_fsi 越高越差
-    - min_balance 若為負，懲罰越重
-    - bankrupt_probability 越高越差
-    """
     score = 0.0
-
-    score += sim_summary["max_fsi"] * 50
+    score += sim_summary["max_fsi"] * 60
     score += max(0, -sim_summary["min_balance"]) * 0.001
-    score += mc_summary["bankrupt_probability"] * 100
-
+    score += mc_summary["bankrupt_probability"] * 120
+    score += max(0, sim_summary["target_emergency_months"] - sim_summary["emergency_fund_coverage"]) * 3
     return round(score, 4)
+
+
+def _merge_profile(profile: Dict[str, Any], overrides: Dict[str, Any]) -> Dict[str, Any]:
+    merged = deepcopy(profile)
+    for key, value in overrides.items():
+        if key in merged:
+            merged[key] = value
+    return merged
 
 
 def compare_options(
     profile: Dict[str, Any],
     options: List[Dict[str, Any]],
     months: int = 60,
-    mc_runs: int = 300
+    mc_runs: int = 300,
+    seed: int | None = None,
 ) -> Dict[str, Any]:
-    """
-    比較多個方案，回傳最佳方案與各方案結果
-
-    options 格式：
-    [
-        {
-            "name": "buy_now",
-            "events": [...],
-            "loans": [...]
-        },
-        ...
-    ]
-    """
     if not options:
         raise ValueError("options must not be empty")
 
     option_results = []
-
-    for option in options:
+    for index, option in enumerate(options):
+        option_profile = _merge_profile(profile, option.get("profile_overrides", {}))
         sim_result = simulate_finance(
-            profile=profile,
+            profile=option_profile,
             months=months,
             events=option.get("events", []),
-            loans=option.get("loans", [])
+            loans=option.get("loans", []),
+            random_shocks=option.get("random_shocks", []),
+            seed=seed,
         )
-
         mc_result = run_monte_carlo(
-            profile=profile,
+            profile=option_profile,
             base_events=option.get("events", []),
             loans=option.get("loans", []),
+            random_shocks=option.get("random_shocks", []),
             months=months,
-            simulations=mc_runs
+            simulations=mc_runs,
+            seed=None if seed is None else seed + index,
+            sample_paths=4,
+        )
+        option_results.append(
+            {
+                "name": option["name"],
+                "simulation_summary": sim_result["summary"],
+                "monte_carlo_summary": mc_result,
+                "score": score_option(sim_result["summary"], mc_result),
+            }
         )
 
-        score = score_option(sim_result["summary"], mc_result)
-
-        option_results.append({
-            "name": option["name"],
-            "simulation_summary": sim_result["summary"],
-            "monte_carlo_summary": mc_result,
-            "score": score
-        })
-
-    option_results.sort(key=lambda x: x["score"])
-    best = option_results[0]
-
-    return {
-        "best_option": best["name"],
-        "options": option_results
-    }
+    option_results.sort(key=lambda item: item["score"])
+    return {"best_option": option_results[0]["name"], "options": option_results}
 
 
 def generate_advice(compare_result: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    依最佳方案生成建議文字與風險摘要
-    """
     best = compare_result["options"][0]
     sim = best["simulation_summary"]
     mc = best["monte_carlo_summary"]
-
-    if mc["bankrupt_probability"] < 0.05 and sim["max_fsi"] < 0.30:
-        risk_level = "low"
-    elif mc["bankrupt_probability"] < 0.15 and sim["max_fsi"] < 0.60:
-        risk_level = "medium"
-    elif mc["bankrupt_probability"] < 0.30 and sim["max_fsi"] < 0.90:
-        risk_level = "high"
-    else:
-        risk_level = "crisis"
-
-    summary = (
-        f"綜合現金流模擬、FSI 與 Monte Carlo 分析後，"
-        f"目前最建議的方案為「{best['name']}」。"
-    )
-
-    reasons = [
-        f"最高 FSI 為 {sim['max_fsi']}",
-        f"最低資產餘額為 {sim['min_balance']}",
-        f"Monte Carlo 破產機率為 {mc['bankrupt_probability'] * 100:.2f}%"
-    ]
-
+    risk_level = mc["risk_classification"]
     suggestions = []
-
     if sim["min_balance"] < 0:
-        suggestions.append("此方案曾出現資產轉負，建議降低支出或延後高額決策。")
-
-    elif sim["max_fsi"] >= 0.60:
-        suggestions.append("財務壓力偏高，建議增加緊急預備金或降低貸款負擔。")
-
-    elif mc["bankrupt_probability"] >= 0.15:
-        suggestions.append("情境風險偏高，建議保守規劃並預留更高安全邊際。")
-
+        suggestions.append("優先降低一次性支出或延後事件時程，避免資產在期間內跌破零。")
+    if sim["max_fsi"] >= 0.6:
+        suggestions.append("FSI 偏高，建議提高緊急備用金或降低固定支出。")
+    if mc["bankrupt_probability"] >= 0.1:
+        suggestions.append("Monte Carlo 顯示破產機率偏高，請增加收入緩衝或縮小貸款規模。")
     if not suggestions:
-        suggestions.append("整體風險可控，可作為優先考慮方案。")
-
+        suggestions.append("目前方案風險可控，可持續追蹤支出分類與重大生活事件。")
     return {
-        "summary": summary,
+        "summary": f"根據 deterministic simulation 與 Monte Carlo，建議方案為「{best['name']}」。",
         "risk_level": risk_level,
         "best_option": best["name"],
-        "reason": reasons,
-        "suggestions": suggestions
+        "reason": [
+            f"最高 FSI：{sim['max_fsi']}",
+            f"最低資產：{sim['min_balance']}",
+            f"破產機率：{mc['bankrupt_probability'] * 100:.2f}%",
+        ],
+        "suggestions": suggestions,
     }

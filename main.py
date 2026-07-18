@@ -1,399 +1,208 @@
-from fastapi import FastAPI, HTTPException, Form
+from __future__ import annotations
+
 import os
-import uvicorn
 from pathlib import Path
+from typing import Any, Dict
+from contextlib import asynccontextmanager
+
+import uvicorn
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from supabase import create_client
-from passlib.context import CryptContext
 
-from app.schemas import (
-    SimulationRequest,
-    MonteCarloRequest,
-    CompareRequest,
-    FinanceEvent,
-    RegisterRequest,
-    LoginRequest,
-    FinancialProfileCreate,
-)
-from app.core.simulation import simulate_finance
-from app.core.monte_carlo import run_monte_carlo
+from app.config import settings
 from app.core.advisor import compare_options, generate_advice
+from app.core.monte_carlo import run_monte_carlo
+from app.core.simulation import simulate_finance
+from app.core.transparency import build_simulation_transparency
+from app.schemas import (
+    CategorizeExpensesRequest,
+    CompareRequest,
+    GenerateReportRequest,
+    LoginRequest,
+    MonteCarloRequest,
+    OptimizeRequest,
+    RegisterRequest,
+    ScenarioParseRequest,
+    SimulationRequest,
+)
+from app.security.auth import create_access_token, current_user, hash_password, public_user, verify_password
+from app.services.expense_categorizer import categorize_expenses
+from app.services.optimizer import optimize
+from app.services.rate_limit import rate_limit_ai
+from app.services.report_generator import generate_report
+from app.services.scenario_parser import parse_scenario
 
 
-# =========================
-# Supabase 連線
-# =========================
-SUPABASE_URL = "https://tpgtuairychavuzfgifc.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwZ3R1YWlyeWNoYXZ1emZnaWZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NjY2ODQsImV4cCI6MjA5MTA0MjY4NH0.W-BQ7HijWcGnqRlQQSRyaT4GDdLCKMaYYBtL7LFFz-I"
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    for warning in settings.startup_warnings():
+        print(f"CONFIG WARNING: {warning}")
+    yield
 
-# =========================
-# 密碼加密
-# =========================
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# =========================
-# FastAPI 初始化
-# =========================
-app = FastAPI(title="AI 財務模擬系統 API", version="3.0.0")
+BASE_DIR = Path(__file__).resolve().parent
+app = FastAPI(
+    title="FinSim-Core API",
+    version=settings.app_version,
+    description="AI-assisted personal life-decision simulation and financial-risk analysis platform.",
+    lifespan=lifespan,
+)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-BASE_DIR = Path(__file__).resolve().parent
+# Graduation-project friendly fallback store. Production deployments should use Supabase Auth/RLS.
+USERS: Dict[str, Dict[str, Any]] = {}
+PROFILES: Dict[str, Dict[str, Any]] = {}
 
 
-# =========================
-# 基本 API
-# =========================
 @app.get("/api")
-def home():
+def home() -> Dict[str, Any]:
     return {
-        "message": "後端系統運作中",
+        "message": "FinSim-Core API is running",
+        "product": "AI-assisted personal life-decision simulation and financial-risk analysis platform",
         "docs": "/docs",
-        "version": "3.0.0"
+        "version": settings.app_version,
+        "ai_enabled": settings.ai_enabled and bool(settings.ai_api_key),
     }
+
 
 @app.get("/api/version")
-def version():
-    return {
-        "app": "FinSim-Core",
-        "version": "username-fix-003"
-    }
+def version() -> Dict[str, str]:
+    return {"app": settings.app_name, "version": settings.app_version}
 
-# =========================
-# 註冊 / 登入 API
-# =========================
+
 @app.post("/auth/register")
-async def register_user(req: RegisterRequest):
-    try:
-        # 檢查 username 是否存在
-        existing_username = supabase.table("users").select("*").eq("username", req.username).execute()
-        if existing_username.data:
-            raise HTTPException(status_code=400, detail="此帳號已被註冊")
-
-        # 檢查 email 是否存在
-        existing_email = supabase.table("users").select("*").eq("email", req.email).execute()
-        if existing_email.data:
-            raise HTTPException(status_code=400, detail="此 Email 已被註冊")
-
-        password_hash = pwd_context.hash(req.password)
-
-        response = supabase.table("users").insert({
-            "username": req.username,
-            "email": req.email,
-            "password_hash": password_hash
-        }).execute()
-
-        return {
-            "status": "success",
-            "message": "註冊成功",
-            "data": response.data
-        }
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"註冊失敗: {str(e)}")
+def register_user(req: RegisterRequest) -> Dict[str, Any]:
+    if req.username in USERS:
+        raise HTTPException(status_code=400, detail="Username already exists")
+    if any(user["email"] == req.email for user in USERS.values()):
+        raise HTTPException(status_code=400, detail="Email already exists")
+    user = public_user(req.username, str(req.email))
+    USERS[req.username] = {**user, "password_hash": hash_password(req.password)}
+    token = create_access_token(user)
+    return {"status": "success", "user": user, "access_token": token, "token_type": "bearer"}
 
 
 @app.post("/auth/login")
-async def login_user(
-    username: str = Form(...),
-    email: str = Form(...),
-    password: str = Form(...)
-):
-    try:
-        response = (
-            supabase.table("users")
-            .select("*")
-            .eq("username", username)
-            .eq("email", email)
-            .execute()
-        )
-
-        if not response.data:
-            raise HTTPException(status_code=404, detail="查無此使用者，請確認帳號或電子郵件")
-
-        user = response.data[0]
-        stored_hash = user.get("password_hash")
-
-        if not stored_hash:
-            raise HTTPException(status_code=500, detail="資料庫中沒有 password_hash 欄位或資料")
-
-        if not pwd_context.verify(password, stored_hash):
-            raise HTTPException(status_code=401, detail="密碼錯誤")
-
-        return {
-            "status": "success",
-            "message": "登入成功",
-            "user": {
-                "id": user["id"],
-                "username": user["username"],
-                "email": user["email"]
-            }
-        }
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"登入失敗: {str(e)}")
+def login_user(req: LoginRequest) -> Dict[str, Any]:
+    stored = USERS.get(req.username)
+    if not stored or stored["email"] != str(req.email) or not verify_password(req.password, stored["password_hash"]):
+        raise HTTPException(status_code=401, detail="Invalid username, email, or password")
+    user = {key: stored[key] for key in ("id", "username", "email")}
+    return {"status": "success", "user": user, "access_token": create_access_token(user), "token_type": "bearer"}
 
 
-# =========================
-# 財務資料 API
-# =========================
-@app.post("/financial-profile/create")
-async def create_financial_profile(profile: FinancialProfileCreate):
-    try:
-        response = supabase.table("financial_profiles").insert({
-            "user_id": profile.user_id,
-            "current_savings": profile.current_savings,
-            "monthly_income": profile.monthly_income,
-            "has_loan": profile.has_loan,
-            "loan_amount": profile.loan_amount
-        }).execute()
-
-        return {
-            "status": "success",
-            "message": "財務資料已建立",
-            "data": response.data
-        }
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"建立財務資料失敗: {str(e)}")
+@app.post("/financial-profile")
+def save_financial_profile(profile: Dict[str, Any], user: Dict[str, Any] = Depends(current_user)) -> Dict[str, Any]:
+    PROFILES[user["sub"]] = profile
+    return {"status": "success", "profile": profile}
 
 
-# =========================
-# 事件 API
-# =========================
-@app.post("/event/add")
-async def add_event(event: FinanceEvent):
-    try:
-        event_data = event.model_dump() if hasattr(event, "model_dump") else event.dict()
-
-        response = supabase.table("life_events").insert({
-            "user_id": event_data["user_id"],
-            "event_type": event_data["event_type"],
-            "decision": f"amount={event_data['amount']}"
-        }).execute()
-
-        return {
-            "status": "event_added",
-            "data": response.data,
-            "impact": "negative" if event_data["amount"] < 0 else "positive"
-        }
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"新增事件失敗: {str(e)}")
+@app.get("/financial-profile")
+def get_financial_profile(user: Dict[str, Any] = Depends(current_user)) -> Dict[str, Any]:
+    return {"profile": PROFILES.get(user["sub"])}
 
 
-@app.get("/result/{user_id}")
-async def get_result(user_id: str):
-    try:
-        sessions = supabase.table("simulation_sessions").select("*").eq("user_id", user_id).execute()
-
-        if not sessions.data:
-            return {
-                "user_id": user_id,
-                "summary": "尚無模擬資料",
-                "charts_data": []
-            }
-
-        latest_session = sessions.data[-1]
-        results = supabase.table("simulation_results").select("*").eq("session_id", latest_session["id"]).execute()
-
-        if not results.data:
-            return {
-                "user_id": user_id,
-                "summary": "尚無模擬結果",
-                "charts_data": []
-            }
-
-        latest_result = results.data[-1]
-
-        return {
-            "user_id": user_id,
-            "summary": "已成功取得最新模擬結果",
-            "session": latest_session,
-            "result": latest_result,
-            "charts_data": [
-                latest_result["projected_income"],
-                latest_result["projected_expense"],
-                latest_result["projected_savings"]
-            ]
-        }
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"查詢結果失敗: {str(e)}")
-
-
-# =========================
-# AI 模組 API
-# =========================
 @app.post("/simulate")
-async def simulate_api(req: SimulationRequest):
-    try:
-        data = req.model_dump() if hasattr(req, "model_dump") else req.dict()
+def simulate_api(req: SimulationRequest) -> Dict[str, Any]:
+    data = req.model_dump()
+    baseline = simulate_finance(
+        profile=data["profile"],
+        months=data["months"],
+        events=[],
+        loans=data.get("loans", []),
+        random_shocks=data.get("random_shocks", []),
+        seed=data.get("seed"),
+        include_details=True,
+    )
+    result = simulate_finance(
+        profile=data["profile"],
+        months=data["months"],
+        events=data.get("events", []),
+        loans=data.get("loans", []),
+        random_shocks=data.get("random_shocks", []),
+        seed=data.get("seed"),
+        include_details=True,
+    )
+    result["transparency"] = build_simulation_transparency(
+        profile=data["profile"],
+        events=data.get("events", []),
+        loans=data.get("loans", []),
+        random_shocks=data.get("random_shocks", []),
+        baseline_result=baseline,
+        scenario_result=result,
+        scenario_context=data.get("scenario_context", []),
+        seed=data.get("seed"),
+    )
+    if not data.get("include_details", False):
+        for row in result["simulation_curve"]:
+            row.pop("expense_categories", None)
+        result.pop("shock_details", None)
+    return {"result": result}
 
-        result = simulate_finance(
-            profile=data["profile"],
-            months=data["months"],
-            events=data.get("events", []),
-            loans=data.get("loans", [])
-        )
-
-        user_id = data.get("user_id")
-        session_id = None
-
-        print("=== SIMULATE START ===")
-        print("收到資料:", data)
-        print("user_id =", user_id)
-        print("result =", result)
-
-        if user_id:
-            try:
-                session = supabase.table("simulation_sessions").insert({
-                    "user_id": user_id,
-                    "simulation_name": "AI財務模擬"
-                }).execute()
-
-                print("session response =", session.data)
-
-                if session.data:
-                    session_id = session.data[0]["id"]
-
-                    summary = result.get("summary", {})
-                    print("summary =", summary)
-
-                    # 容錯抓值：避免 summary key 名不一致直接炸掉
-                    projected_savings = (
-                        summary.get("final_balance")
-                        or summary.get("ending_balance")
-                        or summary.get("projected_savings")
-                        or data["profile"].get("balance")
-                        or 0
-                    )
-
-                    financial_stress_score = (
-                        summary.get("max_fsi")
-                        or summary.get("fsi")
-                        or summary.get("financial_stress_score")
-                        or 0
-                    )
-
-                    insert_payload = {
-                        "session_id": session_id,
-                        "simulation_year": int(data["months"] / 12),
-                        "projected_income": int(data["profile"]["salary"]),
-                        "projected_expense": int(
-                            data["profile"]["fixed_expense"]
-                            + data["profile"]["variable_expense"]
-                        ),
-                        "projected_savings": int(projected_savings),
-                        "financial_stress_score": float(financial_stress_score)
-                    }
-
-                    print("simulation_results insert payload =", insert_payload)
-
-                    result_insert = supabase.table("simulation_results").insert(insert_payload).execute()
-                    print("simulation_results insert response =", result_insert.data)
-
-            except Exception as db_error:
-                print("DB ERROR =", str(db_error))
-                return {
-                    "result": result,
-                    "warning": f"模擬成功，但資料庫儲存失敗: {str(db_error)}"
-                }
-
-        return {
-            "result": result,
-            "session_id": session_id
-        }
-
-    except Exception as e:
-        print("SIMULATE ERROR =", str(e))
-        raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/monte-carlo")
-async def monte_carlo_api(req: MonteCarloRequest):
-    try:
-        data = req.model_dump() if hasattr(req, "model_dump") else req.dict()
-
-        result = run_monte_carlo(
-            profile=data["profile"],
-            base_events=data.get("events", []),
-            loans=data.get("loans", []),
-            months=data["months"],
-            simulations=data["simulations"]
-        )
-
-        return result
-
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+def monte_carlo_api(req: MonteCarloRequest) -> Dict[str, Any]:
+    data = req.model_dump()
+    return run_monte_carlo(
+        profile=data["profile"],
+        base_events=data.get("events", []),
+        loans=data.get("loans", []),
+        random_shocks=data.get("random_shocks", []),
+        months=data["months"],
+        simulations=data["simulations"],
+        seed=data.get("seed"),
+        sample_paths=data.get("sample_paths", 8),
+        include_details=data.get("include_details", False),
+    )
 
 
 @app.post("/compare")
-async def compare_api(req: CompareRequest):
-    try:
-        data = req.model_dump() if hasattr(req, "model_dump") else req.dict()
-
-        compare_result = compare_options(
-            profile=data["profile"],
-            options=data["options"],
-            months=data["months"],
-            mc_runs=data["mc_runs"]
-        )
-
-        advice = generate_advice(compare_result)
-
-        return {
-            "compare_result": compare_result,
-            "advice": advice
-        }
-
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+def compare_api(req: CompareRequest) -> Dict[str, Any]:
+    data = req.model_dump()
+    compare_result = compare_options(
+        profile=data["profile"],
+        options=data["options"],
+        months=data["months"],
+        mc_runs=data["mc_runs"],
+        seed=data.get("seed"),
+    )
+    return {"compare_result": compare_result, "advice": generate_advice(compare_result)}
 
 
-@app.post("/ai/advice")
-async def get_ai_advice(req: CompareRequest):
-    try:
-        data = req.model_dump() if hasattr(req, "model_dump") else req.dict()
-
-        compare_result = compare_options(
-            profile=data["profile"],
-            options=data["options"],
-            months=data["months"],
-            mc_runs=data["mc_runs"]
-        )
-
-        advice = generate_advice(compare_result)
-
-        return advice
-
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@app.post("/optimize")
+def optimize_api(req: OptimizeRequest) -> Dict[str, Any]:
+    return optimize(req.model_dump())
 
 
-# =========================
-# 靜態前端
-# =========================
+@app.post("/ai/parse-scenario")
+def parse_scenario_api(req: ScenarioParseRequest, request: Request) -> Dict[str, Any]:
+    rate_limit_ai(request)
+    return parse_scenario(req).model_dump()
+
+
+@app.post("/ai/categorize-expenses")
+def categorize_expenses_api(req: CategorizeExpensesRequest, request: Request) -> Dict[str, Any]:
+    rate_limit_ai(request)
+    return categorize_expenses(req).model_dump()
+
+
+@app.post("/ai/generate-report")
+def generate_report_api(req: GenerateReportRequest, request: Request) -> Dict[str, Any]:
+    rate_limit_ai(request)
+    return generate_report(req.model_dump())
+
+
 app.mount("/", StaticFiles(directory=BASE_DIR / "static", html=True), name="static")
 
 
-# =========================
-# 啟動
-# =========================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
-    print("=== AI 財務模擬系統後端已啟動 ===")
-    print(f"Using port: {port}")
     uvicorn.run(app, host="0.0.0.0", port=port)
