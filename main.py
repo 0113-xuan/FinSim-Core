@@ -25,13 +25,34 @@ from app.schemas import (
     RegisterRequest,
     ScenarioParseRequest,
     SimulationRequest,
+    FinancialOnboardingMessageRequest,
+    FinancialOnboardingMessageResponse,
+    FinancialProfileDraftConfirm,
+    FinancialProfileDraftUpdate,
 )
 from app.security.auth import create_access_token, current_user, hash_password, public_user, verify_password
 from app.services.expense_categorizer import categorize_expenses
+from app.services.ai_provider import AIProvider, AIProviderError, get_ai_provider
+from app.services.financial_answer_extraction import (
+    ExtractionNormalizationError,
+    deterministic_financial_extraction,
+    extract_financial_answer,
+)
 from app.services.optimizer import optimize
 from app.services.rate_limit import rate_limit_ai
 from app.services.report_generator import generate_report
 from app.services.scenario_parser import parse_scenario
+from app.services.profile_onboarding import (
+    assistant_reply,
+    confirm_draft,
+    create_draft,
+    extract_message,
+    is_standalone_amount_answer,
+    merge_extraction_candidates,
+    next_questions,
+    interview_progress,
+    update_draft,
+)
 
 
 @asynccontextmanager
@@ -60,6 +81,12 @@ app.add_middleware(
 # Graduation-project friendly fallback store. Production deployments should use Supabase Auth/RLS.
 USERS: Dict[str, Dict[str, Any]] = {}
 PROFILES: Dict[str, Dict[str, Any]] = {}
+PROFILE_DRAFTS: Dict[str, Any] = {}
+CONFIRMED_DEMO_PROFILES: Dict[str, Dict[str, Any]] = {}
+
+
+def get_onboarding_ai_provider() -> AIProvider | None:
+    return get_ai_provider()
 
 
 @app.get("/api")
@@ -69,7 +96,7 @@ def home() -> Dict[str, Any]:
         "product": "AI-assisted personal life-decision simulation and financial-risk analysis platform",
         "docs": "/docs",
         "version": settings.app_version,
-        "ai_enabled": settings.ai_enabled and bool(settings.ai_api_key),
+        "ai_enabled": settings.ai_provider_ready(),
     }
 
 
@@ -108,6 +135,117 @@ def save_financial_profile(profile: Dict[str, Any], user: Dict[str, Any] = Depen
 @app.get("/financial-profile")
 def get_financial_profile(user: Dict[str, Any] = Depends(current_user)) -> Dict[str, Any]:
     return {"profile": PROFILES.get(user["sub"])}
+
+
+@app.post("/ai/financial-onboarding/message", response_model=FinancialOnboardingMessageResponse)
+async def financial_onboarding_message(
+    req: FinancialOnboardingMessageRequest,
+    request: Request,
+    provider: Any = Depends(get_onboarding_ai_provider),
+) -> Dict[str, Any]:
+    rate_limit_ai(request)
+    draft = PROFILE_DRAFTS.get(req.draft_id) if req.draft_id else None
+    if draft is None:
+        draft = create_draft()
+    updated = None
+    provider_succeeded = False
+    deterministic_extraction = deterministic_financial_extraction(req.text)
+    if deterministic_extraction is not None:
+        updated = merge_extraction_candidates(draft, deterministic_extraction, req.text)
+        provider_succeeded = provider is not None
+    elif is_standalone_amount_answer(req.text):
+        # The active interview question deterministically defines a bare
+        # amount's field. Avoid asking the model to infer it again.
+        updated = extract_message(draft, req.text)
+        provider_succeeded = provider is not None
+    elif provider is not None:
+        current_values = {
+            field_name: {
+                "value": getattr(draft, field_name).value,
+                "source": getattr(draft, field_name).source.value,
+            }
+            for field_name in (
+                "cash_and_deposits",
+                "investments",
+                "other_assets",
+                "monthly_salary",
+                "other_recurring_income",
+                "fixed_expenses",
+                "total_variable_expenses",
+                "monthly_debt_payments",
+                "emergency_fund",
+                "simulation_months",
+                "risk_preference",
+            )
+            if getattr(draft, field_name).source.value != "system_default"
+        }
+        try:
+            extraction = await extract_financial_answer(
+                provider=provider,
+                answer=req.text,
+                current_values=current_values,
+                current_question=(next_questions(draft) or [None])[0],
+                existing_future_plans=[
+                    {
+                        "index": index,
+                        "value": item.value,
+                        "source": item.source.value,
+                    }
+                    for index, item in enumerate(draft.future_plans)
+                ],
+            )
+            updated = merge_extraction_candidates(draft, extraction, req.text)
+            provider_succeeded = True
+        except (AIProviderError, ExtractionNormalizationError, LookupError, ValueError):
+            updated = None
+    if updated is None:
+        updated = extract_message(draft, req.text)
+    PROFILE_DRAFTS[updated.id] = updated
+    questions = next_questions(updated)
+    progress = interview_progress(updated)
+    return {
+        "draft": updated,
+        "assistant_message": assistant_reply(updated),
+        "follow_up_questions": questions,
+        "ready_for_review": not questions,
+        "provider_available": provider_succeeded,
+        **progress,
+    }
+
+
+@app.get("/financial-profile-drafts/{draft_id}")
+def get_financial_profile_draft(draft_id: str) -> Dict[str, Any]:
+    draft = PROFILE_DRAFTS.get(draft_id)
+    if draft is None:
+        raise HTTPException(status_code=404, detail="找不到財務資料草稿。")
+    return {"draft": draft}
+
+
+@app.put("/financial-profile-drafts/{draft_id}")
+def update_financial_profile_draft(draft_id: str, req: FinancialProfileDraftUpdate) -> Dict[str, Any]:
+    previous = PROFILE_DRAFTS.get(draft_id)
+    if previous is None:
+        raise HTTPException(status_code=404, detail="找不到財務資料草稿。")
+    updated = update_draft(req.draft, previous)
+    PROFILE_DRAFTS[draft_id] = updated
+    return {"draft": updated}
+
+
+@app.post("/financial-profile-drafts/{draft_id}/confirm")
+def confirm_financial_profile_draft(draft_id: str, req: FinancialProfileDraftConfirm) -> Dict[str, Any]:
+    previous = PROFILE_DRAFTS.get(draft_id)
+    if previous is None:
+        raise HTTPException(status_code=404, detail="找不到財務資料草稿。")
+    if not req.explicit_confirmation:
+        raise HTTPException(status_code=400, detail="必須明確確認後才能套用財務資料。")
+    candidate = update_draft(req.draft, previous)
+    try:
+        confirmed, profile = confirm_draft(candidate)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    PROFILE_DRAFTS[draft_id] = confirmed
+    CONFIRMED_DEMO_PROFILES[draft_id] = profile
+    return {"status": "success", "draft": confirmed, "profile": profile}
 
 
 @app.post("/simulate")
@@ -182,10 +320,23 @@ def optimize_api(req: OptimizeRequest) -> Dict[str, Any]:
     return optimize(req.model_dump())
 
 
-@app.post("/ai/parse-scenario")
+@app.post(
+    "/ai/parse-scenario",
+    deprecated=True,
+    summary="Legacy scenario parser",
+    description=(
+        "Backward-compatible deterministic/AI parser. This legacy endpoint will "
+        "later be replaced by the Generic Scenario Engine."
+    ),
+)
 def parse_scenario_api(req: ScenarioParseRequest, request: Request) -> Dict[str, Any]:
     rate_limit_ai(request)
-    return parse_scenario(req).model_dump()
+    confirmed_profile = (
+        CONFIRMED_DEMO_PROFILES.get(req.profile_draft_id)
+        if req.profile_draft_id
+        else None
+    )
+    return parse_scenario(req, confirmed_profile=confirmed_profile).model_dump()
 
 
 @app.post("/ai/categorize-expenses")

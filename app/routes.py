@@ -1,3 +1,9 @@
+"""Legacy router retained temporarily for reference.
+
+The production application in ``main.py`` does not mount this router. Changes
+to this module therefore do not affect the production API routes.
+"""
+
 from fastapi import APIRouter, HTTPException
 
 from app.schemas import (

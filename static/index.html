@@ -8,8 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="transparency.js?v=transparent-results-20260718"></script>
-  <link rel="stylesheet" href="style.css?v=transparent-results-20260718">
+  <script src="transparency.js?v=p0p1-blockers-20260721"></script>
+  <script src="profile-onboarding.js?v=financial-provenance-20260721-2"></script>
+  <link rel="stylesheet" href="style.css?v=profile-mode-toggle-20260719">
 </head>
 <body>
   <div class="app">
@@ -17,7 +18,7 @@
       <div class="brand"><span>F</span><strong>FinSim Core</strong></div>
       <p>AI 輔助生活決策模擬與財務風險分析平台</p>
       <nav aria-label="主要區塊">
-        <a href="#profile">基本資料</a>
+        <a href="#onboarding">建立財務資料</a>
         <a href="#scenario">AI 情境</a>
         <a href="#results">模擬結果</a>
         <a href="#advanced">進階設定</a>
@@ -38,12 +39,112 @@
         <button id="runBtn" class="primary" type="button">執行模擬</button>
       </header>
 
-      <section id="profile" class="panel">
+      <section id="onboarding" class="panel onboarding-panel">
+        <div class="onboarding-heading">
+          <div>
+            <h2>建立你的財務起點</h2>
+            <p>先建立完整且可追溯的財務資料，模擬結果才會更可靠。</p>
+          </div>
+          <span id="onboardingStatus" class="draft-status">尚未開始</span>
+        </div>
+
+        <div class="onboarding-methods" role="group" aria-label="選擇財務資料建立方式">
+          <button id="startAiOnboardingBtn" class="onboarding-method primary-method" type="button" aria-pressed="false">
+            <strong>用 AI 引導建立</strong>
+            <span>推薦方式，一次輸入多項資料，AI 只追問必要缺漏</span>
+          </button>
+          <button id="startManualProfileBtn" class="onboarding-method" type="button" aria-pressed="false">
+            <strong>手動填寫</strong>
+            <span>直接使用既有表單，適合進階編輯</span>
+          </button>
+        </div>
+
+        <div id="onboardingWorkspace" class="onboarding-workspace" hidden>
+          <div class="onboarding-conversation">
+            <div class="workspace-title">
+              <div>
+                <h3>AI 財務顧問</h3>
+                <small id="advisorProgress">第 1 步，共 5 步 · 財務概況</small>
+                <small id="providerStatus">準備建立草稿</small>
+              </div>
+              <button id="restartOnboardingBtn" type="button">重新建立</button>
+            </div>
+            <div id="onboardingChatLog" class="chat-log onboarding-chat" role="log" aria-live="polite">
+              <div class="chat-message assistant">
+                <span class="chat-avatar" aria-hidden="true">AI</span>
+                <div class="chat-bubble">
+                  <strong>現金與存款大約多少？</strong>
+                </div>
+              </div>
+            </div>
+            <div class="chat-composer">
+              <textarea id="onboardingText" rows="2" aria-label="輸入財務資料" placeholder="輸入財務概況，按 Enter 送出"></textarea>
+              <button id="sendOnboardingBtn" class="primary send-button" type="button" aria-label="送出財務資料"><span aria-hidden="true">↑</span></button>
+            </div>
+            <p id="onboardingFallback" class="onboarding-fallback" hidden>雲端 AI 暫時無法使用，已切換至本機擷取。你的對話與草稿都會保留，也可以隨時改用手動表單。</p>
+          </div>
+
+          <aside class="draft-progress">
+            <div class="workspace-title">
+              <div><h3>財務資料草稿</h3><small>只有確認後才會套用</small></div>
+              <span id="draftVersion">v1</span>
+            </div>
+            <div id="draftProgressList" class="draft-progress-list empty-state">送出第一則訊息後顯示完整度。</div>
+            <button id="openDraftReviewBtn" class="primary" type="button" disabled>檢視完整草稿</button>
+          </aside>
+        </div>
+      </section>
+
+      <section id="profileDraftReview" class="panel profile-draft-review" hidden>
         <div class="panel-title">
           <div>
-            <h2>基本資料</h2>
+            <h2>AI 建立的財務資料草稿</h2>
+            <p>估算值不是已確認事實。請檢查來源、信心與理由，並逐項確認。</p>
+          </div>
+          <span id="draftReviewStatus" class="draft-status status-review">等待確認</span>
+        </div>
+        <div id="draftValidation" class="draft-validation" role="alert"></div>
+        <div class="table-scroll">
+          <table class="draft-review-table">
+            <thead><tr><th>項目</th><th>數值</th><th>資料來源</th><th>信心</th><th>確認狀態</th><th>理由</th></tr></thead>
+            <tbody id="draftReviewRows"></tbody>
+          </table>
+        </div>
+
+        <section class="allocation-review">
+          <div class="workspace-title">
+            <div><h3>變動支出分配</h3><small>分類合計必須等於變動支出總額</small></div>
+            <label class="toggle"><input id="keepAllocationTotal" type="checkbox" checked> 保持總額固定</label>
+          </div>
+          <div class="table-scroll">
+            <table class="draft-review-table">
+              <thead><tr><th>分類</th><th>每月金額</th><th>比例</th><th>來源</th><th>理由</th><th>確認</th></tr></thead>
+              <tbody id="draftAllocationRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="future-plan-review">
+          <h3>未來計畫</h3>
+          <div id="draftFuturePlans" class="empty-state">尚未提供未來計畫。</div>
+        </section>
+
+        <div class="button-row draft-actions">
+          <button id="saveProfileDraftBtn" type="button">儲存草稿</button>
+          <button id="confirmAllEstimatesBtn" type="button">確認所有估算</button>
+          <button id="useManualFallbackBtn" type="button">改用手動填寫</button>
+          <button id="confirmProfileDraftBtn" class="primary" type="button">確認並套用財務資料</button>
+          <button id="cancelProfileDraftBtn" type="button">取消</button>
+        </div>
+      </section>
+
+      <section id="profile" class="panel manual-profile-panel" hidden>
+        <div class="panel-title">
+          <div>
+            <h2>手動財務資料</h2>
             <p>只需要先填常見財務欄位。分類支出、季節性與風險假設可到進階設定調整。</p>
           </div>
+          <span id="manualProfileStatus" class="draft-status">手動模式</span>
         </div>
         <div class="grid three">
           <label>目前資產 <input id="balance" type="number" value="1000000" inputmode="decimal"></label>
@@ -304,6 +405,6 @@
     </main>
   </div>
 
-  <script src="app.js?v=transparent-results-20260718"></script>
+  <script src="app.js?v=p0p1-blockers-20260721"></script>
 </body>
 </html>

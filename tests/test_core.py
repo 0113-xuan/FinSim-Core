@@ -130,8 +130,9 @@ def test_ai_fallback_validation_and_categorization():
     assert isinstance(parsed, ParsedScenario)
     assert parsed.events
     chinese = deterministic_parse_scenario(ScenarioParseRequest(text="半年後搬家，每月房租增加 8000 元", months=60))
-    assert chinese.events
-    assert chinese.expense_adjustments
+    assert chinese.clarification.intent == "relocation"
+    assert "one_time_costs" in chinese.clarification.missing_fields
+    assert "30000" not in str(chinese.model_dump())
     unclear = deterministic_parse_scenario(ScenarioParseRequest(text="今天天氣真好", months=60))
     assert not unclear.events
     assert not unclear.expense_adjustments

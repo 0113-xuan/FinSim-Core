@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from enum import Enum
+from decimal import Decimal
+from datetime import date
 from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
+from pydantic import BaseModel, EmailStr, Field, field_serializer, field_validator, model_validator
 
 
 MAX_MONTHS = 360
@@ -33,6 +35,7 @@ class EventSource(str, Enum):
     manual = "manual"
     ai = "ai"
     system = "system"
+    system_assumption = "system_assumption"
 
 
 class DistributionType(str, Enum):
@@ -94,6 +97,8 @@ class EventInput(BaseModel):
     month: Optional[int] = Field(default=None, gt=0, le=MAX_MONTHS)
     start_month: Optional[int] = Field(default=None, gt=0, le=MAX_MONTHS)
     end_month: Optional[int] = Field(default=None, gt=0, le=MAX_MONTHS)
+    start_period: Optional[str] = Field(default=None, pattern=r"^\d{4}-(0[1-9]|1[0-2])$")
+    end_period: Optional[str] = Field(default=None, pattern=r"^\d{4}-(0[1-9]|1[0-2])$")
     amount: Optional[float] = Field(default=None, ge=-20_000_000, le=20_000_000)
     new_salary: Optional[float] = Field(default=None, ge=0, le=50_000_000)
     one_time_amount: float = Field(default=0, ge=-50_000_000, le=50_000_000)
@@ -106,6 +111,7 @@ class EventInput(BaseModel):
     expense_role: Literal["additional", "replacement", "offset"] = "additional"
     display_source: str = Field(default="使用者輸入", max_length=40)
     reason: str = Field(default="", max_length=200)
+    assumption_key: Optional[str] = Field(default=None, max_length=120)
     probability: float = Field(default=1.0, ge=0, le=1)
     source: EventSource = EventSource.manual
     note: Optional[str] = Field(default=None, max_length=200)
@@ -212,6 +218,9 @@ class OptimizeRequest(BaseModel):
 class ScenarioParseRequest(BaseModel):
     text: str = Field(..., min_length=3, max_length=2000)
     months: int = Field(default=60, gt=0, le=MAX_MONTHS)
+    reference_date: Optional[date] = None
+    timezone: str = Field(default="Asia/Taipei", min_length=1, max_length=80)
+    profile_draft_id: Optional[str] = Field(default=None, min_length=8, max_length=80)
 
 
 class ScenarioAssumption(BaseModel):
@@ -219,14 +228,14 @@ class ScenarioAssumption(BaseModel):
     label: str = Field(..., min_length=1, max_length=100)
     value: str = Field(..., max_length=160)
     suggested_value: Optional[str] = Field(default=None, max_length=160)
-    source: str = Field(default="AI 推估", max_length=40)
+    source: str = Field(default="來源未標示", max_length=40)
     editable: bool = True
 
 
 class ScenarioSourceItem(BaseModel):
     label: str = Field(..., min_length=1, max_length=100)
     value: str = Field(..., max_length=160)
-    source: str = Field(default="AI 推估", max_length=40)
+    source: str = Field(default="來源未標示", max_length=40)
     estimated: bool = True
 
 
@@ -235,6 +244,9 @@ class ScenarioContext(BaseModel):
     title: str = Field(default="AI 建立的財務情境", max_length=120)
     scenario_type: str = Field(default="生活事件", max_length=80)
     start_month: int = Field(default=1, gt=0, le=MAX_MONTHS)
+    start_period: Optional[str] = Field(default=None, pattern=r"^\d{4}-(0[1-9]|1[0-2])$")
+    end_period: Optional[str] = Field(default=None, pattern=r"^\d{4}-(0[1-9]|1[0-2])$")
+    original_target_date_text: Optional[str] = Field(default=None, max_length=80)
     duration_months: int = Field(default=1, gt=0, le=MAX_MONTHS)
     one_time_cost: float = Field(default=0, ge=0, le=50_000_000)
     recurring_monthly_cost: float = Field(default=0, ge=0, le=10_000_000)
@@ -257,11 +269,50 @@ class ExpenseAdjustment(BaseModel):
     category: ExpenseCategoryName
     start_month: int = Field(..., gt=0, le=MAX_MONTHS)
     end_month: Optional[int] = Field(default=None, gt=0, le=MAX_MONTHS)
+    start_period: Optional[str] = Field(default=None, pattern=r"^\d{4}-(0[1-9]|1[0-2])$")
+    end_period: Optional[str] = Field(default=None, pattern=r"^\d{4}-(0[1-9]|1[0-2])$")
     multiplier: float = Field(default=1.0, ge=0, le=3)
     monthly_amount: float = Field(default=0, ge=-1_000_000, le=1_000_000)
     reason: str = Field(default="", max_length=200)
     expense_role: Literal["additional", "replacement", "offset"] = "additional"
-    source: str = Field(default="AI 推估", max_length=40)
+    source: str = Field(default="來源未標示", max_length=40)
+    assumption_key: Optional[str] = Field(default=None, max_length=120)
+
+
+class ScenarioKnownValue(BaseModel):
+    key: str = Field(..., min_length=1, max_length=80)
+    label: str = Field(..., min_length=1, max_length=100)
+    value: str = Field(..., min_length=1, max_length=160)
+    source: str = Field(default="來源未標示", max_length=40)
+
+
+class ScenarioCandidate(BaseModel):
+    id: str = Field(..., min_length=1, max_length=80)
+    label: str = Field(..., min_length=1, max_length=100)
+    monthly_amount: float = Field(..., ge=0, le=10_000_000)
+    source: Literal["user_provided", "system_assumption"]
+    display_source: Literal["使用者提供", "系統模擬假設"]
+    comparison_months: int = Field(default=60, gt=0, le=MAX_MONTHS)
+    derived_total: float = Field(..., ge=0, le=500_000_000)
+    derived_source: Literal["derived"] = "derived"
+    derived_display_source: Literal["系統計算"] = "系統計算"
+
+
+class ScenarioClarification(BaseModel):
+    intent: Literal[
+        "vehicle_purchase",
+        "relocation",
+        "insurance_purchase",
+        "savings_change",
+        "work_break",
+        "job_change",
+    ]
+    summary: str = Field(..., min_length=1, max_length=300)
+    known_values: List[ScenarioKnownValue] = Field(default_factory=list, max_length=20)
+    candidates: List[ScenarioCandidate] = Field(default_factory=list, max_length=12)
+    missing_fields: List[str] = Field(default_factory=list, max_length=20)
+    questions: List[str] = Field(default_factory=list, min_length=1, max_length=8)
+    system_assumption_offer: Optional[str] = Field(default=None, max_length=300)
 
 
 class ParsedScenario(BaseModel):
@@ -271,6 +322,11 @@ class ParsedScenario(BaseModel):
     confidence: float = Field(..., ge=0, le=1)
     warnings: List[str] = Field(default_factory=list)
     display: Optional[ScenarioContext] = None
+    provider_used: bool = False
+    fallback_used: bool = False
+    fallback_type: Optional[str] = Field(default=None, max_length=80)
+    fallback_reason: Optional[str] = Field(default=None, max_length=80)
+    clarification: Optional[ScenarioClarification] = None
 
 
 class CategorizeExpensesRequest(BaseModel):
@@ -319,3 +375,111 @@ class FinancialProfileCreate(BaseModel):
 class FinanceEvent(BaseModel):
     event_type: str = Field(..., max_length=80)
     amount: float
+
+
+class ProfileValueSource(str, Enum):
+    user_provided = "user_provided"
+    ai_extracted = "ai_extracted"
+    ai_estimated = "ai_estimated"
+    historical_data = "historical_data"
+    system_default = "system_default"
+    external_research = "external_research"
+    user_modified = "user_modified"
+    backend_normalized = "backend_normalized"
+
+
+class DraftFieldValue(BaseModel):
+    value: Any = None
+    source: ProfileValueSource
+    confidence: float = Field(..., ge=0, le=1)
+    confirmed: bool = False
+    reason: str = Field(default="", max_length=300)
+    original_message_ref: Optional[str] = Field(default=None, max_length=80)
+    original_value: Any = None
+    normalized_from: Optional[str] = Field(default=None, max_length=120)
+    original_amount: Optional[float] = Field(default=None, ge=0)
+    original_frequency: Optional[str] = Field(default=None, max_length=40)
+    normalization_source: Optional[str] = Field(default=None, max_length=40)
+
+    @field_serializer("value", when_used="json")
+    def serialize_decimal_value(self, value: Any) -> Any:
+        return float(value) if isinstance(value, Decimal) else value
+
+
+class VariableExpenseAllocationDraft(BaseModel):
+    category: Literal[
+        "food",
+        "transportation",
+        "shopping",
+        "entertainment",
+        "medical",
+        "education",
+        "travel",
+        "other",
+    ]
+    amount: float = Field(..., ge=0, le=20_000_000)
+    percentage: float = Field(..., ge=0, le=100)
+    source: ProfileValueSource
+    confidence: float = Field(..., ge=0, le=1)
+    confirmed: bool = False
+    reason: str = Field(default="", max_length=300)
+
+
+class DebtDraft(BaseModel):
+    name: str = Field(default="債務", max_length=80)
+    principal: DraftFieldValue
+    monthly_payment: DraftFieldValue
+    annual_interest_rate: Optional[DraftFieldValue] = None
+    remaining_months: Optional[DraftFieldValue] = None
+
+
+class FinancialProfileDraft(BaseModel):
+    id: str = Field(..., min_length=8, max_length=80)
+    version: int = Field(default=1, ge=1)
+    status: Literal["collecting", "review", "confirmed", "cancelled"] = "collecting"
+    cash_and_deposits: DraftFieldValue
+    investments: DraftFieldValue
+    other_assets: DraftFieldValue
+    monthly_salary: DraftFieldValue
+    other_recurring_income: DraftFieldValue
+    fixed_expenses: DraftFieldValue
+    total_variable_expenses: DraftFieldValue
+    monthly_debt_payments: DraftFieldValue
+    emergency_fund: DraftFieldValue
+    simulation_months: DraftFieldValue
+    risk_preference: DraftFieldValue
+    variable_expense_allocation: List[VariableExpenseAllocationDraft] = Field(default_factory=list, max_length=8)
+    debts: List[DebtDraft] = Field(default_factory=list, max_length=20)
+    future_plans: List[DraftFieldValue] = Field(default_factory=list, max_length=20)
+    validation_errors: List[str] = Field(default_factory=list, max_length=30)
+    conflicts: List[str] = Field(default_factory=list, max_length=20)
+    missing_required: List[str] = Field(default_factory=list, max_length=20)
+    audit_trail: List[Dict[str, Any]] = Field(default_factory=list, max_length=200)
+    created_at: str
+    updated_at: str
+    confirmed_at: Optional[str] = None
+
+
+class FinancialOnboardingMessageRequest(BaseModel):
+    text: str = Field(..., min_length=1, max_length=2000)
+    draft_id: Optional[str] = Field(default=None, min_length=8, max_length=80)
+
+
+class FinancialOnboardingMessageResponse(BaseModel):
+    draft: FinancialProfileDraft
+    assistant_message: str = Field(..., max_length=800)
+    follow_up_questions: List[str] = Field(default_factory=list, max_length=5)
+    ready_for_review: bool
+    provider_available: bool
+    current_step: int = Field(default=1, ge=1)
+    total_steps: int = Field(default=5, ge=1)
+    stage_label: str = Field(default="財務概況", max_length=40)
+
+
+class FinancialProfileDraftUpdate(BaseModel):
+    draft: FinancialProfileDraft
+
+
+class FinancialProfileDraftConfirm(BaseModel):
+    draft: FinancialProfileDraft
+    explicit_confirmation: bool = False

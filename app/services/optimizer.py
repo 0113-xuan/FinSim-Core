@@ -6,6 +6,22 @@ from typing import Any, Dict, List
 from app.core.advisor import compare_options
 
 
+BASELINE_OPTION_NAME = "Baseline"
+
+
+def find_baseline_option(options: List[Dict[str, Any]]) -> Dict[str, Any]:
+    matches = [
+        option
+        for option in options
+        if option.get("name") == BASELINE_OPTION_NAME
+    ]
+    if not matches:
+        raise ValueError("Optimization comparison is missing the baseline option")
+    if len(matches) > 1:
+        raise ValueError("Optimization comparison contains multiple baseline options")
+    return matches[0]
+
+
 def _violations(summary: Dict[str, Any], mc: Dict[str, Any], constraints: Dict[str, Any]) -> List[str]:
     issues = []
     if constraints.get("balance_must_not_be_negative") and summary["min_balance"] < 0:
@@ -25,7 +41,7 @@ def optimize(request: Dict[str, Any]) -> Dict[str, Any]:
     profile = request["profile"]
     constraints = request.get("constraints", {})
     max_candidates = request.get("max_candidates", 24)
-    candidates = [{"name": "Baseline"}]
+    candidates = [{"name": BASELINE_OPTION_NAME}]
 
     for pct in [0.05, 0.1, 0.15, 0.2]:
         updated = deepcopy(profile)
@@ -50,10 +66,11 @@ def optimize(request: Dict[str, Any]) -> Dict[str, Any]:
         else:
             feasible.append(option)
     best = feasible[0] if feasible else comparison["options"][0]
+    baseline = find_baseline_option(comparison["options"])
     return {
         "best_scenario": best,
         "feasible_scenarios": feasible,
         "rejected_scenarios": rejected,
-        "baseline": comparison["options"][-1] if comparison["options"] else None,
+        "baseline": baseline,
         "explanation": f"Recommended option is {best['name']} based on deterministic scoring and constraints.",
     }

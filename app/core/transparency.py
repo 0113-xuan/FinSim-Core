@@ -27,6 +27,41 @@ DISPLAY_CATEGORIES = (
     "other",
 )
 
+SOURCE_DISPLAY_LABELS = {
+    "manual": "使用者提供",
+    "user_provided": "使用者提供",
+    "使用者輸入": "使用者提供",
+    "使用者提供": "使用者提供",
+    "使用者財務資料": "使用者提供",
+    "ai": "AI 語意解析",
+    "ai_interpretation": "AI 語意解析",
+    "ai_extracted": "AI 語意解析",
+    "ai_estimated": "AI 語意解析",
+    "AI 推估": "AI 語意解析",
+    "AI 語意判讀": "AI 語意解析",
+    "system_assumption": "系統模擬假設",
+    "system_default": "系統模擬假設",
+    "系統預設": "系統模擬假設",
+    "系統假設值": "系統模擬假設",
+    "系統模擬假設": "系統模擬假設",
+    "system": "系統計算",
+    "derived": "系統計算",
+    "backend_normalized": "系統計算",
+    "系統計算": "系統計算",
+    "財務引擎計算": "系統計算",
+    "external_estimate": "外部資料估算",
+    "external_research": "外部資料估算",
+    "外部資料": "外部資料估算",
+    "外部資料估算": "外部資料估算",
+}
+
+
+def display_source_label(source: Any) -> str:
+    normalized = getattr(source, "value", source)
+    if normalized is None:
+        return "來源未標示"
+    return SOURCE_DISPLAY_LABELS.get(str(normalized), "來源未標示")
+
 
 def _active(event: Dict[str, Any], month: int) -> bool:
     start = event.get("start_month") or event.get("month")
@@ -80,11 +115,30 @@ def _event_reasons(events: Iterable[Dict[str, Any]], category: str, month: int) 
     return reasons
 
 
+def _event_source(
+    events: Iterable[Dict[str, Any]],
+    category: str,
+    month: int,
+) -> Optional[str]:
+    sources = []
+    for event in events:
+        target = _display_category(event.get("target_expense_category"))
+        changes_category = (
+            float(event.get("category_monthly_adjustment", 0) or 0) != 0
+            or float(event.get("variable_expense_multiplier", 1) or 1) != 1
+        )
+        if changes_category and _active(event, month) and target in (category, "other"):
+            label = display_source_label(event.get("source"))
+            if label not in sources:
+                sources.append(label)
+    return "、".join(sources) if sources else None
+
+
 def _expense_source(profile: Dict[str, Any]) -> str:
     model = profile.get("variable_expense_model") or {}
     if model.get("mode") == "advanced" and model.get("categories"):
-        return "使用者輸入"
-    return "系統預設"
+        return "user_provided"
+    return "system_assumption"
 
 
 def _metric(before: Optional[float], after: Optional[float]) -> Dict[str, Optional[float]]:
@@ -141,6 +195,7 @@ def build_simulation_transparency(
     original_percentages = _percentages(original)
     adjusted_percentages = _percentages(adjusted)
     allocation_source = _expense_source(profile)
+    allocation_source_label = display_source_label(allocation_source)
 
     allocation = []
     comparison = []
@@ -149,7 +204,7 @@ def build_simulation_transparency(
         after = adjusted.get(category, 0.0)
         difference = round(after - before, 2)
         reasons = _event_reasons(events, category, comparison_month)
-        source = "AI 推估" if reasons else allocation_source
+        source = _event_source(events, category, comparison_month) or allocation_source_label
         allocation.append(
             {
                 "category": category,
@@ -187,9 +242,7 @@ def build_simulation_transparency(
                 "category_label": CATEGORY_LABELS.get(
                     _display_category(event.get("target_expense_category")), "其他"
                 ),
-                "source": event.get("display_source") or (
-                    "AI 推估" if event.get("source") == "ai" else "使用者輸入"
-                ),
+                "source": display_source_label(event.get("source")),
                 "reason": event.get("reason") or event.get("description") or "",
                 "effect_on_assets": round(
                     -costs["one_time_cost"] - costs["recurring_cost"] + costs["offset"], 2
@@ -298,8 +351,8 @@ def build_simulation_transparency(
             },
             {
                 "label": "變動支出分配",
-                "value": allocation_source,
-                "source": allocation_source,
+                "value": allocation_source_label,
+                "source": allocation_source_label,
                 "editable": True,
             },
             {
@@ -311,15 +364,41 @@ def build_simulation_transparency(
             {
                 "label": "Random seed",
                 "value": seed,
-                "source": "系統預設" if seed is None else "使用者輸入",
+                "source": display_source_label(
+                    "system_assumption" if seed is None else "user_provided"
+                ),
                 "editable": True,
             },
         ],
         "sources": [
-            {"label": "目前資產與每月收支", "source": "使用者財務資料", "estimated": False},
-            {"label": "變動支出分類比例", "source": allocation_source, "estimated": allocation_source == "系統預設"},
-            {"label": "情境事件與金額", "source": "AI 推估", "estimated": True},
-            {"label": "資產、現金流與 FSI", "source": "財務引擎計算", "estimated": False},
+            {
+                "label": "目前資產與每月收支",
+                "source": display_source_label("user_provided"),
+                "estimated": False,
+            },
+            {
+                "label": "變動支出分類比例",
+                "source": allocation_source_label,
+                "estimated": allocation_source == "system_assumption",
+            },
+            {
+                "label": "情境事件與金額",
+                "source": (
+                    display_source_label(events[0].get("source"))
+                    if events
+                    else "來源未標示"
+                ),
+                "estimated": any(
+                    getattr(event.get("source"), "value", event.get("source"))
+                    == "system_assumption"
+                    for event in events
+                ),
+            },
+            {
+                "label": "資產、現金流與 FSI",
+                "source": display_source_label("derived"),
+                "estimated": False,
+            },
         ],
         "events": event_ledger,
         "expense_allocation": allocation,

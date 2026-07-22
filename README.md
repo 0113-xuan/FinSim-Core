@@ -70,11 +70,26 @@ Important variables:
 - `CORS_ORIGINS`
 - `JWT_SECRET`
 - `AI_PROVIDER`
+- `AI_ENABLED`
+- `GEMINI_API_KEY`
+- `GEMINI_MODEL`
 - `AI_API_KEY`
 - `AI_MODEL`
 - `AI_TIMEOUT_SECONDS`
 - `AI_MAX_RETRIES`
-- `AI_ENABLED`
+
+使用 Gemini 結構化擷取時：
+
+```text
+AI_PROVIDER=gemini
+GEMINI_API_KEY=your-secret
+GEMINI_MODEL=gemini-flash-lite-latest
+```
+
+API key 僅能放在後端環境變數或未追蹤的 `.env`，不可寫入
+`.env.example`、前端程式或日誌。
+`AI_ENABLED` 為可選的停用開關；未設定時會依選定 provider 的 key
+自動啟用，明確設為 `false` 時停用。
 
 Do not commit `.env` or real secrets.
 

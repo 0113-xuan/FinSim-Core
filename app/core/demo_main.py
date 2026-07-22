@@ -1,3 +1,9 @@
+"""Standalone local simulation demo retained as an example.
+
+This module is not the production FastAPI entry point and is not imported by
+the application, tests, startup commands, or deployment configuration.
+"""
+
 from app.core.simulation import simulate_finance
 from app.core.monte_carlo import run_monte_carlo
 from app.core.advisor import compare_options, generate_advice

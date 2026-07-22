@@ -1,4 +1,5 @@
 const T = window.FinSimTransparency;
+const P = window.FinSimProfileOnboarding;
 const $ = id => document.getElementById(id);
 
 const state = {
@@ -10,11 +11,18 @@ const state = {
   assumptionBindings: [],
   lastSimulation: null,
   lastMonteCarlo: null,
-  lastOptimization: null
+  lastOptimization: null,
+  profileDraft: null,
+  profileMode: null,
+  referenceDate: new Intl.DateTimeFormat('en-CA', {
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Taipei',
+    year: 'numeric', month: '2-digit', day: '2-digit'
+  }).format(new Date())
 };
 
 const chartControllers = {};
 const initialChatMarkup = $('chatLog').innerHTML;
+const initialOnboardingChatMarkup = $('onboardingChatLog').innerHTML;
 const currency = T.formatCurrency;
 
 function toast(message, type = 'ok') {
@@ -36,6 +44,182 @@ async function api(path, options = {}) {
   const data = await response.json();
   if (!response.ok) throw new Error(data.detail || `API failed: ${path}`);
   return data;
+}
+
+function appendOnboardingMessage(role, content) {
+  const message = document.createElement('div');
+  message.className = `chat-message ${role}`;
+  const avatar = document.createElement('span');
+  avatar.className = 'chat-avatar';
+  avatar.setAttribute('aria-hidden', 'true');
+  avatar.textContent = role === 'user' ? '你' : 'AI';
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
+  const paragraph = document.createElement('p');
+  paragraph.textContent = content;
+  bubble.appendChild(paragraph);
+  message.append(...(role === 'user' ? [bubble, avatar] : [avatar, bubble]));
+  $('onboardingChatLog').appendChild(message);
+  $('onboardingChatLog').scrollTop = $('onboardingChatLog').scrollHeight;
+}
+
+function persistDraftLocally() {
+  if (state.profileDraft) {
+    sessionStorage.setItem('finsim-profile-draft', JSON.stringify(state.profileDraft));
+  } else {
+    sessionStorage.removeItem('finsim-profile-draft');
+  }
+}
+
+function draftFuturePlansHtml() {
+  const plans = state.profileDraft?.future_plans || [];
+  if (!plans.length) return '<div class="empty-state">尚未提供未來計畫。</div>';
+  return `<div class="future-plan-list">${plans.map((item, index) => `
+    <div class="future-plan-item ${P.isEstimated(item) ? 'is-estimated' : ''}">
+      <div><strong>${T.escapeHtml(item.value)}</strong><small>${P.sourceLabel(item.source)} · ${T.escapeHtml(item.reason)}</small></div>
+      <label class="confirm-check"><input data-confirm-plan="${index}" type="checkbox" ${item.confirmed ? 'checked' : ''}> ${item.confirmed ? '已確認' : '等待確認'}</label>
+    </div>`).join('')}</div>`;
+}
+
+function renderProfileDraft(openReview = false) {
+  const draft = state.profileDraft;
+  if (!draft) {
+    $('draftProgressList').className = 'draft-progress-list empty-state';
+    $('draftProgressList').textContent = '送出第一則訊息後顯示完整度。';
+    $('openDraftReviewBtn').disabled = true;
+    return;
+  }
+  $('onboardingStatus').textContent = draft.status === 'confirmed' ? '已確認' : '草稿進行中';
+  $('onboardingStatus').className = `draft-status ${draft.status === 'confirmed' ? 'status-confirmed' : 'status-review'}`;
+  $('draftVersion').textContent = `v${draft.version}`;
+  $('draftProgressList').className = 'draft-progress-list';
+  $('draftProgressList').innerHTML = P.renderProgress(draft);
+  $('openDraftReviewBtn').disabled = false;
+  $('draftReviewRows').innerHTML = P.renderReview(draft);
+  $('draftAllocationRows').innerHTML = P.renderAllocation(draft);
+  $('draftFuturePlans').innerHTML = draftFuturePlansHtml();
+  const errors = P.clientValidation(draft);
+  $('draftValidation').innerHTML = errors.length
+    ? `<strong>確認前請先修正：</strong><ul>${errors.map(error => `<li>${T.escapeHtml(error)}</li>`).join('')}</ul>`
+    : '';
+  const requiredKeys = ['cash_and_deposits', 'monthly_salary', 'fixed_expenses', 'total_variable_expenses', 'simulation_months'];
+  const unconfirmedRequired = requiredKeys.some(key => !draft[key]?.confirmed);
+  const allocationUnconfirmed = (draft.variable_expense_allocation || []).some(item => !item.confirmed);
+  $('confirmProfileDraftBtn').disabled = errors.length > 0 || unconfirmedRequired || allocationUnconfirmed;
+  $('draftReviewStatus').textContent = draft.status === 'confirmed' ? '已確認' : '等待確認';
+  $('draftReviewStatus').className = `draft-status ${draft.status === 'confirmed' ? 'status-confirmed' : 'status-review'}`;
+  if (openReview) {
+    $('profileDraftReview').hidden = false;
+    $('profileDraftReview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  persistDraftLocally();
+}
+
+function setProfileSetupMode(mode, { scroll = true } = {}) {
+  const useAi = mode === 'ai';
+  const useManual = mode === 'manual';
+  $('onboardingWorkspace').hidden = !useAi;
+  $('profile').hidden = !useManual;
+  $('profileDraftReview').hidden = true;
+  $('startAiOnboardingBtn').classList.toggle('is-selected', useAi);
+  $('startManualProfileBtn').classList.toggle('is-selected', useManual);
+  $('startAiOnboardingBtn').setAttribute('aria-pressed', String(useAi));
+  $('startManualProfileBtn').setAttribute('aria-pressed', String(useManual));
+
+  if (useManual) {
+    state.profileMode = 'manual';
+    $('runBtn').disabled = false;
+    $('manualProfileStatus').textContent = '手動模式';
+    if (scroll) $('profile').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+
+  state.profileMode = state.profileDraft?.status === 'confirmed' ? 'confirmed-ai' : null;
+  $('runBtn').disabled = !state.profileMode;
+  $('onboardingStatus').textContent = state.profileDraft ? '草稿進行中' : '開始建立';
+  $('onboardingStatus').className = 'draft-status status-review';
+  if (scroll) $('onboardingWorkspace').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  $('onboardingText').focus();
+}
+
+function openManualProfile() {
+  setProfileSetupMode('manual');
+}
+
+async function sendOnboardingMessage() {
+  const text = $('onboardingText').value.trim();
+  if (!text) return;
+  appendOnboardingMessage('user', text);
+  $('onboardingText').value = '';
+  const button = $('sendOnboardingBtn');
+  setLoading(button, true, '…');
+  try {
+    const data = await api('/ai/financial-onboarding/message', {
+      method: 'POST',
+      body: JSON.stringify({ text, draft_id: state.profileDraft?.id || null })
+    });
+    state.profileDraft = data.draft;
+    appendOnboardingMessage('assistant', data.assistant_message);
+    $('providerStatus').textContent = data.provider_available
+      ? 'AI 擷取服務可用'
+      : '使用安全的本機擷取模式';
+    $('advisorProgress').textContent = `第 ${data.current_step} 步，共 ${data.total_steps} 步 · ${data.stage_label}`;
+    $('onboardingFallback').hidden = data.provider_available;
+    renderProfileDraft(data.ready_for_review);
+  } catch (error) {
+    appendOnboardingMessage('assistant', '自動擷取暫時無法使用。你的訊息仍保留在這個對話中，可以改用手動填寫。');
+    $('onboardingFallback').hidden = false;
+    sessionStorage.setItem('finsim-onboarding-unsent', text);
+  } finally {
+    setLoading(button, false);
+    $('onboardingText').focus();
+  }
+}
+
+async function saveProfileDraft() {
+  if (!state.profileDraft) return;
+  const data = await api(`/financial-profile-drafts/${state.profileDraft.id}`, {
+    method: 'PUT',
+    body: JSON.stringify({ draft: state.profileDraft })
+  });
+  state.profileDraft = data.draft;
+  renderProfileDraft();
+}
+
+function applyConfirmedDraft(profile) {
+  const draft = state.profileDraft;
+  $('balance').value = profile.balance;
+  $('salary').value = Number(draft.monthly_salary.value || 0) + Number(draft.other_recurring_income.value || 0);
+  $('fixedExpense').value = draft.fixed_expenses.value || 0;
+  $('variableExpense').value = draft.total_variable_expenses.value || 0;
+  $('monthlyDebtPayment').value = draft.monthly_debt_payments.value || 0;
+  $('months').value = draft.simulation_months.value || 60;
+  if (profile.variable_expense_model?.categories?.length) {
+    renderCategories(profile.variable_expense_model.categories.map(item => ({
+      category: item.category,
+      amount: item.baseline
+    })));
+    $('advancedMode').checked = true;
+  }
+  state.profileMode = 'confirmed-ai';
+  $('profile').hidden = false;
+  $('manualProfileStatus').textContent = 'AI 草稿已確認';
+  $('manualProfileStatus').className = 'draft-status status-confirmed';
+  $('runBtn').disabled = false;
+}
+
+function profileFromConfirmedDraft(draft) {
+  return {
+    balance: Number(draft.cash_and_deposits.value || 0)
+      + Number(draft.investments.value || 0)
+      + Number(draft.other_assets.value || 0),
+    variable_expense_model: {
+      categories: (draft.variable_expense_allocation || []).map(item => ({
+        category: item.category,
+        baseline: Number(item.amount || 0)
+      }))
+    }
+  };
 }
 
 function setLoading(button, loading, label = '處理中...') {
@@ -85,6 +269,21 @@ function directReplyForInput(text) {
     return '這裡主要協助評估生活計畫的財務影響。你可以告訴我搬家、換工作、買車或旅行等計畫。';
   }
   return null;
+}
+
+function scenarioClarificationText(clarification) {
+  const known = (clarification.known_values || [])
+    .map(item => `${item.label}：${item.value}（${item.source}）`)
+    .join('、');
+  const questions = (clarification.questions || []).join(' ');
+  const candidates = T.ClarificationCandidateList(clarification.candidates || []);
+  return [
+    clarification.summary,
+    known ? `已知：${known}。` : '',
+    candidates,
+    questions,
+    clarification.system_assumption_offer || ''
+  ].filter(Boolean).join(' ');
 }
 
 function monthlyDebtLoan() {
@@ -173,7 +372,7 @@ function renderScenarioWorkspace() {
     list.textContent = '尚無 AI 情境。請先在上方描述你的未來計畫。';
     $('scenarioEventsList').innerHTML = '';
     $('scenarioReview').hidden = true;
-    $('runBtn').disabled = false;
+    $('runBtn').disabled = !state.profileMode;
     return;
   }
 
@@ -201,11 +400,11 @@ function renderScenarioWorkspace() {
         <tr>
           <td>${T.escapeHtml(scenario.title)}</td>
           <th>${T.escapeHtml(event.name || '財務事件')}</th>
-          <td>第 ${Number(event.start_month || event.month || 1)} 個月</td>
+          <td>${T.formatPeriod(event.start_period || scenario.start_period)}</td>
           <td>${currency(cost.oneTime)}</td>
           <td>${currency(cost.recurring)}</td>
           <td>${cost.offset ? `-${currency(cost.offset)}` : '無變化'}</td>
-          <td>${T.sourceLabel(event.display_source || (event.source === 'ai' ? 'AI 推估' : '使用者輸入'))}</td>
+          <td>${T.sourceLabel(event.source)}</td>
         </tr>`).join('')}</tbody>
     </table></div>` : '';
 
@@ -219,7 +418,7 @@ function renderScenarioWorkspace() {
     $('sourceList').className = 'details-body';
     $('sourceList').innerHTML = T.SourceList(scenario.sources);
   }
-  $('runBtn').disabled = pendingScenarios().length > 0;
+  $('runBtn').disabled = !state.profileMode || pendingScenarios().length > 0;
 }
 
 function fillReviewForm(scenario) {
@@ -283,7 +482,7 @@ function applyReviewToEvents(scenario) {
       name: `${scenario.title}一次性支出`,
       start_month: scenario.start_month,
       one_time_amount: -scenario.one_time_cost,
-      source: 'ai',
+      source: 'manual',
       display_source: '使用者修改',
       reason: '使用者在確認頁新增'
     });
@@ -373,7 +572,7 @@ function renderAssumptions(items) {
       const assumption = state.assumptionBindings[Number(event.target.dataset.assumptionIndex)];
       if (!assumption) return;
       assumption.value = event.target.value;
-      assumption.source = '使用者修改';
+      assumption.edited = true;
       const owner = state.scenarios.find(scenario => scenario.assumptions.includes(assumption));
       if (owner) {
         owner.status = '使用者已修改';
@@ -453,7 +652,7 @@ function chartOptions(unit, legend = true) {
               const marker = context.raw.meta;
               return [
                 marker.name,
-                `月份：第 ${marker.month} 個月`,
+                `月份：${marker.period ? T.formatPeriod(marker.period) : '依模擬年月'}`,
                 `成本：${currency(marker.cost)}`,
                 `分類：${marker.category}`,
                 `來源：${marker.source}`,
@@ -507,13 +706,13 @@ function setupCharts() {
     emptyMessage: '尚無模擬資料，請先確認 AI 建立的情境並執行模擬。',
     hasData: rows => Array.isArray(rows) && rows.some(row => Number.isFinite(Number(row.balance))),
     build: (rows, metadata) => {
-      const labels = rows.map(row => `M${row.month}`);
+      const labels = rows.map(row => T.formatPeriod(T.periodForMonth(state.referenceDate, row.month)));
       const markerDatasets = (metadata.markers || []).map((marker, index) => {
         const row = rows.find(item => item.month === marker.month);
         return {
           type: 'scatter',
           label: marker.name,
-          data: row ? [{ x: `M${marker.month}`, y: row.balance, meta: marker }] : [],
+          data: row ? [{ x: T.formatPeriod(T.periodForMonth(state.referenceDate, marker.month)), y: row.balance, meta: { ...marker, period: marker.period || T.periodForMonth(state.referenceDate, marker.month) } }] : [],
           pointRadius: 6,
           pointHoverRadius: 8,
           pointStyle: 'triangle',
@@ -549,7 +748,7 @@ function setupCharts() {
     build: rows => ({
       type: 'bar',
       data: {
-        labels: rows.map(row => `M${row.month}`),
+        labels: rows.map(row => T.formatPeriod(T.periodForMonth(state.referenceDate, row.month))),
         datasets: [
           { label: '收入', data: rows.map(row => row.income), backgroundColor: 'rgba(4,120,87,.55)' },
           { label: '總支出', data: rows.map(row => row.expense + row.debt_payment), backgroundColor: 'rgba(220,38,38,.45)' }
@@ -566,7 +765,7 @@ function setupCharts() {
     build: rows => ({
       type: 'line',
       data: {
-        labels: rows.map(row => `M${row.month}`),
+        labels: rows.map(row => T.formatPeriod(T.periodForMonth(state.referenceDate, row.month))),
         datasets: [{ label: 'FSI', data: rows.map(row => row.fsi), borderColor: '#7c3aed', pointRadius: 0, tension: .2 }]
       },
       options: chartOptions('FSI', false)
@@ -594,7 +793,7 @@ function setupCharts() {
     build: paths => ({
       type: 'line',
       data: {
-        labels: paths[0].points.map(point => `M${point.month}`),
+        labels: paths[0].points.map(point => T.formatPeriod(T.periodForMonth(state.referenceDate, point.month))),
         datasets: paths.map((path, index) => ({ label: `Path ${index + 1}`, data: path.points.map(point => point.balance), borderWidth: 1.2, pointRadius: 0 }))
       },
       options: chartOptions('金額 TWD')
@@ -646,7 +845,7 @@ function renderTransparency(result) {
   $('aiActionTimeline').innerHTML = T.AIActionTimeline(transparency.actions);
   $('variableExpenseAllocation').innerHTML = T.VariableExpenseAllocation(transparency.expense_allocation);
   $('expenseComparison').innerHTML = T.ExpenseComparisonTable(transparency.expense_comparison);
-  $('allocationNotice').textContent = `比較月份：第 ${transparency.comparison_month || 1} 個月。比例總計 100%；系統預設與 AI 推估都不是已確認事實。`;
+  $('allocationNotice').textContent = `比較月份：${transparency.comparison_period ? T.formatPeriod(transparency.comparison_period) : '依模擬年月'}。比例總計 100%；系統模擬假設與 AI 語意解析都不是已確認事實。`;
   renderCostBreakdown(transparency.cost_breakdown);
   const scenarioAssumptions = state.scenarios
     .filter(item => item.status === '使用者已確認')
@@ -687,6 +886,11 @@ function resetResults() {
 }
 
 async function runSimulation(button = $('runBtn'), allowPending = false) {
+  if (!state.profileMode) {
+    toast('請先用 AI 建立並確認財務資料，或選擇手動填寫', 'error');
+    $('onboarding').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
   if (!allowPending && pendingScenarios().length) {
     toast('尚有 AI 情境等待確認，請先加入模擬或取消', 'error');
     return;
@@ -764,9 +968,19 @@ async function sendScenarioMessage() {
   try {
     const data = await api('/ai/parse-scenario', {
       method: 'POST',
-      body: JSON.stringify({ text, months: Number($('months').value) || 60 })
+      body: JSON.stringify({
+        text,
+        months: Number($('months').value) || 60,
+        reference_date: state.referenceDate,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Taipei',
+        profile_draft_id: state.profileDraft?.status === 'confirmed' ? state.profileDraft.id : null
+      })
     });
     loading.remove();
+    if (data.clarification) {
+      appendChatMessage('assistant', scenarioClarificationText(data.clarification));
+      return;
+    }
     if (!data.events.length && !data.expense_adjustments.length) {
       appendChatMessage('assistant', '我還找不到可模擬的財務變化。請補充計畫發生的時間，以及收入或支出大約會改變多少。');
       return;
@@ -874,10 +1088,9 @@ $('editAssumptionsBtn').addEventListener('click', () => {
 $('restoreAssumptionsBtn').addEventListener('click', () => {
   const scenario = activeScenario();
   if (!scenario) return toast('目前沒有可恢復的情境假設', 'error');
-  scenario.assumptions.forEach(item => {
-    if (item.suggested_value != null) item.value = item.suggested_value;
-    item.source = item.source === '使用者修改' ? 'AI 推估' : item.source;
-  });
+  scenario.assumptions = T.restoreCanonicalAssumptions(
+    scenario.original.display.assumptions
+  );
   renderScenarioWorkspace();
   toast('已恢復建議假設');
 });
@@ -982,6 +1195,172 @@ $('reportBtn').addEventListener('click', async event => {
   }
 });
 
+$('startAiOnboardingBtn').addEventListener('click', () => {
+  setProfileSetupMode('ai');
+});
+
+$('startManualProfileBtn').addEventListener('click', openManualProfile);
+$('useManualFallbackBtn').addEventListener('click', openManualProfile);
+$('sendOnboardingBtn').addEventListener('click', sendOnboardingMessage);
+$('onboardingText').addEventListener('keydown', event => {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    sendOnboardingMessage();
+  }
+});
+$('openDraftReviewBtn').addEventListener('click', () => renderProfileDraft(true));
+
+$('restartOnboardingBtn').addEventListener('click', () => {
+  state.profileDraft = null;
+  state.profileMode = null;
+  $('runBtn').disabled = true;
+  $('profile').hidden = true;
+  $('profileDraftReview').hidden = true;
+  $('onboardingChatLog').innerHTML = initialOnboardingChatMarkup;
+  $('onboardingText').value = '';
+  $('onboardingStatus').textContent = '開始建立';
+  $('onboardingStatus').className = 'draft-status status-review';
+  persistDraftLocally();
+  renderProfileDraft();
+  toast('已建立新的空白對話');
+});
+
+$('cancelProfileDraftBtn').addEventListener('click', () => {
+  $('profileDraftReview').hidden = true;
+  $('onboarding').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+$('draftReviewRows').addEventListener('input', event => {
+  const key = event.target.dataset.draftField;
+  if (!key || !state.profileDraft) return;
+  P.updateField(state.profileDraft, key, event.target.value);
+  const row = event.target.closest('[data-field-row]');
+  row?.classList.add('is-estimated');
+  const source = row?.querySelector('.source-tag');
+  if (source) {
+    source.textContent = '使用者修改';
+    source.className = 'source-tag source-user_modified';
+  }
+  const confidence = row?.querySelector('.confidence-value');
+  if (confidence) {
+    confidence.textContent = '高';
+    if (confidence.nextElementSibling) confidence.nextElementSibling.textContent = '100%';
+  }
+  const reason = row?.querySelector('td:last-child small');
+  if (reason) reason.textContent = '使用者在審核畫面修改';
+  const checkbox = row?.querySelector('[data-confirm-field]');
+  if (checkbox) {
+    checkbox.checked = false;
+    const label = checkbox.closest('label');
+    if (label) label.lastChild.textContent = ' 等待確認';
+  }
+  $('confirmProfileDraftBtn').disabled = true;
+  persistDraftLocally();
+});
+
+$('draftReviewRows').addEventListener('change', event => {
+  const key = event.target.dataset.draftField;
+  if (!key || !state.profileDraft) return;
+  P.updateField(state.profileDraft, key, event.target.value);
+  renderProfileDraft();
+});
+
+$('draftReviewRows').addEventListener('change', event => {
+  const key = event.target.dataset.confirmField;
+  if (!key || !state.profileDraft) return;
+  state.profileDraft[key].confirmed = event.target.checked;
+  renderProfileDraft();
+});
+
+$('draftAllocationRows').addEventListener('change', event => {
+  const index = event.target.dataset.allocationAmount;
+  if (index === undefined || !state.profileDraft) return;
+  P.redistributeAllocation(
+    state.profileDraft,
+    Number(index),
+    event.target.value,
+    $('keepAllocationTotal').checked
+  );
+  renderProfileDraft();
+});
+
+$('draftAllocationRows').addEventListener('change', event => {
+  const index = event.target.dataset.confirmAllocation;
+  if (index === undefined || !state.profileDraft) return;
+  state.profileDraft.variable_expense_allocation[Number(index)].confirmed = event.target.checked;
+  renderProfileDraft();
+});
+
+$('draftFuturePlans').addEventListener('change', event => {
+  const index = event.target.dataset.confirmPlan;
+  if (index === undefined || !state.profileDraft) return;
+  state.profileDraft.future_plans[Number(index)].confirmed = event.target.checked;
+  renderProfileDraft();
+});
+
+$('confirmAllEstimatesBtn').addEventListener('click', () => {
+  if (!state.profileDraft) return;
+  P.FIELD_GROUPS.flatMap(group => group.fields).forEach(([key]) => {
+    if (state.profileDraft[key]?.value !== null) state.profileDraft[key].confirmed = true;
+  });
+  state.profileDraft.variable_expense_allocation.forEach(item => { item.confirmed = true; });
+  state.profileDraft.future_plans.forEach(item => { item.confirmed = true; });
+  renderProfileDraft();
+  toast('所有目前顯示的估算已標記為確認');
+});
+
+$('saveProfileDraftBtn').addEventListener('click', async event => {
+  const button = event.currentTarget;
+  setLoading(button, true);
+  try {
+    await saveProfileDraft();
+    toast('草稿已儲存，尚未套用到正式財務資料');
+  } catch (error) {
+    toast(error.message, 'error');
+  } finally {
+    setLoading(button, false);
+  }
+});
+
+$('confirmProfileDraftBtn').addEventListener('click', async event => {
+  if (!state.profileDraft) return;
+  const button = event.currentTarget;
+  setLoading(button, true);
+  try {
+    await saveProfileDraft();
+    const data = await api(`/financial-profile-drafts/${state.profileDraft.id}/confirm`, {
+      method: 'POST',
+      body: JSON.stringify({ draft: state.profileDraft, explicit_confirmation: true })
+    });
+    state.profileDraft = data.draft;
+    applyConfirmedDraft(data.profile);
+    renderProfileDraft();
+    appendOnboardingMessage('assistant', '財務資料已由你明確確認並套用。接下來可以建立未來情境或直接執行模擬。');
+    $('profileDraftReview').hidden = true;
+    $('profile').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    toast('財務資料已確認並套用');
+  } catch (error) {
+    toast(error.message, 'error');
+    renderProfileDraft();
+  } finally {
+    setLoading(button, false);
+  }
+});
+
 setupCharts();
+const savedDraft = sessionStorage.getItem('finsim-profile-draft');
+if (savedDraft) {
+  try {
+    state.profileDraft = JSON.parse(savedDraft);
+    setProfileSetupMode('ai', { scroll: false });
+    renderProfileDraft();
+    if (state.profileDraft.status === 'confirmed') {
+      applyConfirmedDraft(profileFromConfirmedDraft(state.profileDraft));
+    }
+  } catch {
+    sessionStorage.removeItem('finsim-profile-draft');
+  }
+}
+$('runBtn').disabled = !state.profileMode;
 renderScenarioWorkspace();
 resetResults();

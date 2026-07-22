@@ -16,14 +16,41 @@
 
   const SOURCE_LABELS = new Set([
     '使用者輸入',
+    '使用者提供',
     '使用者財務資料',
     '歷史支出資料',
-    'AI 推估',
+    'AI 語意判讀',
+    'AI 語意解析',
     '系統預設',
+    '系統假設值',
+    '系統模擬假設',
     '財務引擎計算',
+    '系統計算',
     '使用者修改',
-    '外部資料'
+    '外部資料',
+    '外部資料估算',
+    '來源未標示'
   ]);
+
+  const SOURCE_LABEL_MAP = {
+    manual: '使用者提供',
+    user_provided: '使用者提供',
+    '使用者輸入': '使用者提供',
+    ai: 'AI 語意解析',
+    ai_interpretation: 'AI 語意解析',
+    ai_extracted: 'AI 語意解析',
+    ai_estimated: 'AI 語意解析',
+    'AI 語意判讀': 'AI 語意解析',
+    system_assumption: '系統模擬假設',
+    system_default: '系統模擬假設',
+    '系統預設': '系統模擬假設',
+    '系統假設值': '系統模擬假設',
+    system: '系統計算',
+    derived: '系統計算',
+    backend_normalized: '系統計算',
+    external_estimate: '外部資料估算',
+    external_research: '外部資料估算'
+  };
 
   const DEFAULT_ALLOCATION = {
     food: 30,
@@ -54,6 +81,16 @@
   };
 
   const formatMonths = value => value == null ? '尚未設定' : `${Number(value)} 個月`;
+  const formatPeriod = value => {
+    const match = /^(\d{4})-(\d{2})$/.exec(String(value || ''));
+    return match ? `${match[1]}年${Number(match[2])}月` : '時間尚未確認';
+  };
+  const periodForMonth = (referenceDate, monthIndex) => {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(referenceDate || ''));
+    if (!match || Number(monthIndex) < 1) return null;
+    const absolute = Number(match[1]) * 12 + Number(match[2]) - 1 + Number(monthIndex);
+    return `${Math.floor(absolute / 12)}-${String(absolute % 12 + 1).padStart(2, '0')}`;
+  };
   const formatConfidence = value => value == null ? '尚未提供' : `${Math.round(Number(value) * 100)}%`;
 
   const formatDifference = (value, options = {}) => {
@@ -66,7 +103,17 @@
     return `${number > 0 ? '+' : '-'}${formatted}`;
   };
 
-  const sourceLabel = value => SOURCE_LABELS.has(value) ? value : '系統預設';
+  const sourceLabel = value => SOURCE_LABEL_MAP[value]
+    || (SOURCE_LABELS.has(value) ? value : '來源未標示');
+
+  const itemSourceLabel = item => {
+    const displaySource = typeof item?.display_source === 'string'
+      ? item.display_source.trim()
+      : '';
+    return displaySource || sourceLabel(item?.source);
+  };
+
+  const restoreCanonicalAssumptions = originalItems => structuredClone(originalItems || []);
 
   function normalizePercentages(input) {
     const values = Object.fromEntries(
@@ -118,6 +165,9 @@
       title: display.title || events[0]?.name || 'AI 建立的財務情境',
       scenario_type: display.scenario_type || events[0]?.type || '生活事件',
       start_month: Number(display.start_month || Math.min(...starts, 1)),
+      start_period: display.start_period || events.find(item => item.start_period)?.start_period || null,
+      end_period: display.end_period || null,
+      original_target_date_text: display.original_target_date_text || null,
       duration_months: Number(display.duration_months || 1),
       one_time_cost: Number(display.one_time_cost ?? oneTime),
       recurring_monthly_cost: Number(display.recurring_monthly_cost ?? recurring),
@@ -141,15 +191,17 @@
       type: 'life_event',
       name: `支出調整：${CATEGORY_LABELS[item.category] || item.category}`,
       start_month: item.start_month,
+      start_period: item.start_period || null,
       end_month: item.end_month || simulationMonths,
+      end_period: item.end_period || null,
       monthly_amount: 0,
       category_monthly_adjustment: Number(item.monthly_amount || 0),
       variable_expense_multiplier: Number(item.multiplier || 1),
       target_expense_category: item.category,
       expense_role: item.expense_role || 'additional',
-      source: 'ai',
-      display_source: item.source || 'AI 推估',
-      reason: item.reason || 'AI 建議的分類支出調整'
+      source: item.source || 'unknown',
+      display_source: item.display_source || sourceLabel(item.source),
+      reason: item.reason || '分類支出調整'
     }));
     return [...events, ...adjustments];
   }
@@ -160,6 +212,9 @@
       title: scenario.title,
       scenario_type: scenario.scenario_type,
       start_month: Number(scenario.start_month),
+      start_period: scenario.start_period,
+      end_period: scenario.end_period,
+      original_target_date_text: scenario.original_target_date_text,
       duration_months: Number(scenario.duration_months),
       one_time_cost: Number(scenario.one_time_cost),
       recurring_monthly_cost: Number(scenario.recurring_monthly_cost),
@@ -196,7 +251,7 @@
           ${ScenarioStatusBadge(scenario.status)}
         </div>
         <dl class="summary-fields">
-          <div><dt>開始</dt><dd>第 ${Number(scenario.start_month)} 個月</dd></div>
+          <div><dt>開始</dt><dd>${formatPeriod(scenario.start_period)}</dd></div>
           <div><dt>期間</dt><dd>${formatMonths(scenario.duration_months)}</dd></div>
           <div><dt>一次性成本</dt><dd>${formatCurrency(scenario.one_time_cost)}</dd></div>
           <div><dt>每月週期成本</dt><dd>${formatCurrency(scenario.recurring_monthly_cost)}</dd></div>
@@ -217,7 +272,7 @@
       <label class="assumption-row">
         <span>${escapeHtml(item.label)}</span>
         <input data-assumption-index="${index}" value="${escapeHtml(item.value)}" ${item.editable === false ? 'disabled' : ''}>
-        <small>${sourceLabel(item.source)}${item.editable === false ? ' · 不可修改' : ' · 可修改'}</small>
+        <small>${escapeHtml(itemSourceLabel(item))}${item.editable === false ? ' · 不可修改' : ' · 可修改'}</small>
       </label>`).join('')}</div>`;
   }
 
@@ -227,8 +282,16 @@
       <div>
         <strong>${escapeHtml(item.label)}</strong>
         <span>${escapeHtml(item.value ?? '')}</span>
-        <small>${sourceLabel(item.source)}${item.estimated ? ' · 估算值' : ''}</small>
+        <small>${escapeHtml(itemSourceLabel(item))}${item.estimated ? ' · 估算值' : ''}</small>
       </div>`).join('')}</div>`;
+  }
+
+  function ClarificationCandidateList(items) {
+    return (items || []).map(item => (
+      `${item.label}：每月 ${formatCurrency(item.monthly_amount)}`
+      + `（${itemSourceLabel(item)}）；${Number(item.comparison_months || 60)} 個月合計 `
+      + `${formatCurrency(item.derived_total)}（${item.derived_display_source || sourceLabel(item.derived_source)}）`
+    )).join(' ');
   }
 
   function VariableExpenseAllocation(items) {
@@ -240,7 +303,7 @@
           <th>${escapeHtml(item.label || CATEGORY_LABELS[item.category] || item.category)}</th>
           <td>${formatCurrency(item.monthly_amount)}</td>
           <td>${Number(item.percentage || 0).toFixed(2)}%</td>
-          <td>${sourceLabel(item.source)}</td>
+          <td>${escapeHtml(itemSourceLabel(item))}</td>
           <td>${item.scenario_changed ? '有變更' : '無變化'}</td>
         </tr>`).join('')}</tbody>
     </table></div>`;
@@ -257,7 +320,7 @@
           <td>${formatCurrency(item.adjusted_amount)}</td>
           <td class="${Number(item.difference) > 0 ? 'difference-up' : Number(item.difference) < 0 ? 'difference-down' : ''}">${formatDifference(item.difference)}</td>
           <td>${escapeHtml(item.reason || '無情境調整')}</td>
-          <td>${sourceLabel(item.source)}</td>
+          <td>${escapeHtml(itemSourceLabel(item))}</td>
         </tr>`).join('')}</tbody>
     </table></div>`;
   }
@@ -279,7 +342,7 @@
       if (type === 'currency') return formatCurrency(value);
       if (type === 'months') return `${Number(value).toFixed(1)} 月`;
       if (type === 'percent') return formatPercent(value);
-      if (type === 'month') return `第 ${value} 個月`;
+      if (type === 'month') return typeof value === 'string' ? formatPeriod(value) : '依模擬年月';
       return Number(value).toFixed(3);
     };
     const displayDifference = (value, type) => {
@@ -312,9 +375,13 @@
     formatCurrency,
     formatPercent,
     formatMonths,
+    formatPeriod,
+    periodForMonth,
     formatConfidence,
     formatDifference,
     sourceLabel,
+    itemSourceLabel,
+    restoreCanonicalAssumptions,
     normalizePercentages,
     allocationFromTotal,
     createScenarioModel,
@@ -325,6 +392,7 @@
     AIActionTimeline,
     AssumptionList,
     SourceList,
+    ClarificationCandidateList,
     VariableExpenseAllocation,
     ExpenseComparisonTable,
     FinancialImpactSummary,
