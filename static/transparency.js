@@ -368,6 +368,68 @@
     }).join('')}</div>`;
   }
 
+  function ScenarioComparisonResult(response) {
+    const baseline = response?.baseline?.option || {};
+    const scenarioResult = response?.scenarios?.[0];
+    const scenario = scenarioResult?.option || {};
+    const request = scenario.scenario_request || {};
+    const build = scenarioResult?.build || {};
+    const delta = response?.deltas?.[0];
+    const factRows = items => (items || []).map(item => `<tr>
+      <td>${escapeHtml(item.field || '')}</td><td>${item.value == null ? '—' : formatCurrency(item.value)}</td>
+      <td>${escapeHtml(item.display_source || sourceLabel(item.source))}</td><td>${escapeHtml(item.reason || '')}</td>
+    </tr>`).join('');
+    if (response?.baseline_only) {
+      return `<section class="scenario-comparison"><h3>基準</h3><p>${escapeHtml(baseline.label || '目前財務狀況')}</p><p>此結果未加入任何情境事件、貸款或隱藏假設。</p></section>`;
+    }
+    if (!scenarioResult || !delta) return '<p>尚無可顯示的情境比較。</p>';
+    const oneTime = (build.events || []).filter(item => item.type === 'one_time');
+    const monthly = (build.events || []).filter(item => item.type === 'range');
+    const metric = (label, value, period = false) => `<li><span>${label}</span><strong>${period ? formatPeriod(value) : formatCurrency(value)}</strong></li>`;
+    return `<section class="scenario-comparison">
+      <div><h3>基準</h3><p>${escapeHtml(baseline.label || '目前財務狀況')}</p></div>
+      <div><h3>情境</h3><p>${escapeHtml(scenario.label || '')} · ${escapeHtml(request.scenario_type || '')} · ${formatPeriod(request.target_period)}</p></div>
+      <h4>一次性變動</h4><ul>${oneTime.map(item => metric(item.name, Math.abs(Number(item.amount || 0)))).join('') || '<li>無</li>'}</ul>
+      <h4>每月變動</h4><ul>${monthly.map(item => metric(item.name, Math.abs(Number(item.amount || 0)))).join('') || '<li>無</li>'}</ul>
+      <h4>後端比較結果</h4><ul>
+        ${metric('期末現金差額', delta.final_cash_difference)}
+        ${metric('平均每月現金流差額', delta.average_monthly_cash_flow_difference)}
+        ${metric('最低現金餘額', delta.minimum_cash_balance)}
+        ${metric('最低餘額月份', delta.minimum_balance_period, true)}
+        ${delta.first_deficit_period ? metric('首次赤字月份', delta.first_deficit_period, true) : '<li><span>首次赤字月份</span><strong>無赤字</strong></li>'}
+        ${metric('新增債務', delta.total_new_debt)}${metric('總利息', delta.total_interest)}
+        ${metric('一次性成本合計', delta.one_time_cost_total)}${metric('持續性成本合計', delta.recurring_cost_total)}
+      </ul>
+      <h4>假設與來源</h4><div class="table-wrap"><table><thead><tr><th>欄位</th><th>值</th><th>來源</th><th>理由</th></tr></thead><tbody>${factRows([...(build.assumptions || []), ...(build.derived_values || [])])}</tbody></table></div>
+      ${(build.missing_fields || []).length ? `<p class="warning">待釐清：${escapeHtml(build.missing_fields.join(', '))}</p>` : ''}
+      ${(build.warnings || []).map(item => `<p class="warning">${escapeHtml(item)}</p>`).join('')}
+    </section>`;
+  }
+
+  function buildScenarioComparisonPayload(typedRequest, confirmedProfile, startPeriod, horizonMonths) {
+    if (!typedRequest || !confirmedProfile) return null;
+    return {
+      confirmed_profile: confirmedProfile,
+      start_period: startPeriod,
+      horizon_months: Number(horizonMonths),
+      options: [
+        { option_id: 'baseline', label: '目前財務狀況', is_baseline: true, scenario_request: null },
+        { option_id: typedRequest.scenario_id, label: typedRequest.scenario_id, is_baseline: false, scenario_request: typedRequest }
+      ]
+    };
+  }
+
+  async function runTypedScenarioComparison({ parsed, confirmedProfile, startPeriod, horizonMonths, request, render }) {
+    if (!parsed?.typed_scenario_request) return { status: 'not_executable' };
+    if (!confirmedProfile) return { status: 'missing_profile' };
+    const payload = buildScenarioComparisonPayload(parsed.typed_scenario_request, confirmedProfile, startPeriod, horizonMonths);
+    const response = await request('/scenarios/compare', {
+      method: 'POST', body: JSON.stringify(payload)
+    });
+    render(response);
+    return { status: 'rendered', payload, response };
+  }
+
   return {
     CATEGORY_LABELS,
     DEFAULT_ALLOCATION,
@@ -396,6 +458,9 @@
     VariableExpenseAllocation,
     ExpenseComparisonTable,
     FinancialImpactSummary,
+    ScenarioComparisonResult,
+    buildScenarioComparisonPayload,
+    runTypedScenarioComparison,
     ConfidenceIndicator
   };
 });

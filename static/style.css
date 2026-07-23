@@ -541,6 +541,10 @@ tbody th { color: var(--text); }
   font-weight: 800;
 }
 .action-timeline p { margin: 6px 0 0; }
+.scenario-comparison { display: grid; gap: 12px; margin-top: 18px; }
+.scenario-comparison ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.scenario-comparison li { display: flex; justify-content: space-between; gap: 16px; }
+.scenario-comparison .warning { color: #9f1239; }
 .assumption-list, .source-list { display: grid; gap: 10px; }
 .assumption-row {
   display: grid;

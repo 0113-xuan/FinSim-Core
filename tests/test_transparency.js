@@ -8,6 +8,67 @@ const appSource = fs.readFileSync(path.join(__dirname, '../static/app.js'), 'utf
 const htmlSource = fs.readFileSync(path.join(__dirname, '../static/index.html'), 'utf8');
 const cssSource = fs.readFileSync(path.join(__dirname, '../static/style.css'), 'utf8');
 
+test('typed scenario comparison renders backend values, periods and provenance only', () => {
+  const html = T.ScenarioComparisonResult({
+    baseline: { option: { option_id: 'baseline', label: '目前財務狀況', is_baseline: true } },
+    scenarios: [{ option: { label: '車貸方案', scenario_request: { scenario_type: 'vehicle_purchase', target_period: '2027-01' } },
+      build: { events: [{ type: 'one_time', name: '頭期款', amount: -200000 }, { type: 'range', name: '停車', amount: -3000 }],
+        assumptions: [], derived_values: [{ field: 'monthly_loan_payment', value: '7187.48', source: 'derived', display_source: '系統計算', reason: '既有公式' }] } }],
+    deltas: [{ final_cash_difference: '-500000', average_monthly_cash_flow_difference: '-8000', minimum_cash_balance: '10000',
+      minimum_balance_period: '2030-02', first_deficit_period: null, total_new_debt: '400000', total_interest: '31248.8',
+      one_time_cost_total: '200000', recurring_cost_total: '180000' }]
+  });
+  assert.match(html, /目前財務狀況/); assert.match(html, /2027年1月/); assert.match(html, /系統計算/);
+  assert.match(html, /無赤字/); assert.match(html, /400,000/);
+  assert.doesNotMatch(appSource, /calculateLoan|monthlyRate|principal\s*\*/);
+  assert.doesNotMatch(appSource, /deltas\s*\[.*\]\s*=/);
+  assert.match(appSource, /T\.ScenarioComparisonResult\(response\)/);
+});
+
+test('typed baseline-only rendering does not infer baseline by array position', () => {
+  const html = T.ScenarioComparisonResult({ baseline_only: true, baseline: { option: { label: '目前財務狀況' } } });
+  assert.match(html, /未加入任何情境事件、貸款或隱藏假設/);
+  assert.doesNotMatch(appSource, /scenarios\s*\[\s*0\s*\].*baseline/);
+});
+
+test('complete typed parser response triggers comparison with one explicit baseline and scenario', async () => {
+  const typed = { scenario_id: 'vehicle-1', scenario_type: 'vehicle_purchase', horizon_months: 60 };
+  const calls = []; let rendered = null;
+  const result = await T.runTypedScenarioComparison({
+    parsed: { typed_scenario_request: typed }, confirmedProfile: { salary: 1 },
+    startPeriod: '2026-07', horizonMonths: 60,
+    request: async (path, options) => { calls.push({ path, body: JSON.parse(options.body) }); return { deltas: [] }; },
+    render: value => { rendered = value; }
+  });
+  assert.equal(result.status, 'rendered'); assert.equal(calls[0].path, '/scenarios/compare');
+  assert.equal(calls[0].body.options.filter(item => item.is_baseline).length, 1);
+  assert.equal(calls[0].body.options.filter(item => !item.is_baseline).length, 1);
+  assert.deepEqual(calls[0].body.options[1].scenario_request, typed);
+  assert.deepEqual(rendered, { deltas: [] });
+});
+
+test('incomplete unsupported or missing-profile parser results do not call comparison', async () => {
+  let calls = 0; const request = async () => { calls += 1; };
+  assert.equal((await T.runTypedScenarioComparison({ parsed: {}, confirmedProfile: {}, request, render() {} })).status, 'not_executable');
+  assert.equal((await T.runTypedScenarioComparison({ parsed: { typed_scenario_request: { scenario_id: 'x' } }, confirmedProfile: null, request, render() {} })).status, 'missing_profile');
+  assert.equal(calls, 0);
+});
+
+test('comparison helper propagates structured and network failures without mutating input', async () => {
+  const typed = { scenario_id: 'cash', payload: { purchase_price: { value: '250000' } } };
+  const original = structuredClone(typed);
+  await assert.rejects(() => T.runTypedScenarioComparison({ parsed: { typed_scenario_request: typed }, confirmedProfile: { salary: 1 },
+    startPeriod: '2026-07', horizonMonths: 60, request: async () => { throw new Error('purchase_price missing'); }, render() {} }), /purchase_price/);
+  assert.deepEqual(typed, original);
+});
+
+test('canonical source labels cover derived normalized and missing values', () => {
+  assert.equal(T.sourceLabel('derived'), '系統計算');
+  assert.equal(T.sourceLabel('backend_normalized'), '系統計算');
+  assert.equal(T.sourceLabel('missing'), '來源未標示');
+  assert.doesNotMatch(T.ScenarioComparisonResult({ baseline_only: true, baseline: { option: { label: '基準' } } }), /AI 推估/);
+});
+
 function parsedScenario(overrides = {}) {
   return {
     summary: 'draft',

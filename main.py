@@ -53,6 +53,8 @@ from app.services.profile_onboarding import (
     interview_progress,
     update_draft,
 )
+from app.scenario_schemas import ScenarioComparisonRequest, ScenarioComparisonResponse
+from app.services.scenario_engine import compare_scenarios
 
 
 @asynccontextmanager
@@ -313,6 +315,15 @@ def compare_api(req: CompareRequest) -> Dict[str, Any]:
         seed=data.get("seed"),
     )
     return {"compare_result": compare_result, "advice": generate_advice(compare_result)}
+
+
+@app.post("/scenarios/compare", response_model=ScenarioComparisonResponse)
+def scenario_compare_api(req: ScenarioComparisonRequest) -> ScenarioComparisonResponse:
+    """Typed, deterministic baseline/scenario comparison without persistence or providers."""
+    try:
+        return compare_scenarios(req)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
 @app.post("/optimize")

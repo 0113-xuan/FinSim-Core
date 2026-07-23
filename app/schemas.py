@@ -327,6 +327,8 @@ class ParsedScenario(BaseModel):
     fallback_type: Optional[str] = Field(default=None, max_length=80)
     fallback_reason: Optional[str] = Field(default=None, max_length=80)
     clarification: Optional[ScenarioClarification] = None
+    typed_scenario_request: Optional[Dict[str, Any]] = None
+    typed_missing_fields: List[str] = Field(default_factory=list, max_length=30)
 
 
 class CategorizeExpensesRequest(BaseModel):

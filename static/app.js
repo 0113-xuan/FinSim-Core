@@ -13,6 +13,7 @@ const state = {
   lastMonteCarlo: null,
   lastOptimization: null,
   profileDraft: null,
+  confirmedProfile: null,
   profileMode: null,
   referenceDate: new Intl.DateTimeFormat('en-CA', {
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Taipei',
@@ -188,6 +189,7 @@ async function saveProfileDraft() {
 
 function applyConfirmedDraft(profile) {
   const draft = state.profileDraft;
+  state.confirmedProfile = structuredClone(profile);
   $('balance').value = profile.balance;
   $('salary').value = Number(draft.monthly_salary.value || 0) + Number(draft.other_recurring_income.value || 0);
   $('fixedExpense').value = draft.fixed_expenses.value || 0;
@@ -872,6 +874,16 @@ function renderSimulation(result) {
   renderTransparency(result);
 }
 
+// Typed Scenario Engine responses are rendered verbatim; all financial values
+// and provenance come from the backend response.
+function renderScenarioComparison(response) {
+  const container = $('scenarioComparisonResult');
+  if (!container) return;
+  container.className = '';
+  container.innerHTML = T.ScenarioComparisonResult(response);
+}
+window.renderScenarioComparison = renderScenarioComparison;
+
 function resetResults() {
   state.lastSimulation = null;
   $('resultMessage').textContent = '尚無模擬資料。財務影響只會使用後端引擎的基準與情境模擬結果。';
@@ -977,19 +989,32 @@ async function sendScenarioMessage() {
       })
     });
     loading.remove();
-    if (data.clarification) {
+    if (data.clarification && !data.typed_scenario_request) {
       appendChatMessage('assistant', scenarioClarificationText(data.clarification));
       return;
     }
+    if (data.clarification) appendChatMessage('assistant', scenarioClarificationText(data.clarification));
     if (!data.events.length && !data.expense_adjustments.length) {
       appendChatMessage('assistant', '我還找不到可模擬的財務變化。請補充計畫發生的時間，以及收入或支出大約會改變多少。');
       return;
     }
     const scenario = T.createScenarioModel(data, `scenario-${Date.now()}`);
+    scenario.typedScenarioRequest = data.typed_scenario_request || null;
     state.scenarios.push(scenario);
     state.activeScenarioId = scenario.id;
     appendChatMessage('assistant', `${data.summary} 我建立了 ${data.events.length} 個事件與 ${data.expense_adjustments.length} 個分類調整。請先檢查摘要、假設與估算，再決定是否加入模擬。`);
     renderScenarioWorkspace();
+    const comparison = await T.runTypedScenarioComparison({
+      parsed: data,
+      confirmedProfile: state.confirmedProfile,
+      startPeriod: state.referenceDate.slice(0, 7),
+      horizonMonths: Number($('months').value) || 60,
+      request: api,
+      render: renderScenarioComparison
+    });
+    if (comparison.status === 'missing_profile') {
+      appendChatMessage('assistant', '請先完成並確認財務資料，才能執行情境比較。你的情境內容已保留。');
+    }
     $('scenarioReview').scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (error) {
     loading.remove();

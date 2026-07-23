@@ -9,7 +9,7 @@ from typing import Any, Dict, List
 
 from pydantic import ValidationError
 
-from app.schemas import EventSource, ParsedScenario, ScenarioContext, ScenarioParseRequest
+from app.schemas import EventSource, ParsedScenario, ScenarioClarification, ScenarioContext, ScenarioParseRequest
 from app.core.events import calculate_loan_payment
 from app.services.ai_provider import (
     AIProviderError,
@@ -17,6 +17,7 @@ from app.services.ai_provider import (
     get_ai_provider,
 )
 from app.services.financial_answer_extraction import deterministic_financial_extraction
+from app.services.scenario_bridge import build_housing_scenario_request, build_vehicle_scenario_request
 from app.services.financial_amount import FINANCIAL_AMOUNT_PATTERN, parse_financial_amount
 from app.services.calendar_period import (
     YearMonth,
@@ -321,9 +322,6 @@ def _vehicle_clarification_or_scenario(
             if financing.annual_interest_rate is None:
                 missing.append("interest_rate")
                 questions.append("車貸年利率是多少？")
-    if cash_purchase and plan.estimated_cost is not None and plan.normalized_target_date is not None:
-        missing.extend(["insurance", "tax", "fuel_or_electricity", "parking", "annual_maintenance"])
-        questions.append("請提供保險、稅費、油電、停車與年度維護預算，或選擇使用系統模擬假設。")
     missing = list(dict.fromkeys(missing))
 
     if missing:
@@ -441,6 +439,26 @@ def _vehicle_clarification_or_scenario(
         reference_date=reference_date,
         original_target_date_text=plan.original_target_date_text,
     )
+    typed_request = build_vehicle_scenario_request(
+        scenario_id="vehicle-purchase", target_period=start_period, horizon_months=req.months,
+        original_text=req.text, purchase_price=Decimal(str(plan.estimated_cost)),
+        payment_method="cash" if cash_purchase else "financed",
+        down_payment=Decimal(str(plan.down_payment)) if plan.down_payment is not None else None,
+        explicit_loan_amount=Decimal(str(financing.loan_amount)) if financing and financing.loan_amount is not None else None,
+        loan_term_months=financing.loan_term_months if financing else None,
+        annual_interest_rate_percent=Decimal(str(financing.annual_interest_rate)) if financing and financing.annual_interest_rate is not None else None,
+        vehicle_condition="used" if "二手" in req.text else "unknown",
+    )
+    legacy_clarification = None
+    if cash_purchase:
+        legacy_clarification = ScenarioClarification(
+            intent="vehicle_purchase",
+            summary="已辨識為現金購車計畫；持有成本仍可稍後補充，不影響購車比較。",
+            known_values=known_values,
+            missing_fields=["insurance", "tax", "fuel_or_electricity", "parking", "annual_maintenance"],
+            questions=["可稍後提供保險、稅費、油電、停車與年度維護預算。"],
+            system_assumption_offer="未提供的持有成本不會自動加入比較。",
+        )
     return ParsedScenario(
         summary="已依使用者提供的購車資料建立情境草稿。",
         events=events,
@@ -452,6 +470,8 @@ def _vehicle_clarification_or_scenario(
         fallback_used=True,
         fallback_type="deterministic_vehicle_adapter",
         fallback_reason=fallback_reason,
+        typed_scenario_request=typed_request.model_dump(mode="json"),
+        clarification=legacy_clarification,
     )
 
 
@@ -573,6 +593,12 @@ def _relocation_clarification(
          "expense_role": "offset" if commute_change < 0 else "additional",
          "reason": "每月通勤費變化", "source": "user_provided"},
     ]
+    typed_request = build_housing_scenario_request(
+        scenario_id="housing-change", target_period=target_period, horizon_months=req.months,
+        original_text=req.text, current_rent=current_rent, new_rent=new_rent,
+        monthly_rent_change=None if current_rent is not None and new_rent is not None else rent_increase,
+        monthly_commute_change=commute_change, deposit=deposit, moving_cost=moving_cost,
+    )
     return ParsedScenario(
         summary="已依使用者提供的搬家日期、房租、交通與一次性費用建立情境草稿。",
         events=events, expense_adjustments=adjustments, confidence=0.98, warnings=[],
@@ -582,6 +608,7 @@ def _relocation_clarification(
                                   timing_source="系統計算"),
         provider_used=False, fallback_used=True, fallback_type="deterministic_relocation_adapter",
         fallback_reason=fallback_reason,
+        typed_scenario_request=typed_request.model_dump(mode="json"),
     )
 
 
