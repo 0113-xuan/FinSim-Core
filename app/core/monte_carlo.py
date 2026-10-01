@@ -1,4 +1,5 @@
 from __future__ import annotations
+from app.core.financial_rules import emergency_shortfall
 
 import random
 import statistics
@@ -70,8 +71,7 @@ def run_monte_carlo(
         min_balances.append(summary["min_balance"])
         max_fsis.append(summary["max_fsi"])
         target_months = float(profile.get("target_emergency_months", 3))
-        final_expense = max(1.0, curve[-1]["expense"] + curve[-1]["debt_payment"])
-        emergency_shortfalls.append(max(0.0, target_months * final_expense - summary["final_balance"]))
+        emergency_shortfalls.append(emergency_shortfall(summary["final_balance"], curve[-1]["living_expense"], curve[-1]["debt_payment"], target_months))
         for row in curve:
             if row["risk_level"] in ("high", "crisis"):
                 high_risk_month_counter[row["month"]] += 1

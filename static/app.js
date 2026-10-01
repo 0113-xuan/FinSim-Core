@@ -5,6 +5,7 @@ const $ = id => document.getElementById(id);
 const state = {
   categories: [],
   scenarios: [],
+  scenarioDraft: null,
   activeScenarioId: null,
   events: [],
   allocationRatios: { ...T.DEFAULT_ALLOCATION },
@@ -15,6 +16,8 @@ const state = {
   profileDraft: null,
   confirmedProfile: null,
   profileMode: null,
+  onboardingRequestController: null,
+  onboardingRequestId: 0,
   referenceDate: new Intl.DateTimeFormat('en-CA', {
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Taipei',
     year: 'numeric', month: '2-digit', day: '2-digit'
@@ -38,13 +41,40 @@ function toast(message, type = 'ok') {
 }
 
 async function api(path, options = {}) {
-  const response = await fetch(path, {
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }
-  });
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.detail || `API failed: ${path}`);
-  return data;
+  const { timeoutMs = 30000, signal: externalSignal, ...fetchOptions } = options;
+  const controller = new AbortController();
+  let timedOut = false;
+  const abortFromCaller = () => controller.abort();
+  externalSignal?.addEventListener('abort', abortFromCaller, { once: true });
+  const timeout = window.setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, timeoutMs);
+  try {
+    const response = await fetch(path, {
+      ...fetchOptions,
+      signal: controller.signal,
+      headers: { 'Content-Type': 'application/json', ...(fetchOptions.headers || {}) }
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.detail || `API failed: ${path}`);
+    return data;
+  } catch (error) {
+    if (timedOut) {
+      const timeoutError = new Error('請求逾時，草稿仍保留在本機。');
+      timeoutError.code = 'timeout';
+      throw timeoutError;
+    }
+    if (externalSignal?.aborted) {
+      const cancelled = new Error('請求已取消。');
+      cancelled.code = 'cancelled';
+      throw cancelled;
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(timeout);
+    externalSignal?.removeEventListener('abort', abortFromCaller);
+  }
 }
 
 function appendOnboardingMessage(role, content) {
@@ -149,7 +179,10 @@ function openManualProfile() {
 
 async function sendOnboardingMessage() {
   const text = $('onboardingText').value.trim();
-  if (!text) return;
+  if (!text || state.onboardingRequestController) return;
+  const requestId = ++state.onboardingRequestId;
+  const controller = new AbortController();
+  state.onboardingRequestController = controller;
   appendOnboardingMessage('user', text);
   $('onboardingText').value = '';
   const button = $('sendOnboardingBtn');
@@ -157,23 +190,37 @@ async function sendOnboardingMessage() {
   try {
     const data = await api('/ai/financial-onboarding/message', {
       method: 'POST',
-      body: JSON.stringify({ text, draft_id: state.profileDraft?.id || null })
+      body: JSON.stringify({ text, draft_id: state.profileDraft?.id || null }),
+      signal: controller.signal,
+      timeoutMs: 25000
     });
+    if (requestId !== state.onboardingRequestId) return;
     state.profileDraft = data.draft;
     appendOnboardingMessage('assistant', data.assistant_message);
-    $('providerStatus').textContent = data.provider_available
-      ? 'AI 擷取服務可用'
-      : '使用安全的本機擷取模式';
+    const providerStatus = {
+      timeout: 'AI 擷取逾時，草稿已保留',
+      provider_error: 'AI 擷取驗證失敗，草稿已保留',
+      no_match: '尚未辨識到具體資料',
+      needs_clarification: '需要確認支出分類'
+    };
+    $('providerStatus').textContent = providerStatus[data.extraction_status]
+      || (data.provider_available ? 'AI 擷取服務可用' : '使用安全的本機擷取模式');
     $('advisorProgress').textContent = `第 ${data.current_step} 步，共 ${data.total_steps} 步 · ${data.stage_label}`;
     $('onboardingFallback').hidden = data.provider_available;
     renderProfileDraft(data.ready_for_review);
   } catch (error) {
-    appendOnboardingMessage('assistant', '自動擷取暫時無法使用。你的訊息仍保留在這個對話中，可以改用手動填寫。');
+    if (requestId !== state.onboardingRequestId || error.code === 'cancelled') return;
+    appendOnboardingMessage('assistant', error.code === 'timeout'
+      ? 'AI 回應逾時，這則訊息已保留，可以重新送出或改用手動填寫。'
+      : `目前無法完成擷取：${error.message} 草稿仍保留在本機。`);
     $('onboardingFallback').hidden = false;
     sessionStorage.setItem('finsim-onboarding-unsent', text);
   } finally {
-    setLoading(button, false);
-    $('onboardingText').focus();
+    if (requestId === state.onboardingRequestId) {
+      state.onboardingRequestController = null;
+      setLoading(button, false);
+      $('onboardingText').focus();
+    }
   }
 }
 
@@ -263,9 +310,6 @@ function directReplyForInput(text) {
   }
   if (/^(嗨|哈囉|你好|hello|hi)[!！。.]?$/iu.test(compact)) {
     return '嗨！告訴我一個可能影響收入或支出的未來計畫，我會幫你整理成財務情境。';
-  }
-  if (compact.length < 4) {
-    return '可以再多說一點嗎？我需要知道你打算做什麼，以及大約何時發生。';
   }
   if (/(天氣|笑話|歌詞|遊戲攻略|寫作業|翻譯)/u.test(compact)) {
     return '這裡主要協助評估生活計畫的財務影響。你可以告訴我搬家、換工作、買車或旅行等計畫。';
@@ -369,6 +413,7 @@ function eventCost(event) {
 
 function renderScenarioWorkspace() {
   const list = $('scenarioSummaryList');
+  $('scenarioSummary').hidden = !state.scenarios.length;
   if (!state.scenarios.length) {
     list.className = 'scenario-summary-list empty-state';
     list.textContent = '尚無 AI 情境。請先在上方描述你的未來計畫。';
@@ -870,13 +915,15 @@ function renderTransparency(result) {
 
 function renderSimulation(result) {
   state.lastSimulation = result;
-  $('resultMessage').textContent = `後端已完成 ${result.simulation_curve.length} 個月份的基準與情境比較。所有影響值皆由財務引擎計算。`;
+  $('resultsWorkspace').open = true;
+  $('resultMessage').textContent = `已完成 ${result.simulation_curve.length} 個月的評估`;
   renderTransparency(result);
 }
 
 // Typed Scenario Engine responses are rendered verbatim; all financial values
 // and provenance come from the backend response.
 function renderScenarioComparison(response) {
+  $('resultsWorkspace').open = true;
   const container = $('scenarioComparisonResult');
   if (!container) return;
   container.className = '';
@@ -884,9 +931,27 @@ function renderScenarioComparison(response) {
 }
 window.renderScenarioComparison = renderScenarioComparison;
 
+function revealWorkflowTarget() {
+  const target = document.getElementById(location.hash.slice(1));
+  if (!target) return;
+  let parent = target;
+  while (parent) {
+    if (parent.tagName === 'DETAILS') parent.open = true;
+    parent = parent.parentElement;
+  }
+  target.scrollIntoView({ block: 'start' });
+}
+window.addEventListener('hashchange', revealWorkflowTarget);
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', () => {
+    if (link.hash === location.hash) revealWorkflowTarget();
+  });
+});
+window.addEventListener('load', revealWorkflowTarget);
+
 function resetResults() {
   state.lastSimulation = null;
-  $('resultMessage').textContent = '尚無模擬資料。財務影響只會使用後端引擎的基準與情境模擬結果。';
+  $('resultMessage').textContent = '尚未執行評估';
   $('financialImpact').className = 'empty-state';
   $('financialImpact').textContent = '請先確認情境並執行模擬。';
   $('aiActionTimeline').className = 'details-body empty-state';
@@ -978,19 +1043,26 @@ async function sendScenarioMessage() {
   setLoading(button, true, '…');
   const loading = appendChatMessage('assistant', '正在理解你的計畫…', { loading: true });
   try {
-    const data = await api('/ai/parse-scenario', {
+    const draftResponse = await api('/scenarios/draft/message', {
       method: 'POST',
       body: JSON.stringify({
-        text,
+        message: text,
+        draft: state.scenarioDraft,
         months: Number($('months').value) || 60,
         reference_date: state.referenceDate,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Taipei',
         profile_draft_id: state.profileDraft?.status === 'confirmed' ? state.profileDraft.id : null
       })
     });
+    state.scenarioDraft = draftResponse.draft;
+    sessionStorage.setItem('finsim-scenario-draft', JSON.stringify(state.scenarioDraft));
+    const data = draftResponse.parsed;
     loading.remove();
     if (data.clarification && !data.typed_scenario_request) {
-      appendChatMessage('assistant', scenarioClarificationText(data.clarification));
+      appendChatMessage(
+        'assistant',
+        draftResponse.draft.next_question || scenarioClarificationText(data.clarification)
+      );
       return;
     }
     if (data.clarification) appendChatMessage('assistant', scenarioClarificationText(data.clarification));
@@ -1000,21 +1072,15 @@ async function sendScenarioMessage() {
     }
     const scenario = T.createScenarioModel(data, `scenario-${Date.now()}`);
     scenario.typedScenarioRequest = data.typed_scenario_request || null;
+    scenario.scenarioDraft = draftResponse.draft;
+    scenario.originalTypedScenarioRequest = structuredClone(scenario.typedScenarioRequest);
+    scenario.originalScenarioDraft = structuredClone(scenario.scenarioDraft);
+    state.scenarioDraft = null;
+    sessionStorage.removeItem('finsim-scenario-draft');
     state.scenarios.push(scenario);
     state.activeScenarioId = scenario.id;
     appendChatMessage('assistant', `${data.summary} 我建立了 ${data.events.length} 個事件與 ${data.expense_adjustments.length} 個分類調整。請先檢查摘要、假設與估算，再決定是否加入模擬。`);
     renderScenarioWorkspace();
-    const comparison = await T.runTypedScenarioComparison({
-      parsed: data,
-      confirmedProfile: state.confirmedProfile,
-      startPeriod: state.referenceDate.slice(0, 7),
-      horizonMonths: Number($('months').value) || 60,
-      request: api,
-      render: renderScenarioComparison
-    });
-    if (comparison.status === 'missing_profile') {
-      appendChatMessage('assistant', '請先完成並確認財務資料，才能執行情境比較。你的情境內容已保留。');
-    }
     $('scenarioReview').scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (error) {
     loading.remove();
@@ -1051,6 +1117,7 @@ $('scenarioText').addEventListener('keydown', event => {
 $('runBtn').addEventListener('click', event => runSimulation(event.currentTarget));
 $('modifyScenarioBtn').addEventListener('click', () => $('reviewTitle').focus());
 $('modifyAllocationBtn').addEventListener('click', () => {
+  $('resultsWorkspace').open = true;
   $('expenseAllocationPanel').open = true;
   renderDraftAllocationEditor();
   $('expenseAllocationPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1066,22 +1133,68 @@ $('restoreScenarioBtn').addEventListener('click', () => {
     confidence: scenario.confidence,
     warnings: scenario.warnings
   }, scenario.id);
+  restored.typedScenarioRequest = structuredClone(scenario.originalTypedScenarioRequest || scenario.typedScenarioRequest);
+  restored.scenarioDraft = structuredClone(scenario.originalScenarioDraft || scenario.scenarioDraft);
+  restored.originalTypedScenarioRequest = structuredClone(restored.typedScenarioRequest);
+  restored.originalScenarioDraft = structuredClone(restored.scenarioDraft);
   const index = state.scenarios.findIndex(item => item.id === scenario.id);
   state.scenarios[index] = restored;
   renderScenarioWorkspace();
   toast('已恢復 AI 建議值');
 });
 
-$('confirmScenarioBtn').addEventListener('click', event => {
+$('confirmScenarioBtn').addEventListener('click', async event => {
   const scenario = activeScenario();
   if (!scenario) return toast('請先建立情境', 'error');
+  const button = event.currentTarget;
+  const wasModified = scenario.status === '使用者已修改';
   readReviewForm(scenario, false);
   applyReviewToEvents(scenario);
-  scenario.status = '使用者已確認';
-  rebuildConfirmedEvents();
-  appendChatMessage('assistant', `「${scenario.title}」已加入模擬。現在只會使用你確認過的事件與假設。`);
-  renderScenarioWorkspace();
-  runSimulation(event.currentTarget, true);
+  setLoading(button, true);
+  try {
+    if (scenario.scenarioDraft && !wasModified) {
+      const confirmed = await api('/scenarios/draft/confirm', {
+        method: 'POST',
+        body: JSON.stringify({
+          draft: scenario.scenarioDraft,
+          explicit_confirmation: true
+        })
+      });
+      scenario.scenarioDraft = confirmed.draft;
+      scenario.typedScenarioRequest = confirmed.scenario_request;
+    }
+    if (wasModified) {
+      scenario.typedScenarioRequest = null;
+      scenario.scenarioDraft = null;
+      $('scenarioComparisonResult').className = 'empty-state';
+      $('scenarioComparisonResult').textContent = '此情境已修改；為避免使用舊數值，typed comparison 未執行。一般模擬仍會使用你確認後的事件。';
+    } else if (scenario.typedScenarioRequest) {
+      const comparisonProfile = state.profileMode === 'manual'
+        ? buildProfile()
+        : state.confirmedProfile;
+      const comparison = await T.runTypedScenarioComparison({
+        parsed: { typed_scenario_request: scenario.typedScenarioRequest },
+        confirmedProfile: comparisonProfile,
+        baselineLoans: monthlyDebtLoan(),
+        startPeriod: state.referenceDate.slice(0, 7),
+        horizonMonths: Number($('months').value) || 60,
+        request: api,
+        render: renderScenarioComparison
+      });
+      if (comparison.status === 'missing_profile') {
+        appendChatMessage('assistant', '請先完成並確認財務資料，才能執行情境比較。你的情境內容已保留。');
+      }
+    }
+    scenario.status = '使用者已確認';
+    rebuildConfirmedEvents();
+    appendChatMessage('assistant', `「${scenario.title}」已加入模擬。現在只會使用你確認過的事件與假設。`);
+    renderScenarioWorkspace();
+    await runSimulation(button, true);
+  } catch (error) {
+    toast(error.message, 'error');
+  } finally {
+    setLoading(button, false);
+  }
 });
 
 $('cancelScenarioBtn').addEventListener('click', () => {
@@ -1096,8 +1209,10 @@ $('cancelScenarioBtn').addEventListener('click', () => {
 
 $('clearScenarioBtn').addEventListener('click', () => {
   state.scenarios = [];
+  state.scenarioDraft = null;
   state.activeScenarioId = null;
   state.events = [];
+  sessionStorage.removeItem('finsim-scenario-draft');
   $('chatLog').innerHTML = initialChatMarkup;
   $('scenarioText').value = '';
   renderScenarioWorkspace();
@@ -1236,6 +1351,10 @@ $('onboardingText').addEventListener('keydown', event => {
 $('openDraftReviewBtn').addEventListener('click', () => renderProfileDraft(true));
 
 $('restartOnboardingBtn').addEventListener('click', () => {
+  state.onboardingRequestId += 1;
+  state.onboardingRequestController?.abort();
+  state.onboardingRequestController = null;
+  setLoading($('sendOnboardingBtn'), false);
   state.profileDraft = null;
   state.profileMode = null;
   $('runBtn').disabled = true;
@@ -1384,6 +1503,14 @@ if (savedDraft) {
     }
   } catch {
     sessionStorage.removeItem('finsim-profile-draft');
+  }
+}
+const savedScenarioDraft = sessionStorage.getItem('finsim-scenario-draft');
+if (savedScenarioDraft) {
+  try {
+    state.scenarioDraft = JSON.parse(savedScenarioDraft);
+  } catch {
+    sessionStorage.removeItem('finsim-scenario-draft');
   }
 }
 $('runBtn').disabled = !state.profileMode;

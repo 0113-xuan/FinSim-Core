@@ -406,10 +406,11 @@
     </section>`;
   }
 
-  function buildScenarioComparisonPayload(typedRequest, confirmedProfile, startPeriod, horizonMonths) {
+  function buildScenarioComparisonPayload(typedRequest, confirmedProfile, startPeriod, horizonMonths, baselineLoans = []) {
     if (!typedRequest || !confirmedProfile) return null;
     return {
       confirmed_profile: confirmedProfile,
+      baseline_loans: baselineLoans,
       start_period: startPeriod,
       horizon_months: Number(horizonMonths),
       options: [
@@ -419,10 +420,12 @@
     };
   }
 
-  async function runTypedScenarioComparison({ parsed, confirmedProfile, startPeriod, horizonMonths, request, render }) {
+  async function runTypedScenarioComparison({ parsed, confirmedProfile, baselineLoans = [], startPeriod, horizonMonths, request, render }) {
     if (!parsed?.typed_scenario_request) return { status: 'not_executable' };
     if (!confirmedProfile) return { status: 'missing_profile' };
-    const payload = buildScenarioComparisonPayload(parsed.typed_scenario_request, confirmedProfile, startPeriod, horizonMonths);
+    const payload = buildScenarioComparisonPayload(
+      parsed.typed_scenario_request, confirmedProfile, startPeriod, horizonMonths, baselineLoans
+    );
     const response = await request('/scenarios/compare', {
       method: 'POST', body: JSON.stringify(payload)
     });

@@ -34,11 +34,14 @@ def test_financed_vehicle_natural_language_full_chain():
     data = result.json(); build = data["scenarios"][0]["build"]
     assert len(data["scenarios"]) == 1 and len(build["loans"]) == 1
     assert build["loans"][0]["principal"] == 400000
-    assert [event["name"] for event in build["events"]] == ["車輛頭期款"]
+    assert [event["name"] for event in build["events"]] == ["車輛頭期款", "annual_maintenance_budget"]
+    assert build["events"][1]["source"] == "system_assumption"
+    assert build["events"][1]["display_source"] == "系統模擬假設"
     facts = {item["field"]: item for item in build["derived_values"]}
     assert facts["loan_principal"]["source"] == "derived"
     assert facts["monthly_loan_payment"]["value"] == "7187.48"
     assert facts["total_interest"]["value"] == "31248.80"
+    assert data["deltas"][0]["recurring_cost_total"] == "460436.44"
 
 
 def test_cash_vehicle_natural_language_full_chain():
@@ -46,7 +49,8 @@ def test_cash_vehicle_natural_language_full_chain():
     typed = parsed["typed_scenario_request"]
     assert typed["target_period"] == "2026-12" and typed["payload"]["payment_method"] == "cash"
     data = compare(typed).json(); build = data["scenarios"][0]["build"]
-    assert len(build["events"]) == 1 and build["events"][0]["amount"] == -250000
+    assert len(build["events"]) == 2 and build["events"][0]["amount"] == -250000
+    assert build["events"][1]["name"] == "annual_maintenance_budget"
     assert build["loans"] == [] and data["deltas"][0]["total_interest"] == "0.00"
 
 

@@ -119,6 +119,19 @@
         const items = draft.future_plans || [];
         hasData = items.length > 0;
         status = { complete: items.filter(item => item.confirmed).length, total: Math.max(1, items.length), percentage: items.length ? Math.round(items.filter(item => item.confirmed).length / items.length * 100) : 0 };
+      } else if (group.key === 'debts' && (draft.debts || []).length) {
+        const items = draft.debts || [];
+        const complete = items.reduce((count, debt) => (
+          count
+          + (debt.principal?.value != null ? 1 : 0)
+          + (debt.monthly_payment?.value != null ? 1 : 0)
+        ), 0);
+        hasData = true;
+        status = {
+          complete,
+          total: items.length * 2,
+          percentage: Math.round(complete / (items.length * 2) * 100)
+        };
       } else {
         hasData = group.fields.some(([key]) => draft?.[key]?.value !== null);
         status = completionForGroup(draft, group);
@@ -172,18 +185,27 @@
         ${group.fields.map(([key, label, type]) => fieldRow(key, label, type, draft[key])).join('')}
       </tbody>
     `).join('');
-    const debts = (draft.debts || []).map(debt => `
-      <tr class="draft-field-row is-estimated">
-        <th scope="row">${escapeHtml(debt.name || '債務')}</th>
-        <td>
-          每月 NT$${Number(debt.monthly_payment?.value || 0).toLocaleString('zh-TW')}
-          ${debt.remaining_months?.value != null ? `<small>剩餘 ${escapeHtml(debt.remaining_months.value)} 期</small>` : ''}
-        </td>
-        <td><span class="source-tag source-${debt.monthly_payment?.source || 'missing'}">${sourceLabel(debt.monthly_payment?.source)}</span></td>
-        <td><span class="confidence-value">${confidenceLabel(Number(debt.monthly_payment?.confidence || 0))}</span></td>
-        <td>等待確認</td>
-        <td><small>${escapeHtml(debt.monthly_payment?.reason || '依使用者訊息擷取')}</small></td>
-      </tr>`).join('');
+    const debts = (draft.debts || []).map(debt => {
+      const paymentKnown = debt.monthly_payment?.value != null;
+      const provenance = paymentKnown ? debt.monthly_payment : debt.principal;
+      return `
+        <tr class="draft-field-row is-estimated">
+          <th scope="row">${escapeHtml(debt.name || '債務')}</th>
+          <td>
+            ${debt.principal?.value != null
+              ? `<strong>剩餘本金 NT$${Number(debt.principal.value).toLocaleString('zh-TW')}</strong>`
+              : '<strong>剩餘本金尚未提供</strong>'}
+            <small>${paymentKnown
+              ? `每月付款 NT$${Number(debt.monthly_payment.value).toLocaleString('zh-TW')}`
+              : '每月付款尚未提供'}</small>
+            ${debt.remaining_months?.value != null ? `<small>剩餘 ${escapeHtml(debt.remaining_months.value)} 期</small>` : ''}
+          </td>
+          <td><span class="source-tag source-${provenance?.source || 'missing'}">${sourceLabel(provenance?.source)}</span></td>
+          <td><span class="confidence-value">${confidenceLabel(Number(provenance?.confidence || 0))}</span></td>
+          <td>${paymentKnown ? '等待確認' : '等待補充'}</td>
+          <td><small>${escapeHtml(provenance?.reason || '依使用者訊息擷取')}</small></td>
+        </tr>`;
+    }).join('');
     return fieldGroups + (debts ? `
       <tbody>
         <tr class="draft-section-row"><th colspan="6">債務明細</th></tr>

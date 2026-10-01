@@ -1,0 +1,37 @@
+.vehicle-page { background: #fff; }
+.vehicle-header { display:flex; align-items:center; gap:24px; padding:20px 32px; border-bottom:1px solid var(--line); }
+.vehicle-header .brand { margin:0; color:var(--accent); font-size:22px; font-weight:800; text-decoration:none; }
+.vehicle-header span { flex:1; font-size:14px; color:var(--muted); }
+.vehicle-main { max-width:1100px; margin:auto; padding:32px; }
+.vehicle-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+.vehicle-grid label { display:flex; flex-direction:column; gap:8px; font-size:14px; }
+.vehicle-grid input,.vehicle-grid select { width:100%; min-width:0; min-height:44px; padding:10px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--text); }
+.vehicle-grid small { color:var(--muted); }
+.check-label { display:flex; align-items:center; gap:8px; margin:20px 0; }
+.check-label input { width:18px; height:18px; }
+.vehicle-actions { display:flex; align-items:center; gap:16px; margin:24px 0; }
+.vehicle-page p { color:var(--muted); line-height:1.7; font-size:14px; max-width:75ch; }
+.vehicle-page h2 { margin-top:32px; }
+.table-scroll { overflow:auto; }
+.vehicle-page table { width:100%; min-width:0; border-collapse:collapse; font-variant-numeric:tabular-nums; }
+.vehicle-page th,.vehicle-page td { padding:14px 12px; text-align:right; border-bottom:1px solid var(--line); white-space:nowrap; }
+.vehicle-page th:first-child,.vehicle-page td:first-child { text-align:left; }
+.vehicle-page th { background:#f5f7f8; }
+.vehicle-page caption { text-align:left; color:var(--muted); padding:8px 0; font-size:13px; }
+.vehicle-chart { height:340px; position:relative; }
+.vehicle-page details { padding:18px 0; border-bottom:1px solid var(--line); }
+.vehicle-page summary { cursor:pointer; font-weight:700; }
+.vehicle-page dt { margin-top:16px; font-weight:600; }
+.vehicle-page dd { margin:4px 0 0; line-height:1.7; }
+.vehicle-page #error { color:#b42318; }
+.vehicle-page :focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+@media(max-width:760px) {
+  .vehicle-header { padding:16px; gap:16px; flex-wrap:wrap; }
+  .vehicle-header span { display:none; }
+  .vehicle-main { padding:20px 16px; }
+  .vehicle-grid { grid-template-columns:1fr; gap:16px; }
+  .vehicle-chart { height:280px; }
+  .vehicle-page th,.vehicle-page td { padding:12px 6px; font-size:12px; }
+  .vehicle-page th:first-child,.vehicle-page td:first-child { white-space:normal; min-width:76px; }
+  .vehicle-actions { align-items:stretch; flex-direction:column; }
+}

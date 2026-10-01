@@ -6,6 +6,7 @@ import pytest
 from app.schemas import ScenarioParseRequest
 from app.services.calendar_period import (
     YearMonth,
+    extract_date_text,
     normalize_date_text,
     period_for_simulation_month,
     resolve_reference_date,
@@ -24,6 +25,10 @@ REFERENCE_DATE = date(2026, 7, 21)
     [
         ("下個月", "2026-08"),
         ("兩個月後", "2026-09"),
+        ("半年後", "2027-01"),
+        ("六個月後", "2027-01"),
+        ("6個月後", "2027-01"),
+        ("十二個月後", "2027-07"),
         ("今年年底", "2026-12"),
         ("2027年3月", "2027-03"),
         ("明年", "2027-01"),
@@ -41,6 +46,7 @@ def test_calendar_rollover_leap_year_and_vague_date():
     assert normalize_date_text("過一陣子", REFERENCE_DATE) is None
     assert simulation_month_for_period("2026-08", REFERENCE_DATE) == 1
     assert period_for_simulation_month(1, REFERENCE_DATE) == "2026-08"
+    assert extract_date_text("先說兩個月後，後來改成半年後") == "半年後"
 
 
 def test_timezone_and_reference_date_are_injectable():

@@ -78,6 +78,16 @@ def test_missing_and_duplicate_baselines_fail():
     with pytest.raises(ValueError, match="multiple"): find_baseline_option([baseline, baseline])
 
 
+def test_comparison_rejects_duplicate_option_ids():
+    options = [
+        {"option_id": "baseline", "label": "baseline", "is_baseline": True},
+        {"option_id": "same", "label": "scenario", "scenario_request": vehicle()},
+        {"option_id": "same", "label": "duplicate", "scenario_request": vehicle()},
+    ]
+    with pytest.raises(Exception, match="unique"):
+        ScenarioComparisonRequest.model_validate(comparison(options=options))
+
+
 def test_cash_vehicle_has_one_event_and_no_loan():
     build = build_scenario(ScenarioRequest.model_validate(vehicle("cash")), YearMonth(2026, 7))
     assert len(build.events) == 1 and build.events[0].amount == -250000
@@ -93,6 +103,17 @@ def test_financed_vehicle_reuses_loan_and_prevents_double_counting():
     facts = {item.field: item for item in build.derived_values}
     assert facts["loan_principal"].source.value == "derived"
     assert facts["monthly_loan_payment"].value > 0 and facts["total_interest"].value > 0
+
+
+def test_system_maintenance_keeps_assumption_provenance_on_event():
+    raw = vehicle(annual_maintenance_budget=sourced(24000, "system_assumption"))
+    build = build_scenario(ScenarioRequest.model_validate(raw), YearMonth(2026, 7))
+    maintenance = next(item for item in build.events if item.name == "annual_maintenance_budget")
+    fact = next(item for item in build.derived_values if item.field == "annual_maintenance_budget_monthly_average")
+    assert maintenance.amount == -2000
+    assert maintenance.source.value == "system_assumption"
+    assert maintenance.display_source == "系統模擬假設"
+    assert fact.source.value == "backend_normalized"
 
 
 def test_explicit_loan_consistency_and_vehicle_validation():
@@ -114,6 +135,13 @@ def test_housing_keeps_events_separate_and_derives_net_effect():
     assert build.missing_fields == []
 
 
+@pytest.mark.parametrize("field", ["current_rent", "new_rent"])
+def test_housing_rejects_negative_absolute_rent(field):
+    raw = housing(**{field: sourced(-1)})
+    with pytest.raises(Exception, match="negative"):
+        ScenarioRequest.model_validate(raw)
+
+
 @pytest.mark.parametrize("rent,commute", [(5000, 1000), (-5000, 1000), (5000, -1000), (-5000, -1000)])
 def test_housing_preserves_rent_and_commute_direction(rent, commute):
     raw = housing(current_rent=None, new_rent=None, monthly_rent_change=sourced(rent), monthly_commute_change=sourced(commute), broker_fee=sourced(0))
@@ -132,6 +160,18 @@ def test_comparison_is_deterministic_isolated_and_returns_real_periods():
     assert isinstance(delta.minimum_balance_period, YearMonth)
     assert delta.total_new_debt == Decimal("400000.00") and delta.total_interest > 0
     assert len(first.baseline.simulation["simulation_curve"]) == len(first.scenarios[0].simulation["simulation_curve"]) == 60
+
+
+def test_existing_loans_are_applied_to_baseline_and_scenario_and_new_payment_is_recurring():
+    raw = comparison(vehicle())
+    raw["baseline_loans"] = [{"principal": 120000, "apr": 0, "months": 12, "start_month": 1, "note": "existing"}]
+    result = compare_scenarios(ScenarioComparisonRequest.model_validate(raw))
+    baseline_curve = result.baseline.simulation["simulation_curve"]
+    scenario_curve = result.scenarios[0].simulation["simulation_curve"]
+    assert baseline_curve[0]["debt_payment"] == 10000
+    assert scenario_curve[0]["debt_payment"] == 10000
+    assert baseline_curve[0]["debt_to_income"] > 0
+    assert result.deltas[0].recurring_cost_total == Decimal("395311.40")
 
 
 def test_baseline_only_has_no_events_loans_or_delta():

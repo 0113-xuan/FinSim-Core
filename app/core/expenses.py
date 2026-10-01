@@ -4,6 +4,7 @@ import random
 from typing import Any, Dict, List, Optional
 
 from app.schemas import ExpenseCategoryName, ExpenseMode
+from app.core.financial_rules import inflation_factor, value_or_default
 
 
 DEFAULT_CATEGORY_WEIGHTS = {
@@ -46,7 +47,7 @@ def _event_multiplier_for_category(month: int, category: str, events: List[Dict[
         start = event.get("start_month") or event.get("month")
         end = event.get("end_month") or start
         if start and end and start <= month <= end:
-            multiplier *= float(event.get("variable_expense_multiplier", 1.0) or 1.0)
+            multiplier *= float(value_or_default(event.get("variable_expense_multiplier"), 1.0))
     return multiplier
 
 
@@ -70,7 +71,8 @@ def get_expense_categories(profile: Dict[str, Any]) -> List[Dict[str, Any]]:
     if mode == ExpenseMode.advanced.value and categories:
         return [item for item in categories if item.get("enabled", True)]
     total = model.get("total_variable_expense", profile.get("variable_expense", 0))
-    return split_quick_variable_expense(float(total or 0))
+    return [{**item, "annual_inflation_rate": profile.get("inflation_rate", 0.02)}
+            for item in split_quick_variable_expense(float(total or 0))]
 
 
 def calculate_variable_expenses(
@@ -85,7 +87,6 @@ def calculate_variable_expenses(
     events = events or []
     rng = rng or random.Random(0)
     categories = get_expense_categories(profile)
-    years_passed = (month - 1) // 12
     month_index = (month - 1) % 12
     total = 0.0
     details = []
@@ -93,12 +94,12 @@ def calculate_variable_expenses(
     for category in categories:
         baseline = float(category.get("baseline", 0) or 0)
         seasonal_factor = float(category.get("seasonal_factors", [1.0] * 12)[month_index])
-        inflation_factor = (1 + float(category.get("annual_inflation_rate", profile.get("inflation_rate", 0.02)))) ** years_passed
+        inflation_growth = inflation_factor(month, float(category.get("annual_inflation_rate", profile.get("inflation_rate", 0.02))))
         income_ratio = income / base_income if base_income > 0 else 1.0
         elasticity_factor = income_ratio ** float(category.get("income_elasticity", 0.0) or 0.0)
         event_multiplier = _event_multiplier_for_category(month, category["category"], events)
         event_amount = _event_monthly_amount_for_category(month, category["category"], events)
-        amount_before_event = baseline * seasonal_factor * inflation_factor * elasticity_factor
+        amount_before_event = baseline * seasonal_factor * inflation_growth * elasticity_factor
         amount = amount_before_event * event_multiplier + event_amount
 
         volatility = float(category.get("monthly_volatility", 0.0) or 0.0)
@@ -119,7 +120,7 @@ def calculate_variable_expenses(
                 "category": category["category"],
                 "amount": amount,
                 "seasonal_factor": seasonal_factor,
-                "inflation_factor": round(inflation_factor, 6),
+                "inflation_factor": round(inflation_growth, 6),
                 "income_elasticity_factor": round(elasticity_factor, 6),
                 "event_multiplier": round(event_multiplier, 6),
                 "event_amount": round(event_amount, 2),

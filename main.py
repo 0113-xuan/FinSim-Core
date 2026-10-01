@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import os
 from pathlib import Path
 from typing import Any, Dict
@@ -11,6 +12,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
+from app.decision_schemas import VehicleDecisionRequest
+from app.decision_assumptions import registry
+from app.services.vehicle_decision import simulate_vehicle_decision
 from app.core.advisor import compare_options, generate_advice
 from app.core.monte_carlo import run_monte_carlo
 from app.core.simulation import simulate_finance
@@ -35,8 +39,10 @@ from app.services.expense_categorizer import categorize_expenses
 from app.services.ai_provider import AIProvider, AIProviderError, get_ai_provider
 from app.services.financial_answer_extraction import (
     ExtractionNormalizationError,
+    deterministic_current_debt_extraction,
     deterministic_financial_extraction,
     extract_financial_answer,
+    merge_deterministic_debt_candidates,
 )
 from app.services.optimizer import optimize
 from app.services.rate_limit import rate_limit_ai
@@ -47,14 +53,23 @@ from app.services.profile_onboarding import (
     confirm_draft,
     create_draft,
     extract_message,
+    is_ambiguous_total_expense_message,
     is_standalone_amount_answer,
     merge_extraction_candidates,
     next_questions,
     interview_progress,
     update_draft,
 )
-from app.scenario_schemas import ScenarioComparisonRequest, ScenarioComparisonResponse
+from app.scenario_schemas import (
+    ScenarioComparisonRequest,
+    ScenarioComparisonResponse,
+    ScenarioDraftConfirmRequest,
+    ScenarioDraftConfirmResponse,
+    ScenarioDraftMessageRequest,
+    ScenarioDraftMessageResponse,
+)
 from app.services.scenario_engine import compare_scenarios
+from app.services.scenario_draft import confirm_scenario_draft, continue_scenario_draft
 
 
 @asynccontextmanager
@@ -150,9 +165,20 @@ async def financial_onboarding_message(
     if draft is None:
         draft = create_draft()
     updated = None
+    local_fallback_succeeded = False
     provider_succeeded = False
+    extraction_status = "success"
     deterministic_extraction = deterministic_financial_extraction(req.text)
-    if deterministic_extraction is not None:
+    deterministic_debts = deterministic_current_debt_extraction(req.text)
+    if draft.pending_total_expense is not None or is_ambiguous_total_expense_message(req.text):
+        updated = extract_message(draft, req.text)
+        provider_succeeded = provider is not None
+        extraction_status = "needs_clarification" if updated.pending_total_expense is not None else "success"
+    elif deterministic_extraction is not None:
+        deterministic_extraction = merge_deterministic_debt_candidates(
+            deterministic_extraction,
+            deterministic_debts,
+        )
         updated = merge_extraction_candidates(draft, deterministic_extraction, req.text)
         provider_succeeded = provider is not None
     elif is_standalone_amount_answer(req.text):
@@ -182,35 +208,66 @@ async def financial_onboarding_message(
             if getattr(draft, field_name).source.value != "system_default"
         }
         try:
-            extraction = await extract_financial_answer(
-                provider=provider,
-                answer=req.text,
-                current_values=current_values,
-                current_question=(next_questions(draft) or [None])[0],
-                existing_future_plans=[
-                    {
-                        "index": index,
-                        "value": item.value,
-                        "source": item.source.value,
-                    }
-                    for index, item in enumerate(draft.future_plans)
-                ],
+            extraction = await asyncio.wait_for(
+                extract_financial_answer(
+                    provider=provider,
+                    answer=req.text,
+                    current_values=current_values,
+                    current_question=(next_questions(draft) or [None])[0],
+                    existing_future_plans=[
+                        {
+                            "index": index,
+                            "value": item.value,
+                            "source": item.source.value,
+                        }
+                        for index, item in enumerate(draft.future_plans)
+                    ],
+                ),
+                timeout=settings.ai_onboarding_timeout_seconds,
             )
+            extraction = merge_deterministic_debt_candidates(extraction, deterministic_debts)
             updated = merge_extraction_candidates(draft, extraction, req.text)
             provider_succeeded = True
+            if not extraction.fields and not extraction.debts and not extraction.future_plans:
+                extraction_status = "no_match"
+        except TimeoutError:
+            extraction_status = "timeout"
+            updated = None
         except (AIProviderError, ExtractionNormalizationError, LookupError, ValueError):
+            extraction_status = "provider_error"
             updated = None
     if updated is None:
-        updated = extract_message(draft, req.text)
+        if deterministic_debts is not None:
+            updated = merge_extraction_candidates(draft, deterministic_debts, req.text)
+            local_fallback_succeeded = True
+        else:
+            updated = extract_message(draft, req.text)
+            local_fallback_succeeded = bool(
+                updated.audit_trail
+                and updated.audit_trail[-1].get("changed_fields")
+            )
+        if extraction_status == "success":
+            extraction_status = "provider_unavailable" if provider is None else "no_match"
     PROFILE_DRAFTS[updated.id] = updated
     questions = next_questions(updated)
     progress = interview_progress(updated)
+    if local_fallback_succeeded:
+        message = assistant_reply(updated)
+    elif extraction_status == "timeout":
+        message = "AI 回應逾時，這則訊息與草稿都已保留，請再試一次或改用手動填寫。"
+    elif extraction_status == "provider_error":
+        message = "AI 擷取服務目前無法完成驗證，沒有套用未驗證的資料；草稿已保留。"
+    elif extraction_status == "no_match":
+        message = "我沒有從這句話抓到具體財務資料，請提供金額、範圍，或直接回答目前的問題。"
+    else:
+        message = assistant_reply(updated)
     return {
         "draft": updated,
-        "assistant_message": assistant_reply(updated),
+        "assistant_message": message,
         "follow_up_questions": questions,
         "ready_for_review": not questions,
         "provider_available": provider_succeeded,
+        "extraction_status": extraction_status,
         **progress,
     }
 
@@ -324,6 +381,53 @@ def scenario_compare_api(req: ScenarioComparisonRequest) -> ScenarioComparisonRe
         return compare_scenarios(req)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/decisions/vehicle/assumptions")
+def vehicle_assumptions_api():
+    return registry()
+
+
+@app.post("/decisions/vehicle")
+def vehicle_decision_api(req: VehicleDecisionRequest):
+    try:
+        return simulate_vehicle_decision(req)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/scenarios/draft/message", response_model=ScenarioDraftMessageResponse)
+def scenario_draft_message_api(
+    req: ScenarioDraftMessageRequest,
+    request: Request,
+) -> ScenarioDraftMessageResponse:
+    """Continue a user-held scenario draft without persistence or hidden server state."""
+    rate_limit_ai(request)
+    confirmed_profile = (
+        CONFIRMED_DEMO_PROFILES.get(req.profile_draft_id)
+        if req.profile_draft_id
+        else None
+    )
+    try:
+        return continue_scenario_draft(req, confirmed_profile=confirmed_profile)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/scenarios/draft/confirm", response_model=ScenarioDraftConfirmResponse)
+def scenario_draft_confirm_api(req: ScenarioDraftConfirmRequest) -> ScenarioDraftConfirmResponse:
+    """Explicitly confirm a complete client-held draft without persisting it."""
+    if not req.explicit_confirmation:
+        raise HTTPException(status_code=400, detail="必須由使用者明確確認情境。")
+    try:
+        draft = confirm_scenario_draft(req.draft)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    assert draft.scenario_request is not None
+    return ScenarioDraftConfirmResponse(
+        draft=draft,
+        scenario_request=draft.scenario_request,
+    )
 
 
 @app.post("/optimize")

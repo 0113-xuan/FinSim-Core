@@ -13,6 +13,7 @@ from app.extraction_schemas import (
     FinancialExtractionResult,
     RiskPreference,
 )
+from app.services.financial_amount import find_financial_amounts
 from app.schemas import (
     DebtDraft,
     DraftFieldValue,
@@ -122,6 +123,81 @@ def create_draft() -> FinancialProfileDraft:
     return validate_draft(draft)
 
 
+def _unresolved_debts(draft: FinancialProfileDraft) -> List[DebtDraft]:
+    return [item for item in draft.debts if item.monthly_payment.value is None]
+
+
+def _debt_field(
+    value: Any,
+    *,
+    source: ProfileValueSource,
+    confidence: float,
+    confirmed: bool,
+    reason: str,
+    message_ref: str,
+    original_value: str,
+) -> DraftFieldValue:
+    return DraftFieldValue(
+        value=value,
+        source=source,
+        confidence=confidence,
+        confirmed=confirmed,
+        reason=reason,
+        original_message_ref=message_ref,
+        original_value=original_value,
+    )
+
+
+def _refresh_debt_total(draft: FinancialProfileDraft, changed: List[str]) -> None:
+    unresolved = _unresolved_debts(draft)
+    if unresolved:
+        draft.monthly_debt_payments = _empty_field(None, "仍有債務尚未提供每月付款")
+    elif draft.debts:
+        total = sum(Decimal(str(item.monthly_payment.value)) for item in draft.debts)
+        draft.monthly_debt_payments = DraftFieldValue(
+            value=total.quantize(Decimal("0.01")),
+            source=ProfileValueSource.backend_normalized,
+            confidence=min(item.monthly_payment.confidence for item in draft.debts),
+            confirmed=False,
+            reason="由債務明細的每月付款在後端加總",
+            normalized_from="後端加總債務明細",
+            normalization_source="backend_calculation",
+        )
+    if "monthly_debt_payments" not in changed:
+        changed.append("monthly_debt_payments")
+
+
+def _apply_debt_payment_answer(
+    draft: FinancialProfileDraft,
+    text: str,
+    message_ref: str,
+) -> bool:
+    unresolved = _unresolved_debts(draft)
+    if not unresolved:
+        return False
+    standalone = re.fullmatch(STANDALONE_AMOUNT_PATTERN, text, re.IGNORECASE)
+    explicit = re.search(
+        rf"(?:每個月|每月|月)\s*(?:繳|付|付款)?\s*{AMOUNT_PATTERN}",
+        text,
+        re.IGNORECASE,
+    )
+    match = standalone or explicit
+    if not match:
+        return False
+    value = _amount(match.group(1), match.group(2))
+    debt = unresolved[0]
+    debt.monthly_payment = _debt_field(
+        value,
+        source=ProfileValueSource.user_provided,
+        confidence=0.98,
+        confirmed=True,
+        reason="使用者補充這筆債務的每月付款",
+        message_ref=message_ref,
+        original_value=text.strip(),
+    )
+    return True
+
+
 def _amount(raw: str, unit: Optional[str]) -> float:
     value = float(raw.replace(",", ""))
     if unit == "萬":
@@ -133,7 +209,10 @@ def _amount(raw: str, unit: Optional[str]) -> float:
 
 def is_standalone_amount_answer(text: str) -> bool:
     """Return whether a guided-interview answer contains only one amount."""
-    return re.fullmatch(STANDALONE_AMOUNT_PATTERN, text, re.IGNORECASE) is not None
+    return bool(
+        re.fullmatch(STANDALONE_AMOUNT_PATTERN, text, re.IGNORECASE)
+        or re.fullmatch(r"\s*\d+\s*(?:年|個?月)\s*", text)
+    )
 
 
 def _find_amount(text: str, keywords: Iterable[str]) -> Optional[Tuple[float, str, bool]]:
@@ -149,6 +228,81 @@ def _find_amount(text: str, keywords: Iterable[str]) -> Optional[Tuple[float, st
             approximate = bool(re.search(r"(約|大約|差不多|將近)", match.group(0)))
             return _amount(raw, unit), match.group(0).strip(), approximate
     return None
+
+
+def is_ambiguous_total_expense_message(text: str) -> bool:
+    if not re.search(r"(?:每月)?(?:生活)?(?:開銷|總支出|支出總額)", text):
+        return False
+    if re.search(r"(?:固定支出|變動支出|房租|租金|保險|伙食|餐飲|交通)", text):
+        return False
+    return bool(find_financial_amounts(text))
+
+
+def _pending_expense_reply(
+    draft: FinancialProfileDraft,
+    text: str,
+    message_ref: str,
+) -> List[str] | None:
+    if is_ambiguous_total_expense_message(text):
+        amount = find_financial_amounts(text)[0][2].value
+        draft.pending_total_expense = DraftFieldValue(
+            value=amount,
+            source=ProfileValueSource.user_provided,
+            confidence=0.98,
+            confirmed=True,
+            reason="使用者提供的是未分類的每月總支出，尚未拆分固定與變動支出",
+            original_message_ref=message_ref,
+            original_value=text.strip(),
+        )
+        draft.pending_total_expense_kind = "unclassified"
+        return ["pending_total_expense"]
+    pending = draft.pending_total_expense
+    if pending is None:
+        return None
+    amounts = find_financial_amounts(text)
+    fixed_amount = amounts[0][2].value if amounts else None
+    says_combined = bool(re.search(r"(?:全部|總支出|合計|固定.*變動|包含.*生活)", text))
+    says_fixed_only = bool(re.search(r"(?:只有|都是|算是)?\s*固定(?:支出)?", text))
+    if fixed_amount is not None and (says_combined or "固定" in text):
+        total = Decimal(str(pending.value))
+        if fixed_amount > total:
+            draft.conflicts.append("固定支出不能高於先前提供的每月總支出。")
+            return []
+        _set_field(draft, "fixed_expenses", fixed_amount, message_ref, text.strip())
+        _set_field(
+            draft, "total_variable_expenses", total - fixed_amount,
+            message_ref, f"每月總支出 {total} 減固定支出 {fixed_amount}",
+            normalized_from="由每月總支出扣除固定支出",
+        )
+        draft.pending_total_expense = None
+        draft.pending_total_expense_kind = None
+        return ["fixed_expenses", "total_variable_expenses"]
+    if says_fixed_only:
+        _set_field(
+            draft, "fixed_expenses", pending.value, message_ref,
+            str(pending.original_value or pending.value),
+        )
+        draft.pending_total_expense = None
+        draft.pending_total_expense_kind = None
+        return ["fixed_expenses"]
+    if says_combined:
+        draft.pending_total_expense_kind = "combined"
+        return ["pending_total_expense"]
+    if draft.pending_total_expense_kind == "combined" and fixed_amount is not None:
+        total = Decimal(str(pending.value))
+        if fixed_amount > total:
+            draft.conflicts.append("固定支出不能高於先前提供的每月總支出。")
+            return []
+        _set_field(draft, "fixed_expenses", fixed_amount, message_ref, text.strip())
+        _set_field(
+            draft, "total_variable_expenses", total - fixed_amount,
+            message_ref, f"每月總支出 {total} 減固定支出 {fixed_amount}",
+            normalized_from="由每月總支出扣除固定支出",
+        )
+        draft.pending_total_expense = None
+        draft.pending_total_expense_kind = None
+        return ["fixed_expenses", "total_variable_expenses"]
+    return []
 
 
 def _frequency_normalized(text: str, amount: float, fragment: str) -> Tuple[float, Optional[str]]:
@@ -235,6 +389,21 @@ def extract_message(draft: FinancialProfileDraft, text: str) -> FinancialProfile
         updated.conflicts = []
     original_snapshot = updated.model_dump()
 
+    pending_changes = _pending_expense_reply(updated, text, message_ref)
+    if pending_changes is not None:
+        total = float(updated.total_variable_expenses.value or 0)
+        if total > 0 and not updated.variable_expense_allocation:
+            updated.variable_expense_allocation = _propose_allocation(total)
+        updated.audit_trail.append({
+            "version": updated.version,
+            "action": "expense_classification",
+            "message_ref": message_ref,
+            "changed_fields": pending_changes,
+            "ambiguous": updated.pending_total_expense is not None,
+            "timestamp": updated.updated_at,
+        })
+        return validate_draft(updated)
+
     mappings = {
         "cash_and_deposits": ("存款", "現金", "銀行", "cash", "deposit"),
         "investments": ("投資", "股票", "基金", "investment"),
@@ -275,6 +444,15 @@ def extract_message(draft: FinancialProfileDraft, text: str) -> FinancialProfile
         getattr(updated, field_name).model_dump() != original_snapshot[field_name]
         for field_name in FIELD_LABELS
     )
+    debt_payment_changed = False
+    core_question_pending = any(
+        _needs_interview_answer(getattr(updated, item["field"]))
+        for item in INTERVIEW_QUESTIONS
+    )
+    if not scalar_changed and not core_question_pending:
+        debt_payment_changed = _apply_debt_payment_answer(updated, text, message_ref)
+        if debt_payment_changed:
+            _refresh_debt_total(updated, [])
     if standalone and not scalar_changed:
         current_question = next(
             (
@@ -321,6 +499,8 @@ def extract_message(draft: FinancialProfileDraft, text: str) -> FinancialProfile
     for field_name in FIELD_LABELS:
         if getattr(updated, field_name).model_dump() != original_snapshot[field_name]:
             changed.append(field_name)
+    if debt_payment_changed and "monthly_debt_payments" not in changed:
+        changed.append("monthly_debt_payments")
     updated.audit_trail.append({
         "version": updated.version,
         "action": "ai_extraction",
@@ -432,7 +612,6 @@ def merge_extraction_candidates(
                 ))
             updated.variable_expense_allocation = allocations
 
-    debt_payments: List[Decimal] = []
     for debt in result.debts:
         if debt.debt_type.value == "none":
             current = updated.monthly_debt_payments
@@ -448,15 +627,41 @@ def merge_extraction_candidates(
                 )
                 changed.append("monthly_debt_payments")
             continue
-        if any(item.monthly_payment.original_value == debt.original_value for item in updated.debts):
+        if any(
+            item.monthly_payment.original_value == debt.original_value
+            or item.principal.original_value == debt.original_value
+            for item in updated.debts
+        ):
             continue
-        payment = Decimal(str(debt.monthly_payment or 0))
+        payment = Decimal(str(debt.monthly_payment)) if debt.monthly_payment is not None else None
         debt_value_source = (
             ProfileValueSource.user_provided
             if debt.source.value == "user_provided" and debt.confidence >= 0.95
             else ProfileValueSource.ai_extracted
         )
-        debt_payments.append(payment)
+        existing = next(
+            (item for item in updated.debts if item.name == (debt.name or debt.debt_type.value)),
+            None,
+        )
+        if existing is not None:
+            if debt.remaining_balance is not None and existing.principal.value is None:
+                existing.principal = _debt_field(
+                    Decimal(str(debt.remaining_balance)), source=debt_value_source,
+                    confidence=debt.confidence, confirmed=False, reason=debt.reason,
+                    message_ref=message_ref, original_value=debt.original_value,
+                )
+            if payment is not None and existing.monthly_payment.value is None:
+                existing.monthly_payment = _debt_field(
+                    payment, source=debt_value_source, confidence=debt.confidence,
+                    confirmed=debt_value_source == ProfileValueSource.user_provided,
+                    reason=debt.reason, message_ref=message_ref,
+                    original_value=debt.original_value,
+                )
+            elif payment is not None and Decimal(str(existing.monthly_payment.value)) != payment:
+                updated.conflicts.append(
+                    f"{existing.name}每月付款原為 {existing.monthly_payment.value}，本次為 {payment}，請確認要採用哪個數字。"
+                )
+            continue
         updated.debts.append(
             DebtDraft(
                 name=debt.name or debt.debt_type.value,
@@ -471,10 +676,10 @@ def merge_extraction_candidates(
                 ),
                 monthly_payment=DraftFieldValue(
                     value=payment,
-                    source=debt_value_source,
-                    confidence=debt.confidence,
-                    confirmed=debt_value_source == ProfileValueSource.user_provided,
-                    reason=debt.reason,
+                    source=(debt_value_source if payment is not None else ProfileValueSource.system_default),
+                    confidence=(debt.confidence if payment is not None else 0),
+                    confirmed=(payment is not None and debt_value_source == ProfileValueSource.user_provided),
+                    reason=(debt.reason if payment is not None else "使用者尚未提供每月付款"),
                     original_message_ref=message_ref,
                     original_value=debt.original_value,
                 ),
@@ -502,20 +707,8 @@ def merge_extraction_candidates(
                 ),
             )
         )
-    if debt_payments:
-        current = updated.monthly_debt_payments
-        if current.source == ProfileValueSource.system_default and not current.confirmed:
-            updated.monthly_debt_payments = DraftFieldValue(
-                value=sum(debt_payments).quantize(Decimal("0.01")),
-                source=ProfileValueSource.backend_normalized,
-                confidence=min(item.confidence for item in result.debts if item.debt_type.value != "none"),
-                confirmed=False,
-                reason="由債務明細的每月付款在後端加總",
-                original_message_ref=message_ref,
-                normalized_from="後端加總債務明細",
-                normalization_source="backend_calculation",
-            )
-            changed.append("monthly_debt_payments")
+    if any(item.debt_type.value != "none" for item in result.debts):
+        _refresh_debt_total(updated, changed)
 
     for plan in result.future_plans:
         if any(item.original_value == plan.source_text for item in updated.future_plans):
@@ -601,6 +794,8 @@ def validate_draft(draft: FinancialProfileDraft) -> FinancialProfileDraft:
     draft.missing_required = [
         FIELD_LABELS[name] for name in REQUIRED_FIELDS if getattr(draft, name).value is None
     ]
+    if draft.pending_total_expense is not None:
+        draft.validation_errors.append("每月總支出尚未拆分為固定與變動支出。")
     numeric_fields = (
         "cash_and_deposits",
         "investments",
@@ -623,9 +818,12 @@ def validate_draft(draft: FinancialProfileDraft) -> FinancialProfileDraft:
         draft.validation_errors.append(
             f"變動支出分類合計為 NT${allocated:,.0f}，必須與總額 NT${total:,.0f} 相同。"
         )
+    unresolved_debts = _unresolved_debts(draft)
+    for debt in unresolved_debts:
+        draft.validation_errors.append(f"{debt.name}每月付款尚未提供。")
     debt_total = sum(float(item.monthly_payment.value or 0) for item in draft.debts)
     declared = float(draft.monthly_debt_payments.value or 0)
-    if draft.debts and abs(debt_total - declared) > 0.01:
+    if draft.debts and not unresolved_debts and abs(debt_total - declared) > 0.01:
         draft.validation_errors.append("債務明細的每月付款合計與每月債務付款不一致。")
 
     if draft.conflicts:
@@ -639,6 +837,13 @@ def next_questions(draft: FinancialProfileDraft) -> List[str]:
         return [
             f"{draft.conflicts[-1]} 請回覆要採用哪個數字。"
         ]
+    if draft.pending_total_expense is not None:
+        total = float(draft.pending_total_expense.value or 0)
+        if draft.pending_total_expense_kind == "combined":
+            return ["其中房租、保險等固定支出大約多少？"]
+        return [
+            f"你提到每月開銷約 NT${total:,.0f}，這是只有固定支出，還是固定與變動支出的合計？"
+        ]
     if draft.audit_trail and draft.audit_trail[-1].get("ambiguous"):
         question = next(
             (item for item in INTERVIEW_QUESTIONS if _needs_interview_answer(getattr(draft, item["field"]))),
@@ -649,6 +854,9 @@ def next_questions(draft: FinancialProfileDraft) -> List[str]:
     for item in INTERVIEW_QUESTIONS:
         if _needs_interview_answer(getattr(draft, item["field"])):
             return [item["question"]]
+    unresolved = _unresolved_debts(draft)
+    if unresolved:
+        return [f"{unresolved[0].name}目前每月大約繳多少？"]
     return []
 
 
@@ -666,6 +874,12 @@ def interview_progress(draft: FinancialProfileDraft) -> Dict[str, Any]:
                 "total_steps": len(INTERVIEW_QUESTIONS),
                 "stage_label": item["stage"],
             }
+    if _unresolved_debts(draft):
+        return {
+            "current_step": len(INTERVIEW_QUESTIONS),
+            "total_steps": len(INTERVIEW_QUESTIONS),
+            "stage_label": "債務付款",
+        }
     return {
         "current_step": len(INTERVIEW_QUESTIONS),
         "total_steps": len(INTERVIEW_QUESTIONS),
@@ -731,8 +945,7 @@ def confirm_draft(draft: FinancialProfileDraft) -> Tuple[FinancialProfileDraft, 
     profile = {
         "salary": float(validated.monthly_salary.value or 0)
         + float(validated.other_recurring_income.value or 0),
-        "fixed_expense": float(validated.fixed_expenses.value or 0)
-        + float(validated.monthly_debt_payments.value or 0),
+        "fixed_expense": float(validated.fixed_expenses.value or 0),
         "variable_expense": float(validated.total_variable_expenses.value or 0),
         "balance": float(validated.cash_and_deposits.value or 0)
         + float(validated.investments.value or 0)

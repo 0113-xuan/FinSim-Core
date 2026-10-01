@@ -11,7 +11,9 @@ import app.services.ai_provider as ai_provider_module
 from app.services.ai_provider import AIProviderError, OpenAIProvider, parse_structured_content
 from app.services.financial_answer_extraction import (
     ExtractionNormalizationError,
+    deterministic_current_debt_extraction,
     extract_financial_answer,
+    merge_deterministic_debt_candidates,
     validate_normalizations,
 )
 from app.services.mock_ai_provider import MockAIProvider
@@ -63,6 +65,55 @@ def field_candidate(
         "normalized_frequency": normalized_frequency,
         "normalized_from": normalized_from,
     }
+
+
+@pytest.mark.parametrize(
+    ("message", "debt_type", "balance"),
+    [
+        ("我有學貸15萬", "student_loan", 150_000),
+        ("信用卡債五萬", "credit_card", 50_000),
+        ("目前信貸還有30萬", "personal_loan", 300_000),
+    ],
+)
+def test_deterministic_current_debt_balance_does_not_invent_monthly_payment(
+    message, debt_type, balance
+):
+    result = deterministic_current_debt_extraction(message)
+    assert result is not None
+    assert result.debts[0].debt_type.value == debt_type
+    assert result.debts[0].remaining_balance == balance
+    assert result.debts[0].monthly_payment is None
+    assert result.debts[0].currency.value == "TWD"
+
+
+def test_deterministic_current_debt_extracts_payment_term_and_rate():
+    result = deterministic_current_debt_extraction(
+        "房貸還有500萬，每月繳25000元，剩餘240期，年利率2%"
+    )
+    assert result is not None
+    debt = result.debts[0]
+    assert debt.remaining_balance == 5_000_000
+    assert debt.monthly_payment == 25_000
+    assert debt.remaining_months == 240
+    assert debt.annual_interest_rate == 0.02
+
+
+def test_future_vehicle_loan_is_not_misclassified_as_current_debt():
+    assert deterministic_current_debt_extraction("我明年想買車，預計辦車貸50萬") is None
+
+
+def test_deterministic_debt_overlay_preserves_provider_fields():
+    provider_result = FinancialExtractionResult.model_validate(empty_result(fields=[
+        field_candidate(
+            "monthly_salary",
+            60_000,
+            original_value="月薪6萬",
+        )
+    ]))
+    debts = deterministic_current_debt_extraction("月薪6萬，有學貸15萬")
+    combined = merge_deterministic_debt_candidates(provider_result, debts)
+    assert combined.fields[0].value == 60_000
+    assert combined.debts[0].remaining_balance == 150_000
 
 
 def run_mock(payload, answer="fixture answer"):

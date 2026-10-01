@@ -23,6 +23,13 @@ MONEY_TOKEN = r"([\d,]+(?:\.\d+)?)\s*(萬|千|[kK])?"
 VEHICLE_PRICE_APPROXIMATION_PATTERN = (
     r"(?:大約|大概|約莫|差不多|左右|大致|估計|預計|約)"
 )
+CURRENT_DEBT_PATTERNS = (
+    (r"信用卡債|卡債", "credit_card", "信用卡債"),
+    (r"就學貸款|學貸", "student_loan", "學貸"),
+    (r"個人信貸|信用貸款|信貸|個人貸款", "personal_loan", "信貸"),
+    (r"房屋貸款|房貸", "mortgage", "房貸"),
+    (r"汽車貸款|車貸", "auto_loan", "車貸"),
+)
 
 
 class ExtractionNormalizationError(ValueError):
@@ -115,6 +122,134 @@ def _empty_extraction_payload() -> dict[str, list[Any]]:
         "ambiguities": [],
         "conflicts": [],
     }
+
+
+def deterministic_current_debt_extraction(answer: str) -> FinancialExtractionResult | None:
+    """Extract explicit current-debt facts without inventing a monthly payment."""
+    matches: list[tuple[int, int, str, str]] = []
+    for pattern, debt_type, name in CURRENT_DEBT_PATTERNS:
+        for match in re.finditer(pattern, answer):
+            matches.append((match.start(), match.end(), debt_type, name))
+    matches.sort(key=lambda item: item[0])
+
+    if not matches and re.search(r"(?:目前)?(?:沒有|無)(?:任何)?(?:貸款|債務|負債)", answer):
+        payload = _empty_extraction_payload()
+        payload["debts"].append({
+            "debt_type": "none",
+            "name": "無債務",
+            "remaining_balance": None,
+            "monthly_payment": None,
+            "annual_interest_rate": None,
+            "remaining_months": None,
+            "currency": "TWD",
+            "source": "user_provided",
+            "confidence": 0.99,
+            "reason": "後端依使用者明確表示目前沒有債務",
+            "original_value": answer,
+        })
+        return FinancialExtractionResult.model_validate(payload)
+
+    payload = _empty_extraction_payload()
+    for index, (start, end, debt_type, name) in enumerate(matches):
+        prefix = answer[max(0, start - 8):start]
+        if re.search(r"(?:沒有|無|已繳清|已還清)\s*$", prefix):
+            continue
+        context = answer[max(0, start - 30):min(len(answer), end + 30)]
+        if debt_type == "auto_loan" and re.search(r"(?:想|要|打算|預計).*買.*車", context):
+            if not re.search(r"(?:目前|現在|已有|還有|剩餘|剩下)", context):
+                continue
+
+        segment_end = matches[index + 1][0] if index + 1 < len(matches) else len(answer)
+        punctuation = re.search(r"[。；;\n]", answer[end:segment_end])
+        if punctuation:
+            segment_end = end + punctuation.start()
+        segment = answer[start:segment_end].strip(" ，,。；;\n")
+        remaining_balance = None
+        monthly_payment = None
+        for amount_start, amount_end, parsed in find_financial_amounts(segment):
+            left = segment[max(0, amount_start - 18):amount_start]
+            right = segment[amount_end:min(len(segment), amount_end + 8)]
+            if re.match(r"\s*(?:%|％|期|個月|年)", right):
+                continue
+            if re.search(r"(?:每月|每個月|月繳|月付|每期)[^，,。；;\n]{0,12}$", left):
+                monthly_payment = parsed.value
+            elif remaining_balance is None:
+                remaining_balance = parsed.value
+
+        remaining_term = re.search(r"(?:還剩|剩餘|還有)?\s*(\d+)\s*期", segment)
+        interest_rate = re.search(r"(?:年利率|利率)\s*([\d.]+)\s*[%％]", segment)
+        payload["debts"].append({
+            "debt_type": debt_type,
+            "name": name,
+            "remaining_balance": remaining_balance,
+            "monthly_payment": monthly_payment,
+            "annual_interest_rate": (
+                float(interest_rate.group(1)) / 100 if interest_rate else None
+            ),
+            "remaining_months": int(remaining_term.group(1)) if remaining_term else None,
+            "currency": "TWD",
+            "source": "user_provided",
+            "confidence": 0.99,
+            "reason": "後端依債務名稱與相鄰金額直接擷取；未提供的月付款維持未知",
+            "original_value": segment or answer,
+        })
+
+    if not payload["debts"]:
+        return None
+    return FinancialExtractionResult.model_validate(payload)
+
+
+def merge_deterministic_debt_candidates(
+    result: FinancialExtractionResult,
+    deterministic: FinancialExtractionResult | None,
+) -> FinancialExtractionResult:
+    """Overlay direct debt facts while preserving all other provider candidates."""
+    if deterministic is None or not deterministic.debts:
+        return result
+
+    debts = [item for item in result.debts]
+    for direct in deterministic.debts:
+        if direct.debt_type.value == "none":
+            if not any(item.debt_type.value != "none" for item in debts):
+                debts = [direct]
+            continue
+        debts = [item for item in debts if item.debt_type.value != "none"]
+        existing_index = next(
+            (index for index, item in enumerate(debts) if item.debt_type == direct.debt_type),
+            None,
+        )
+        if existing_index is None:
+            debts.append(direct)
+            continue
+        existing = debts[existing_index]
+        debts[existing_index] = existing.model_copy(update={
+            "name": direct.name or existing.name,
+            "remaining_balance": (
+                direct.remaining_balance
+                if direct.remaining_balance is not None
+                else existing.remaining_balance
+            ),
+            "monthly_payment": (
+                direct.monthly_payment
+                if direct.monthly_payment is not None
+                else existing.monthly_payment
+            ),
+            "annual_interest_rate": (
+                direct.annual_interest_rate
+                if direct.annual_interest_rate is not None
+                else existing.annual_interest_rate
+            ),
+            "remaining_months": (
+                direct.remaining_months
+                if direct.remaining_months is not None
+                else existing.remaining_months
+            ),
+            "source": direct.source,
+            "confidence": max(existing.confidence, direct.confidence),
+            "reason": direct.reason,
+            "original_value": direct.original_value,
+        })
+    return result.model_copy(update={"debts": debts})
 
 
 def deterministic_financial_extraction(

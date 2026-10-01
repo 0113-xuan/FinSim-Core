@@ -36,6 +36,7 @@ test('complete typed parser response triggers comparison with one explicit basel
   const calls = []; let rendered = null;
   const result = await T.runTypedScenarioComparison({
     parsed: { typed_scenario_request: typed }, confirmedProfile: { salary: 1 },
+    baselineLoans: [{ principal: 120000, apr: 0, months: 12, start_month: 1 }],
     startPeriod: '2026-07', horizonMonths: 60,
     request: async (path, options) => { calls.push({ path, body: JSON.parse(options.body) }); return { deltas: [] }; },
     render: value => { rendered = value; }
@@ -43,6 +44,7 @@ test('complete typed parser response triggers comparison with one explicit basel
   assert.equal(result.status, 'rendered'); assert.equal(calls[0].path, '/scenarios/compare');
   assert.equal(calls[0].body.options.filter(item => item.is_baseline).length, 1);
   assert.equal(calls[0].body.options.filter(item => !item.is_baseline).length, 1);
+  assert.deepEqual(calls[0].body.baseline_loans, [{ principal: 120000, apr: 0, months: 12, start_month: 1 }]);
   assert.deepEqual(calls[0].body.options[1].scenario_request, typed);
   assert.deepEqual(rendered, { deltas: [] });
 });

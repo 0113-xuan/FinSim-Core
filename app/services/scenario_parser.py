@@ -11,6 +11,7 @@ from pydantic import ValidationError
 
 from app.schemas import EventSource, ParsedScenario, ScenarioClarification, ScenarioContext, ScenarioParseRequest
 from app.core.events import calculate_loan_payment
+from app.decision_assumptions import ASSUMPTIONS
 from app.services.ai_provider import (
     AIProviderError,
     UnsupportedAIProviderOperation,
@@ -30,8 +31,8 @@ from app.services.calendar_period import (
 
 
 logger = logging.getLogger(__name__)
-LEGACY_VEHICLE_MAINTENANCE_MONTHLY = Decimal("1500")
-LEGACY_VEHICLE_MAINTENANCE_ANNUAL = LEGACY_VEHICLE_MAINTENANCE_MONTHLY * Decimal(12)
+LEGACY_VEHICLE_MAINTENANCE_ANNUAL = Decimal(str(ASSUMPTIONS["annual_maintenance_budget"]["value"]))
+LEGACY_VEHICLE_MAINTENANCE_MONTHLY = LEGACY_VEHICLE_MAINTENANCE_ANNUAL / Decimal(12)
 
 
 @dataclass(frozen=True)
@@ -448,6 +449,7 @@ def _vehicle_clarification_or_scenario(
         loan_term_months=financing.loan_term_months if financing else None,
         annual_interest_rate_percent=Decimal(str(financing.annual_interest_rate)) if financing and financing.annual_interest_rate is not None else None,
         vehicle_condition="used" if "二手" in req.text else "unknown",
+        annual_maintenance_budget=LEGACY_VEHICLE_MAINTENANCE_ANNUAL,
     )
     legacy_clarification = None
     if cash_purchase:
@@ -487,14 +489,14 @@ def _relocation_clarification(
     target_period = normalize_date_text(target_text, reference_date) if target_text else None
 
     def amount(pattern: str) -> Decimal | None:
-        match = re.search(
+        matches = list(re.finditer(
             pattern + rf"[^零一二兩三四五六七八九十百千萬\d]{{0,8}}(?P<amount>{FINANCIAL_AMOUNT_PATTERN})(?:元|塊)?",
             req.text,
-        )
-        if not match:
+        ))
+        if not matches:
             return None
         try:
-            return parse_financial_amount(match.group("amount")).value
+            return parse_financial_amount(matches[-1].group("amount")).value
         except ValueError:
             return None
 
@@ -512,11 +514,31 @@ def _relocation_clarification(
     moving_cost = amount(r"搬家費")
     commute_saving = amount(commute_terms + r"[^，。]{0,12}" + decrease_terms)
     commute_increase = amount(commute_terms + r"[^，。]{0,12}" + increase_terms)
+    one_time_unknown = bool(re.search(
+        r"(?:押金|仲介費|搬家費)[^，。\n]{0,18}(?:不知道|不清楚|不確定|未知|還沒問|尚未決定)",
+        req.text,
+    ))
+    one_time_none = bool(re.search(
+        r"(?:沒有|不用|不需要)[^，。\n]{0,10}(?:押金|仲介費|搬家費)|"
+        r"(?:押金|仲介費|搬家費)[^，。\n]{0,10}(?:沒有|不用|不需要)",
+        req.text,
+    ))
+    commute_unknown = bool(re.search(
+        commute_terms + r"[^，。\n]{0,12}(?:不知道|不清楚|不確定|未知)", req.text
+    ))
+    commute_unchanged = bool(re.search(
+        commute_terms + r"[^，。\n]{0,12}(?:不變|沒有變|沒變|一樣|維持原本)", req.text
+    ))
+    if one_time_none:
+        deposit = Decimal(0)
+        moving_cost = Decimal(0)
     if rent_increase is None and current_rent is not None and new_rent is not None:
         rent_increase = new_rent - current_rent
     if rent_decrease is not None:
         rent_increase = -rent_decrease
     commute_change = -commute_saving if commute_saving is not None else commute_increase
+    if commute_unchanged:
+        commute_change = Decimal(0)
 
     known: List[Dict[str, str]] = []
     if target_period:
@@ -547,12 +569,16 @@ def _relocation_clarification(
         missing.append("timing")
         questions.append("預計什麼時候搬家？")
     if rent_increase is None:
-        missing.extend(["current_rent", "new_rent"])
-        questions.extend(["目前房租是多少？", "新房租大約多少？"])
-    if deposit is None and moving_cost is None:
+        if current_rent is None:
+            missing.append("current_rent")
+            questions.append("目前房租是多少？")
+        if new_rent is None:
+            missing.append("new_rent")
+            questions.append("新房租大約多少？")
+    if deposit is None and moving_cost is None and not one_time_unknown:
         missing.append("one_time_costs")
         questions.append("是否有押金、仲介費或搬家費？若未知可先保留未知。")
-    if commute_change is None:
+    if commute_change is None and not commute_unknown:
         missing.append("commuting_cost_change")
         questions.append("搬家後每月通勤費預計增加或減少多少？")
 
@@ -570,14 +596,14 @@ def _relocation_clarification(
     start_month = min(simulation_month_for_period(target_period, reference_date), req.months)
     end_period = period_for_simulation_month(req.months, reference_date)
     events: List[Dict[str, Any]] = []
-    if deposit is not None:
+    if deposit is not None and deposit > 0:
         events.append({
             "type": "life_event", "name": "租屋押金", "start_month": start_month,
             "start_period": target_period, "one_time_amount": -float(deposit),
             "source": EventSource.manual.value, "display_source": "使用者提供",
             "reason": "使用者提供的押金",
         })
-    if moving_cost is not None:
+    if moving_cost is not None and moving_cost > 0:
         events.append({
             "type": "life_event", "name": "搬家費", "start_month": start_month,
             "start_period": target_period, "one_time_amount": -float(moving_cost),
@@ -588,11 +614,15 @@ def _relocation_clarification(
         {"category": "other", "start_month": start_month, "end_month": req.months,
          "start_period": target_period, "end_period": end_period, "monthly_amount": float(rent_increase),
          "reason": "每月房租增加", "source": "user_provided"},
-        {"category": "transportation", "start_month": start_month, "end_month": req.months,
-         "start_period": target_period, "end_period": end_period, "monthly_amount": float(commute_change),
-         "expense_role": "offset" if commute_change < 0 else "additional",
-         "reason": "每月通勤費變化", "source": "user_provided"},
     ]
+    if commute_change is not None:
+        adjustments.append({
+            "category": "transportation", "start_month": start_month, "end_month": req.months,
+            "start_period": target_period, "end_period": end_period,
+            "monthly_amount": float(commute_change),
+            "expense_role": "offset" if commute_change < 0 else "additional",
+            "reason": "每月通勤費變化", "source": "user_provided",
+        })
     typed_request = build_housing_scenario_request(
         scenario_id="housing-change", target_period=target_period, horizon_months=req.months,
         original_text=req.text, current_rent=current_rent, new_rent=new_rent,
@@ -601,7 +631,13 @@ def _relocation_clarification(
     )
     return ParsedScenario(
         summary="已依使用者提供的搬家日期、房租、交通與一次性費用建立情境草稿。",
-        events=events, expense_adjustments=adjustments, confidence=0.98, warnings=[],
+        events=events, expense_adjustments=adjustments, confidence=0.98,
+        warnings=[
+            message for condition, message in (
+                (one_time_unknown, "一次性搬家費用保留為未知，尚未計入模擬。"),
+                (commute_unknown, "通勤費變化保留為未知，尚未計入模擬。"),
+            ) if condition
+        ],
         display=_scenario_display(events=events, adjustments=adjustments, confidence=0.98,
                                   months=req.months, reference_date=reference_date,
                                   original_target_date_text=target_text,

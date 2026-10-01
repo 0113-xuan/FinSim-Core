@@ -2,5 +2,10 @@ venv/
 __pycache__/
 finsim-server*.log
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
 .pytest_cache/
 *.pyc

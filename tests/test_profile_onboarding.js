@@ -41,7 +41,7 @@ function draft() {
 }
 
 test('Traditional Chinese onboarding entry and manual fallback are present', () => {
-  assert.match(html, /建立你的財務起點/);
+  assert.match(html, /1\. 你的財務資料/);
   assert.match(html, /用 AI 引導建立/);
   assert.match(html, /手動填寫/);
   assert.match(html, /AI 建立的財務資料草稿/);
@@ -90,12 +90,14 @@ test('current debt details show debt name, payment and remaining term', () => {
   const data = draft();
   data.debts = [{
     name: '車貸',
+    principal: field(350000, 'user_provided', true, .99),
     monthly_payment: field(11000, 'ai_extracted', false, .99),
     remaining_months: field(60, 'ai_extracted', false, .99)
   }];
   const output = P.renderReview(data);
   assert.match(output, /債務明細/);
   assert.match(output, /車貸/);
+  assert.match(output, /剩餘本金 NT\$350,000/);
   assert.match(output, /11,000/);
   assert.match(output, /剩餘 60 期/);
 });
@@ -145,6 +147,30 @@ test('draft persistence and provider-failure fallback retain data', () => {
   assert.match(appSource, /sessionStorage\.setItem\('finsim-profile-draft'/);
   assert.match(appSource, /sessionStorage\.setItem\('finsim-onboarding-unsent'/);
   assert.match(appSource, /financial-profile-drafts/);
+});
+
+test('onboarding requests time out, cancel stale responses and prevent duplicate sends', () => {
+  assert.match(appSource, /new AbortController\(\)/);
+  assert.match(appSource, /timeoutMs: 25000/);
+  assert.match(appSource, /state\.onboardingRequestController\?\.abort\(\)/);
+  assert.match(appSource, /requestId !== state\.onboardingRequestId/);
+  assert.match(appSource, /!text \|\| state\.onboardingRequestController/);
+});
+
+test('unknown debt payment is not rendered as zero', () => {
+  const data = draft();
+  data.debts = [{
+    name: '學貸',
+    principal: field(150000, 'user_provided', false, .99),
+    monthly_payment: field(null, 'system_default', false, 0)
+  }];
+  const output = P.renderReview(data);
+  assert.match(output, /剩餘本金 NT\$150,000/);
+  assert.match(output, /每月付款尚未提供/);
+  assert.match(output, /等待補充/);
+  assert.doesNotMatch(output, /每月付款 NT\$0/);
+  const progress = P.renderProgress(data);
+  assert.match(progress, /債務[\s\S]*部分完成[\s\S]*50%/);
 });
 
 test('mobile onboarding becomes a single-column workflow', () => {

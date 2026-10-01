@@ -1,14 +1,20 @@
+import asyncio
 from copy import deepcopy
+from dataclasses import replace
 
 import pytest
 from fastapi.testclient import TestClient
 
+from app.extraction_schemas import FinancialExtractionResult
 from app.schemas import FinancialProfileDraft, ProfileValueSource
 from app.services.profile_onboarding import (
     assistant_reply,
     confirm_draft,
     create_draft,
     extract_message,
+    interview_progress,
+    is_standalone_amount_answer,
+    merge_extraction_candidates,
     next_questions,
     update_draft,
 )
@@ -19,6 +25,7 @@ from main import (
     app,
     get_onboarding_ai_provider,
 )
+import main as main_module
 
 
 client = TestClient(app)
@@ -109,6 +116,11 @@ def test_bare_numeric_answers_apply_to_the_current_question():
     draft = extract_message(draft, "5")
     assert draft.simulation_months.value == 60
     assert next_questions(draft) == []
+
+
+def test_duration_with_unit_is_handled_locally_as_a_short_answer():
+    assert is_standalone_amount_answer("5年") is True
+    assert is_standalone_amount_answer("18個月") is True
 
 
 def test_bare_numeric_answer_recovers_from_a_spurious_conflict_loop():
@@ -224,6 +236,58 @@ def test_provider_failure_uses_safe_fallback_without_losing_input():
     assert body["draft"]["audit_trail"][-1]["message_ref"]
 
 
+def test_onboarding_provider_has_total_timeout_and_preserves_draft(monkeypatch):
+    class SlowProvider:
+        async def generate_structured(self, **kwargs):
+            await asyncio.sleep(1)
+
+    app.dependency_overrides[get_onboarding_ai_provider] = lambda: SlowProvider()
+    monkeypatch.setattr(
+        main_module,
+        "settings",
+        replace(main_module.settings, ai_onboarding_timeout_seconds=0.01),
+    )
+    response = client.post(
+        "/ai/financial-onboarding/message",
+        json={"text": "我不太清楚，目前沒有具體數字"},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["extraction_status"] == "timeout"
+    assert body["provider_available"] is False
+    assert "逾時" in body["assistant_message"]
+    assert body["draft"]["audit_trail"][-1]["message_ref"]
+
+
+def test_generic_monthly_expense_is_classified_before_splitting():
+    first = client.post(
+        "/ai/financial-onboarding/message",
+        json={"text": "我每月生活開銷大約3萬5"},
+    )
+    assert first.status_code == 200, first.text
+    body = first.json()
+    assert body["draft"]["fixed_expenses"]["value"] is None
+    assert body["draft"]["total_variable_expenses"]["value"] is None
+    assert body["draft"]["pending_total_expense"]["value"] == 35000
+    assert "只有固定支出" in body["assistant_message"]
+
+    second = client.post(
+        "/ai/financial-onboarding/message",
+        json={"draft_id": body["draft"]["id"], "text": "是全部支出的合計"},
+    ).json()
+    assert "固定支出大約多少" in second["assistant_message"]
+
+    third = client.post(
+        "/ai/financial-onboarding/message",
+        json={"draft_id": body["draft"]["id"], "text": "固定支出2萬"},
+    )
+    assert third.status_code == 200, third.text
+    draft = third.json()["draft"]
+    assert draft["fixed_expenses"]["value"] == 20000
+    assert draft["total_variable_expenses"]["value"] == 15000
+    assert draft["pending_total_expense"] is None
+
+
 def test_current_vehicle_debt_api_retains_11000_without_touching_fixed_expense():
     draft = create_draft()
     draft.fixed_expenses.value = 8_000
@@ -248,6 +312,73 @@ def test_current_vehicle_debt_api_retains_11000_without_touching_fixed_expense()
     assert body["draft"]["future_plans"] == []
     assert body["draft"]["conflicts"] == []
     assert "2000" not in response.text
+
+
+def test_balance_only_debt_stays_unknown_and_requests_monthly_payment():
+    result = FinancialExtractionResult.model_validate({
+        "fields": [], "variable_expense_allocation": [],
+        "debts": [{
+            "debt_type": "student_loan", "name": "學貸", "remaining_balance": 150000,
+            "monthly_payment": None, "annual_interest_rate": None, "remaining_months": None,
+            "currency": "TWD", "source": "user_provided", "confidence": 1,
+            "reason": "只提供債務餘額", "original_value": "學貸15萬",
+        }],
+        "future_plans": [], "future_plan_conflicts": [], "ambiguities": [], "conflicts": [],
+    })
+    draft = merge_extraction_candidates(create_draft(), result, "學貸15萬")
+    assert draft.debts[0].principal.value == 150000
+    assert draft.debts[0].monthly_payment.value is None
+    assert draft.debts[0].monthly_payment.confirmed is False
+    for field, value in (
+        ("cash_and_deposits", 800000), ("monthly_salary", 60000),
+        ("fixed_expenses", 20000), ("total_variable_expenses", 15000),
+        ("simulation_months", 60),
+    ):
+        target = getattr(draft, field)
+        target.value = value
+        target.source = ProfileValueSource.user_provided
+        target.confirmed = True
+    assert next_questions(draft) == ["學貸目前每月大約繳多少？"]
+    assert interview_progress(draft)["stage_label"] == "債務付款"
+    resolved = extract_message(draft, "3000")
+    assert resolved.debts[0].monthly_payment.value == 3000
+    assert resolved.monthly_debt_payments.value == 3000
+
+
+def test_api_adds_deterministic_debt_when_provider_omits_it():
+    class ProviderWithoutDebt:
+        async def generate_structured(self, **_kwargs):
+            return FinancialExtractionResult.model_validate({
+                "fields": [],
+                "variable_expense_allocation": [],
+                "debts": [],
+                "future_plans": [],
+                "future_plan_conflicts": [],
+                "ambiguities": [],
+                "conflicts": [],
+            })
+
+    app.dependency_overrides[get_onboarding_ai_provider] = lambda: ProviderWithoutDebt()
+    response = client.post(
+        "/ai/financial-onboarding/message",
+        json={"text": "我有學貸15萬"},
+    )
+
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["extraction_status"] == "success"
+    assert body["draft"]["debts"][0]["principal"]["value"] == 150_000
+    assert body["draft"]["debts"][0]["monthly_payment"]["value"] is None
+
+
+def test_confirmed_profile_keeps_debt_out_of_fixed_expense():
+    draft = complete_draft()
+    draft.fixed_expenses.value = 20000
+    draft.monthly_debt_payments.value = 5000
+    draft.monthly_debt_payments.source = ProfileValueSource.user_provided
+    draft.monthly_debt_payments.confirmed = True
+    _, profile = confirm_draft(draft)
+    assert profile["fixed_expense"] == 20000
 
 
 def test_weekly_income_api_exposes_backend_normalization_without_zero_conflict():

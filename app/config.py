@@ -26,6 +26,7 @@ class Settings:
     gemini_api_key: str = ""
     gemini_model: str = "gemini-flash-lite-latest"
     ai_timeout_seconds: int = 30
+    ai_onboarding_timeout_seconds: int = 20
     ai_max_retries: int = 2
     ai_enabled: bool = False
 
@@ -63,6 +64,7 @@ class Settings:
             gemini_api_key=gemini_api_key,
             gemini_model=os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest"),
             ai_timeout_seconds=int(os.getenv("AI_TIMEOUT_SECONDS", "30")),
+            ai_onboarding_timeout_seconds=int(os.getenv("AI_ONBOARDING_TIMEOUT_SECONDS", "20")),
             ai_max_retries=int(os.getenv("AI_MAX_RETRIES", "2")),
             ai_enabled=ai_enabled,
         )

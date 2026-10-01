@@ -14,6 +14,7 @@ from app.core.events import (
 from app.core.expenses import calculate_variable_expenses
 from app.core.fsi import calculate_fsi, classify_risk
 from app.core.shocks import generate_shocks_for_month
+from app.core.financial_rules import emergency_fund_months, inflation_factor
 
 
 def summarize_simulation(simulation_curve: List[Dict[str, Any]], profile: Dict[str, Any]) -> Dict[str, Any]:
@@ -34,12 +35,17 @@ def summarize_simulation(simulation_curve: List[Dict[str, Any]], profile: Dict[s
     max_fsi = max(item["fsi"] for item in simulation_curve)
     avg_fsi = sum(item["fsi"] for item in simulation_curve) / len(simulation_curve)
     high_risk_months = [item["month"] for item in simulation_curve if item["risk_level"] in ("high", "crisis")]
-    final_expense = max(1.0, simulation_curve[-1]["fixed_expense"] + simulation_curve[-1]["variable_expense"])
-    emergency_fund_coverage = final_balance / final_expense
+    final = simulation_curve[-1]
+    coverage = emergency_fund_months(final_balance, final.get("living_expense", final["expense"]), final["debt_payment"])
+    emergency_fund_coverage = coverage if coverage is not None else 0.0
+    coverages = [r["emergency_fund_months"] for r in simulation_curve if r.get("emergency_fund_months") is not None]
 
     return {
         "final_balance": round(final_balance, 2),
         "min_balance": round(min_balance, 2),
+        "minimum_cash_balance": round(min_balance, 2),
+        "minimum_cash_month": min(simulation_curve, key=lambda r: r["balance"])["month"],
+        "minimum_emergency_fund_months": round(min(coverages), 4) if coverages else None,
         "max_fsi": round(max_fsi, 4),
         "avg_fsi": round(avg_fsi, 4),
         "high_risk_months": len(high_risk_months),
@@ -61,6 +67,7 @@ def simulate_finance(
     include_details: bool = False,
     override_raise_rate: Optional[float] = None,
     override_inflation_rate: Optional[float] = None,
+    evaluate_legacy_risk: bool = True,
 ) -> Dict[str, Any]:
     if months <= 0:
         raise ValueError("months must be > 0")
@@ -85,7 +92,8 @@ def simulate_finance(
         years_passed = (month - 1) // 12
         scheduled_income = base_salary * ((1 + raise_rate) ** years_passed)
         income = get_income_for_month(month, scheduled_income, events)
-        fixed_expense = get_fixed_expense_for_month(month, base_fixed_expense, events)
+        fixed_base = base_fixed_expense * (inflation_factor(month, inflation_rate) if profile.get("fixed_expense_inflates", False) else 1)
+        fixed_expense = get_fixed_expense_for_month(month, fixed_base, events)
         variable_result = calculate_variable_expenses(
             month=month,
             profile=profile,
@@ -94,8 +102,9 @@ def simulate_finance(
             events=events,
             rng=rng,
         )
-        debt_payment = get_debt_payment_for_month(month, loans)
+        debt_payment = get_debt_payment_for_month(month, loans) + float(profile.get("required_monthly_debt", 0))
         recurring_event_amount = get_recurring_event_amount(month, events)
+        living_expense = max(0.0, fixed_expense + variable_result["total"] - recurring_event_amount)
         one_time_asset_impact = get_one_time_asset_impact(month, events)
         shock_result = generate_shocks_for_month(
             month=month,
@@ -112,12 +121,12 @@ def simulate_finance(
 
         fsi = calculate_fsi(
             income=income,
-            expense=fixed_expense + variable_result["total"] + shock_expense,
+            expense=living_expense,
             debt_payment=debt_payment,
             balance=balance,
             target_emergency_months=target_emergency_months,
-        )
-        risk_level = classify_risk(fsi, balance)
+        ) if evaluate_legacy_risk else 0.0
+        risk_level = classify_risk(fsi, balance) if evaluate_legacy_risk else None
 
         row = {
             "month": month,
@@ -126,6 +135,8 @@ def simulate_finance(
             "variable_expense": variable_result["total"],
             "expense": round(fixed_expense + variable_result["total"] + shock_expense, 2),
             "debt_payment": round(debt_payment, 2),
+            "living_expense": round(living_expense, 2),
+            "emergency_fund_months": emergency_fund_months(balance, living_expense, debt_payment),
             "shock_expense": shock_expense,
             "event_net": round(recurring_event_amount + one_time_asset_impact, 2),
             "net_cashflow": round(net_cashflow, 2),
@@ -140,7 +151,7 @@ def simulate_finance(
 
     result = {
         "simulation_curve": curve,
-        "summary": summarize_simulation(curve, profile),
+        "summary": summarize_simulation(curve, profile) if evaluate_legacy_risk else {},
         "seed": seed,
     }
     if include_details:

@@ -453,6 +453,8 @@ class FinancialProfileDraft(BaseModel):
     variable_expense_allocation: List[VariableExpenseAllocationDraft] = Field(default_factory=list, max_length=8)
     debts: List[DebtDraft] = Field(default_factory=list, max_length=20)
     future_plans: List[DraftFieldValue] = Field(default_factory=list, max_length=20)
+    pending_total_expense: Optional[DraftFieldValue] = None
+    pending_total_expense_kind: Optional[Literal["unclassified", "combined"]] = None
     validation_errors: List[str] = Field(default_factory=list, max_length=30)
     conflicts: List[str] = Field(default_factory=list, max_length=20)
     missing_required: List[str] = Field(default_factory=list, max_length=20)
@@ -473,6 +475,10 @@ class FinancialOnboardingMessageResponse(BaseModel):
     follow_up_questions: List[str] = Field(default_factory=list, max_length=5)
     ready_for_review: bool
     provider_available: bool
+    extraction_status: Literal[
+        "success", "needs_clarification", "no_match", "provider_unavailable",
+        "timeout", "provider_error",
+    ] = "success"
     current_step: int = Field(default=1, ge=1)
     total_steps: int = Field(default=5, ge=1)
     stage_label: str = Field(default="財務概況", max_length=40)

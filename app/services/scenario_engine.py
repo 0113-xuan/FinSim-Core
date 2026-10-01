@@ -23,6 +23,8 @@ from app.services.calendar_period import YearMonth
 
 
 MONEY = Decimal("0.01")
+
+
 def _money(value: Decimal | float | int | str) -> Decimal:
     return Decimal(str(value)).quantize(MONEY, rounding=ROUND_HALF_UP)
 
@@ -35,6 +37,14 @@ def _fact(field: str, value: Decimal | None, source: ValueSource, reason: str) -
         display_source=display_source_label(source),
         reason=reason,
     )
+
+
+def _event_source(source: ValueSource) -> EventSource:
+    if source == ValueSource.user_provided:
+        return EventSource.manual
+    if source == ValueSource.system_assumption:
+        return EventSource.system_assumption
+    return EventSource.system
 
 
 def find_baseline_option(options: list[ScenarioOption]) -> ScenarioOption:
@@ -136,13 +146,22 @@ def _vehicle(request: ScenarioRequest, start_period: YearMonth) -> ScenarioBuild
         if sourced.value < 0:
             raise ValueError(f"{field} cannot be negative")
         amount = sourced.value / Decimal(12) if annual else sourced.value
-        source = ValueSource.backend_normalized if annual else sourced.source
-        derived.append(_fact(field + ("_monthly_average" if annual else ""), amount, source, reason))
+        derived_source = ValueSource.backend_normalized if annual else sourced.source
+        event_source = sourced.source if sourced.source == ValueSource.system_assumption else derived_source
+        derived.append(_fact(field + ("_monthly_average" if annual else ""), amount, derived_source, reason))
         events.append(EventInput(
             type="range", name=field, start_month=start_month, end_month=request.horizon_months,
-            start_period=str(request.target_period), amount=-float(amount), source=EventSource.manual,
-            display_source=display_source_label(source), reason=reason,
+            start_period=str(request.target_period), amount=-float(amount), source=_event_source(event_source),
+            display_source=display_source_label(event_source), reason=reason,
         ))
+    if payload.monthly_transportation_offset is not None:
+        offset = payload.monthly_transportation_offset
+        if offset.value < 0:
+            raise ValueError("transportation offset cannot be negative")
+        events.append(EventInput(type="range", name="monthly_transportation_offset",
+                                start_month=start_month, end_month=request.horizon_months,
+                                amount=float(offset.value), source=_event_source(offset.source),
+                                display_source=display_source_label(offset.source), reason="取代原有交通支出"))
     return ScenarioBuildResult(scenario_request=request, events=events, loans=loans,
                                assumptions=request.assumptions, missing_fields=list(dict.fromkeys(missing)),
                                warnings=warnings, derived_values=derived)
@@ -168,14 +187,15 @@ def _housing(request: ScenarioRequest, start_period: YearMonth) -> ScenarioBuild
     else:
         events.append(EventInput(type="range", name="租金變動", start_month=start_month,
                                  end_month=request.horizon_months, start_period=str(request.target_period),
-                                 amount=-float(rent_change), source=EventSource.manual,
+                                 amount=-float(rent_change),
+                                 source=_event_source(ValueSource.derived if payload.current_rent and payload.new_rent else payload.monthly_rent_change.source),
                                  display_source=display_source_label(ValueSource.derived if payload.current_rent and payload.new_rent else payload.monthly_rent_change.source),
                                  reason="租金差額，正值代表費用增加"))
     commute = payload.monthly_commute_change.value if payload.monthly_commute_change else None
     if commute is not None:
         events.append(EventInput(type="range", name="通勤費變動", start_month=start_month,
                                  end_month=request.horizon_months, start_period=str(request.target_period),
-                                 amount=-float(commute), source=EventSource.manual,
+                                 amount=-float(commute), source=_event_source(payload.monthly_commute_change.source),
                                  display_source=display_source_label(payload.monthly_commute_change.source),
                                  reason="通勤費差額，正值代表費用增加"))
     else:
@@ -190,7 +210,7 @@ def _housing(request: ScenarioRequest, start_period: YearMonth) -> ScenarioBuild
             raise ValueError(f"{field} cannot be negative")
         events.append(EventInput(type="one_time", name=field, month=start_month,
                                  start_period=str(request.target_period), amount=-float(sourced.value),
-                                 source=EventSource.manual, display_source=display_source_label(sourced.source),
+                                 source=_event_source(sourced.source), display_source=display_source_label(sourced.source),
                                  reason=f"使用者提供的 {field}"))
     if payload.deposit and payload.deposit_refundable is None:
         warnings.append("押金是否可退尚未確認；模擬僅呈現支付時點，不推定為永久損失")
@@ -222,6 +242,10 @@ def _delta(baseline: ScenarioOptionResult, scenario: ScenarioOptionResult, start
             continue
         active = max(0, min(event.end_month or len(scenario_curve), len(scenario_curve)) - (event.start_month or 1) + 1)
         recurring += _money(-event.amount) * active
+    for loan in build.loans:
+        end_month = loan.start_month + loan.months - 1
+        active = max(0, min(end_month, len(scenario_curve)) - loan.start_month + 1)
+        recurring += _money(calculate_loan_payment(loan.principal, loan.apr, loan.months)) * active
     avg_baseline = sum(_money(row["net_cashflow"]) for row in baseline_curve) / len(baseline_curve)
     avg_scenario = sum(_money(row["net_cashflow"]) for row in scenario_curve) / len(scenario_curve)
     return ScenarioDelta(
@@ -244,7 +268,11 @@ def compare_scenarios(request: ScenarioComparisonRequest) -> ScenarioComparisonR
         raise ValueError("all scenario options must match the comparison horizon")
     horizon = request.horizon_months
     profile = request.confirmed_profile.model_dump()
-    baseline_sim = simulate_finance(profile=profile, months=horizon, events=[], loans=[], seed=request.seed, include_details=True)
+    baseline_loans = [item.model_dump() for item in request.baseline_loans]
+    baseline_sim = simulate_finance(
+        profile=profile, months=horizon, events=[], loans=baseline_loans,
+        seed=request.seed, include_details=True,
+    )
     baseline_result = ScenarioOptionResult(option=baseline_option, simulation=baseline_sim)
     results: list[ScenarioOptionResult] = []
     deltas: list[ScenarioDelta] = []
@@ -256,7 +284,8 @@ def compare_scenarios(request: ScenarioComparisonRequest) -> ScenarioComparisonR
             raise ValueError("scenario has missing fields: " + ", ".join(build.missing_fields))
         simulation = simulate_finance(profile=profile, months=horizon,
                                       events=[item.model_dump() for item in build.events],
-                                      loans=[item.model_dump() for item in build.loans], seed=request.seed, include_details=True)
+                                      loans=[*baseline_loans, *[item.model_dump() for item in build.loans]],
+                                      seed=request.seed, include_details=True)
         result = ScenarioOptionResult(option=option, build=build, simulation=simulation)
         results.append(result)
         deltas.append(_delta(baseline_result, result, request.start_period))

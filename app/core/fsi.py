@@ -1,4 +1,5 @@
 from typing import Literal
+from app.core.financial_rules import emergency_fund_months
 
 
 def calculate_fsi(
@@ -17,16 +18,14 @@ def calculate_fsi(
 
     說明：
     - income <= 0 時，視為極高風險，直接回傳 999.0
-    - 緊急預備金月數 = balance / expense
-    - 若 expense <= 0，則視為已達成 target_emergency_months
+    - 緊急預備金月數 = balance / (expense + debt_payment)
+    - 無必要支出時，共用函式回傳 None，舊版 FSI 視為無預備金缺口
     """
     if income <= 0:
         return 999.0
 
-    if expense > 0:
-        emergency_months = balance / expense
-    else:
-        emergency_months = target_emergency_months
+    coverage = emergency_fund_months(balance, expense, debt_payment)
+    emergency_months = target_emergency_months if coverage is None else coverage
 
     emergency_gap = max(0.0, 1.0 - (emergency_months / target_emergency_months))
 

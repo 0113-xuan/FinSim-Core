@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+from datetime import date
 from decimal import Decimal
 from enum import Enum
 from typing import Annotated, Literal, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator, model_validator
 
-from app.schemas import EventInput, LoanInput, ProfileInput
+from app.schemas import EventInput, LoanInput, ParsedScenario, ProfileInput
 from app.services.calendar_period import YearMonth
 
 
@@ -55,6 +56,7 @@ class VehiclePurchaseScenarioInput(StrictScenarioModel):
     annual_maintenance_budget: Optional[SourcedDecimal] = None
     monthly_fuel_or_energy: Optional[SourcedDecimal] = None
     monthly_parking: Optional[SourcedDecimal] = None
+    monthly_transportation_offset: Optional[SourcedDecimal] = None
 
 
 class HousingChangeScenarioInput(StrictScenarioModel):
@@ -67,6 +69,13 @@ class HousingChangeScenarioInput(StrictScenarioModel):
     moving_cost: Optional[SourcedDecimal] = None
     broker_fee: Optional[SourcedDecimal] = None
     deposit_refundable: Optional[bool] = None
+
+    @field_validator("current_rent", "new_rent")
+    @classmethod
+    def validate_nonnegative_rent(cls, value: Optional[SourcedDecimal]) -> Optional[SourcedDecimal]:
+        if value is not None and value.value < 0:
+            raise ValueError("rent values cannot be negative")
+        return value
 
 
 ScenarioPayload = Annotated[
@@ -157,6 +166,7 @@ class ScenarioDelta(StrictScenarioModel):
 
 class ScenarioComparisonRequest(StrictScenarioModel):
     confirmed_profile: ProfileInput
+    baseline_loans: list[LoanInput] = Field(default_factory=list, max_length=50)
     start_period: YearMonth
     horizon_months: int = Field(default=60, gt=0, le=360)
     options: list[ScenarioOption] = Field(min_length=1, max_length=12)
@@ -175,6 +185,13 @@ class ScenarioComparisonRequest(StrictScenarioModel):
     def serialize_start_period(self, value: YearMonth) -> str:
         return str(value)
 
+    @model_validator(mode="after")
+    def validate_option_ids(self) -> "ScenarioComparisonRequest":
+        option_ids = [option.option_id for option in self.options]
+        if len(option_ids) != len(set(option_ids)):
+            raise ValueError("scenario option_id values must be unique")
+        return self
+
 
 class ScenarioOptionResult(StrictScenarioModel):
     option: ScenarioOption
@@ -187,3 +204,53 @@ class ScenarioComparisonResponse(StrictScenarioModel):
     scenarios: list[ScenarioOptionResult] = Field(default_factory=list)
     deltas: list[ScenarioDelta] = Field(default_factory=list)
     baseline_only: bool = False
+
+
+class ScenarioDraftStatus(str, Enum):
+    collecting = "collecting"
+    ready_for_review = "ready_for_review"
+    confirmed = "confirmed"
+
+
+class ScenarioDraft(StrictScenarioModel):
+    draft_id: str = Field(min_length=8, max_length=80)
+    status: ScenarioDraftStatus = ScenarioDraftStatus.collecting
+    messages: list[str] = Field(default_factory=list, max_length=12)
+    scenario_type: Optional[ScenarioType] = None
+    missing_fields: list[str] = Field(default_factory=list, max_length=30)
+    next_question: Optional[str] = Field(default=None, max_length=300)
+    scenario_request: Optional[ScenarioRequest] = None
+
+    @field_validator("messages")
+    @classmethod
+    def validate_messages(cls, value: list[str]) -> list[str]:
+        if any(not item.strip() or len(item) > 2000 for item in value):
+            raise ValueError("draft messages must be non-empty and at most 2000 characters")
+        if sum(len(item) for item in value) > 6000:
+            raise ValueError("scenario draft conversation is too long")
+        return value
+
+
+class ScenarioDraftMessageRequest(StrictScenarioModel):
+    message: str = Field(min_length=1, max_length=2000)
+    draft: Optional[ScenarioDraft] = None
+    months: int = Field(default=60, gt=0, le=360)
+    reference_date: Optional[date] = None
+    timezone: str = Field(default="Asia/Taipei", min_length=1, max_length=80)
+    profile_draft_id: Optional[str] = Field(default=None, min_length=8, max_length=80)
+
+
+class ScenarioDraftMessageResponse(StrictScenarioModel):
+    draft: ScenarioDraft
+    parsed: ParsedScenario
+    ready_for_review: bool
+
+
+class ScenarioDraftConfirmRequest(StrictScenarioModel):
+    draft: ScenarioDraft
+    explicit_confirmation: bool = False
+
+
+class ScenarioDraftConfirmResponse(StrictScenarioModel):
+    draft: ScenarioDraft
+    scenario_request: ScenarioRequest

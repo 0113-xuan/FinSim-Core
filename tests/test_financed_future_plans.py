@@ -1,4 +1,5 @@
 import asyncio
+from datetime import date
 
 import pytest
 from decimal import Decimal
@@ -94,7 +95,13 @@ def extract_with_mock(message, payload, *, existing_future_plans=None):
     )
 
 
-def test_vehicle_purchase_with_installments_and_annual_rate():
+def test_vehicle_purchase_with_installments_and_annual_rate(monkeypatch):
+    class FixedDate(date):
+        @classmethod
+        def today(cls):
+            return cls(2026, 7, 21)
+
+    monkeypatch.setattr("app.services.financial_answer_extraction.date", FixedDate)
     message = "我下個月要買一台60萬的車，分60期，利率3%。"
     payload = result_payload(future_plans=[vehicle_plan(
         message,

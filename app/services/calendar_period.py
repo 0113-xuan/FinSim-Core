@@ -43,6 +43,23 @@ def resolve_reference_date(reference_date: date | None, timezone_name: str) -> d
     return datetime.now(timezone).date()
 
 
+def _parse_small_integer(value: str) -> int | None:
+    if value.isdigit():
+        return int(value)
+    digits = {"一": 1, "二": 2, "兩": 2, "三": 3, "四": 4, "五": 5,
+              "六": 6, "七": 7, "八": 8, "九": 9}
+    if value in digits:
+        return digits[value]
+    if value == "十":
+        return 10
+    match = re.fullmatch(r"([一二兩三四五六七八九])?十([一二兩三四五六七八九])?", value)
+    if match:
+        tens = digits.get(match.group(1), 1)
+        units = digits.get(match.group(2), 0)
+        return tens * 10 + units
+    return None
+
+
 def normalize_date_text(text: str, reference_date: date) -> str | None:
     normalized = re.sub(r"\s+", "", text)
     base = YearMonth(reference_date.year, reference_date.month)
@@ -50,6 +67,8 @@ def normalize_date_text(text: str, reference_date: date) -> str | None:
         return str(base.add_months(1))
     if normalized in {"下下個月", "兩個月後", "2個月後"}:
         return str(base.add_months(2))
+    if normalized == "半年後":
+        return str(base.add_months(6))
     if normalized in {"今年年底", "今年年末", "年底", "年末"}:
         return str(YearMonth(reference_date.year, 12))
     if normalized in {"明年", "明年年初"}:
@@ -70,6 +89,11 @@ def normalize_date_text(text: str, reference_date: date) -> str | None:
         month = int(current_year.group(1))
         return str(YearMonth(reference_date.year, month)) if 1 <= month <= 12 else None
 
+    months = re.fullmatch(r"([一二兩三四五六七八九十\d]+)個?月後", normalized)
+    if months:
+        count = _parse_small_integer(months.group(1))
+        return str(base.add_months(count)) if count is not None and count > 0 else None
+
     years = re.fullmatch(r"([一二三四五六七八九十]|\d+)年後", normalized)
     if years:
         chinese = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6,
@@ -84,14 +108,20 @@ def extract_date_text(text: str) -> str | None:
         r"\d{4}年\d{1,2}月",
         r"今年\d{1,2}月",
         r"今年年底|今年年末|年底|年末",
+        r"半年後",
+        r"(?:[一二兩三四五六七八九十\d]+)個?月後",
         r"下下個月|兩個月後|2個月後",
         r"下個月|下月",
         r"明年\d{1,2}月",
         r"明年年初|明年",
         r"(?:[一二三四五六七八九十]|\d+)年後",
     ]
-    match = re.search("|".join(f"(?:{item})" for item in patterns), text)
-    return match.group(0) if match else None
+    matches = list(re.finditer("|".join(f"(?:{item})" for item in patterns), text))
+    if not matches:
+        return None
+    last = matches[-1]
+    prefix = text[max(0, last.start() - 12):last.start()]
+    return last.group(0) if re.search(r"(?:改成|改為|更正(?:為)?|後來改)", prefix) else matches[0].group(0)
 
 
 def simulation_month_for_period(period: str, reference_date: date) -> int:
