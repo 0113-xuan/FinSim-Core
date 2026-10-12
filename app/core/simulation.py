@@ -68,6 +68,7 @@ def simulate_finance(
     override_raise_rate: Optional[float] = None,
     override_inflation_rate: Optional[float] = None,
     evaluate_legacy_risk: bool = True,
+    round_output: bool = True,
 ) -> Dict[str, Any]:
     if months <= 0:
         raise ValueError("months must be > 0")
@@ -102,7 +103,11 @@ def simulate_finance(
             events=events,
             rng=rng,
         )
-        debt_payment = get_debt_payment_for_month(month, loans) + float(profile.get("required_monthly_debt", 0))
+        existing_debts = profile.get("existing_debts")
+        existing_payment = (sum(float(debt['monthly_payment']) for debt in existing_debts
+                                if month <= debt['remaining_months'])
+                            if existing_debts is not None else float(profile.get("required_monthly_debt", 0)))
+        debt_payment = get_debt_payment_for_month(month, loans, rounded=round_output) + existing_payment
         recurring_event_amount = get_recurring_event_amount(month, events)
         living_expense = max(0.0, fixed_expense + variable_result["total"] - recurring_event_amount)
         one_time_asset_impact = get_one_time_asset_impact(month, events)
@@ -145,6 +150,10 @@ def simulate_finance(
             "risk_level": risk_level,
             "debt_to_income": debt_to_income_for_month(month, income, loans),
         }
+        if not round_output:
+            # Constraint searches must evaluate calculated values before display rounding.
+            row.update(income=income, fixed_expense=fixed_expense, debt_payment=debt_payment,
+                       living_expense=living_expense, net_cashflow=net_cashflow, balance=balance)
         if include_details:
             row["expense_categories"] = variable_result["categories"]
         curve.append(row)

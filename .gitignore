@@ -9,3 +9,4 @@ finsim-server*.log
 secrets/
 .pytest_cache/
 *.pyc
+.playwright-cli/

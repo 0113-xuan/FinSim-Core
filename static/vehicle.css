@@ -24,7 +24,96 @@
 .vehicle-page dt { margin-top:16px; font-weight:600; }
 .vehicle-page dd { margin:4px 0 0; line-height:1.7; }
 .vehicle-page #error { color:#b42318; }
+.result-heading { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-top:32px; }
+.result-heading h2 { margin:0; }
+.result-heading a { flex-shrink:0; color:var(--accent); font-size:14px; }
+.vehicle-page .result-status { padding:12px 0; margin:12px 0 0; font-weight:600; color:#047857; }
+.vehicle-page .result-status[data-state="failed"] { color:#b42318; }
+.vehicle-page .result-status { font-size:18px; padding:16px 0; }
+.vehicle-page .risk-headline { max-width:none; color:var(--text); padding:12px 0; margin:0; font-weight:600; }
+.vehicle-page .risk-headline[data-state="failed"] { color:#b42318; }
+.result-overview { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; margin:0; padding:24px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.result-overview > div { min-width:0; padding:22px; border:1px solid #dce3e5; border-radius:8px; background:#f7f9fa; }
+.loan-overview { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.vehicle-page .result-overview dt { margin:0; font-size:14px; color:var(--muted); font-weight:400; }
+.vehicle-page .result-overview dd { margin:8px 0; font-size:24px; font-weight:700; line-height:1.35; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+.vehicle-page .result-overview p { margin:0; font-size:13px; }
+.vehicle-page .result-scope { font-size:13px; }
 .vehicle-page :focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+.debt-row { display:grid; grid-template-columns:2fr 1fr 1fr auto; align-items:end; gap:12px; margin:16px 0; }
+.debt-row label { display:flex; flex-direction:column; gap:6px; font-size:14px; min-width:0; }
+.debt-row input { min-width:0; width:100%; min-height:44px; border:1px solid var(--line); border-radius:6px; padding:8px; }
+.vehicle-page button { min-height:44px; }
+#sensitivityStatus { margin-left:12px; font-size:14px; }
+.vehicle-page #sensitivityPanel { margin:28px 0; padding:24px 0; border-top:2px solid #0e7490; border-bottom:2px solid #d9e7ec; }
+.vehicle-page #sensitivityPanel > summary { font-size:22px; line-height:1.5; color:#164e63; }
+#sensitivityPanel .vehicle-actions { margin:20px 0; }
+#sensitivityPanel #runSensitivity { background:#0e7490; color:#fff; border-color:#0e7490; font-weight:700; padding:12px 22px; }
+#sensitivityPanel #runSensitivity:hover:not(:disabled) { background:#155e75; }
+#sensitivityPanel #runSensitivity:disabled { opacity:.6; cursor:wait; }
+.factor-select { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin:20px 0; font-size:14px; }
+.factor-select select { min-height:44px; padding:8px 12px; border:1px solid var(--line); border-radius:6px; background:#fff; }
+.what-if-stories { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin:20px 0; }
+.what-if-stories[hidden] { display:none; }
+.what-if-story { padding:18px; border:1px solid var(--line); border-radius:6px; min-width:0; }
+.what-if-story h3 { margin:0 0 12px; font-size:16px; line-height:1.5; overflow-wrap:anywhere; }
+.vehicle-page .what-if-story .story-effect { color:var(--text); font-size:20px; font-weight:700; margin:12px 0; overflow-wrap:anywhere; }
+.vehicle-page .what-if-story p { margin:8px 0; }
+.vehicle-page .what-if-story .story-status { padding-top:12px; border-top:1px solid var(--line); color:#047857; }
+.vehicle-page .what-if-story .story-status[data-state="failed"] { color:#b42318; }
+#whatIfResult { grid-template-columns:1fr; }
+.vehicle-page [hidden] { display:none !important; }
+.vehicle-page .sr-only { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+.vehicle-modes { display:flex; gap:0; border:0; padding:0; margin:24px 0; border-bottom:1px solid var(--line); }
+.vehicle-modes label { position:relative; cursor:pointer; padding:14px 24px; font-size:16px; border-bottom:3px solid transparent; }
+.vehicle-modes label:has(:checked) { border-color:var(--accent); color:var(--accent); font-weight:700; background:#f1f7f5; }
+.vehicle-modes input { position:absolute; opacity:0; width:1px; height:1px; }
+.vehicle-modes label:has(:focus-visible) { outline:2px solid var(--accent); outline-offset:2px; }
+.compare-picks,.compare-budget-grid,.cost-score-grid,.cost-structure-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:32px; }
+.compare-picks { margin-bottom:24px; }
+.compare-budget-grid .vehicle-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.cost-score-grid { padding:28px 0; border-top:1px solid var(--line); }
+.cost-score,.cost-structure-grid > div { min-width:0; }
+.cost-score h3 { margin:0 0 20px; font-size:17px; line-height:1.5; }
+.vehicle-page .cost-score p { margin:8px 0; }
+.vehicle-page .cost-score .cost-score-total { color:#047857; font-size:40px; line-height:1.25; font-weight:750; overflow-wrap:anywhere; font-variant-numeric:tabular-nums; }
+.vehicle-page .cost-score .financial-metric { color:var(--text); font-size:22px; font-weight:600; overflow-wrap:anywhere; font-variant-numeric:tabular-nums; }
+.vehicle-page .cost-difference { max-width:none; margin:0 0 32px; padding:16px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); font-size:16px; color:var(--text); font-weight:600; }
+.cost-category { margin:18px 0; }
+.cost-category-heading { display:flex; justify-content:space-between; align-items:baseline; gap:12px; font-size:14px; }
+.cost-category-heading span:last-child { text-align:right; font-variant-numeric:tabular-nums; }
+.cost-track { height:8px; background:#edf0f1; margin-top:8px; overflow:hidden; border-radius:2px; }
+.cost-track span { display:block; height:100%; background:#047857; }
+.cost-category[data-category="monthly_fuel_or_energy"] .cost-track span { background:#0e7490; }
+.cost-category[data-category="annual_tax"] .cost-track span { background:#44403c; }
+.cost-category[data-category="annual_insurance"] .cost-track span { background:#8b4772; }
+.cost-category[data-category="annual_maintenance_budget"] .cost-track span { background:#64748b; }
+.vehicle-page .monthly-cost-primary dd { font-size:36px; color:#047857; }
+.result-overview > .monthly-cost-primary { background:#203b35; border-color:#203b35; }
+.vehicle-page .monthly-cost-primary dt,.vehicle-page .monthly-cost-primary p { color:#d9e8e2; }
+.vehicle-page .monthly-cost-primary dd { color:#fff; font-size:32px; }
+.result-overview > div:nth-child(2) { background:#f0f7fa; border-color:#d9e7ec; }
+.vehicle-page .result-overview dt { font-weight:600; color:#44535d; line-height:1.6; }
+.vehicle-page .monthly-cost-primary dt { color:#d9e8e2; }
+.ownership-overview > div { background:#fff; }
+.cost-score { padding:24px; border:1px solid #dce3e5; border-radius:8px; background:#f7f9fa; }
+#financialCompareScores .cost-score { background:#203b35; border-color:#203b35; color:#fff; }
+.vehicle-page #financialCompareScores .cost-score p { color:#d9e8e2; }
+.vehicle-page #financialCompareScores .cost-score .cost-score-total { color:#fff; font-size:36px; }
+.vehicle-page #financialCompareScores .cost-score .financial-metric { color:#fff; }
+.vehicle-page #financialCompareScores .cost-score .result-status { margin-top:20px; padding-top:16px; border-top:1px solid #557269; color:#bcebd3; font-size:15px; }
+.vehicle-page #financialCompareScores .cost-score .result-status[data-state="failed"] { color:#ffd3cc; }
+.vehicle-page .cost-difference { border:0; padding:18px 20px; background:#eef5f9; border-radius:8px; color:#244858; }
+.vehicle-page .risk-headline { padding:14px 18px; background:#f0f5f3; border-radius:6px; }
+.vehicle-page .risk-headline[data-state="failed"] { background:#fff1ef; }
+#ownershipStructure { max-width:640px; }
+.cost-options { border:0; padding:16px 0; margin:0; display:flex; flex-wrap:wrap; gap:10px; }
+.cost-options legend { font-size:14px; font-weight:600; }
+.cost-options label { display:flex; align-items:center; gap:8px; min-height:44px; padding:10px 14px; border:1px solid #dce3e5; border-radius:6px; cursor:pointer; }
+.cost-options label:has(:checked) { background:#edf6f3; border-color:#047857; color:#065f46; font-weight:600; }
+.cost-options:disabled { opacity:.5; }
+#vehiclePreview { margin:12px 0; }
+.vehicle-page #vehiclePreview dd { font-size:22px; }
 @media(max-width:760px) {
   .vehicle-header { padding:16px; gap:16px; flex-wrap:wrap; }
   .vehicle-header span { display:none; }
@@ -34,4 +123,17 @@
   .vehicle-page th,.vehicle-page td { padding:12px 6px; font-size:12px; }
   .vehicle-page th:first-child,.vehicle-page td:first-child { white-space:normal; min-width:76px; }
   .vehicle-actions { align-items:stretch; flex-direction:column; }
+  .result-overview { grid-template-columns:1fr; gap:20px; }
+  .result-overview > div,.cost-score { padding:20px; }
+  .vehicle-page #financialCompareScores .cost-score .cost-score-total { font-size:32px; }
+  .result-heading { align-items:baseline; }
+  .result-heading h2 { font-size:20px; }
+  .debt-row { grid-template-columns:1fr 1fr; }
+  .debt-row label:first-child { grid-column:1/-1; }
+  .vehicle-page summary { line-height:1.6; }
+  .what-if-stories { grid-template-columns:1fr; }
+  .compare-picks,.compare-budget-grid,.cost-score-grid,.cost-structure-grid { grid-template-columns:1fr; gap:24px; }
+  .cost-score-grid { gap:28px; }
+  .vehicle-page .cost-score .cost-score-total { font-size:36px; }
+  .vehicle-modes label { flex:1; text-align:center; padding:14px 8px; }
 }

@@ -4,16 +4,17 @@ from typing import Any, Dict, List
 from app.core.financial_rules import value_or_default
 
 
-def calculate_loan_payment(principal: float, apr: float, months: int) -> float:
+def calculate_loan_payment(principal: float, apr: float, months: int, *, rounded: bool = True) -> float:
     if months <= 0:
         raise ValueError("months must be > 0")
     if principal < 0:
         raise ValueError("principal must be >= 0")
     if apr <= 0:
-        return round(principal / months, 2)
+        payment = principal / months
+        return round(payment, 2) if rounded else payment
     monthly_rate = apr / 12
     payment = principal * monthly_rate / (1 - (1 + monthly_rate) ** (-months))
-    return round(payment, 2)
+    return round(payment, 2) if rounded else payment
 
 
 def is_event_active(event: Dict[str, Any], month: int) -> bool:
@@ -65,15 +66,15 @@ def get_fixed_expense_for_month(month: int, base_fixed_expense: float, events: L
     return round(max(0.0, fixed), 2)
 
 
-def get_debt_payment_for_month(month: int, loans: List[Dict[str, Any]]) -> float:
+def get_debt_payment_for_month(month: int, loans: List[Dict[str, Any]], *, rounded: bool = True) -> float:
     total = 0.0
     for loan in loans:
         start_month = int(loan["start_month"])
         loan_months = int(loan["months"])
         end_month = start_month + loan_months - 1
         if start_month <= month <= end_month:
-            total += calculate_loan_payment(float(loan["principal"]), float(loan["apr"]), loan_months)
-    return round(total, 2)
+            total += calculate_loan_payment(float(loan["principal"]), float(loan["apr"]), loan_months, rounded=rounded)
+    return round(total, 2) if rounded else total
 
 
 def debt_to_income_for_month(month: int, income: float, loans: List[Dict[str, Any]]) -> float:

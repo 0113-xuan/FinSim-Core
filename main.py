@@ -12,9 +12,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
-from app.decision_schemas import VehicleDecisionRequest
+from app.decision_schemas import VehicleDecisionRequest, VehicleComparisonRequest, VehicleWhatIfRequest
 from app.decision_assumptions import registry
+from app.vehicle_catalog import catalog_list, vehicle_preset, VehiclePresetRequest
 from app.services.vehicle_decision import simulate_vehicle_decision
+from app.services.vehicle_analysis import sensitivity_analysis, compare_vehicles, vehicle_what_if
+from app.services.vehicle_cost_comparison import VehicleCostComparisonRequest, compare_running_costs
+from app.services.vehicle_costs import StandaloneVehicleCostRequest, estimate_vehicle_costs
 from app.core.advisor import compare_options, generate_advice
 from app.core.monte_carlo import run_monte_carlo
 from app.core.simulation import simulate_finance
@@ -383,6 +387,35 @@ def scenario_compare_api(req: ScenarioComparisonRequest) -> ScenarioComparisonRe
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
+@app.get("/decisions/vehicle/catalog")
+def vehicle_catalog_api():
+    return catalog_list()
+
+
+@app.post("/decisions/vehicle/preset")
+def vehicle_preset_api(req: VehiclePresetRequest):
+    try:
+        return vehicle_preset(req)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post('/decisions/vehicle/cost-comparison')
+def vehicle_cost_comparison_api(req: VehicleCostComparisonRequest):
+    try:
+        return compare_running_costs(req)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post('/decisions/vehicle/costs')
+def standalone_vehicle_cost_api(req: StandaloneVehicleCostRequest):
+    try:
+        return estimate_vehicle_costs(req)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
 @app.get("/decisions/vehicle/assumptions")
 def vehicle_assumptions_api():
     return registry()
@@ -392,6 +425,30 @@ def vehicle_assumptions_api():
 def vehicle_decision_api(req: VehicleDecisionRequest):
     try:
         return simulate_vehicle_decision(req)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/decisions/vehicle/sensitivity")
+def vehicle_sensitivity_api(req: VehicleDecisionRequest):
+    try:
+        return sensitivity_analysis(req)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/decisions/vehicle/compare")
+def vehicle_comparison_api(req: VehicleComparisonRequest):
+    try:
+        return compare_vehicles(req)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/decisions/vehicle/what-if")
+def vehicle_what_if_api(req: VehicleWhatIfRequest):
+    try:
+        return vehicle_what_if(req)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 

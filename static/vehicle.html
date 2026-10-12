@@ -3,49 +3,154 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FinSim | 購車決策</title>
-  <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="vehicle.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-  <script defer src="vehicle.js"></script>
+  <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="vehicle.css?v=20261012-15">
+  <script async src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <script defer src="vehicle.js?v=20261012-17"></script>
+  <script defer src="vehicle-analysis.js?v=20261012-1"></script>
+  <script defer src="vehicle-catalog.js?v=20261012-14"></script>
+  <script defer src="vehicle-costs.js?v=20261012-13"></script>
 </head>
 <body class="vehicle-page">
 <header class="vehicle-header"><a href="vehicle.html" class="brand">FinSim</a><span>個人重大財務決策模擬與風險分析</span><a href="/">舊版工作區</a></header>
 <main class="vehicle-main">
   <h1>購車決策評估</h1>
+  <fieldset class="vehicle-modes"><legend class="sr-only">評估方式</legend>
+    <label><input type="radio" name="vehicleMode" value="single" checked>單車評估</label>
+    <label><input type="radio" name="vehicleMode" value="compare">雙車比較</label>
+  </fieldset>
+  <section id="directComparison" hidden aria-labelledby="directComparisonTitle">
+    <h2 id="directComparisonTitle">兩款車，每月差多少？</h2>
+    <form id="costCompareForm">
+      <label>共同購買月份<input id="comparePurchaseMonth" type="month" required></label>
+      <div class="vehicle-grid compare-picks">
+        <div><label>第一款車<select id="costLeft" required><option value="">選擇車款</option><option value="custom">自訂車款</option></select></label><div id="leftCustom" hidden><label>車款名稱<input id="leftCustomName" maxlength="100" disabled required></label><label>每月油電（元）<input id="leftCustomFuel" type="number" min="0" max="20000000" step="any" disabled required></label></div></div>
+        <div><label>第二款車<select id="costRight" required><option value="">選擇車款</option><option value="custom">自訂車款</option></select></label><div id="rightCustom" hidden><label>車款名稱<input id="rightCustomName" maxlength="100" disabled required></label><label>每月油電（元）<input id="rightCustomFuel" type="number" min="0" max="20000000" step="any" disabled required></label></div></div>
+      </div>
+      <div class="compare-budget-grid"><div><h3>第一款車付款條件</h3><div id="leftFinance" class="vehicle-grid"></div></div><div><h3>第二款車付款條件</h3><div id="rightFinance" class="vehicle-grid"></div></div></div>
+      <div class="vehicle-grid">
+        <label>年里程（km）<input id="costDistance" type="number" min="0" max="200000" step="any" value="15000" required></label>
+        <label>油價（NT$／L）<input id="costFuelPrice" type="number" min="0" max="200" step="any" value="30" required></label>
+        <label>持有期間<select id="costYears"><option value="1">1 年</option><option value="3">3 年</option><option value="5" selected>5 年</option></select></label>
+      </div>
+      <details id="compareBudgets"><summary>調整保險、稅費、維修與停車</summary><p>以下為規劃預算，非個別車款報價。</p><div class="compare-budget-grid"><div><h3 id="leftBudgetTitle">第一款車</h3><div id="leftBudgets" class="vehicle-grid"></div></div><div><h3 id="rightBudgetTitle">第二款車</h3><div id="rightBudgets" class="vehicle-grid"></div></div></div></details>
+      <label class="check-label"><input id="compareReviewed" type="checkbox" required>已確認財務資料與兩款車的付款條件</label>
+      <div class="vehicle-actions"><button id="compareCosts" class="primary" disabled>比較購車後的財務狀況</button><span id="costCompareStatus" role="status" aria-live="polite">資料載入中</span></div>
+    </form>
+    <p class="result-scope">財務比較採相同資料、購買月份與五年期間；養車費另按選定持有期間計算，不含折舊與殘值。</p>
+    <section id="costCompareResults" hidden tabindex="-1">
+      <h2>買哪款，生活負擔比較小？</h2><div id="financialCompareScores" class="cost-score-grid"></div><p id="financialCompareDifference" class="cost-difference"></p>
+      <h3>每月養車費（不含車貸）</h3>
+      <div id="costCompareScores" class="cost-score-grid"></div>
+      <p id="costCompareDifference" class="cost-difference"></p>
+      <h3>每月成本結構</h3><div id="costCompareStructure" class="cost-structure-grid"></div>
+      <details><summary>資料來源與試算假設</summary><div id="costCompareSources"></div></details>
+    </section>
+  </section>
   <form id="vehicleForm">
-    <section class="panel"><h2>你的財務資料</h2><div class="vehicle-grid">
+    <div id="singleModeOptions"><label class="check-label"><input type="checkbox" id="includeFinancialProfile">加入我的財務資料，評估是否負擔得起</label></div>
+    <section id="sharedFinancialProfile" class="panel"><h2>你的財務資料</h2><div class="vehicle-grid">
       <label>每月收入（元）<input name="salary" type="number" min="0" max="50000000" required></label>
       <label>現金與存款（元）<input name="balance" type="number" min="-500000000" max="5000000000" required></label>
       <label>每月固定支出（元）<input name="fixed_expense" type="number" min="0" max="20000000" required></label>
       <label>每月變動支出（元）<input name="variable_expense" type="number" min="0" max="20000000" required></label>
-      <label>既有每月必要還款（元）<input name="required_monthly_debt" type="number" min="0" max="20000000" required></label>
+      <label>既有每月必要還款（元）<input name="required_monthly_debt" type="number" min="0" max="20000000" required><small id="debtModeNote">僅填總額時，五年內持續扣款</small></label>
       <label>基準月份<input name="start_period" type="month" required></label>
-    </div></section>
-    <section class="panel"><h2>車輛與付款</h2><div class="vehicle-grid">
-      <label>車價（元）<input name="purchase_price" type="number" min="1" required></label>
+    </div><details><summary>按筆設定債務到期日</summary><div id="debtRows"></div><button type="button" id="addDebt">新增債務</button></details></section>
+    <section id="singleVehicleFields" class="panel"><h2>選擇車款</h2>
+      <div class="vehicle-grid">
+        <label>車款<select id="vehicleModel"><option value="">自訂車款／自行輸入車價</option></select></label>
+        <label>每年行駛里程（km）<input id="annualDistance" type="number" min="0" max="200000" step="any" value="15000"><small>可修改的規劃假設</small></label>
+        <label>油價（NT$／L）<input id="fuelPrice" type="number" min="0" max="200" step="any" value="30"><small>規劃假設，非即時油價</small></label>
+      </div>
+      <fieldset id="distancePresets" class="cost-options"><legend>年里程</legend><label><input type="radio" name="distancePreset" value="8000">8,000 km</label><label><input type="radio" name="distancePreset" value="12000">12,000 km</label><label><input type="radio" name="distancePreset" value="15000" checked>15,000 km</label><label><input type="radio" name="distancePreset" value="20000">20,000 km</label><label><input type="radio" name="distancePreset" value="30000">30,000 km</label></fieldset>
+      <dl id="vehiclePreview" class="result-overview" hidden aria-label="車款參考資訊">
+        <div><dt>官方參考車價</dt><dd id="previewPrice"></dd><p id="previewModel"></p></div>
+        <div><dt>測試油耗</dt><dd id="previewEfficiency"></dd><p>實際道路油耗可能不同</p></div>
+        <div><dt>資料版本</dt><dd id="previewVersion"></dd><p id="previewChecked"></p></div>
+      </dl>
+      <div class="vehicle-actions"><button id="chooseCustomVehicle" type="button">自訂車款</button><button id="applyVehiclePreset" type="button" disabled>帶入車價與油費</button><span id="catalogStatus" role="status" aria-live="polite"></span></div>
+      <div id="customVehicleFields" class="vehicle-grid"><label>自訂車款名稱（選填）<input id="customVehicleName" maxlength="100" placeholder="例如：我的二手車"></label></div>
+      <p id="catalogDescription">車款清單載入中；也可自行輸入車價。</p>
+      <p id="catalogSource" hidden><a id="catalogSourceLink" target="_blank" rel="noopener noreferrer">官方資料來源</a> · <span id="catalogSourceDate"></span></p>
+      <h3>車輛與付款</h3><div class="vehicle-grid">
+      <label>車價（元）<input name="purchase_price" type="number" min="1" required><small id="vehiclePriceSource">使用者輸入</small></label>
       <label>購買月份<input name="target_period" type="month" required></label>
       <label>付款方式<select name="payment_method"><option value="financed">貸款</option><option value="cash">現金一次付清</option></select></label>
       <label class="financing">頭期款（元）<input name="down_payment" type="number" min="0" required></label>
       <label class="financing">貸款年利率（%）<input name="annual_interest_rate" type="number" min="0" max="98" step="0.01" required></label>
       <label class="financing">貸款期數（月）<input name="loan_term_months" type="number" min="1" max="600" required></label>
     </div></section>
-    <section class="panel"><h2>持有成本與假設</h2><p>以下為規劃假設，並非市場報價。年度預算按月提列。</p><div id="assumptionFields" class="vehicle-grid"></div>
+    <section id="singleAssumptionFields" class="panel"><h2>持有成本與假設</h2><p>以下為規劃假設，並非市場報價。年度預算按月提列。</p><div id="assumptionFields" class="vehicle-grid"></div>
+      <div class="vehicle-grid"><label>停車方式<select id="parkingChoice"><option value="custom">自行設定停車預算</option><option value="own">自有免費車位</option><option value="rent">月租車位</option><option value="street">路邊停車</option></select></label><label id="ownershipPeriodControl">持有期間<select id="singleOwnershipYears"><option value="1">1 年</option><option value="3">3 年</option><option value="5" selected>5 年</option></select></label></div>
       <label class="check-label"><input type="checkbox" name="fixed_expense_inflates">固定支出也隨通膨調整</label>
-      <p>交通抵減須已包含在原生活支出中；車貸與既有還款不隨通膨調整。</p>
+      <p id="personalCostNote">交通抵減須已包含在原生活支出中；車貸與既有還款不隨通膨調整。</p>
     </section>
-    <section class="panel"><h2>你的財務限制</h2><div id="constraintFields" class="vehicle-grid"></div></section>
-    <label class="check-label"><input type="checkbox" id="reviewed" required>已確認金額、來源與假設</label>
-    <div class="vehicle-actions"><button id="submitDecision" class="primary" disabled>執行 5 年購車評估</button><span id="status" role="status" aria-live="polite"></span></div>
+    <section id="financialConstraintSection" class="panel"><h2>你的財務限制</h2><div id="constraintFields" class="vehicle-grid"></div></section>
+    <div id="singleSubmitFields"><label class="check-label"><input type="checkbox" id="reviewed" required>已確認金額、來源與假設</label>
+    <div class="vehicle-actions"><button id="submitDecision" class="primary" disabled>執行 5 年購車評估</button><span id="status" role="status" aria-live="polite"></span></div></div>
   </form>
   <p id="error" role="alert" hidden></p>
+  <section id="singleCostResults" hidden tabindex="-1">
+    <div class="result-heading"><h2 id="singleCostTitle">單車成本評估</h2><a href="#singleVehicleFields">修改車款條件</a></div>
+    <dl class="result-overview">
+      <div class="monthly-cost-primary"><dt>每月養車＋車貸</dt><dd id="singleCostMonthly"></dd><p id="singleCostMonthlyNote"></p></div>
+      <div><dt>購車當下付款</dt><dd id="singleCostUpfront"></dd><p>頭期款或全額車價</p></div>
+      <div><dt id="singleCostTotalLabel">持有五年的現金支出</dt><dd id="singleCostTotal"></dd><p>購車付款＋期間車貸＋養車費</p></div>
+    </dl>
+    <p id="singleCostAnnual" class="cost-difference"></p>
+    <p class="result-scope">重點金額約至百元，明細保留試算值。尚未計入折舊、ETC、臨時停車、洗車與罰單；折舊不是當期現金支出。</p>
+    <h3>每月養車成本結構</h3><div id="singleCostStructure"></div>
+    <h3>費用明細</h3><div class="table-scroll"><table><thead><tr><th>項目</th><th>每月</th><th>每年</th><th id="singleCostPeriodHeader">五年累計</th><th>來源</th></tr></thead><tbody id="singleCostExpenseRows"></tbody></table></div>
+    <details><summary>車價與貸款明細</summary><div class="table-scroll"><table><thead><tr><th>項目</th><th>金額</th></tr></thead><tbody id="singleCostRows"></tbody></table></div></details>
+    <p id="singleCostScope"></p>
+  </section>
   <section id="decisionResults" hidden tabindex="-1">
-    <h2>原本生活 vs 購車後</h2><p id="constraintStatus"></p>
-    <div class="table-scroll"><table><caption>資料來源：確定性財務引擎計算</caption><thead><tr><th>指標</th><th>原本生活</th><th>購車後</th></tr></thead><tbody id="metrics"></tbody></table></div>
-    <p>每月結餘採購車生效月份，排除一次性支出；最低現金採每月底餘額。僅比較現金，不含車輛殘值或淨資產。</p>
-    <h2>現金餘額走勢</h2><div class="vehicle-chart"><canvas id="cashChart" role="img" aria-label="原本生活與購車後的60個月現金餘額"></canvas></div><p id="chartUnavailable" hidden>圖表套件無法載入，完整數值仍可查看下方現金明細。</p>
-    <h2>壓力測試</h2><p>事件設定為系統假設；結果由相同財務引擎計算。</p><div class="table-scroll"><table><thead><tr><th>情況</th><th>最低現金</th><th>月份</th><th>最低預備金月數</th><th>期末現金</th><th>限制結果</th></tr></thead><tbody id="stresses"></tbody></table></div>
-    <h2>可負擔車價上限</h2><p id="limit"></p><p>維持相同頭期款、期數與持有預算，只改變車價。這是設定條件下的計算邊界，不是購車建議。</p><div class="table-scroll"><table><thead><tr><th>限制</th><th>要求</th><th>邊界值</th><th>結果</th></tr></thead><tbody id="boundaryChecks"></tbody></table></div>
-    <details><summary>假設、來源與計算定義</summary><div class="table-scroll"><table><thead><tr><th>項目</th><th>數值</th><th>來源</th></tr></thead><tbody id="sources"></tbody></table></div><dl id="definitions"></dl></details>
-    <details><summary>每月現金明細</summary><div class="table-scroll"><table><thead><tr><th>月份</th><th>原本生活</th><th>購車後</th></tr></thead><tbody id="cashRows"></tbody></table></div></details>
+    <div class="result-heading"><h2>買這台車，生活會差多少？</h2><a href="#vehicleForm">修改條件</a></div>
+    <p id="constraintStatus" class="result-status" role="status"></p>
+    <dl class="result-overview" aria-label="購車重點">
+      <div class="monthly-cost-primary"><dt id="ownershipNetLabel">買車後，每月多花</dt><dd id="ownershipNet"></dd><p id="ownershipNetNote"></p></div>
+      <div><dt>付完生活費與還款，每月剩下</dt><dd id="overviewSurplus"></dd><p id="overviewSurplusNote"></p></div>
+      <div><dt>未來五年，存款最低剩下</dt><dd id="overviewCash"></dd><p id="overviewCashNote"></p></div>
+    </dl>
+    <p id="riskHeadline" class="risk-headline"></p>
+    <p class="result-scope">重點金額約至百元，財務門檻仍用原始值判斷。尚未計入折舊、ETC、臨時停車、洗車與罰單；折舊不是當期現金支出。</p>
+    <section id="loanSummary" aria-labelledby="loanSummaryTitle"><h2 id="loanSummaryTitle">車貸與利息</h2>
+      <dl class="result-overview loan-overview"><div><dt>每月車貸</dt><dd id="loanMonthly"></dd><p>每月償還本金與利息</p></div><div><dt>全期貸款利息</dt><dd id="loanTotalInterest"></dd><p>完整貸款期間的利息，不限於五年</p></div></dl>
+    </section>
+    <section id="ownershipCosts" hidden aria-labelledby="ownershipTitle">
+      <h2 id="ownershipTitle">錢花在哪裡？</h2><p id="ownershipVehicle" hidden></p>
+      <dl class="result-overview ownership-overview">
+        <div><dt>每月養車費（不含車貸）</dt><dd id="ownershipMonthly"></dd><p>僅油電、停車、保險、稅費與維修；車貸需另外支付</p></div>
+        <div><dt>購車當下付款</dt><dd id="ownershipUpfront"></dd><p>貸款：頭期款；現金購車：全額車價</p></div>
+        <div><dt>車價參考邊界（非建議預算）</dt><dd id="overviewLimit"></dd><p id="overviewLimitNote"></p></div>
+      </dl>
+      <p id="ownershipPeriod"></p>
+      <h3>每月成本結構</h3><div id="ownershipStructure"></div>
+      <details><summary>養車費用與五年累計</summary>
+        <div class="table-scroll"><table><caption>年度費用按月提列；月預算採購車生效月份</caption><thead><tr><th>項目</th><th>月預算</th><th>五年內累計</th><th>來源</th></tr></thead><tbody id="ownershipRows"></tbody></table></div>
+        <p id="ownershipScope"></p>
+      </details>
+    </section>
+    <details id="sensitivityPanel" open><summary>如果條件改變，會怎樣？</summary>
+      <div class="vehicle-actions"><button type="button" id="runSensitivity" class="primary">查看可能的影響</button><span id="sensitivityStatus" role="status" aria-live="polite"></span></div>
+      <div id="sensitivityResult" hidden><p id="sensitivityLeader"></p>
+        <label class="factor-select">想看哪個因素？<select id="sensitivityFactor"></select></label>
+        <div id="sensitivityStories" class="what-if-stories"></div>
+        <details id="sensitivityDetails"><summary>圖表、完整數字與測試幅度</summary><p>每次只改一項；收入 ±10%、油電／停車／保險 ±20%、維護 ±30%、車價 ±10%、通膨 ±1 個百分點。排序依這些幅度，不代表發生機率。</p><div class="vehicle-chart"><canvas id="sensitivityChart" aria-label="各因素對五年期末現金的影響" role="img"></canvas></div>
+        <div class="table-scroll"><table><thead><tr><th>因素</th><th>原始值</th><th>較低值</th><th>現金變化</th><th>較高值</th><th>現金變化</th></tr></thead><tbody id="sensitivityRows"></tbody></table></div>
+        </details>
+      </div>
+      <h3>試試自己的變化</h3>
+      <form id="whatIfForm"><div class="vehicle-grid">
+        <label>條件<select id="whatIfField"><option value="salary">每月收入</option><option value="monthly_parking">每月停車費</option><option value="purchase_price">車價</option></select></label>
+        <label>變化<select id="whatIfDirection"><option value="-1">減少</option><option value="1">增加</option></select></label>
+        <label>金額（元）<input id="whatIfAmount" type="number" min="0" max="20000000" step="any" value="5000" required></label>
+      </div><div class="vehicle-actions"><button type="submit" id="runWhatIf">看會有什麼影響</button><span id="whatIfStatus" role="status" aria-live="polite"></span></div></form>
+      <div id="whatIfResult" class="what-if-stories" hidden></div>
+      <p>每次只改一個條件。收入從模擬第1個月起改變，停車費從購車月起；調整車價時，頭期款與期數維持原設定。</p>
+    </details>
+    <details><summary>壓力測試 · <span id="stressSummary"></span></summary><p>事件設定為系統假設；結果由相同財務引擎計算。</p><div class="table-scroll"><table><thead><tr><th>情況</th><th>最低現金</th><th>月份</th><th>最低預備金月數</th><th>期末現金</th><th>限制結果</th></tr></thead><tbody id="stresses"></tbody></table></div></details>
+    <details><summary>車價上限與限制明細</summary><p id="limit"></p><p>維持相同頭期款、期數與持有預算，只改變車價。這是設定條件下的計算邊界，不是購車建議。</p><div class="table-scroll"><table><thead><tr><th>限制</th><th>要求</th><th>邊界值</th><th>結果</th></tr></thead><tbody id="boundaryChecks"></tbody></table></div></details>
   </section>
 </main>
 </body></html>

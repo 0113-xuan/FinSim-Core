@@ -4,7 +4,30 @@ FinSim-Core is an **AI-assisted personal life-decision simulation and financial-
 
 The product is not a generic financial chatbot. The deterministic backend engine is always responsible for cash-flow, loan, FSI, Monte Carlo, comparison, and optimization calculations. AI is used only to help users parse natural-language scenarios, categorize expenses, and explain backend-generated results.
 
-## Features
+## FinSim 2.0 Vehicle Decision
+
+The current decision workspace is `/vehicle.html`. It compares 60 months of
+cash flow using the deterministic engine, without AI or legacy risk scoring.
+
+- One-at-a-time sensitivity: income +/-10%, fuel/parking/insurance +/-20%,
+  maintenance +/-30%, inflation +/-1 percentage point, vehicle price +/-10%.
+- Save an evaluated option A, edit purchase conditions, evaluate option B,
+  then compare on identical financial inputs, constraints, and observation dates.
+- Existing debt details replace the aggregate payment and stop after the last
+  remaining installment (counted from simulation month 1).
+- Assumption records include effective/default values, units, provenance,
+  source dates, and override status. Defaults are uncalibrated planning budgets,
+  not market quotes. Missing external source dates remain null.
+
+APIs: `POST /decisions/vehicle`, `POST /decisions/vehicle/sensitivity`,
+`POST /decisions/vehicle/compare`, `POST /decisions/vehicle/what-if`,
+`GET /decisions/vehicle/assumptions`.
+Sensitivity starts with concrete input changes, before/after cash, and threshold
+checks. Charts stay collapsed. Custom income, parking, and price changes use the
+same engine; invalid adjusted amounts or financing terms have no result.
+See [Sprint 2 definitions](docs/SPRINT2_IMPLEMENTATION.md).
+
+## Existing Platform Features
 
 - FastAPI backend with OpenAPI docs at `/docs`
 - Backend-only deterministic financial simulation

@@ -17,4 +17,7 @@ STRESS_DEFAULTS = dict(income_multiplier=.9, unemployment_months=3, emergency_ex
 
 
 def registry():
-    return [{"key": key, **value, "source": "system_assumption", "reference": None} for key, value in ASSUMPTIONS.items()]
+    return [{"key": key, **value, "source": "system_assumption", "reference": None,
+             "source_date": None, "reviewed_at": "2026-10-10", "user_override": False,
+             "calibration_status": "planning_assumption", "registry_version": "2.0-sprint2"}
+            for key, value in ASSUMPTIONS.items()]

@@ -1,9 +1,55 @@
 import pytest
+from decimal import Decimal, localcontext
 from fastapi.testclient import TestClient
 from main import app
 from app.decision_schemas import VehicleDecisionRequest
-from app.services.vehicle_decision import simulate_vehicle_decision, resolve, run_timeline, evaluate, price_metrics
+from app.services.vehicle_decision import simulate_vehicle_decision, resolve, run_timeline, evaluate, price_metrics, ownership_cost_summary
 from app.core.financial_rules import emergency_fund_months
+
+
+@pytest.mark.parametrize('apr', ['0', '0.03', '0.075'])
+def test_affordability_matches_independent_unrounded_annuity(apr):
+    data = request_data()
+    payload = data['scenario']['payload']
+    payload['annual_interest_rate'] = sourced(apr)
+    for key, value in dict(annual_insurance=18000, annual_tax=12000,
+                           annual_maintenance_budget=12000, monthly_fuel_or_energy=2500,
+                           monthly_parking=2000).items():
+        payload[key] = sourced(value)
+    with localcontext() as context:
+        context.prec = 50
+        rate = Decimal(apr) / 12
+        payment = Decimal(20000)
+        principal = payment * (1 - (1 + rate) ** -60) / rate if rate else payment * 60
+        exact = Decimal(150000) + principal
+    result = simulate_vehicle_decision(req(data))['affordability']
+    actual = Decimal(str(result['maximum_affordable_vehicle_price']))
+    assert Decimal(0) <= exact - actual <= Decimal('0.01')
+    resolved, _ = resolve(req(data))
+    _, below = price_metrics(resolved, float(actual))
+    _, above = price_metrics(resolved, float(actual + Decimal('0.01')))
+    assert all(c['passed'] for c in below)
+    assert not next(c['passed'] for c in above if c['key'] == 'minimum_monthly_surplus')
+
+
+def test_explicit_assumptions_keep_values_and_provenance():
+    data = request_data()
+    data['profile'].update(raise_rate=.01, inflation_rate=.04)
+    data['constraints'] = dict(minimum_emergency_fund_months=4,
+                               minimum_cash_balance=0, minimum_monthly_surplus=6000)
+    data['assumption_sources'] = {key: 'system_assumption' for key in
+                                 ['profile.raise_rate', 'profile.inflation_rate', *data['constraints']]}
+    resolved, provenance = resolve(req(data))
+    assert resolved.constraints.minimum_monthly_surplus == 6000
+    assert resolved.profile.inflation_rate == .04
+    assert all(p['source'] == 'system_assumption' for p in provenance
+               if p['key'] in data['assumption_sources'])
+    data['assumption_sources']['minimum_monthly_surplus'] = 'user'
+    _, provenance = resolve(req(data))
+    assert next(p['source'] for p in provenance if p['key'] == 'minimum_monthly_surplus') == 'user'
+    data['assumption_sources']['unknown'] = 'user'
+    with pytest.raises(ValueError):
+        req(data)
 
 
 def sourced(value):
@@ -145,3 +191,42 @@ def test_invalid_dates_offsets_and_rates_rejected():
     data = request_data()
     data['scenario']['target_period'] = '2026-09'
     assert client.post('/decisions/vehicle', json=data).status_code == 422
+
+
+@pytest.mark.parametrize('cash,term,target', [(False, 36, '2026-10'), (False, 84, '2027-10'), (True, 60, '2026-10')])
+def test_ownership_cash_totals_match_engine_without_double_counting(cash, term, target):
+    data = request_data()
+    data['scenario']['target_period'] = target
+    p = data['scenario']['payload']
+    p['monthly_transportation_offset'] = sourced(1000)
+    p['loan_term_months'] = term
+    if cash:
+        p['payment_method'] = 'cash'
+        for key in ['down_payment', 'annual_interest_rate', 'loan_term_months']:
+            del p[key]
+    resolved, _ = resolve(req(data))
+    rows, build = run_timeline(resolved)
+    baseline, _ = run_timeline(resolved, baseline=True)
+    costs = ownership_cost_summary(resolved, build)
+    assert costs['net_cash_outlay'] == pytest.approx(baseline[-1]['balance'] - rows[-1]['balance'], abs=.01)
+    assert costs['one_time_payment'] == (650000 if cash else 150000)
+    assert costs['remaining_loan_months'] == (0 if cash or term == 36 else 36)
+    assert costs['monthly_net_increase'] == pytest.approx(costs['monthly_ownership'] + costs['monthly_loan_payment'] - costs['monthly_offset'], abs=.01)
+    assert len(costs['items']) == 6
+    displayed_total = costs['one_time_payment'] + costs['loan_payments_total'] + costs['rounding_adjustment'] + sum(i['period_total'] * (-1 if i['is_offset'] else 1) for i in costs['items'])
+    assert costs['net_cash_outlay'] == pytest.approx(displayed_total, abs=.001)
+    assert next(i for i in costs['items'] if i['key'] == 'monthly_transportation_offset')['is_offset']
+
+
+def test_zero_ownership_budget_and_short_loan():
+    data = request_data()
+    data['profile']['inflation_rate'] = 0
+    for key in ['annual_insurance', 'annual_tax', 'annual_maintenance_budget', 'monthly_fuel_or_energy', 'monthly_parking', 'monthly_transportation_offset']:
+        data['scenario']['payload'][key] = sourced(0)
+    data['scenario']['payload']['loan_term_months'] = 12
+    resolved, _ = resolve(req(data))
+    _, build = run_timeline(resolved)
+    costs = ownership_cost_summary(resolved, build)
+    assert costs['monthly_ownership'] == 0
+    assert costs['loan_payments_total'] == pytest.approx(costs['monthly_loan_payment'] * 12)
+    assert costs['net_cash_outlay'] == pytest.approx(costs['one_time_payment'] + costs['loan_payments_total'])
