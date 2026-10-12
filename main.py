@@ -10,6 +10,7 @@ import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
 
 from app.config import settings
 from app.decision_schemas import VehicleDecisionRequest, VehicleComparisonRequest, VehicleWhatIfRequest
@@ -521,6 +522,11 @@ def categorize_expenses_api(req: CategorizeExpensesRequest, request: Request) ->
 def generate_report_api(req: GenerateReportRequest, request: Request) -> Dict[str, Any]:
     rate_limit_ai(request)
     return generate_report(req.model_dump())
+
+
+@app.api_route("/", methods=["GET", "HEAD"], include_in_schema=False)
+def workspace_entrypoint():
+    return RedirectResponse(url="/vehicle.html", status_code=302, headers={"Cache-Control":"no-store"})
 
 
 app.mount("/", StaticFiles(directory=BASE_DIR / "static", html=True), name="static")
