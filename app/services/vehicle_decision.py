@@ -71,9 +71,16 @@ def run_timeline(req, *, baseline=False, stress=None, round_output=True):
             if raw['type'] != 'range':
                 events.append(raw)
                 continue
-            # Ownership budgets and offsets grow annually; debt is fixed nominal.
-            for month in range(start, 61):
-                events.append({**raw, 'start_month': month, 'end_month': month,
+            # Inflation is constant within simulation months 1-12, 13-24, ... .
+            # Keep the same amount and active months, but avoid scanning up to
+            # 360 individual monthly ownership events in every expense category.
+            # A purchase in month 12 gets one month at year-one prices, not 12.
+            for year_start in range(1, 61, 12):
+                month = max(start, year_start)
+                end = year_start + 11
+                if month > end:
+                    continue
+                events.append({**raw, 'start_month': month, 'end_month': end,
                                'amount': raw['amount'] * inflation_factor(month, req.profile.inflation_rate)})
     if stress == 'income_reduction':
         events.append(dict(type='range', start_month=start, end_month=60, income_multiplier=STRESS_DEFAULTS['income_multiplier']))
