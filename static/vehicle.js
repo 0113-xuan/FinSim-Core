@@ -182,7 +182,7 @@ form.addEventListener('submit',async event=>{
     if(submittedRevision!==revision) { $('status').textContent='資料已修改，請重新確認並評估。'; return; }
     if(personal) {render(result);setVehicleAnalysisContext(submittedRequest);} else renderStandaloneCosts(result);
     $('status').textContent='評估完成';
-  } catch(error) { $('error').hidden=false; $('error').textContent=error.name==='AbortError'?'計算逾時，資料仍保留，請再試一次。':error.message; $('status').textContent='未完成'; }
+  } catch(error) { $('error').hidden=false; $('error').textContent=error.name==='AbortError'?'等待超過 30 秒，已停止本次請求。資料仍保留，請確認伺服器可連線後再試。':error.message; $('status').textContent='未完成'; }
   finally { clearTimeout(timeout); $('submitDecision').disabled=false; }
 });
 $('includeFinancialProfile').addEventListener('change',syncFinancialProfile);
