@@ -62,6 +62,17 @@ function row(target, values) {
   $(target).append(tr);
 }
 function name(key) { return labels[key.replace('profile.','')] || key; }
+function stressVerdict(stress) {
+  if(stress.applicable === false) return '不適用';
+  const failed=stress.constraints.filter(c=>c.applicable !== false && c.passed === false);
+  const unknown=stress.constraints.filter(c=>c.applicable !== false && c.passed !== true && c.passed !== false);
+  const inapplicable=stress.constraints.filter(c=>c.applicable === false);
+  const verdict=stress.passed === true ? '全部符合' : stress.passed === false ? '未符合' : '尚未判定';
+  const details=[...failed.map(c=>`${name(c.key)}未符合`),
+    ...unknown.map(c=>`${name(c.key)}尚未判定`),
+    ...inapplicable.map(c=>`${name(c.key)}：不適用`)];
+  return [verdict,...details].join('；');
+}
 function render(result) {
   renderOwnershipCosts(result.ownership_costs);
   const customName=$('customVehicleName').value.trim();
@@ -78,13 +89,14 @@ function render(result) {
   $('overviewCash').textContent = money(result.scenario.minimum_cash_balance);
   const coverage = result.scenario.minimum_emergency_fund_months;
   $('overviewCashNote').textContent = coverage == null ? '無必要支出，無法換算預備金月數' : `期間內預備金最低可支應 ${num(coverage)} 個月必要支出`;
-  const applicableStresses = result.stress_tests.filter(s=>s.applicable);
-  const failedStresses = applicableStresses.filter(s=>s.constraints.some(c=>!c.passed));
-  $('stressSummary').textContent = `${applicableStresses.length} 種適用情況，${failedStresses.length} 種未符合限制`;
-  $('riskHeadline').textContent = applicableStresses.length ? (failedStresses.length ? `遇到收入下降等壓力情況，有 ${failedStresses.length}／${applicableStresses.length} 種會超出財務門檻。` : `目前 ${applicableStresses.length} 種壓力測試都符合門檻，但不代表沒有風險。`) : '目前沒有適用的壓力測試，不能判定抗風險能力。';
-  $('riskHeadline').dataset.state=failedStresses.length?'failed':'passed';
+  const applicableStresses = result.stress_tests.filter(s=>s.applicable === true);
+  const failedStresses = applicableStresses.filter(s=>s.passed === false);
+  const unknownStresses = applicableStresses.filter(s=>s.passed !== true && s.passed !== false);
+  $('stressSummary').textContent = `${applicableStresses.length} 種適用情況，${failedStresses.length} 種未符合限制` + (unknownStresses.length?`，${unknownStresses.length} 種尚未判定`:'');
+  $('riskHeadline').textContent = applicableStresses.length ? (failedStresses.length ? `遇到收入下降等壓力情況，有 ${failedStresses.length}／${applicableStresses.length} 種會超出財務門檻。` : unknownStresses.length ? '部分壓力測試尚未判定，請重新評估。' : `目前 ${applicableStresses.length} 種壓力測試都符合門檻，但不代表沒有風險。`) : '目前沒有適用的壓力測試，不能判定抗風險能力。';
+  $('riskHeadline').dataset.state=failedStresses.length?'failed':unknownStresses.length || !applicableStresses.length?'unknown':'passed';
   const stressNames = {income_reduction:'購車起收入減少 10%',unemployment:'購車起失業 3 個月',emergency_expense:'購車月突發支出 10 萬',interest_rate:'貸款利率增加 2 個百分點'};
-  result.stress_tests.forEach(s=>row('stresses',[stressNames[s.name],money(s.metrics.minimum_cash_balance),s.metrics.minimum_cash_month,num(s.metrics.minimum_emergency_fund_months),money(s.metrics.ending_cash),!s.applicable?'不適用':s.constraints.every(c=>c.passed)?'全部符合':s.constraints.filter(c=>!c.passed).map(c=>name(c.key)).join('、')+'未符合']));
+  result.stress_tests.forEach(s=>row('stresses',[stressNames[s.name],money(s.metrics.minimum_cash_balance),s.metrics.minimum_cash_month,num(s.metrics.minimum_emergency_fund_months),money(s.metrics.ending_cash),stressVerdict(s)]));
   const limit = result.affordability;
   $('overviewLimit').textContent = limit.status === 'bounded' ? money(limit.maximum_affordable_vehicle_price) : limit.status === 'no_feasible_price' ? '無可行車價' : '尚未找到上限';
   $('overviewLimitNote').textContent = limit.status === 'bounded' ? '僅為設定門檻下的計算邊界，不是建議預算，也不代表買得輕鬆或通過所有壓力測試。' : limit.status === 'no_feasible_price' ? '目前條件無法同時符合全部財務限制' : '已達搜尋範圍，無法判定最大可負擔車價';
