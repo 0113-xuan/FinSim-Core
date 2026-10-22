@@ -4,7 +4,7 @@ from pydantic import Field, model_validator
 from app.decision_schemas import StrictModel, VehicleDecisionRequest, DecisionProfile, DecisionConstraints
 from app.decision_assumptions import ASSUMPTIONS
 from app.vehicle_catalog import VehiclePresetRequest, vehicle_preset
-from app.services.vehicle_decision import resolve, ownership_cost_summary, simulate_vehicle_decision
+from app.services.vehicle_decision import resolve, run_timeline, evaluate, constraints, ownership_cost_summary
 from app.services.scenario_engine import build_scenario
 from app.services.calendar_period import YearMonth
 
@@ -101,9 +101,15 @@ def compare_running_costs(request: VehicleCostComparisonRequest):
                 start_period=context.start_period,
                 scenario=dict(scenario_id='vehicle-comparison',scenario_type='vehicle_purchase',
                               target_period=context.target_period,horizon_months=60,payload=financial_payload)))
-            simulation=simulate_vehicle_decision(decision)
-            financial=dict(baseline=simulation['baseline'],metrics=simulation['scenario'],
-                           constraints=simulation['constraints'],ownership_costs=simulation['ownership_costs'],
+            # This response exposes neither stress tests nor a price boundary.
+            # Use exactly the same timeline/metric functions without those searches.
+            decision, _ = resolve(decision)
+            baseline_rows, _ = run_timeline(decision, baseline=True)
+            rows, financial_build = run_timeline(decision)
+            metrics = evaluate(rows, decision, financial_build)
+            financial=dict(baseline=evaluate(baseline_rows, decision), metrics=metrics,
+                           constraints=constraints(metrics, decision),
+                           ownership_costs=ownership_cost_summary(decision, financial_build),
                            source='derived')
         return dict(vehicle=vehicle, financial=financial, monthly_cost=costs['monthly_ownership'],
                     annual_cost=round(costs['ownership_total'] / request.ownership_years, 2),
