@@ -1,0 +1,136 @@
+{
+  "source_revision": "d1ca696",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "repeats": 3,
+  "measurement": "TestClient real API, one untimed warm-up per case; no concurrent benchmark/test runs",
+  "validation_note": "Original HEAD lacks stress.passed; timing is not a declaration of passing full regression.",
+  "cases": [
+    {
+      "name": "financed_defaults",
+      "route": "/decisions/vehicle",
+      "seconds": [
+        0.743717999997898,
+        0.7158125999994809,
+        0.7009529000060866
+      ],
+      "median_seconds": 0.7158125999994809,
+      "max_seconds": 0.743717999997898,
+      "full_json_matches_expected": false,
+      "nonstress_fields_equal": true,
+      "stress_financial_metrics_equal": true
+    },
+    {
+      "name": "cash_month13_inflation_offset",
+      "route": "/decisions/vehicle",
+      "seconds": [
+        0.6122367999996641,
+        0.6158098000014434,
+        0.6103074000056949
+      ],
+      "median_seconds": 0.6122367999996641,
+      "max_seconds": 0.6158098000014434,
+      "full_json_matches_expected": false,
+      "nonstress_fields_equal": true,
+      "stress_financial_metrics_equal": true
+    },
+    {
+      "name": "zero_budget_zero_apr_short_loan",
+      "route": "/decisions/vehicle",
+      "seconds": [
+        0.6832927000068594,
+        0.6825962000002619,
+        0.6816544000030262
+      ],
+      "median_seconds": 0.6825962000002619,
+      "max_seconds": 0.6832927000068594,
+      "full_json_matches_expected": false,
+      "nonstress_fields_equal": true,
+      "stress_financial_metrics_equal": true
+    },
+    {
+      "name": "month58_long_loan_expiring_debt",
+      "route": "/decisions/vehicle",
+      "seconds": [
+        0.3377297000042745,
+        0.37024620000011055,
+        0.329771199998504
+      ],
+      "median_seconds": 0.3377297000042745,
+      "max_seconds": 0.37024620000011055,
+      "full_json_matches_expected": false,
+      "nonstress_fields_equal": true,
+      "stress_financial_metrics_equal": true
+    },
+    {
+      "name": "claude_wealthy_unemployment",
+      "route": "/decisions/vehicle",
+      "seconds": [
+        0.8711307999983546,
+        0.7810626999998931,
+        0.7857713000048534
+      ],
+      "median_seconds": 0.7857713000048534,
+      "max_seconds": 0.8711307999983546,
+      "full_json_matches_expected": false,
+      "nonstress_fields_equal": true,
+      "stress_financial_metrics_equal": true
+    },
+    {
+      "name": "no_feasible_price",
+      "route": "/decisions/vehicle",
+      "seconds": [
+        0.09244030000263592,
+        0.09066080000047805,
+        0.0908287999991444
+      ],
+      "median_seconds": 0.0908287999991444,
+      "max_seconds": 0.09244030000263592,
+      "full_json_matches_expected": false,
+      "nonstress_fields_equal": true,
+      "stress_financial_metrics_equal": true
+    },
+    {
+      "name": "comparison_catalog_financed",
+      "route": "/decisions/vehicle/cost-comparison",
+      "seconds": [
+        0.04443669999454869,
+        0.04319460000260733,
+        0.04267480000271462
+      ],
+      "median_seconds": 0.04319460000260733,
+      "max_seconds": 0.04443669999454869,
+      "full_json_matches_expected": true,
+      "nonstress_fields_equal": true,
+      "stress_financial_metrics_equal": true
+    },
+    {
+      "name": "comparison_mixed_payment_month12",
+      "route": "/decisions/vehicle/cost-comparison",
+      "seconds": [
+        0.0440221000026213,
+        0.04510719999962021,
+        0.04142449999926612
+      ],
+      "median_seconds": 0.0440221000026213,
+      "max_seconds": 0.04510719999962021,
+      "full_json_matches_expected": true,
+      "nonstress_fields_equal": true,
+      "stress_financial_metrics_equal": true
+    },
+    {
+      "name": "comparison_running_costs_only",
+      "route": "/decisions/vehicle/cost-comparison",
+      "seconds": [
+        0.002459900002577342,
+        0.0024553000039304607,
+        0.0024176000006264076
+      ],
+      "median_seconds": 0.0024553000039304607,
+      "max_seconds": 0.002459900002577342,
+      "full_json_matches_expected": true,
+      "nonstress_fields_equal": true,
+      "stress_financial_metrics_equal": true
+    }
+  ]
+}

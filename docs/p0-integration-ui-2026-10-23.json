@@ -1,0 +1,40 @@
+{
+  "url": "http://127.0.0.1:8767/vehicle.html",
+  "title": "FinSim | 購車決策",
+  "passedText": "購車起失業 3 個月\t約 NT$4,722,600\t2026-12\t111.24\t約 NT$13,655,700\t全部符合；最低每月結餘（元）：不適用",
+  "failedText": "購車起失業 3 個月\t約 -NT$984,300\t2031-09\t-22.35\t約 -NT$984,300\t未符合；最低預備金（月）未符合；最低現金（元）未符合；最低每月結餘（元）：不適用",
+  "passedState": {
+    "state": "passed",
+    "text": "目前 4 種壓力測試都符合門檻，但不代表沒有風險。",
+    "color": "rgb(15, 23, 42)",
+    "background": "rgb(240, 245, 243)",
+    "borderWidth": "0px",
+    "borderColor": "rgb(15, 23, 42)"
+  },
+  "failedState": {
+    "state": "failed",
+    "text": "遇到收入下降等壓力情況，有 4／4 種會超出財務門檻。",
+    "color": "rgb(180, 35, 24)",
+    "background": "rgb(255, 241, 239)",
+    "borderWidth": "0px",
+    "borderColor": "rgb(180, 35, 24)"
+  },
+  "unknownState": {
+    "state": "unknown",
+    "text": "部分壓力測試尚未判定，請重新評估。",
+    "color": "rgb(133, 77, 14)",
+    "background": "rgb(254, 249, 195)",
+    "borderWidth": "4px",
+    "borderColor": "rgb(161, 98, 7)"
+  },
+  "unknownSummary": "4 種適用情況，0 種未符合限制，4 種尚未判定",
+  "viewports": [
+    "1365x900",
+    "390x844"
+  ],
+  "errors": [],
+  "layout": {
+    "width": 390,
+    "scrollWidth": 390
+  }
+}

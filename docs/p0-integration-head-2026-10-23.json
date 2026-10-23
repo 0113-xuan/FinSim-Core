@@ -1,0 +1,125 @@
+{
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "repeats": 3,
+  "measurement": "TestClient real API, one untimed warm-up per case; no cloud/network latency",
+  "cases": [
+    {
+      "name": "financed_defaults",
+      "route": "/decisions/vehicle",
+      "json_identical": true,
+      "sha256": "0bc4690e91fa6295a3583c5f934a0492ff207bd5d657a3f145486a187db1ba8d",
+      "seconds": [
+        0.5269048999980441,
+        0.552025600001798,
+        0.5512498999960371
+      ],
+      "median_seconds": 0.5512498999960371,
+      "max_seconds": 0.552025600001798
+    },
+    {
+      "name": "cash_month13_inflation_offset",
+      "route": "/decisions/vehicle",
+      "json_identical": true,
+      "sha256": "042bbe26455ce1b031d7e562257c5d5700252fd61b9e6e49fece252a630ff356",
+      "seconds": [
+        0.4837721000003512,
+        0.46739589999924647,
+        0.46119099999486934
+      ],
+      "median_seconds": 0.46739589999924647,
+      "max_seconds": 0.4837721000003512
+    },
+    {
+      "name": "zero_budget_zero_apr_short_loan",
+      "route": "/decisions/vehicle",
+      "json_identical": true,
+      "sha256": "dd4675544535d5472949a8f2096000b87c224a386b8b311abe07924c0ec82825",
+      "seconds": [
+        0.508648400005768,
+        0.502835999999661,
+        0.5013198000015109
+      ],
+      "median_seconds": 0.502835999999661,
+      "max_seconds": 0.508648400005768
+    },
+    {
+      "name": "month58_long_loan_expiring_debt",
+      "route": "/decisions/vehicle",
+      "json_identical": true,
+      "sha256": "e79b1f5ee0a7dfd1c84e422078c55ab98bbbdfd4e785b64c6a7820aabb23d9c4",
+      "seconds": [
+        0.2474129999973229,
+        0.24800540000433102,
+        0.2671117999998387
+      ],
+      "median_seconds": 0.24800540000433102,
+      "max_seconds": 0.2671117999998387
+    },
+    {
+      "name": "claude_wealthy_unemployment",
+      "route": "/decisions/vehicle",
+      "json_identical": true,
+      "sha256": "faf6c3e2342f5b9479726bac0fa2ef89018208c413fb029ba730da6f57ebcdf9",
+      "seconds": [
+        0.6471065000005183,
+        0.6339297000013175,
+        0.6346451999997953
+      ],
+      "median_seconds": 0.6346451999997953,
+      "max_seconds": 0.6471065000005183
+    },
+    {
+      "name": "no_feasible_price",
+      "route": "/decisions/vehicle",
+      "json_identical": true,
+      "sha256": "8ffc8450c339aea8f68959c9bbea78ac63d9374c013ffeb112b8f5bf2e944726",
+      "seconds": [
+        0.10305199999856995,
+        0.1068135000023176,
+        0.10490929999650689
+      ],
+      "median_seconds": 0.10490929999650689,
+      "max_seconds": 0.1068135000023176
+    },
+    {
+      "name": "comparison_catalog_financed",
+      "route": "/decisions/vehicle/cost-comparison",
+      "json_identical": true,
+      "sha256": "05e2aa0dd98daa432d2b106d8ac74f71301c87484f8b0e676ef900260ba0c348",
+      "seconds": [
+        0.043271100003039464,
+        0.04757889999746112,
+        0.0476565000062692
+      ],
+      "median_seconds": 0.04757889999746112,
+      "max_seconds": 0.0476565000062692
+    },
+    {
+      "name": "comparison_mixed_payment_month12",
+      "route": "/decisions/vehicle/cost-comparison",
+      "json_identical": true,
+      "sha256": "101883dea334434e59da20061e055a08cc735480554551413f01f07de2212c75",
+      "seconds": [
+        0.04319779999786988,
+        0.04310740000073565,
+        0.04786610000155633
+      ],
+      "median_seconds": 0.04319779999786988,
+      "max_seconds": 0.04786610000155633
+    },
+    {
+      "name": "comparison_running_costs_only",
+      "route": "/decisions/vehicle/cost-comparison",
+      "json_identical": true,
+      "sha256": "101562191ab939cd047e36886b57c9d3ec6a011e4c4fecb18a8f450a46593312",
+      "seconds": [
+        0.004087100001925137,
+        0.00539559999742778,
+        0.004631100004189648
+      ],
+      "median_seconds": 0.004631100004189648,
+      "max_seconds": 0.00539559999742778
+    }
+  ]
+}
