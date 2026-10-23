@@ -106,6 +106,7 @@
 .vehicle-page .cost-difference { border:0; padding:18px 20px; background:#eef5f9; border-radius:8px; color:#244858; }
 .vehicle-page .risk-headline { padding:14px 18px; background:#f0f5f3; border-radius:6px; }
 .vehicle-page .risk-headline[data-state="failed"] { background:#fff1ef; }
+.vehicle-page .risk-headline[data-state="unknown"] { color:#854d0e; background:#fef9c3; border-left:4px solid #a16207; }
 #ownershipStructure { max-width:640px; }
 .cost-options { border:0; padding:16px 0; margin:0; display:flex; flex-wrap:wrap; gap:10px; }
 .cost-options legend { font-size:14px; font-weight:600; }
