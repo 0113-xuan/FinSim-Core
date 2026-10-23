@@ -3,8 +3,26 @@ from decimal import Decimal, localcontext
 from fastapi.testclient import TestClient
 from main import app
 from app.decision_schemas import VehicleDecisionRequest
-from app.services.vehicle_decision import simulate_vehicle_decision, resolve, run_timeline, evaluate, price_metrics, ownership_cost_summary
+from app.services.vehicle_decision import simulate_vehicle_decision, resolve, run_timeline, evaluate, price_metrics, ownership_cost_summary, stress_constraints
 from app.core.financial_rules import emergency_fund_months
+
+
+@pytest.mark.parametrize('boundary', ['1263047.15', '1263047.159', '1263047.151'])
+def test_limit_search_uses_bounded_cent_iterations(monkeypatch, boundary):
+    from app.services import vehicle_decision
+    calls = []
+    exact = Decimal(boundary)
+
+    def check_price(request, price):
+        calls.append(price)
+        return {}, [dict(key='minimum_monthly_surplus', passed=Decimal(str(price)) <= exact)]
+
+    monkeypatch.setattr(vehicle_decision, 'price_metrics', check_price)
+    result = vehicle_decision.find_limit(req())
+    actual = Decimal(str(result['maximum_affordable_vehicle_price']))
+    assert Decimal(0) <= exact - actual < Decimal('.01')
+    assert actual + Decimal('.01') > exact
+    assert len(calls) <= 35
 
 
 @pytest.mark.parametrize('apr', ['0', '0.03', '0.075'])
@@ -93,6 +111,24 @@ def test_stresses_use_same_engine_and_unemployment_zero():
     for name in ['unemployment', 'emergency_expense', 'income_reduction', 'interest_rate']:
         rows, _ = run_timeline(resolved, stress=name)
         assert rows[-1]['balance'] < base[-1]['balance']
+
+
+@pytest.mark.parametrize(
+    ('name', 'profile', 'expected'),
+    [
+        ('comfortable', dict(salary=120000, balance=2000000, fixed_expense=12000, variable_expense=8000, required_monthly_debt=0), True),
+        ('tight', dict(salary=60000, balance=300000, fixed_expense=22000, variable_expense=12000, required_monthly_debt=5000), False),
+        ('unable', dict(salary=45000, balance=50000, fixed_expense=25000, variable_expense=15000, required_monthly_debt=5000), False),
+    ],
+)
+def test_unemployment_stress_distinguishes_financial_capacity(name, profile, expected):
+    data = request_data()
+    data['profile'].update(profile)
+    resolved, _ = resolve(req(data))
+    rows, build = run_timeline(resolved, stress='unemployment')
+    checks = stress_constraints(evaluate(rows, resolved, build), resolved, 'unemployment')
+    assert all(c['passed'] is None for c in checks if c['key'] == 'minimum_monthly_surplus')
+    assert all(c['passed'] for c in checks if c['key'] != 'minimum_monthly_surplus') is expected
 
 
 def test_higher_prices_and_costs_cannot_improve_cash():

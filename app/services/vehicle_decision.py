@@ -1,5 +1,5 @@
 """Deterministic typed vehicle simulation, evaluation and bounded search."""
-from decimal import Decimal
+from decimal import Decimal, ROUND_CEILING
 
 from app.core.simulation import simulate_finance
 from app.core.events import calculate_loan_payment, get_recurring_event_amount
@@ -121,6 +121,24 @@ def constraints(metrics, req):
             for key, field in mapping.items() for value in [getattr(req.constraints, key)]]
 
 
+def stress_constraints(metrics, req, stress):
+    """Evaluate a stress result without treating the shock itself as a failure.
+
+    During unemployment the income multiplier is intentionally zero.  The
+    purchase-month surplus therefore cannot answer whether the household can
+    absorb the event; it is not applicable for this stress, while cash and
+    emergency-fund safeguards remain applicable.
+    """
+    checks = constraints(metrics, req)
+    if stress != 'unemployment':
+        return checks
+    for check in checks:
+        if check['key'] == 'minimum_monthly_surplus':
+            check['applicable'] = False
+            check['passed'] = None
+    return checks
+
+
 def price_metrics(req, price):
     copy = req.model_copy(deep=True)
     copy.scenario.payload.purchase_price.value = Decimal(str(price))
@@ -148,20 +166,21 @@ def find_limit(req):
         if upper >= 20000000:
             return dict(status='search_limit_reached', maximum_affordable_vehicle_price=None, binding_constraint=[], constraint_results=checks)
         upper = min(upper * 2, 20000000)
-    while upper - lower > .000001:
-        midpoint = (lower + upper) / 2
-        _, checks = price_metrics(req, midpoint)
+    # Search representable cents, keeping feasibility calculations unrounded.
+    lower_cent = int((Decimal(str(lower)) * 100).to_integral_value(rounding=ROUND_CEILING))
+    upper_cent = int((Decimal(str(upper)) * 100).to_integral_value(rounding=ROUND_CEILING))
+    _, checks = price_metrics(req, lower_cent / 100)
+    if not all(c['passed'] for c in checks):
+        return dict(status='no_feasible_price', maximum_affordable_vehicle_price=None,
+                    binding_constraint=[c['key'] for c in checks if not c['passed']], constraint_results=checks)
+    while upper_cent - lower_cent > 1:
+        midpoint = (lower_cent + upper_cent) // 2
+        _, checks = price_metrics(req, midpoint / 100)
         if all(c['passed'] for c in checks):
-            lower = midpoint
+            lower_cent = midpoint
         else:
-            upper = midpoint
-    price = int(lower * 100) / 100
-    # An exact-cent boundary can sit between the converged endpoints.
-    next_cent = float(Decimal(str(price)) + Decimal('.01'))
-    if next_cent <= upper:
-        _, next_checks = price_metrics(req, next_cent)
-        if all(c['passed'] for c in next_checks):
-            price = next_cent
+            upper_cent = midpoint
+    price = lower_cent / 100
     _, checks = price_metrics(req, price)
     if price * 1.01 > 20000000:
         return dict(status='verification_limit_reached', maximum_affordable_vehicle_price=None,
@@ -183,8 +202,10 @@ def simulate_vehicle_decision(request: VehicleDecisionRequest):
     for name in ('income_reduction', 'unemployment', 'emergency_expense', 'interest_rate'):
         stressed, stress_build = run_timeline(req, stress=name)
         metrics = evaluate(stressed, req, stress_build)
+        stress_checks = stress_constraints(metrics, req, name)
         stresses.append(dict(name=name, applicable=name != 'interest_rate' or req.scenario.payload.payment_method == 'financed',
-                             metrics=metrics, constraints=constraints(metrics, req)))
+                             metrics=metrics, constraints=stress_checks,
+                             passed=all(c['passed'] for c in stress_checks if c.get('applicable', True))))
     return dict(baseline=baseline, scenario=scenario,
                 baseline_monthly_surplus=baseline['monthly_surplus'],
                 scenario_steady_monthly_surplus=scenario['monthly_surplus'],
