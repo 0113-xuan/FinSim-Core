@@ -171,19 +171,21 @@ form.addEventListener('submit',async event=>{
   event.preventDefault(); $('error').hidden=true; $('submitDecision').disabled=true; $('status').textContent='計算中…';
   const controller=new AbortController(), timeout=setTimeout(()=>controller.abort(),30000);
   const submittedRevision=revision;
+  const waiting=setTimeout(()=>{if(submittedRevision===revision) $('status').textContent='仍在計算，請稍候；資料不會清除。';},10000);
   const personal=$('includeFinancialProfile').checked;
-  const allInputs=buildRequest();
-  const submittedRequest=personal?allInputs:{payload:allInputs.scenario.payload,ownership_years:Number($('singleOwnershipYears').value),...(allInputs.vehicle_catalog_id?{vehicle_catalog_id:allInputs.vehicle_catalog_id}:{})};
   invalidateVehicleAnalysis();
   try {
+    const allInputs=buildRequest();
+    const submittedRequest=personal?allInputs:{payload:allInputs.scenario.payload,ownership_years:Number($('singleOwnershipYears').value),...(allInputs.vehicle_catalog_id?{vehicle_catalog_id:allInputs.vehicle_catalog_id}:{})};
     const response=await fetch(personal?'/decisions/vehicle':'/decisions/vehicle/costs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(submittedRequest),signal:controller.signal});
+    if([502,503,504].includes(response.status)) throw new Error('伺服器暫時忙碌或正在啟動，請稍後再試；填寫資料仍保留。');
     const result=await response.json();
     if(!response.ok) throw new Error(typeof result.detail==='string'?result.detail:'請檢查日期、金額與貸款條件。');
     if(submittedRevision!==revision) { $('status').textContent='資料已修改，請重新確認並評估。'; return; }
     if(personal) {render(result);setVehicleAnalysisContext(submittedRequest);} else renderStandaloneCosts(result);
     $('status').textContent='評估完成';
-  } catch(error) { $('error').hidden=false; $('error').textContent=error.name==='AbortError'?'等待超過 30 秒，已停止本次請求。資料仍保留，請確認伺服器可連線後再試。':error.message; $('status').textContent='未完成'; }
-  finally { clearTimeout(timeout); $('submitDecision').disabled=false; }
+  } catch(error) { $('error').hidden=false; $('error').textContent=error.name==='AbortError'?'等待超過 30 秒，已停止本次請求。資料仍保留，請確認伺服器可連線後再試。':error instanceof TypeError?'無法連線至伺服器，資料仍保留，請確認服務已啟動。':error.message; $('status').textContent='未完成'; }
+  finally { clearTimeout(timeout); clearTimeout(waiting); $('submitDecision').disabled=false; }
 });
 $('includeFinancialProfile').addEventListener('change',syncFinancialProfile);
 let previousParking;

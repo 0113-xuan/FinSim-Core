@@ -7,6 +7,52 @@ const js=fs.readFileSync('static/vehicle.js','utf8');
 const css=fs.readFileSync('static/vehicle.css','utf8');
 test('vehicle script parses',()=>assert.doesNotThrow(()=>new vm.Script(js)));
 
+function submitHarness(fetchImpl) {
+  const nodes=new Map(),timers=new Map();let submit,timerId=0;
+  const $=id=>{if(!nodes.has(id)) nodes.set(id,{hidden:true,disabled:false,textContent:'',checked:id==='includeFinancialProfile'});return nodes.get(id);};
+  const context={$ ,form:{addEventListener:(type,handler)=>submit=handler},document:{querySelector:()=>({value:'single'})},
+    revision:0,AbortController,TypeError,Number,buildRequest:()=>({scenario:{payload:{}},profile:{salary:50000}}),
+    invalidateVehicleAnalysis:()=>{},render:()=>{},setVehicleAnalysisContext:()=>{},renderStandaloneCosts:()=>{},
+    fetch:fetchImpl,setTimeout:(callback,delay)=>{timers.set(++timerId,{callback,delay});return timerId;},clearTimeout:id=>timers.delete(id)};
+  vm.createContext(context);
+  vm.runInContext(js.slice(js.indexOf("form.addEventListener('submit'"),js.indexOf("$('includeFinancialProfile').addEventListener")),context);
+  return {$,timers,submit:()=>submit({preventDefault(){}})};
+}
+
+test('calculation shows progress and uses a 30-second deadline',async()=>{
+  let finish;
+  const h=submitHarness(()=>new Promise(resolve=>finish=resolve));
+  const pending=h.submit();
+  assert.equal(h.$('submitDecision').disabled,true);
+  assert.deepEqual([...h.timers.values()].map(t=>t.delay),[30000,10000]);
+  [...h.timers.values()].find(t=>t.delay===10000).callback();
+  assert.match(h.$('status').textContent,/仍在計算/);
+  finish({ok:true,status:200,json:async()=>({})});await pending;
+  assert.equal(h.$('status').textContent,'評估完成');
+  assert.equal(h.$('submitDecision').disabled,false);
+  assert.equal(h.timers.size,0);
+});
+
+test('timeout restores retry controls and preserves submitted profile',async()=>{
+  let submitted;
+  const h=submitHarness((url,options)=>{submitted=JSON.parse(options.body);return new Promise((resolve,reject)=>options.signal.addEventListener('abort',()=>reject(Object.assign(new Error(),{name:'AbortError'}))));});
+  const pending=h.submit();
+  [...h.timers.values()].find(t=>t.delay===30000).callback();await pending;
+  assert.match(h.$('error').textContent,/30 秒/);
+  assert.match(h.$('error').textContent,/資料仍保留/);
+  assert.equal(submitted.profile.salary,50000);
+  assert.equal(h.$('submitDecision').disabled,false);
+  assert.equal(h.timers.size,0);
+});
+
+test('gateway failure has a controlled message even for non-JSON responses',async()=>{
+  const h=submitHarness(async()=>({status:503,json:async()=>{throw new SyntaxError('HTML');}}));
+  await h.submit();
+  assert.match(h.$('error').textContent,/伺服器暫時忙碌/);
+  assert.equal(h.$('submitDecision').disabled,false);
+  assert.equal(h.timers.size,0);
+});
+
 test('headline currency rounds to hundreds while exact values remain available',()=>{
   const context={Intl};vm.createContext(context);
   vm.runInContext(js.slice(js.indexOf('const exactMoney ='),js.indexOf('const form ='))+';this.money=money;this.exactMoney=exactMoney;',context);
