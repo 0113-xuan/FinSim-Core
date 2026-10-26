@@ -99,3 +99,16 @@ progress::-webkit-progress-bar { background:#e9eef2; } progress::-webkit-progres
   .handoff-heading { align-items:flex-start; }.handoff-heading h2 { font-size:23px; }
 }
 @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+.recommendation-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; margin-top:24px; }
+.recommendation-card { border:1px solid var(--line); border-radius:8px; padding:24px; min-width:0; background:white; }
+.recommendation-card h4 { font-size:21px; margin:12px 0 4px; }
+.recommendation-card p { line-height:1.65; }
+.result-meta,.result-caption { color:var(--muted); font-size:13px; }
+.result-money { font-size:32px; color:#087559; display:block; margin:4px 0; }
+.recommendation-card dl { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; font-size:14px; }
+.recommendation-card dt { color:var(--muted); }.recommendation-card dd { margin:0; text-align:right; font-weight:650; overflow-wrap:anywhere; }
+.affordability,.result-notice { padding:12px; background:#eef3f6; font-size:14px; border-left:3px solid #627687; }
+.affordability.passed { background:#eaf6ef; border-color:#19805c; }.affordability.failed { background:#fff0ed; border-color:#b83d29; }
+#recommendationResults { scroll-margin-top:20px; }#recommendationResults:empty { display:none; }
+#recommendationResults h3 { font-size:23px; }#recommendationResults details p { font-size:13px; }#recommendationStatus { font-size:14px; }
+@media(max-width:680px) { .recommendation-grid { grid-template-columns:1fr; }.recommendation-card { padding:20px; }.result-money { font-size:30px; } }

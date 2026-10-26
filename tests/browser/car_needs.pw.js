@@ -73,7 +73,7 @@ async page => {
     check(json.usage.home_charging==='no'&&json.usage.public_charging==='yes',`${mode}: charging values lost`);
     check(json.preferences.priorities.includes('comfort'),`${mode}: comfort suggestion lost`);
     check(json.constraints.avoid_body_types.includes('suv'),`${mode}: exclusion suggestion lost`);
-    check(json.extraction.is_real_ai===false&&json.recommendation_handoff.engine_connected===false,`${mode}: mock not disclosed`);
+    check(json.extraction.is_real_ai===false&&json.recommendation_handoff.engine_connected===true,`${mode}: mock and P2 connection not disclosed`);
     check(!Object.hasOwn(json,'score'),`${mode}: unexpected recommendation score`);
     if(mode==='desktop') {
       check(json.payment.annual_interest_rate===.011&&json.financial_profile.salary===60000,`${mode}: finance mapping or rate precision changed`);

@@ -82,7 +82,7 @@
       financial_profile:a.include_financial?{salary:a.salary,balance:a.balance,fixed_expense:a.fixed_expense,variable_expense:a.variable_expense,required_monthly_debt:a.required_monthly_debt,existing_debts:null,raise_rate:null,inflation_rate:null}:null,
       payment:{payment_method:a.payment_method,down_payment:financed?a.down_payment:null,annual_interest_rate:financed&&a.annual_interest_rate!==null?Number((a.annual_interest_rate/100).toFixed(6)):null,loan_term_months:financed?a.loan_term_months:null},
       free_text:a.free_text,extraction:state.extraction?structuredClone(state.extraction):{provider:'mock',is_real_ai:false,status:'not_requested',candidates:[]},
-      field_sources:{...state.sources},recommendation_handoff:{status:ready?'ready_for_p2':'awaiting_confirmation',engine_connected:false}};
+      field_sources:{...state.sources},recommendation_handoff:{status:ready?'ready_for_p2':'awaiting_confirmation',engine_connected:true}};
   }
   function confirm(state) {
     if([0,1,2].some(step=>Object.keys(validate(state.answers,step)).length)) throw new Error('請先完成必填資料並修正錯誤，再確認需求。');

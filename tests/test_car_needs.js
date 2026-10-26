@@ -93,7 +93,7 @@ test('mock suggestions require explicit application and conflicts cannot overwri
 test('confirmation and revision support editable, deterministic recommendation handoff',()=>{
   const state=completed();state.confirmed=true;
   const json=model.serialize(state);assert.equal(json.status,'confirmed');assert.equal(json.recommendation_handoff.status,'ready_for_p2');
-  assert.equal(json.recommendation_handoff.engine_connected,false);
+  assert.equal(json.recommendation_handoff.engine_connected,true);
   const changed=model.update(state,'budget_max',900000);
   assert.equal(changed.confirmed,false);assert.equal(changed.revision,state.revision+1);
   assert.equal(state.answers.budget_max,1000000);assert.deepEqual(model.serialize(state),json);

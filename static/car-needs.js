@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   const model=window.CarNeeds,$=id=>document.getElementById(id),form=$('needsForm');
-  let state=model.createState(),busy=false,catalogLoaded=false;
+  let state=model.createState(),busy=false;
   const numeric=new Set(Object.keys(model.numericRules));
   const extractionClient=model.createExtractionClient();
   document.querySelectorAll('[data-choice]').forEach(container=>{
@@ -143,25 +143,27 @@
     catch(error) {$('reviewError').textContent=error.message;$('reviewError').hidden=false;return;}
     $('needsJson').textContent=JSON.stringify(model.serialize(state),null,2);
     $('reviewPanel').hidden=true;$('handoffPanel').hidden=false;$('handoffTitle').focus();
-    loadCatalog();
+    $('recommendationResults').replaceChildren();
+    $('recommendationStatus').textContent='';
+    $('runRecommendations').hidden=false;
   });
-  async function loadCatalog() {
-    if(catalogLoaded) return;
-    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
-    $('catalogStatus').textContent='正在讀取現有目錄…';
+  let recommendationController=null;
+  const recommendationButton=$('runRecommendations');
+  recommendationButton.addEventListener('click',async()=>{
+    if(recommendationController) return;
+    const revision=state.revision,controller=new AbortController();recommendationController=controller;
+    const timer=setTimeout(()=>controller.abort(),15000);
+    recommendationButton.disabled=true;$('recommendationResults').replaceChildren();$('recommendationStatus').textContent='正在比較車款與財務負擔…';
     try {
-      const response=await fetch('/decisions/vehicle/catalog',{signal:controller.signal});if(!response.ok) throw new Error();
-      const catalog=await response.json();if(!Array.isArray(catalog)) throw new Error();
-      $('catalogPreview').replaceChildren();
-      for(const vehicle of catalog.slice(0,2)) {
-        const item=document.createElement('div'),name=document.createElement('h4'),price=document.createElement('p');item.className='catalog-item';
-        name.textContent=`${vehicle.brand} ${vehicle.model} ${vehicle.trim}`;price.textContent=`參考車價 ${amount(vehicle.price_twd)}`;
-        item.append(name,price);$('catalogPreview').append(item);
-      }
-      catalogLoaded=true;$('catalogStatus').textContent=catalog.length?`共 ${catalog.length} 個版本；這裡僅預覽前兩個，非推薦結果。`:'目前沒有目錄資料，需求 JSON 仍可使用。';
-    } catch {$('catalogStatus').textContent='目錄暫時無法載入，已確認的需求仍可匯出。';}
-    finally {clearTimeout(timer);}
-  }
+      const result=await window.CarRecommendations.request(model.serialize(state),{signal:controller.signal});
+      if(!state.confirmed||revision!==state.revision) return;
+      window.CarRecommendations.render($('recommendationResults'),result);
+      $('recommendationStatus').textContent=`比較完成：${result.ranked.length} 款可排名、${result.incomplete.length} 款資料不足、${result.excluded.length} 款不符合條件。`;
+      $('recommendationResults').focus();
+    } catch(error) {if(state.confirmed&&revision===state.revision)$('recommendationStatus').textContent=error.name==='AbortError'?'計算逾時，需求仍保留，請再試一次。':error.message;}
+    finally {clearTimeout(timer);recommendationController=null;recommendationButton.disabled=false;}
+  });
+  $('reviseNeeds').addEventListener('click',()=>{recommendationController?.abort();$('recommendationResults').replaceChildren();});
   $('copyJson').addEventListener('click',async()=>{
     try {await navigator.clipboard.writeText($('needsJson').textContent);$('exportStatus').textContent='已複製需求 JSON';}
     catch {$('exportStatus').textContent='無法存取剪貼簿，請使用下載 JSON。';}

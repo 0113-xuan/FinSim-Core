@@ -20,6 +20,8 @@ from app.services.vehicle_decision import simulate_vehicle_decision
 from app.services.vehicle_analysis import sensitivity_analysis, compare_vehicles, vehicle_what_if
 from app.services.vehicle_cost_comparison import VehicleCostComparisonRequest, compare_running_costs
 from app.services.vehicle_costs import StandaloneVehicleCostRequest, estimate_vehicle_costs
+from app.recommendation_schemas import CarNeedsRequest
+from app.services.car_recommendations import recommend_cars
 from app.core.advisor import compare_options, generate_advice
 from app.core.monte_carlo import run_monte_carlo
 from app.core.simulation import simulate_finance
@@ -391,6 +393,14 @@ def scenario_compare_api(req: ScenarioComparisonRequest) -> ScenarioComparisonRe
 @app.get("/decisions/vehicle/catalog")
 def vehicle_catalog_api():
     return catalog_list()
+
+
+@app.post('/decisions/vehicle/recommendations')
+def vehicle_recommendations_api(req: CarNeedsRequest):
+    try:
+        return recommend_cars(req)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
 @app.post("/decisions/vehicle/preset")
