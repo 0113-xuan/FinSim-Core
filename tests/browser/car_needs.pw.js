@@ -1,0 +1,96 @@
+async page => {
+  const check=(condition,message)=>{if(!condition) throw new Error(message);};
+  const results=[],errors=[],aiRequests=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  page.on('request',request=>{if(new URL(request.url()).pathname.startsWith('/ai/')) aiRequests.push(request.url());});
+  await page.goto(new URL('/vehicle.html',page.url()).href);
+  await page.getByRole('link',{name:'幫我選車',exact:true}).click();
+  await page.waitForURL('**/car-needs.html');
+  for(const [mode,width,height] of [['desktop',1440,1000],['mobile',390,844]]) {
+    await page.setViewportSize({width,height});
+    await page.reload();
+    await page.getByRole('heading',{name:'找到適合你生活的車',exact:true}).waitFor();
+    await page.screenshot({path:`finsim-p1-${mode}-20261026.png`,fullPage:true});
+    await page.getByRole('button',{name:'下一步',exact:true}).click();
+    check(await page.locator('#formError').isVisible(),`${mode}: missing validation`);
+    await page.locator('[name="budget_max"]').fill('1000000');
+    await page.getByRole('checkbox',{name:'日常通勤',exact:true}).press('Space');
+    await page.getByRole('button',{name:'下一步',exact:true}).press('Enter');
+    await page.locator('[name="usual_passengers"]').fill('3');
+    await page.locator('[name="ownership_years"]').selectOption('5');
+    await page.getByRole('checkbox',{name:'油電',exact:true}).check();
+    check(!(await page.locator('#chargingFields').isVisible()),`${mode}: irrelevant charging shown`);
+    await page.getByRole('checkbox',{name:'純電',exact:true}).check();
+    check(await page.locator('#chargingFields').isVisible(),`${mode}: BEV charging missing`);
+    await page.locator('[name="home_charging"]').selectOption('no');
+    await page.locator('[name="public_charging"]').selectOption('yes');
+    await page.locator('[name="parking_type"]').selectOption('own');
+    check(await page.locator('[name="monthly_parking"]').inputValue()==='',`${mode}: own parking silently priced`);
+    await page.locator('[name="parking_type"]').selectOption('rented');
+    await page.locator('[name="monthly_parking"]').fill('-1');
+    await page.getByRole('button',{name:'下一步',exact:true}).click();
+    check(await page.locator('[data-error="monthly_parking"]').innerText()!=='',`${mode}: parking validation missing`);
+    await page.locator('[name="monthly_parking"]').fill('3000');
+    if(mode==='desktop') {
+      await page.locator('[name="payment_method"]').selectOption('financed');
+      await page.getByRole('button',{name:'下一步',exact:true}).click();
+      for(const name of ['down_payment','annual_interest_rate','loan_term_months']) {
+        check(await page.locator(`[name="${name}"]`).getAttribute('aria-invalid')==='true',`${mode}: missing loan input accepted: ${name}`);
+        check(await page.locator(`[name="${name}"]`).getAttribute('aria-describedby')===`error-${name}`,`${mode}: error description missing`);
+      }
+      check(await page.locator('#stepTitle1').isVisible(),`${mode}: incomplete loan passed step`);
+      for(const [name,value] of Object.entries({down_payment:'200000',annual_interest_rate:'1.1',loan_term_months:'60'})) await page.locator(`[name="${name}"]`).fill(value);
+      await page.locator('[name="include_financial"]').check();
+      for(const [name,value] of Object.entries({salary:'60000',balance:'500000',fixed_expense:'12000',variable_expense:'8000',required_monthly_debt:'0'})) await page.locator(`[name="${name}"]`).fill(value);
+    } else await page.locator('[name="payment_method"]').selectOption('cash');
+    await page.getByRole('button',{name:'下一步',exact:true}).click();
+    await page.locator('[name="free_text"]').fill('我不是很在意保養費低，五年後我要出國');
+    await page.getByRole('button',{name:'預覽模擬擷取',exact:true}).click();
+    check((await page.locator('#extractionStatus').innerText()).includes('沒有符合示範規則'),`${mode}: negation or ambiguous time inferred`);
+    check(await page.locator('#extractionCandidates li').count()===0,`${mode}: unsupported mock candidates`);
+    const text='我不喜歡休旅車，常常載長輩，希望後座舒服，保養費不要太高。';
+    await page.locator('[name="free_text"]').fill(text);
+    await page.getByRole('button',{name:'預覽模擬擷取',exact:true}).click();
+    await page.locator('#extractionCandidates li').last().waitFor();
+    check(await page.locator('#extractionCandidates li').count()===4,`${mode}: mock example incomplete`);
+    for(const name of ['套用：排除 SUV／休旅車','套用：接送長輩','套用：保養費較低','套用：乘坐舒適（原文提及後座）']) await page.getByRole('button',{name,exact:true}).click();
+    await page.getByRole('button',{name:'上一步',exact:true}).click();
+    check(await page.locator('[name="monthly_parking"]').inputValue()==='3000',`${mode}: parking answer lost on return`);
+    if(mode==='mobile') await page.locator('[name="parking_type"]').selectOption('none');
+    await page.getByRole('button',{name:'下一步',exact:true}).click();
+    check(await page.locator('[name="free_text"]').inputValue()===text,`${mode}: text lost on return`);
+    await page.getByRole('button',{name:'檢查需求',exact:true}).click();
+    check((await page.locator('#reviewGroups').innerText()).includes(mode==='desktop'?'NT$3,000':'尚無停車位置'),`${mode}: review omits parking`);
+    check((await page.locator('#reviewGroups').innerText()).includes(text),`${mode}: review omits original text`);
+    await page.getByRole('button',{name:'確認需求',exact:true}).click();
+    check(await page.locator('#reviewError').isVisible(),`${mode}: confirmation gate missing`);
+    await page.locator('#reviewedNeeds').check();
+    await page.getByRole('button',{name:'確認需求',exact:true}).click();
+    await page.locator('#handoffPanel').waitFor();
+    const json=JSON.parse(await page.locator('#needsJson').textContent());
+    check(json.status==='confirmed'&&json.currency==='TWD',`${mode}: invalid confirmed output`);
+    check(json.usage.monthly_distance_km===null,`${mode}: mileage invented`);
+    check(json.usage.home_charging==='no'&&json.usage.public_charging==='yes',`${mode}: charging values lost`);
+    check(json.preferences.priorities.includes('comfort'),`${mode}: comfort suggestion lost`);
+    check(json.constraints.avoid_body_types.includes('suv'),`${mode}: exclusion suggestion lost`);
+    check(json.extraction.is_real_ai===false&&json.recommendation_handoff.engine_connected===false,`${mode}: mock not disclosed`);
+    check(!Object.hasOwn(json,'score'),`${mode}: unexpected recommendation score`);
+    if(mode==='desktop') {
+      check(json.payment.annual_interest_rate===.011&&json.financial_profile.salary===60000,`${mode}: finance mapping or rate precision changed`);
+      check(json.usage.monthly_parking===3000,`${mode}: parking missing in JSON`);
+    } else check(json.financial_profile===null&&json.usage.monthly_parking===null&&json.payment.down_payment===null,`${mode}: inactive fields leaked`);
+    await page.locator('#jsonDetails summary').click();
+    const downloadPromise=page.waitForEvent('download');
+    await page.getByRole('button',{name:'下載 JSON',exact:true}).click();
+    check((await downloadPromise).suggestedFilename()==='finsim-car-needs.json',`${mode}: JSON download failed`);
+    const geometry=await page.evaluate(()=>({viewport:innerWidth,document:document.documentElement.scrollWidth}));
+    check(geometry.document<=geometry.viewport,`${mode}: horizontal overflow`);
+    await page.screenshot({path:`finsim-p1-${mode}-complete-20261026.png`,fullPage:true});
+    await page.getByRole('button',{name:'修改需求',exact:true}).click();
+    check(await page.locator('[name="budget_max"]').inputValue()==='1000000',`${mode}: revise loses input`);
+    results.push({mode,width,height,complete:true,geometry});
+  }
+  check(errors.length===0,`Runtime errors: ${errors.join('; ')}`);
+  check(aiRequests.length===0,'Unexpected AI API request');
+  return {results,errors,aiRequests};
+}
