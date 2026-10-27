@@ -45,6 +45,7 @@ async page => {
     } else await page.locator('[name="payment_method"]').selectOption('cash');
     await page.getByRole('button',{name:'下一步',exact:true}).click();
     await page.locator('[name="free_text"]').fill('我不是很在意保養費低，五年後我要出國');
+    await page.getByText('本機規則示範（非 AI，選填）',{exact:true}).click();
     await page.getByRole('button',{name:'預覽模擬擷取',exact:true}).click();
     check((await page.locator('#extractionStatus').innerText()).includes('沒有符合示範規則'),`${mode}: negation or ambiguous time inferred`);
     check(await page.locator('#extractionCandidates li').count()===0,`${mode}: unsupported mock candidates`);

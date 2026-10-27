@@ -18,6 +18,10 @@
     if(!Object.hasOwn(state.answers,key)) throw new Error('不支援的問卷欄位');
     const next=structuredClone(state);
     next.answers[key]=value;next.revision++;next.confirmed=false;next.sources[key]='user_provided';
+    if(next.extraction?.schema_version==='2.0') {
+      next.extraction=null;
+      for(const field of Object.keys(next.sources))if(next.sources[field]==='user_confirmed_ai')next.sources[field]='user_provided';
+    }
     if(key==='free_text') next.extraction=null;
     return next;
   }
@@ -74,17 +78,23 @@
   }
   function serialize(state) {
     const a=state.answers,financed=a.payment_method==='financed';
-    const ready=state.confirmed&&[0,1,2].every(step=>Object.keys(validate(a,step)).length===0);
-    return {schema_version:'1.0',revision:state.revision,status:ready?'confirmed':'draft',currency:'TWD',
+    const ai=state.extraction?.schema_version==='2.0';
+    const extraction=state.extraction?structuredClone(state.extraction):{provider:'mock',is_real_ai:false,status:'not_requested',candidates:[]};
+    delete extraction.active_revision;
+    const reviewed=!ai||(state.extraction.expires_at*1000>=Date.now()&&state.extraction.active_revision===state.revision&&state.extraction.candidates.length===state.extraction.accepted_ids.length+state.extraction.rejected_ids.length);
+    const ready=state.confirmed&&reviewed&&[0,1,2].every(step=>Object.keys(validate(a,step)).length===0);
+    return {schema_version:ai?'1.1':'1.0',revision:state.revision,status:ready?'confirmed':'draft',currency:'TWD',
       background:{occupation:a.occupation},constraints:{budget_max:a.budget_max,budget_basis:'vehicle_price',min_seats:a.usual_passengers,avoid_body_types:[...a.avoid_body_types]},
       usage:{purposes:[...a.purposes],monthly_distance_km:a.monthly_distance_km,usual_passengers:a.usual_passengers,ownership_years:a.ownership_years,parking_type:a.parking_type,monthly_parking:hasParking(a)?a.monthly_parking:null,home_charging:hasElectric(a)?a.home_charging:null,public_charging:hasElectric(a)?a.public_charging:null},
       preferences:{body_types:[...a.body_types],priorities:[...a.priorities],powertrains:[...a.powertrains]},
       financial_profile:a.include_financial?{salary:a.salary,balance:a.balance,fixed_expense:a.fixed_expense,variable_expense:a.variable_expense,required_monthly_debt:a.required_monthly_debt,existing_debts:null,raise_rate:null,inflation_rate:null}:null,
       payment:{payment_method:a.payment_method,down_payment:financed?a.down_payment:null,annual_interest_rate:financed&&a.annual_interest_rate!==null?Number((a.annual_interest_rate/100).toFixed(6)):null,loan_term_months:financed?a.loan_term_months:null},
-      free_text:a.free_text,extraction:state.extraction?structuredClone(state.extraction):{provider:'mock',is_real_ai:false,status:'not_requested',candidates:[]},
+      free_text:a.free_text,extraction,
       field_sources:{...state.sources},recommendation_handoff:{status:ready?'ready_for_p2':'awaiting_confirmation',engine_connected:true}};
   }
   function confirm(state) {
+    if(state.extraction?.schema_version==='2.0'&&state.extraction.expires_at*1000<Date.now())throw new Error('AI 候選已過期，請重新分析或略過這次分析。');
+    if(state.extraction?.schema_version==='2.0'&&(state.extraction.active_revision!==state.revision||state.extraction.candidates.length!==state.extraction.accepted_ids.length+state.extraction.rejected_ids.length))throw new Error('請先逐項接受或拒絕 AI 候選，再確認需求。');
     if([0,1,2].some(step=>Object.keys(validate(state.answers,step)).length)) throw new Error('請先完成必填資料並修正錯誤，再確認需求。');
     return {...structuredClone(state),confirmed:true};
   }

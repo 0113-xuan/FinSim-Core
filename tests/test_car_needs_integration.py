@@ -34,7 +34,7 @@ def test_questionnaire_entry_and_all_assets_are_served_by_existing_app():
         assert 'FinSim | 個人化選車問卷' in page.text
         parser = PageLinks()
         parser.feed(page.text)
-        assert len(parser.assets) == 5
+        assert len(parser.assets) == 6
         for asset in parser.assets:
             response = client.get(urljoin('/car-needs.html', asset))
             assert response.status_code == 200, asset

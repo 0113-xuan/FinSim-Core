@@ -24,6 +24,8 @@ from app.services.vehicle_cost_comparison import VehicleCostComparisonRequest, c
 from app.services.vehicle_costs import StandaloneVehicleCostRequest, estimate_vehicle_costs
 from app.recommendation_schemas import CarNeedsRequest
 from app.services.car_recommendations import recommend_cars
+from app.car_needs_ai_schemas import NeedsExtractionRequest, AIExtractionMetadata
+from app.services.car_needs_extraction import extract_car_needs
 from app.core.advisor import compare_options, generate_advice
 from app.core.monte_carlo import run_monte_carlo
 from app.core.simulation import simulate_finance
@@ -115,6 +117,16 @@ CONFIRMED_DEMO_PROFILES: Dict[str, Dict[str, Any]] = {}
 
 def get_onboarding_ai_provider() -> AIProvider | None:
     return get_ai_provider()
+
+
+@app.post('/ai/car-needs/extract', response_model=AIExtractionMetadata)
+async def car_needs_extraction_api(req: NeedsExtractionRequest, request: Request,
+                                   provider: Any = Depends(get_onboarding_ai_provider)):
+    rate_limit_ai(request)
+    try:
+        return await extract_car_needs(req, provider)
+    except AIProviderError:
+        raise HTTPException(status_code=503, detail='AI 分析未完成，未修改需求。請重試或略過 AI，直接使用問卷推薦。') from None
 
 
 @app.get("/api")

@@ -84,6 +84,11 @@ progress::-webkit-progress-bar { background:#e9eef2; } progress::-webkit-progres
 .json-actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:18px 0; }
 .json-actions button { padding:8px 12px; }
 #exportStatus { font-size:13px; color:var(--muted); }
+#aiCandidates { list-style:none; padding:0; margin:20px 0 0; }
+#aiCandidates li { border-top:1px solid var(--line); padding:16px 0; }
+#aiCandidates p { margin:8px 0; overflow-wrap:anywhere; }
+#aiCandidates li > div { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+#aiUnclear { overflow-wrap:anywhere; }
 #needsJson { background:#f5f7fa; padding:18px; overflow:auto; max-height:420px; font-size:12px; border-radius:6px; }
 .needs-footer { color:#6c7c8e; font-size:12px; text-align:center; border-top:1px solid var(--line); margin-top:42px; padding-top:20px; }
 @media(max-width:600px) {

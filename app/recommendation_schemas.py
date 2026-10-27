@@ -2,6 +2,7 @@
 from typing import Literal
 from pydantic import ConfigDict, Field, StrictBool, field_validator, model_validator
 from app.decision_schemas import StrictModel, DecisionProfile
+from app.car_needs_ai_schemas import AIExtractionMetadata
 
 Body = Literal['sedan', 'hatchback', 'suv', 'mpv']
 Power = Literal['ice', 'hev', 'bev']
@@ -80,7 +81,7 @@ class Handoff(RecommendationModel):
 
 
 class CarNeedsRequest(RecommendationModel):
-    schema_version: Literal['1.0']
+    schema_version: Literal['1.0','1.1']
     revision: int = Field(strict=True, ge=0)
     status: Literal['confirmed']
     currency: Literal['TWD']
@@ -91,8 +92,8 @@ class CarNeedsRequest(RecommendationModel):
     financial_profile: DecisionProfile | None
     payment: Payment
     free_text: str = Field(max_length=1000)
-    extraction: ExtractionMetadata
-    field_sources: dict[str, Literal['user_provided', 'user_confirmed_mock']] = Field(max_length=40)
+    extraction: ExtractionMetadata | AIExtractionMetadata
+    field_sources: dict[str, Literal['user_provided', 'user_confirmed_mock', 'user_confirmed_ai']] = Field(max_length=40)
     recommendation_handoff: Handoff
 
     @field_validator('financial_profile', mode='before')
@@ -114,6 +115,13 @@ class CarNeedsRequest(RecommendationModel):
 
     @model_validator(mode='after')
     def consistent_needs(self):
+        if isinstance(self.extraction, AIExtractionMetadata):
+            if self.schema_version != '1.1':
+                raise ValueError('真實 AI 擷取須使用需求契約 1.1。')
+            from app.services.car_needs_extraction import validate_confirmed_ai
+            validate_confirmed_ai(self)
+        elif self.schema_version != '1.0' or 'user_confirmed_ai' in self.field_sources.values():
+            raise ValueError('Mock 與手動需求須使用契約 1.0。')
         if self.constraints.min_seats != self.usage.usual_passengers:
             raise ValueError('乘車人數與最低座位數不一致。')
         if set(self.preferences.body_types) & set(self.constraints.avoid_body_types):

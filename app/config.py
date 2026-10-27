@@ -29,6 +29,7 @@ class Settings:
     ai_onboarding_timeout_seconds: int = 20
     ai_max_retries: int = 2
     ai_enabled: bool = False
+    car_needs_signing_key: str = ''
 
     def ai_provider_ready(self) -> bool:
         if not self.ai_enabled:
@@ -67,6 +68,7 @@ class Settings:
             ai_onboarding_timeout_seconds=int(os.getenv("AI_ONBOARDING_TIMEOUT_SECONDS", "20")),
             ai_max_retries=int(os.getenv("AI_MAX_RETRIES", "2")),
             ai_enabled=ai_enabled,
+            car_needs_signing_key=os.getenv('CAR_NEEDS_SIGNING_KEY', ''),
         )
 
     def startup_warnings(self) -> List[str]:

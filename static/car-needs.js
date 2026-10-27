@@ -72,20 +72,70 @@
     else if(numeric.has(key)) value=model.numberOrNull(input.value);
     else value=input.value||null;
     if(key==='free_text') value=input.value;
+    const invalidatedAI=state.extraction?.schema_version==='2.0';
     state=model.update(state,key,value);clearErrors();conditionals();
+    if(invalidatedAI) {$('aiCandidates').replaceChildren();$('aiUnclear').replaceChildren();$('aiStatus').textContent='問卷已修改，舊 AI 候選已失效；可重新分析或直接檢查需求。';}
     if(key==='free_text') {$('textCount').textContent=`${value.length.toLocaleString()} / 1,000 字`;$('extractionCandidates').replaceChildren();$('extractionStatus').textContent='';}
   });
   form.addEventListener('submit',event=>{
     event.preventDefault();
+    if(busy)return;
     if(showErrors(model.validate(state.answers,state.step))) return;
     if(state.step<2) showStep(state.step+1);else review();
   });
   $('previousStep').addEventListener('click',()=>showStep(Math.max(0,state.step-1)));
+  const ai=window.CarNeedsAI;
+  const skipAI=document.createElement('button');skipAI.type='button';skipAI.textContent='略過這次 AI 分析';skipAI.hidden=true;
+  $('aiStatus').after(skipAI);
+  skipAI.addEventListener('click',()=>{
+    state=model.update(state,'free_text',state.answers.free_text);
+    $('aiCandidates').replaceChildren();$('aiUnclear').replaceChildren();skipAI.hidden=true;
+    $('aiStatus').textContent='已略過 AI 分析；已接受的條件保留為手動答案，可返回修改。';
+  });
+  function renderAI() {
+    const e=state.extraction;
+    $('aiCandidates').replaceChildren();$('aiUnclear').replaceChildren();
+    if(e?.schema_version!=='2.0')return;
+    skipAI.hidden=false;
+    for(const c of e.candidates) {
+      const li=document.createElement('li'),title=document.createElement('strong'),evidence=document.createElement('p'),conflict=document.createElement('p'),actions=document.createElement('div');
+      title.textContent=c.label;evidence.textContent=`原文：${c.evidence}`;
+      if(c.conflict)conflict.textContent=c.conflict;
+      const accepted=e.accepted_ids.includes(c.id),rejected=e.rejected_ids.includes(c.id);
+      if(accepted||rejected)actions.textContent=accepted?'已接受':'已拒絕';
+      else for(const [accept,label] of [[true,c.conflict?'接受並取代衝突答案':'接受'],[false,'拒絕']]) {
+        const button=document.createElement('button');button.type='button';button.textContent=label;button.setAttribute('aria-label',`${label}：${c.label}`);
+        button.addEventListener('click',()=>{try{state=ai.decide(state,c.id,accept,{resolveConflict:!!c.conflict});renderAI();}catch(error){$('aiStatus').textContent=error.message;}});actions.append(button);
+      }
+      li.append(title,evidence,conflict,actions);$('aiCandidates').append(li);
+    }
+    if(e.unclear.length) {
+      const title=document.createElement('h4');title.textContent='尚無法確認，不會套用';$('aiUnclear').append(title);
+      const reasons={uncertain:'語意或時間不明確，請補充',unsupported:'目前問卷不支援這項條件，請手動確認',injection:'此段包含指令，未作為需求執行',missing_information:'缺少必要資訊，未自行推測'};
+      for(const item of e.unclear) {const p=document.createElement('p');p.textContent=`「${item.evidence}」：${reasons[item.reason]}`;$('aiUnclear').append(p);}
+    }
+    const processed=e.accepted_ids.length+e.rejected_ids.length;
+    $('aiStatus').textContent=`${e.provider==='gemini'?'Gemini':'OpenAI'} 分析完成；${e.candidates.length} 項候選，已處理 ${processed} 項。${e.candidates.length>processed?'請逐項接受或拒絕。':e.candidates.length?'可以檢查需求。':'未找到可直接套用的條件。'}`;
+  }
+  $('analyzeAI').addEventListener('click',async()=>{
+    if(busy)return;
+    if(!state.answers.free_text.trim()){$('aiStatus').textContent='請先填寫補充需求，或直接檢查需求。';return;}
+    if(state.extraction?.schema_version==='2.0')state=model.update(state,'free_text',state.answers.free_text);
+    const revision=state.revision,controller=new AbortController(),timer=setTimeout(()=>controller.abort(),25000);
+    busy=true;$('nextStep').disabled=true;$('analyzeAI').disabled=true;$('previewExtraction').disabled=true;$('aiCandidates').replaceChildren();$('aiUnclear').replaceChildren();$('aiStatus').textContent='正在分析補充需求…';
+    try {
+      const result=await ai.request({schema_version:'2.0',text:state.answers.free_text,revision,related_answers:ai.context(state.answers)},{signal:controller.signal});
+      if(revision!==state.revision){$('aiStatus').textContent='問卷已修改，已丟棄舊分析。';return;}
+      state=ai.attach(state,result);renderAI();
+    } catch(error){if(revision===state.revision)$('aiStatus').textContent=error.name==='AbortError'?'AI 分析逾時，需求仍保留。可重試或直接檢查需求。':error.message;}
+    finally {clearTimeout(timer);busy=false;$('nextStep').disabled=false;$('analyzeAI').disabled=false;$('previewExtraction').disabled=false;}
+  });
   $('previewExtraction').addEventListener('click',async()=>{
     if(busy) return;
     const text=state.answers.free_text;
     if(!text.trim()) {$('extractionStatus').textContent='先寫下補充需求，或直接檢查需求。';return;}
-    const revision=state.revision;busy=true;$('previewExtraction').disabled=true;
+    if(state.extraction?.schema_version==='2.0') {state=model.update(state,'free_text',text);$('aiCandidates').replaceChildren();$('aiUnclear').replaceChildren();$('aiStatus').textContent='已改用本機示範；不使用上一份 AI 候選。';}
+    const revision=state.revision;busy=true;$('previewExtraction').disabled=true;$('analyzeAI').disabled=true;
     try {
       const result=await extractionClient.extract({text,related_answers:{body_types:state.answers.body_types,ownership_years:state.answers.ownership_years},revision});
       if(revision!==state.revision) return;
@@ -102,7 +152,7 @@
         });li.append(body,button);$('extractionCandidates').append(li);
       }
     } catch { $('extractionStatus').textContent='模擬擷取未完成，文字仍保留，可以直接繼續。'; }
-    finally {busy=false;$('previewExtraction').disabled=false;}
+    finally {busy=false;$('previewExtraction').disabled=false;$('analyzeAI').disabled=false;}
   });
   const display=(value,options)=>value===null||value===''?'未提供':Array.isArray(value)?(value.length?value.map(v=>options?.[v]||v).join('、'):'未指定'):options?.[value]||String(value);
   const amount=value=>value===null?'未提供':`NT$${value.toLocaleString('zh-TW',{maximumFractionDigits:2})}`;
@@ -113,6 +163,7 @@
     section.append(heading,list);$('reviewGroups').append(section);
   }
   function review() {
+    if(!ai.complete(state)){$('aiStatus').textContent='請先逐項接受或拒絕 AI 候選，再檢查需求。';$('analyzeAI').focus();return;}
     for(let step=0;step<3;step++) {const errors=model.validate(state.answers,step);if(Object.keys(errors).length) {showStep(step);showErrors(errors);return;}}
     const a=state.answers,c=model.choices;
     $('reviewGroups').replaceChildren();
@@ -129,8 +180,8 @@
     reviewGroup('付款與財務',payment.concat(a.include_financial?[
       ['每月收入',amount(a.salary)],['現金與存款',amount(a.balance)],['每月固定支出',amount(a.fixed_expense)],['每月變動支出',amount(a.variable_expense)],['既有每月必要還款',amount(a.required_monthly_debt)]
     ]:[['財務資料','未加入，後續不能判斷個人負擔能力']]));
-    reviewGroup('自由補充', [['原始需求',display(a.free_text)],['擷取狀態',state.extraction?`Mock 模擬（${state.extraction.candidates.length} 項候選，僅套用你確認的項目）`:'未使用模擬擷取']]);
-    $('reviewNotice').textContent='未填項目會保留為 null；尚未計算財務結果或推薦車款。模擬擷取不是實際 AI 分析。';
+    reviewGroup('自由補充', [['原始需求',display(a.free_text)],['擷取狀態',state.extraction?.schema_version==='2.0'?`${state.extraction.provider} AI：接受 ${state.extraction.accepted_ids.length} 項、拒絕 ${state.extraction.rejected_ids.length} 項` : state.extraction?`Mock 模擬（${state.extraction.candidates.length} 項候選，僅套用你確認的項目）`:'未使用 AI 或模擬擷取']]);
+    $('reviewNotice').textContent='未填項目保留 null；請再次確認已接受的條件。AI 不負責推薦排名或財務計算。';
     form.hidden=true;$('handoffPanel').hidden=true;$('reviewPanel').hidden=false;$('reviewedNeeds').checked=false;$('reviewError').hidden=true;
     document.querySelectorAll('#stepList li').forEach(node=>node.removeAttribute('aria-current'));
     $('reviewTitle').focus();
@@ -163,7 +214,7 @@
     } catch(error) {if(state.confirmed&&revision===state.revision)$('recommendationStatus').textContent=error.name==='AbortError'?'計算逾時，需求仍保留，請再試一次。':error.message;}
     finally {clearTimeout(timer);recommendationController=null;recommendationButton.disabled=false;}
   });
-  $('reviseNeeds').addEventListener('click',()=>{recommendationController?.abort();$('recommendationResults').replaceChildren();});
+  $('reviseNeeds').addEventListener('click',()=>{recommendationController?.abort();$('recommendationResults').replaceChildren();$('recommendationStatus').textContent='';});
   $('copyJson').addEventListener('click',async()=>{
     try {await navigator.clipboard.writeText($('needsJson').textContent);$('exportStatus').textContent='已複製需求 JSON';}
     catch {$('exportStatus').textContent='無法存取剪貼簿，請使用下載 JSON。';}
