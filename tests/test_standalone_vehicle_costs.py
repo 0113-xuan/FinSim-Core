@@ -1,4 +1,5 @@
 import pytest
+import json
 from fastapi.testclient import TestClient
 from main import app
 
@@ -12,6 +13,14 @@ def data(method='cash',term=60):
         payload.update(down_payment=dict(value=120000,source='user_provided'),
                        annual_interest_rate=dict(value=0,source='user_provided'),loan_term_months=term)
     return dict(payload=payload)
+
+
+@pytest.mark.parametrize('token', ['NaN', 'Infinity', '-Infinity', '1e9999'])
+def test_nonfinite_vehicle_price_returns_controlled_422(token):
+    content = json.dumps(data()).replace('"value": 600000', '"value": '+token)
+    response = TestClient(app).post('/decisions/vehicle/costs', content=content, headers={'content-type':'application/json'})
+    assert response.status_code == 422
+    assert response.json()['detail'][0]['type'] == 'json_invalid'
 
 
 @pytest.mark.parametrize('method,term,monthly,upfront,total,remaining',[

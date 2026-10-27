@@ -38,8 +38,12 @@
       }
       const cost=detail(card,'支出結構');const breakdown=el('dl');line(breakdown,'首次付款',money(item.costs.one_time_payment));line(breakdown,'五年車貸付款',money(item.costs.loan_payments_total));for(const c of item.costs.items) line(breakdown,`${labels[c.key]||c.key}（五年）`,money(c.period_total));cost.append(breakdown,el('p',item.energy_formula,'hint'),el('p','月度金額取分後累加，與直接乘年費可能有分位捨入差；引擎回傳總額為準。','hint'));
       const preferences=detail(card,'偏好符合情形');if(!item.preferences.length)preferences.append(el('p','未指定偏好'));for(const p of item.preferences)preferences.append(el('p',`${p.label}：${labels[p.status]}${p.note?'；'+p.note:''}`));
-      const source=detail(card,'車款來源與限制');source.append(el('p',`查詢日 ${car.checked_on} · 官方參考數據`),el('p',car.model_year_note));
-      for(const [key,url] of Object.entries(car.sources)) {if(!url)continue;const a=el('a',{price:'官方價格',specifications:'官方規格',efficiency:'官方油耗／電耗'}[key]);a.href=url;a.target='_blank';a.rel='noopener noreferrer';source.append(a,el('br'));}
+      const source=detail(card,'車款來源與限制');source.append(el('p',`查詢日 ${car.checked_on} · 各欄位來源分別列示`),el('p',car.model_year_note));
+      const fieldLabels={price:'價格',specifications:'規格',efficiency:'油耗／電耗',seats:'座位數'};
+      const sourceLabels={official:'品牌官方',government:'政府公開資料',third_party:'第三方資料',unknown:'未知'};
+      const verificationLabels={verified:'已核對',indexed_only:'僅索引佐證，未完成現行頁面核對',unverified:'尚未確認'};
+      for(const [key,url] of Object.entries(car.sources)) {if(!url)continue;const a=el('a',`${fieldLabels[key]||key} · ${sourceLabels[car.source_types?.[key]]||'來源'} · ${verificationLabels[car.verification?.[key]]||'請核對來源'}`);a.href=url;a.target='_blank';a.rel='noopener noreferrer';source.append(a,el('br'));}
+      if(car.verification_notes?.seats)source.append(el('p',car.verification_notes.seats));
       source.append(el('p',`${car.efficiency===null?'電耗未知':car.efficiency+' '+car.efficiency_unit}`),el('p',car.limitations.join('；')),el('p',item.ranking_reason));grid.append(card);
     }
     for(const [title,items] of [['資料不足，暫不排名',incomplete],['不符合硬性條件',excluded]]) {
@@ -49,6 +53,7 @@
         d.append(el('p',`${car.brand} ${car.model} ${car.trim} · ${money(car.price_twd)} · ${car.seats??'未知'} 人：${item.reasons.join('；')}`));
         if(item.preferences)for(const p of item.preferences)d.append(el('p',`${p.label}：${labels[p.status]}`));
         const a=el('a',`官方資料 · 查詢日 ${car.checked_on}`);a.href=car.source_url;a.target='_blank';a.rel='noopener noreferrer';d.append(a,el('p',car.model_year_note));
+        if(car.verification_notes)for(const key of ['price','seats'])d.append(el('p',`${key==='price'?'價格':'座位'}：${car.verification_notes[key]}`));
       }
     }
     const assumptions=detail(container,'比較使用的規劃假設');

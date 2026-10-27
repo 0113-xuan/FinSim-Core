@@ -5,7 +5,7 @@ from app.decision_assumptions import ASSUMPTIONS
 from app.decision_schemas import VehicleDecisionRequest
 from app.recommendation_catalog import recommendation_catalog
 from app.recommendation_schemas import CarNeedsRequest
-from app.services.calendar_period import YearMonth
+from app.services.calendar_period import YearMonth, resolve_reference_date
 from app.services.vehicle_decision import resolve, run_timeline, evaluate, constraints, ownership_cost_summary
 from app.services.scenario_engine import build_scenario
 
@@ -29,8 +29,9 @@ def preference_checks(needs, car):
     return checks
 
 
-def recommend_cars(needs: CarNeedsRequest):
-    start = date.today().strftime('%Y-%m')
+def recommend_cars(needs: CarNeedsRequest, *, reference_date: date | None = None):
+    reference_date = resolve_reference_date(reference_date, 'Asia/Taipei')
+    start = reference_date.strftime('%Y-%m')
     target = str(YearMonth.parse(start).add_months(1))
     assumptions = [dict(key=key, **ASSUMPTIONS[key], source='system_assumption') for key in
                    ('annual_insurance', 'annual_tax', 'annual_maintenance_budget', 'inflation_rate', 'raise_rate',
@@ -101,7 +102,8 @@ def recommend_cars(needs: CarNeedsRequest):
     for rank, item in enumerate(ranked, 1): item['rank'] = rank
     return dict(schema_version='1.0', revision=needs.revision, provider='deterministic', is_real_ai=False,
                 ranked=ranked, incomplete=incomplete, excluded=excluded, assumptions=assumptions,
-                start_period=start, purchase_period=target, horizon_months=60, currency='TWD',
+                start_period=start, purchase_period=target, reference_date=reference_date.isoformat(),
+                timezone='Asia/Taipei', horizon_months=60, currency='TWD',
                 missing_inputs=common_missing, scope='five_year_vehicle_cash_outflow',
                 limitations=['現金支出不是總持有成本或淨資產損失；不含折舊、殘值、投資報酬、領牌與未列雜費',
                              '即使預計持有 1 或 3 年，本頁仍統一比較 60 個月；不模擬提前出售',

@@ -1,10 +1,11 @@
 """P2 has no network or external AI dependency."""
 import json
 import subprocess
+from datetime import date, datetime
 from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
-from app.recommendation_catalog import recommendation_catalog
+from app.recommendation_catalog import recommendation_catalog, record
 from app.recommendation_schemas import CarNeedsRequest
 from app.services.car_recommendations import recommend_cars
 from main import app
@@ -179,3 +180,81 @@ def test_missing_payment_and_foreign_currency(needs):
     needs['currency'] = 'USD'
     with TestClient(app) as client:
         assert client.post('/decisions/vehicle/recommendations', json=needs).status_code == 422
+
+
+@pytest.mark.parametrize('token', ['NaN', 'Infinity', '-Infinity', '1e9999'])
+def test_nonfinite_in_actual_recommendation_field(needs, token):
+    content = json.dumps(needs).replace('"budget_max": 2000000', '"budget_max": '+token)
+    response = TestClient(app).post('/decisions/vehicle/recommendations', content=content, headers={'content-type':'application/json'})
+    assert response.status_code == 422
+    assert response.json()['detail'][0]['type'] == 'json_invalid'
+
+
+def test_record_requires_explicit_seats_and_source():
+    args = ('fixture', 'Fixture', 'Test', 'Test', 100, 'mpv', 'ice', 10, 'https://example.test', None)
+    with pytest.raises(TypeError):
+        record(*args)
+    for seats in (5, 7, None):
+        car = record(*args, seats=seats, seats_source='https://example.test/seats' if seats else None,
+                     seats_source_type='unknown', seats_verification='unverified', seats_note='Synthetic test fixture, not a real vehicle')
+        assert car['seats'] == seats
+    with pytest.raises(ValueError):
+        record(*args, seats=5, seats_source=None, seats_source_type='unknown', seats_verification='unverified', seats_note='fixture')
+
+
+def test_five_seven_and_unknown_seat_filtering(needs, monkeypatch):
+    # Synthetic copies test filtering, not new production catalog specifications.
+    cars = recommendation_catalog()[:3]
+    for car, seats in zip(cars, [5, 7, None]):
+        car['seats'] = seats
+    monkeypatch.setattr('app.services.car_recommendations.recommendation_catalog', lambda: cars)
+    needs['constraints']['min_seats'] = needs['usage']['usual_passengers'] = 7
+    result = run(needs)
+    assert [i['vehicle']['seats'] for i in result['ranked']] == [7]
+    assert [i['vehicle']['seats'] for i in result['excluded']] == [5]
+    assert [i['vehicle']['seats'] for i in result['incomplete']] == [None]
+    assert '座位數未知' in result['incomplete'][0]['reasons'][0]
+
+
+def test_catalog_seats_have_per_field_provenance():
+    for car in recommendation_catalog():
+        assert car['sources']['seats'].startswith('https://')
+        assert car['source_types']['seats'] in ('official', 'government', 'third_party')
+        assert car['verification']['seats'] in ('verified', 'indexed_only')
+        assert car['verification_notes']['seats']
+        assert car['verification']['model_year'] == 'unverified'
+
+
+@pytest.mark.parametrize('reference,start,target', [
+    (date(2026,1,31),'2026-01','2026-02'), (date(2026,2,1),'2026-02','2026-03'),
+    (date(2026,12,31),'2026-12','2027-01'), (date(2027,1,1),'2027-01','2027-02'),
+    (date(2028,2,29),'2028-02','2028-03')])
+def test_fixed_reference_date_preserves_next_month_purchase(needs, reference, start, target):
+    result = recommend_cars(CarNeedsRequest.model_validate(needs), reference_date=reference)
+    assert result['reference_date'] == reference.isoformat()
+    assert result['timezone'] == 'Asia/Taipei'
+    assert result['start_period'] == start and result['purchase_period'] == target
+
+
+@pytest.mark.parametrize('utc_instant,start,target', [
+    ('2026-01-31T15:59:59+00:00','2026-01','2026-02'),
+    ('2026-01-31T16:00:00+00:00','2026-02','2026-03'),
+    ('2026-12-31T15:59:59+00:00','2026-12','2027-01'),
+    ('2026-12-31T16:00:00+00:00','2027-01','2027-02')])
+def test_utc_host_uses_taipei_month(needs, monkeypatch, utc_instant, start, target):
+    instant = datetime.fromisoformat(utc_instant)
+    class Clock:
+        @classmethod
+        def now(cls, zone):
+            assert zone.key == 'Asia/Taipei'
+            return instant.astimezone(zone)
+    monkeypatch.setattr('app.services.calendar_period.datetime', Clock)
+    result = run(needs)
+    assert result['start_period'] == start and result['purchase_period'] == target
+
+
+def test_reference_month_does_not_change_sixty_month_costs_or_order(needs):
+    req = CarNeedsRequest.model_validate(needs)
+    a = recommend_cars(req, reference_date=date(2026,1,31))
+    b = recommend_cars(req, reference_date=date(2027,12,1))
+    assert [(i['vehicle']['id'],i['five_year_cash_outflow'],i['remaining_loan_payments']) for i in a['ranked']] == [(i['vehicle']['id'],i['five_year_cash_outflow'],i['remaining_loan_payments']) for i in b['ranked']]

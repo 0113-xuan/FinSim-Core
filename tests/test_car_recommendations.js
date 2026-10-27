@@ -31,3 +31,41 @@ test('known P1 mock boundaries remain documented, not silently repaired',()=>{
   assert.equal(needs.mockExtract('不喜歡休旅車但是常載長輩').candidates.some(c=>c.id==='elderly'),false);
   assert.equal(needs.mockExtract('後座舒服不重要').candidates.some(c=>c.id==='comfort'),true);
 });
+
+function renderFixture(overrides={}) {
+  class Element {
+    constructor(tag){this.tag=tag;this.children=[];this.textContent='';}
+    append(...items){this.children.push(...items);}
+    replaceChildren(){this.children=[];}
+  }
+  const container=new Element('section');container.ownerDocument={createElement:tag=>new Element(tag)};
+  const vehicle={brand:'Fixture',model:'Test',trim:'Test',body_type:'sedan',powertrain:'ice',seats:5,price_twd:100,
+    checked_on:'2026-10-26',model_year_note:'年式未確認',efficiency:10,efficiency_unit:'km/L',limitations:[],
+    sources:{price:'https://example.test/price',seats:'https://example.test/seats'},
+    source_types:{price:'official',seats:'third_party'},verification:{price:'verified',seats:'indexed_only'},
+    verification_notes:{seats:'座位僅第三方索引佐證'},...overrides};
+  const data={ranked:[{rank:1,vehicle,five_year_cash_outflow:100,costs:{monthly_vehicle_outflow:10,one_time_payment:100,loan_payments_total:0,items:[]},affordability:null,preferences:[],ranking_reason:'cash',energy_formula:'fixture'}],incomplete:[],excluded:[],missing_inputs:[],assumptions:[],limitations:[],purchase_period:'2026-11'};
+  const flatten=node=>[node,...node.children.flatMap(flatten)];
+  return {container,data,flatten};
+}
+
+test('seat sources distinguish verified official facts from third-party index evidence',()=>{
+  const {container,data,flatten}=renderFixture();api.render(container,data);
+  const nodes=flatten(container),links=nodes.filter(n=>n.tag==='a');
+  assert.ok(links.some(n=>n.textContent==='座位數 · 第三方資料 · 僅索引佐證，未完成現行頁面核對'));
+  assert.ok(links.some(n=>n.textContent==='價格 · 品牌官方 · 已核對'));
+  assert.ok(nodes.some(n=>n.textContent==='座位僅第三方索引佐證'));
+  assert.ok(links.every(n=>n.target==='_blank'&&n.rel==='noopener noreferrer'));
+});
+
+test('old optional provenance metadata remains renderable',()=>{
+  const {container,data}=renderFixture({source_types:undefined,verification:undefined,verification_notes:undefined});
+  assert.doesNotThrow(()=>api.render(container,data));
+});
+
+test('missing seats in incomplete entries are not rendered as five',()=>{
+  const {container,data,flatten}=renderFixture({seats:null});
+  data.incomplete=[{vehicle:data.ranked[0].vehicle,reasons:['座位數未知']}];data.ranked=[];
+  api.render(container,data);
+  assert.ok(flatten(container).some(n=>n.textContent.includes('未知 人：座位數未知')));
+});

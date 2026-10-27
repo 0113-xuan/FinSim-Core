@@ -11,8 +11,10 @@ from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
+from fastapi.exceptions import RequestValidationError
 
 from app.config import settings
+from app.request_validation import FiniteJSONRoute, safe_validation_error
 from app.decision_schemas import VehicleDecisionRequest, VehicleComparisonRequest, VehicleWhatIfRequest
 from app.decision_assumptions import registry
 from app.vehicle_catalog import catalog_list, vehicle_preset, VehiclePresetRequest
@@ -93,6 +95,8 @@ app = FastAPI(
     description="AI-assisted personal life-decision simulation and financial-risk analysis platform.",
     lifespan=lifespan,
 )
+app.router.route_class = FiniteJSONRoute
+app.add_exception_handler(RequestValidationError, safe_validation_error)
 
 app.add_middleware(
     CORSMiddleware,
