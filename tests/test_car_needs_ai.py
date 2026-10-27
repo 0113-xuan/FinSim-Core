@@ -191,3 +191,78 @@ process.stdout.write(JSON.stringify(m.serialize(m.confirm(s))));
     parsed = CarNeedsRequest.model_validate_json(result.stdout)
     assert parsed.constraints.avoid_body_types == ['suv']
     assert parsed.extraction.accepted_ids == ['c0','c1']
+
+
+def test_unexpected_provider_error_is_safe_and_manual_fallback_works(monkeypatch, caplog):
+    class Broken:
+        async def generate_structured(self, **kwargs):
+            raise RuntimeError('PRIVATE financial text secret API key')
+    monkeypatch.setattr(service,'settings',replace(service.settings,ai_provider='gemini'))
+    app.dependency_overrides[get_onboarding_ai_provider] = lambda:Broken()
+    try:
+        with TestClient(app) as client:
+            response = client.post('/ai/car-needs/extract',json=dict(schema_version='2.0',text=CASES[0]['text'],revision=12,related_answers=CONTEXT))
+            assert response.status_code == 503
+            assert 'PRIVATE' not in response.text and 'PRIVATE' not in caplog.text
+            assert 'RuntimeError' in caplog.text and 'generate_structured' in caplog.text
+            metadata, _ = extract()
+            payload = handoff(metadata,CASES[0]['text'])
+            payload.update(schema_version='1.0',extraction=dict(provider='mock',is_real_ai=False,status='not_requested',candidates=[]))
+            assert client.post('/decisions/vehicle/recommendations',json=payload).status_code == 200
+    finally:app.dependency_overrides.pop(get_onboarding_ai_provider,None)
+
+
+def test_post_provider_development_errors_are_not_silenced(monkeypatch):
+    def broken_key():raise RuntimeError('development error')
+    monkeypatch.setattr(service,'_key',broken_key)
+    with pytest.raises(RuntimeError,match='development error'):extract()
+
+
+@pytest.mark.parametrize('field', ['salary','budget_max','balance','receipt','ownership_years','priorities'])
+def test_ai_sources_cannot_claim_finances_or_unaccepted_fields(field):
+    metadata, _ = extract()
+    payload = handoff(metadata,CASES[0]['text'])
+    payload['field_sources'][field] = 'user_confirmed_ai'
+    with pytest.raises(ValidationError):CarNeedsRequest.model_validate(payload)
+
+
+def test_partial_acceptance_sources_and_implicit_conflict_removal():
+    metadata, _ = extract(context=dict(CONTEXT,body_types=['suv']))
+    payload = handoff(metadata,CASES[0]['text'])
+    payload['extraction'].update(accepted_ids=['c0'],rejected_ids=['c1'])
+    payload['usage']['purposes'] = ['commute']
+    payload['field_sources'] = dict(avoid_body_types='user_confirmed_ai',body_types='user_confirmed_ai')
+    assert CarNeedsRequest.model_validate(payload)
+    payload['field_sources']['purposes'] = 'user_confirmed_ai'
+    with pytest.raises(ValidationError):CarNeedsRequest.model_validate(payload)
+
+
+@pytest.mark.parametrize('key,warn', [('',True),('short',True),('x'*32,False),('金'*11,False)])
+def test_signing_startup_warnings_do_not_expose_keys(key,warn):
+    warnings = replace(service.settings,car_needs_signing_key=key).startup_warnings()
+    relevant = [w for w in warnings if 'CAR_NEEDS_SIGNING_KEY' in w]
+    assert bool(relevant) == warn
+    if key:assert key not in ' '.join(warnings)
+
+
+def test_fixed_key_survives_process_key_changes_and_short_key_fails_closed(monkeypatch):
+    monkeypatch.setattr(service,'settings',replace(service.settings,car_needs_signing_key='x'*32))
+    metadata, _ = extract()
+    payload = handoff(metadata,CASES[0]['text'])
+    monkeypatch.setattr(service,'_PROCESS_KEY',b'new-worker-key')
+    assert CarNeedsRequest.model_validate(payload)
+    monkeypatch.setattr(service,'settings',replace(service.settings,car_needs_signing_key='short'))
+    with pytest.raises(ValidationError):CarNeedsRequest.model_validate(payload)
+    with pytest.raises(AIProviderError):extract()
+
+
+def test_fixed_signatures_verify_in_an_independent_worker():
+    import os
+    import sys
+    import subprocess
+    env = dict(os.environ,CAR_NEEDS_SIGNING_KEY='test-only-worker-key-'+'x'*32)
+    writer = 'import time; from app.services.car_needs_extraction import _sign; print(_sign(dict(version=2,issued_at=time.time())))'
+    reader = 'import sys; from app.services.car_needs_extraction import _read; assert _read(sys.stdin.read().strip())["version"] == 2; print("verified")'
+    receipt = subprocess.run([sys.executable,'-B','-c',writer],env=env,text=True,capture_output=True,check=True).stdout
+    result = subprocess.run([sys.executable,'-B','-c',reader],input=receipt,env=env,text=True,capture_output=True,check=True)
+    assert result.stdout.strip() == 'verified'

@@ -53,3 +53,14 @@ def test_questionnaire_catalog_dependency_and_original_entrypoints_remain_availa
         root = client.get('/', follow_redirects=False)
         assert root.headers['location'] == '/vehicle.html'
         assert client.get('/decisions/vehicle/assumptions').status_code == 200
+
+
+def test_both_desktop_modes_have_navigation_and_current_page_marker():
+    with TestClient(app) as client:
+        for route in ('/vehicle.html','/car-needs.html'):
+            html = client.get(route).text
+            assert 'aria-label="使用模式"' in html
+            assert f'href="{route}" aria-current="page"' in html
+            links = PageLinks()
+            links.feed(html)
+            assert {'/vehicle.html','/car-needs.html'} <= set(links.links)

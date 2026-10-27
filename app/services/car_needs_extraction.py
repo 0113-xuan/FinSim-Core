@@ -8,10 +8,12 @@ import logging
 import re
 import secrets
 import time
+import traceback
 from time import perf_counter
 
 from pydantic import ValidationError
 from app.car_needs_ai_schemas import AIExtractionMetadata, NeedsExtractionRequest, ParsedCarNeeds, UnclearNeed
+from app.car_needs_ai_schemas import ALLOWED
 from app.config import settings
 from app.services.ai_provider import AIProviderError
 from app.services.prompt_loader import load_prompt
@@ -86,10 +88,19 @@ async def extract_car_needs(request: NeedsExtractionRequest, provider, *, provid
     if provider is None or name not in ('gemini', 'openai'):
         raise AIProviderError('AI 尚未設定，仍可略過分析並使用問卷推薦。')
     try:
-        result = await asyncio.wait_for(provider.generate_structured(
-            system_prompt=load_prompt('car_needs_extraction.md'),
-            user_prompt=json.dumps(dict(text=request.text, related_answers=request.related_answers.model_dump()), ensure_ascii=False),
-            response_schema=ParsedCarNeeds), timeout=settings.ai_onboarding_timeout_seconds)
+        system_prompt = load_prompt('car_needs_extraction.md')
+        user_prompt = json.dumps(dict(text=request.text, related_answers=request.related_answers.model_dump()), ensure_ascii=False)
+        try:
+            result = await asyncio.wait_for(provider.generate_structured(
+                system_prompt=system_prompt, user_prompt=user_prompt,
+                response_schema=ParsedCarNeeds), timeout=settings.ai_onboarding_timeout_seconds)
+        except (AIProviderError, TimeoutError):
+            raise
+        except Exception as exc:
+            # Keep stack locations, not exception messages/source lines that can contain secrets.
+            frames = [(frame.filename, frame.lineno, frame.name) for frame in traceback.extract_tb(exc.__traceback__)]
+            logger.error('car_needs_provider_unexpected provider=%s exception_type=%s frames=%s', name, type(exc).__name__, frames)
+            raise AIProviderError('AI 服務暫時無法使用，可略過分析。') from None
         parsed = ParsedCarNeeds.model_validate(result.model_dump() if hasattr(result, 'model_dump') else result)
         all_evidence = [c.evidence for c in parsed.candidates] + [u.evidence for u in parsed.unclear]
         if any(not e.strip() or e not in request.text for e in all_evidence):
@@ -156,8 +167,17 @@ def validate_confirmed_ai(needs):
     if len(set(accepted)) != len(accepted) or len(set(rejected)) != len(rejected) or set(accepted) & set(rejected) or set(accepted) | set(rejected) != ids:
         raise ValueError('請逐項接受或拒絕全部 AI 候選。')
     expected = payload['context']
+    accepted_fields = set()
     for candidate_id in accepted:
-        apply_confirmed(expected, next(c for c in payload['candidates'] if c['id'] == candidate_id))
+        candidate = next(c for c in payload['candidates'] if c['id'] == candidate_id)
+        accepted_fields.add(candidate['field'])
+        opposite = {'body_types':'avoid_body_types', 'avoid_body_types':'body_types'}.get(candidate['field'])
+        if opposite and candidate['operation'] == 'add' and candidate['value'] in expected[opposite]:
+            accepted_fields.add(opposite)
+        apply_confirmed(expected, candidate)
+    for field, source in needs.field_sources.items():
+        if source == 'user_confirmed_ai' and (field not in ALLOWED or field not in accepted_fields):
+            raise ValueError('AI 來源標記必須對應已接受的白名單候選。')
     actual = dict(body_types=needs.preferences.body_types, avoid_body_types=needs.constraints.avoid_body_types,
                   priorities=needs.preferences.priorities, purposes=needs.usage.purposes,
                   powertrains=needs.preferences.powertrains, ownership_years=needs.usage.ownership_years)

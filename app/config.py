@@ -73,6 +73,10 @@ class Settings:
 
     def startup_warnings(self) -> List[str]:
         warnings = []
+        if not self.car_needs_signing_key:
+            warnings.append('CAR_NEEDS_SIGNING_KEY 未設定：使用強隨機程序金鑰；正式環境多 worker 或重啟會使 AI 候選失效，請設定至少 32 bytes 的固定獨立金鑰。')
+        elif len(self.car_needs_signing_key.encode('utf-8')) < 32:
+            warnings.append('CAR_NEEDS_SIGNING_KEY 少於 32 bytes：AI 候選簽章將拒絕運作，不會退回弱金鑰。請修正正式環境設定。')
         if self.jwt_secret == "dev-only-change-me-please-set-a-real-secret":
             warnings.append("JWT_SECRET is using the development default.")
         if not self.supabase_url or not self.supabase_key:

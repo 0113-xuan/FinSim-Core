@@ -74,7 +74,7 @@
     if(key==='free_text') value=input.value;
     const invalidatedAI=state.extraction?.schema_version==='2.0';
     state=model.update(state,key,value);clearErrors();conditionals();
-    if(invalidatedAI) {$('aiCandidates').replaceChildren();$('aiUnclear').replaceChildren();$('aiStatus').textContent='問卷已修改，舊 AI 候選已失效；可重新分析或直接檢查需求。';}
+    if(invalidatedAI) {$('aiCandidates').replaceChildren();$('aiUnclear').replaceChildren();skipAI.hidden=true;$('aiStatus').textContent='問卷已修改，舊 AI 候選已失效；可重新分析或直接檢查需求。';}
     if(key==='free_text') {$('textCount').textContent=`${value.length.toLocaleString()} / 1,000 字`;$('extractionCandidates').replaceChildren();$('extractionStatus').textContent='';}
   });
   form.addEventListener('submit',event=>{

@@ -887,3 +887,6 @@ main { max-width: 1280px; width: 100%; padding: 28px 36px; }
   .onboarding-method { padding: 12px 8px; }
   .workflow-next { width: 100%; justify-content: center; }
 }
+.workflow-modes { display:flex; gap:8px; align-items:center; }
+.workflow-modes a { padding:8px 12px; border-bottom:2px solid transparent; text-decoration:none; }
+.workflow-modes a[aria-current="page"] { border-color:#087559; color:#075b46; font-weight:700; background:#edf7f1; }
