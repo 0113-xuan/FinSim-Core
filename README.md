@@ -106,13 +106,17 @@ Important variables:
 ```text
 AI_PROVIDER=gemini
 GEMINI_API_KEY=your-secret
-GEMINI_MODEL=gemini-flash-lite-latest
+GEMINI_MODEL=gemini-3.5-flash-lite
 ```
 
 API key 僅能放在後端環境變數或未追蹤的 `.env`，不可寫入
 `.env.example`、前端程式或日誌。
 `AI_ENABLED` 為可選的停用開關；未設定時會依選定 provider 的 key
 自動啟用，明確設為 `false` 時停用。
+
+測試分支的舊 `gemini-flash-lite-latest` 設定會相容解析為固定的
+`gemini-3.5-flash-lite`，避免模型版本漂移；不改寫你的 `.env`。
+組員啟動與桌面驗收請參閱 [P4 測試版說明](docs/P4_TEAM_TEST_GUIDE.md)。
 
 Do not commit `.env` or real secrets.
 

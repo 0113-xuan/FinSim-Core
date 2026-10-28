@@ -13,7 +13,7 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 import httpx
-from app.config import settings
+from app.config import settings, PINNED_GEMINI_MODEL, resolve_gemini_model
 from app.car_needs_ai_schemas import NeedsExtractionRequest, ParsedCarNeeds
 from app.services.car_needs_extraction import extract_car_needs
 from app.services.gemini_provider import GeminiProvider
@@ -44,17 +44,25 @@ def expected_conflict(candidate):
         or (field == 'ownership_years' and value != 3))
 
 
-async def evaluate(output):
+async def evaluate(output, *, model=PINNED_GEMINI_MODEL, max_output_tokens=1024):
     if not settings.ai_enabled or settings.ai_provider != 'gemini' or not settings.gemini_api_key:
         raise SystemExit('未啟用可用的 Gemini；沒有發出付費請求。')
     fixtures_path = ROOT/'tests/fixtures/car_needs_p3_cases.json'
     fixtures = json.loads(fixtures_path.read_text(encoding='utf-8'))
+    if model != PINNED_GEMINI_MODEL or len(fixtures) != 28:
+        raise SystemExit('本次付費授權僅適用固定模型與既有 28 筆案例。')
     rows = []
+    run_started = time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())
     original_client = httpx.AsyncClient
     for case in fixtures:
-        usage, models, statuses, raw_outputs, formats = [], [], [], [], []
+        usage, models, statuses, raw_outputs, formats, http_attempts = [], [], [], [], [], []
+        started = time.perf_counter()
+        async def observe_request(request):
+            http_attempts.append(dict(start_seconds=round(time.perf_counter()-started,6)))
         async def observe(response):
+            headers_at = time.perf_counter()
             await response.aread()
+            http_attempts[-1].update(headers_seconds=round(headers_at-started,6),body_read_ms=round((time.perf_counter()-headers_at)*1000,3))
             statuses.append(response.status_code)
             try:
                 payload = response.json()
@@ -68,14 +76,13 @@ async def evaluate(output):
                     except (ValueError,TypeError,KeyError,IndexError,AIProviderError):formats.append(False)
             except (ValueError,TypeError):pass
         def client_factory(*args,**kwargs):
-            kwargs['event_hooks'] = {'response':[observe]}
+            kwargs['event_hooks'] = {'request':[observe_request],'response':[observe]}
             return original_client(*args,**kwargs)
-        started = time.perf_counter()
         row = dict(id=case['id'],text=case['text'],expected=case['expected'])
         try:
             request = NeedsExtractionRequest(schema_version='2.0',text=case['text'],revision=0,related_answers=CONTEXT)
             with patch('app.services.gemini_provider.httpx.AsyncClient',client_factory):
-                result = await extract_car_needs(request,GeminiProvider())
+                result = await extract_car_needs(request,GeminiProvider(model=model,max_retries=0,max_output_tokens=max_output_tokens))
             actual = dict(candidates=[c.model_dump(include={'field','operation','value','evidence'}) for c in result.candidates],unclear=[u.model_dump() for u in result.unclear])
             row.update(actual=actual,**compare(case['expected'],actual),format_valid=True,
                 evidence_valid=all(c['evidence'] in case['text'] for c in actual['candidates']+actual['unclear']),
@@ -90,15 +97,22 @@ async def evaluate(output):
         if raw_outputs:
             row['raw_model_output']=raw_outputs[-1]
             row['raw_comparison']=compare(case['expected'],raw_outputs[-1])
-        row.update(latency_seconds=round(time.perf_counter()-started,3),http_statuses=statuses,usage=usage,model_versions=models)
+        row.update(latency_seconds=round(time.perf_counter()-started,3),http_statuses=statuses,usage=usage,model_versions=models,http_attempts=http_attempts)
         rows.append(row)
-        report = dict(provider='gemini',configured_model=settings.gemini_model,context=CONTEXT,
-            timeout_seconds=settings.ai_onboarding_timeout_seconds,max_retries=settings.ai_max_retries,
+        report = dict(provider='gemini',configured_model=model,context=CONTEXT,
+            started_at=run_started,
+            timeout_seconds=settings.ai_onboarding_timeout_seconds,max_retries=0,max_output_tokens=max_output_tokens,
+            evaluation_protocol='p4-stability-v2-single-attempt',generation_time_note='REST 非串流無獨立模型生成時間；headers_seconds 含排隊、網路及推論，不能視為純推論時間。',
             fixture_sha256=hashlib.sha256(fixtures_path.read_bytes()).hexdigest(),
             prompt_sha256=hashlib.sha256((ROOT/'app/prompts/car_needs_extraction.md').read_bytes()).hexdigest(),
             created_at=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),cases=rows)
         output.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
         print(f"{row['id']}: {row['category']} {row['latency_seconds']}s",flush=True)
+        if any(v != PINNED_GEMINI_MODEL for v in models) or any(u.get('promptTokenCount',0)>1024 for u in usage):
+            report['stopped_reason']='模型版本或輸入 token 超出已同意的費用估算條件；停止後續請求。'
+            report['summary']=summarize(rows)
+            save_report(output,report)
+            raise SystemExit('已安全停止，請先檢查費用與版本。')
         await asyncio.sleep(1)
     report['summary'] = summarize(rows)
     save_report(output,report)
@@ -113,6 +127,9 @@ def summarize(rows):
         format_failures=sum(not r['format_valid'] and any(s==200 for s in r['http_statuses']) for r in rows),
         api_failures=sum(r['category']=='服務失敗' for r in rows))
     summary['timeouts'] = sum(r.get('error_type') == 'timeout' for r in rows)
+    summary['success_rate'] = round(sum(r['category']!='服務失敗' for r in rows)/len(rows),4)
+    summary['timeout_rate'] = round(summary['timeouts']/len(rows),4)
+    summary['http_attempts'] = sum(len(r.get('http_attempts',[])) for r in rows) if all('http_attempts' in r for r in rows) else None
     summary['observed_prompt_tokens'] = sum(u.get('promptTokenCount',0) for r in rows for u in r['usage'])
     summary['observed_output_tokens'] = sum(u.get('candidatesTokenCount',0)+u.get('thoughtsTokenCount',0) for r in rows for u in r['usage'])
     summary['billing_note'] = '僅為已收到 usage 的 token；逾時或取消請求可能仍有費用，無法由本機判定實際帳單。'
@@ -153,6 +170,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='28 筆真實 Gemini 評估；會使用已設定 API 額度。')
     parser.add_argument('--live',action='store_true',help='明確授權這次 28 案例實際呼叫')
     parser.add_argument('--summarize',action='store_true',help='只重新統計已有 JSON，不呼叫 API')
+    parser.add_argument('--model',default=PINNED_GEMINI_MODEL,help='固定模型，不接受 latest alias')
+    parser.add_argument('--max-output-tokens',type=int,default=1024)
     parser.add_argument('--output',type=Path,required=True)
     args = parser.parse_args()
     if args.summarize:
@@ -163,4 +182,7 @@ if __name__ == '__main__':
         save_report(args.output,report)
     else:
         if not args.live:parser.error('必須明確指定 --live；未發出請求。')
-        asyncio.run(evaluate(args.output))
+        if 'latest' in args.model or resolve_gemini_model(args.model)!=args.model:parser.error('請使用固定模型名稱。')
+        if not 1<=args.max_output_tokens<=1024:parser.error('付費評估輸出上限必須介於 1 至 1024。')
+        if args.output.exists():parser.error('輸出已存在，請用新檔名保留舊輪次結果。')
+        asyncio.run(evaluate(args.output,model=args.model,max_output_tokens=args.max_output_tokens))

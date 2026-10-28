@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import asyncio
 import logging
 from time import perf_counter
 from typing import Any
@@ -9,7 +10,7 @@ from urllib.parse import quote
 import httpx
 from pydantic import BaseModel
 
-from app.config import settings
+from app.config import settings, resolve_gemini_model
 from app.services.ai_provider import (
     AIProviderError,
     StructuredResponse,
@@ -71,9 +72,17 @@ class GeminiProvider:
         *,
         api_key: str | None = None,
         model: str | None = None,
+        max_retries: int | None = None,
+        max_output_tokens: int | None = None,
     ) -> None:
         self.api_key = settings.gemini_api_key if api_key is None else api_key
-        self.model = settings.gemini_model if model is None else model
+        self.model = resolve_gemini_model(settings.gemini_model if model is None else model)
+        self.max_retries = settings.ai_max_retries if max_retries is None else max_retries
+        self.max_output_tokens = max_output_tokens
+        if type(self.max_retries) is not int or not 0 <= self.max_retries <= 5:
+            raise ValueError('Gemini retry 必須介於 0 至 5。')
+        if max_output_tokens is not None and (type(max_output_tokens) is not int or not 1 <= max_output_tokens <= 65536):
+            raise ValueError('Gemini output token 上限無效。')
 
     def _endpoint(self) -> str:
         model = self.model.removeprefix("models/").strip()
@@ -98,6 +107,8 @@ class GeminiProvider:
     ) -> StructuredResponse:
         started = perf_counter()
         success = False
+        attempts_made = 0
+        http_ms = 0.0
         response_json_schema = gemini_json_schema(
             response_schema.model_json_schema()
         )
@@ -112,6 +123,8 @@ class GeminiProvider:
             "responseMimeType": "application/json",
             "temperature": 0.1,
         }
+        if self.max_output_tokens is not None:
+            generation_config['maxOutputTokens'] = self.max_output_tokens
         if len(compact_schema.encode("utf-8")) <= MAX_NATIVE_SCHEMA_BYTES:
             generation_config["responseJsonSchema"] = response_json_schema
         else:
@@ -133,16 +146,17 @@ class GeminiProvider:
             "generationConfig": generation_config,
         }
         last_error: Exception | None = None
-        attempts = max(1, settings.ai_max_retries + 1)
+        attempts = self.max_retries + 1
         try:
             async with httpx.AsyncClient(timeout=settings.ai_timeout_seconds) as client:
                 for attempt in range(attempts):
                     try:
-                        response = await client.post(
-                            self._endpoint(),
-                            headers=self._headers(),
-                            json=payload,
-                        )
+                        attempts_made += 1
+                        http_started = perf_counter()
+                        try:
+                            response = await client.post(self._endpoint(), headers=self._headers(), json=payload)
+                        finally:
+                            http_ms += (perf_counter()-http_started)*1000
                         response.raise_for_status()
                         content = self._extract_text(response.json())
                         try:
@@ -157,17 +171,22 @@ class GeminiProvider:
                         raise
                     except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError) as exc:
                         last_error = exc
-                        if attempt == attempts - 1:
+                        transient = isinstance(exc, httpx.TransportError) or (
+                            isinstance(exc,httpx.HTTPStatusError) and (exc.response.status_code == 429 or exc.response.status_code >= 500))
+                        if not transient or attempt == attempts - 1:
                             break
+                        await asyncio.sleep(min(.25 * 2**attempt, 1))
             raise AIProviderError("Gemini 請求失敗，請稍後再試。") from last_error
         finally:
             logger.info(
                 "AI provider request provider=gemini model=%s schema_mode=%s "
-                "duration_ms=%.1f success=%s",
+                "duration_ms=%.1f success=%s attempts=%d http_ms=%.1f",
                 self.model,
                 schema_mode,
                 (perf_counter() - started) * 1000,
                 success,
+                attempts_made,
+                http_ms,
             )
 
     def complete_json(self, *, system: str, user: str) -> dict[str, Any]:

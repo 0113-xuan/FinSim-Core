@@ -10,6 +10,13 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).resolve().parent.parent / ".env", override=False)
 
+PINNED_GEMINI_MODEL = 'gemini-3.5-flash-lite'
+
+
+def resolve_gemini_model(model: str) -> str:
+    value = model.removeprefix('models/').strip()
+    return PINNED_GEMINI_MODEL if value == 'gemini-flash-lite-latest' else value
+
 
 @dataclass(frozen=True)
 class Settings:
@@ -24,7 +31,7 @@ class Settings:
     ai_api_key: str = ""
     ai_model: str = "gpt-4.1-mini"
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-flash-lite-latest"
+    gemini_model: str = PINNED_GEMINI_MODEL
     ai_timeout_seconds: int = 30
     ai_onboarding_timeout_seconds: int = 20
     ai_max_retries: int = 2
@@ -63,7 +70,7 @@ class Settings:
             ai_api_key=ai_api_key,
             ai_model=os.getenv("AI_MODEL", "gpt-4.1-mini"),
             gemini_api_key=gemini_api_key,
-            gemini_model=os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest"),
+            gemini_model=resolve_gemini_model(os.getenv("GEMINI_MODEL", PINNED_GEMINI_MODEL)),
             ai_timeout_seconds=int(os.getenv("AI_TIMEOUT_SECONDS", "30")),
             ai_onboarding_timeout_seconds=int(os.getenv("AI_ONBOARDING_TIMEOUT_SECONDS", "20")),
             ai_max_retries=int(os.getenv("AI_MAX_RETRIES", "2")),
@@ -73,6 +80,8 @@ class Settings:
 
     def startup_warnings(self) -> List[str]:
         warnings = []
+        if 'latest' in self.gemini_model:
+            warnings.append('GEMINI_MODEL 使用浮動 alias；測試版建議固定已驗證的 gemini-3.5-flash-lite。')
         if not self.car_needs_signing_key:
             warnings.append('CAR_NEEDS_SIGNING_KEY 未設定：使用強隨機程序金鑰；正式環境多 worker 或重啟會使 AI 候選失效，請設定至少 32 bytes 的固定獨立金鑰。')
         elif len(self.car_needs_signing_key.encode('utf-8')) < 32:
