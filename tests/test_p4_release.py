@@ -56,3 +56,24 @@ def test_live_eval_can_limit_each_request_without_changing_app_defaults(monkeypa
     assert captured[0]['generationConfig']['maxOutputTokens']==1024
     assert provider.max_retries==0
     assert module.GeminiProvider().max_output_tokens is None
+
+
+def test_outer_deadline_cancels_initial_http_without_retry(monkeypatch):
+    from app.car_needs_ai_schemas import NeedsExtractionRequest
+    from app.services import car_needs_extraction as extraction
+    calls=[]
+    class SlowClient:
+        def __init__(self,**kwargs):pass
+        async def __aenter__(self):return self
+        async def __aexit__(self,*args):pass
+        async def post(self,url,**kwargs):
+            calls.append(1)
+            await asyncio.sleep(1)
+    monkeypatch.setattr(module.httpx,'AsyncClient',SlowClient)
+    monkeypatch.setattr(extraction,'settings',replace(extraction.settings,ai_onboarding_timeout_seconds=.01))
+    context=dict(body_types=[],avoid_body_types=[],priorities=[],purposes=[],powertrains=[],ownership_years=None)
+    request=NeedsExtractionRequest(schema_version='2.0',text='test',revision=0,related_answers=context)
+    provider=module.GeminiProvider(api_key='test',max_retries=2)
+    with pytest.raises(AIProviderError,match='逾時'):
+        asyncio.run(extraction.extract_car_needs(request,provider,provider_name='gemini'))
+    assert len(calls)==1
