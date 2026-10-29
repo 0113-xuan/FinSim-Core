@@ -8,6 +8,14 @@
 - 請使用下方合成案例，不要輸入自己的真實財務或個資。
 - 原始批次 28 筆有 17 筆逾時；本輪固定模型的兩批各 28 筆仍各有 11 筆逾時，尚不能宣稱 AI 穩定性通過。詳見 [測試發布報告](P4_TEST_RELEASE_REPORT_2026-10-28.md)。
 
+### 2026-10-29 討論測試版更新
+
+- 新增安全離線診斷：`python -B -m scripts.diagnose_car_needs_ai`；只回報設定狀態與錯誤類別，不連外、不驗證真實模型品質。
+- 修復本機快速 503 的方法是停止帶有 `AI_ENABLED=false` 的重複服務，並非修改財務／AI 核心程式。每台電腦只啟動一個 8000 服務。
+- 程式完整回歸：Python **507 passed**、Node **154 passed**；新增測試使用假 Provider，不需要真實 API Key。
+- 已知限制仍保留：真實 Gemini 可能逾時；Provider 在依賴初始化階段直接拋例外時仍可能回 500，執行階段失敗則回受控 503。可以略過 AI 繼續推薦，不代表所有 AI 問題已修正。
+- 進度儀表板已拆成獨立專案，不包含在此 Repository 或測試服務。
+
 ## 首次啟動（Windows PowerShell）
 
 需要 Git、Python 3.12、Node.js 18 以上（Node 供測試使用）。
@@ -20,12 +28,14 @@ python -m venv venv
 Copy-Item .env.example .env
 $env:AI_ENABLED = 'false'
 $env:CAR_NEEDS_SIGNING_KEY = & .\venv\Scripts\python.exe -c "import secrets; print(secrets.token_urlsafe(32))"
+$env:JWT_SECRET = & .\venv\Scripts\python.exe -c "import secrets; print(secrets.token_urlsafe(32))"
 & .\venv\Scripts\python.exe -m uvicorn main:app --host 127.0.0.1 --port 8000
 ```
 
 - 開啟 `http://127.0.0.1:8000/vehicle.html`，問卷為 `/car-needs.html`；不要用 `file:///...`。
 - 若 8000 被占用，改成 8018 並開啟對應網址。不需要停止其他人的程式。
 - Ctrl+C 停止。上述金鑰只存在此 shell，不寫入 Git；新 shell／新金鑰會使舊 AI 候選失效。
+- `.env.example` 的 JWT 值只是公開範例，不可當實際祕密沿用；每位測試者使用上方隨機值。不需共享金鑰或帳號。
 - 更新時在此分支執行 `git pull --ff-only`；若有本機修改先保存，不用 reset 或 force push。
 
 ## 測試 AI（選用，需自己的 API 額度）
@@ -36,6 +46,7 @@ $env:CAR_NEEDS_SIGNING_KEY = & .\venv\Scripts\python.exe -c "import secrets; pri
 4. 不把 Key 放前端、截圖、聊天、Bug 單或 Git。不要在 `.env.example` 填真實值。
 5. `AI_ENABLED=false` 可隨時停用，不影響手動推薦與財務引擎。
 6. 一般 UI 點擊也會使用 AI 額度。28 筆批次評估必須另獲費用同意，勿全組各自反覆執行。
+7. 若 AI 分析幾毫秒就回 503，先看 `/api` 的 `ai_enabled`，再執行離線診斷。注意：診斷是新程序，不能取代檢查正在服務的程序；`.env` 變更要重啟才生效。勿同時執行 `python main.py` 與 uvicorn 競用同一個埠。
 
 ## 合成測試資料
 
@@ -125,3 +136,12 @@ Commit／分支：
 
 可作為「AI 選用」的受控組員測試環境；尚不能宣稱 AI 穩定性通過。
 正式測試環境需固定模型、共用 32 bytes 以上獨立簽章金鑰、限制測試者與 API 額度，並取得部署設定授權。此分支 Push 不等於已部署，也不會自動合併 main。
+
+## 發布前檢查範圍與歷史提醒
+
+2026-10-29 發布前檢查涵蓋所有本機 refs 可達 Git blob、待提交檔案、敏感檔名與目前後端秘密值的精確比對，搭配常見 key／私鑰格式掃描及人工判讀；不是完整滲透測試，也不保證偵測所有秘密格式或個資。
+
+- 沒有納入 `.env`、實際 Gemini/OpenAI 金鑰、私鑰檔或本機簽章金鑰。既有未確認的規劃、審查文件與個人文件不加入此輪提交。
+- 歷史舊 main.py 有一個 Supabase `anon` 類型公開用 JWT；目前 main.py 已移除。其類型不同於高權限 `service_role`，但資料保護仍取決於權限與 RLS。[官方金鑰說明](https://supabase.com/docs/guides/getting-started/api-keys)。本輪未連線查核資料庫權限、未輪替金鑰，也未改寫歷史，因此不能宣稱歷史完全沒有 credential。
+- 本機 JWT 設定與 `.env.example` 公開範例相同；本次不更動本機或正式憑證，請依上方指令在測試 shell 產生獨立隨機值。
+- 本次只發布組員討論測試分支，不修改 main、不執行部署、不跑付費模型評估。
