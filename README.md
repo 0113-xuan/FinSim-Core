@@ -2,7 +2,7 @@
 
 FinSim-Core is an **AI-assisted personal life-decision simulation and financial-risk analysis platform** for a graduation project.
 
-The product is not a generic financial chatbot. The deterministic backend engine is always responsible for cash-flow, loan, FSI, Monte Carlo, comparison, and optimization calculations. AI is used only to help users parse natural-language scenarios, categorize expenses, and explain backend-generated results.
+The product is not a generic financial chatbot. The deterministic backend engine is always responsible for cash-flow, loan, cash shortfall, Monte Carlo, comparison, and optimization calculations. AI is used only to help users parse natural-language scenarios, categorize expenses, and explain backend-generated results.
 
 ## FinSim 2.0 Vehicle Decision
 
@@ -45,7 +45,7 @@ See [Sprint 2 definitions](docs/SPRINT2_IMPLEMENTATION.md).
 - Monte Carlo simulation with:
   - average, median, min, max final balance
   - p5/p25/p50/p75/p95 percentiles
-  - negative-balance and bankruptcy probabilities
+  - cash shortfall probability (any month-end cash below zero)
   - high-risk month distribution
   - emergency-fund shortfall
   - sample paths
@@ -187,7 +187,7 @@ pytest
 
 Tests cover:
 
-- FSI calculations
+- Cash metrics and cash shortfall probability
 - Loan calculation
 - Basic simulation
 - Categorized expenses
