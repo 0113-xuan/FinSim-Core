@@ -48,11 +48,13 @@ def get_recurring_event_amount(month: int, events: List[Dict[str, Any]]) -> floa
     return round(total, 2)
 
 
-def get_income_for_month(month: int, base_income: float, events: List[Dict[str, Any]]) -> float:
+def get_income_for_month(month: int, base_income: float, events: List[Dict[str, Any]], raise_rate: float = 0) -> float:
     salary = float(base_income)
     for event in sorted(events, key=lambda item: item.get("start_month") or item.get("month") or 0):
         if event.get("type") == "salary_change" and event.get("start_month", 999999) <= month:
-            salary = float(value_or_default(event.get("new_salary"), salary))
+            if event.get("new_salary") is not None:
+                years_since_change = (month - event["start_month"]) // 12
+                salary = float(event["new_salary"]) * (1 + raise_rate) ** years_since_change
         elif is_event_active(event, month):
             salary *= float(value_or_default(event.get("income_multiplier"), 1.0))
     return round(max(0.0, salary), 2)

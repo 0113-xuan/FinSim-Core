@@ -83,7 +83,7 @@ def simulate_finance(
     for month in range(1, months + 1):
         years_passed = (month - 1) // 12
         scheduled_income = base_salary * ((1 + raise_rate) ** years_passed)
-        income = get_income_for_month(month, scheduled_income, events)
+        income = get_income_for_month(month, scheduled_income, events, raise_rate=raise_rate)
         fixed_base = base_fixed_expense * (inflation_factor(month, inflation_rate) if profile.get("fixed_expense_inflates", False) else 1)
         fixed_expense = get_fixed_expense_for_month(month, fixed_base, events)
         variable_result = calculate_variable_expenses(

@@ -92,3 +92,31 @@ def test_report_only_uses_cash_terms():
     assert 'bankrupt' not in response.text.lower()
     assert '破產' not in response.text
     assert '現金不足機率' in response.text
+
+
+@pytest.mark.parametrize('raise_rate', [0, .05])
+def test_salary_change_starts_a_new_annual_raise_clock(raise_rate):
+    rows = simulate_finance({**PROFILE, 'raise_rate': raise_rate}, months=37,
+                            events=[{'type': 'salary_change', 'start_month': 13, 'new_salary': 200}])['simulation_curve']
+    assert rows[11]['income'] == 100
+    assert [r['income'] for r in rows[12:24]] == [200] * 12
+    assert [r['income'] for r in rows[24:36]] == [round(200 * (1 + raise_rate), 2)] * 12
+    assert rows[36]['income'] == round(200 * (1 + raise_rate) ** 2, 2)
+
+
+def test_latest_salary_change_wins_even_when_events_are_unordered():
+    rows = simulate_finance({**PROFILE, 'raise_rate': .1}, months=32, events=[
+        {'type': 'salary_change', 'start_month': 20, 'new_salary': 300},
+        {'type': 'salary_change', 'start_month': 13, 'new_salary': 200},
+    ])['simulation_curve']
+    assert rows[18]['income'] == 200
+    assert [r['income'] for r in rows[19:31]] == [300] * 12
+    assert rows[31]['income'] == 330
+
+
+def test_salary_change_before_effective_month_keeps_original_raise_schedule():
+    rows = simulate_finance({**PROFILE, 'raise_rate': .1}, months=15, events=[
+        {'type': 'salary_change', 'start_month': 15, 'new_salary': 200},
+    ])['simulation_curve']
+    assert [r['income'] for r in rows[12:14]] == [110, 110]
+    assert rows[14]['income'] == 200
