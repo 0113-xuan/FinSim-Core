@@ -122,13 +122,13 @@ Do not commit `.env` or real secrets.
 
 ## Supabase Schema
 
-The local app can run without Supabase. Required production table definitions and RLS guidance are documented in:
+The local app can run without Supabase. Login and saved profiles, plans and events use the tables in:
 
 ```text
-docs/supabase_schema.sql
+docs/supabase_schema_v2.sql
 ```
 
-For production, create the tables in Supabase and enable ownership-based RLS policies for every user-owned table.
+Run it once in the Supabase SQL Editor. It creates the tables and owner-only RLS policies; the backend is not wired to these tables yet.
 
 ## Core API Examples
 
