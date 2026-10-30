@@ -5,6 +5,7 @@ import random
 import statistics
 from typing import Any, Dict, List, Optional
 
+from app.core.expenses import get_expense_categories
 from app.core.simulation import simulate_finance
 
 
@@ -17,6 +18,31 @@ def percentile(values: List[float], pct: float) -> float:
     upper = min(lower + 1, len(ordered) - 1)
     weight = index - lower
     return ordered[lower] * (1 - weight) + ordered[upper] * weight
+
+
+def _sampling_metadata(profile: Dict[str, Any], random_shocks: List[Dict[str, Any]]) -> Dict[str, Any]:
+    sampled_parameters = []
+    notes = []
+    if profile.get('inflation_rate') is None:
+        sampled_parameters.append('inflation_rate')
+        notes.append('通膨率暫以 1%–5% 均勻抽樣，範圍為暫時設定，沒有資料來源。')
+    else:
+        notes.append(f"通膨率固定使用 {float(profile['inflation_rate']) * 100:g}%，未抽樣。")
+    if profile.get('raise_rate') is None:
+        if 'inflation_rate' in sampled_parameters:
+            sampled_parameters.append('raise_rate')
+        notes.append('調薪率等於該次試驗的通膨率。')
+    else:
+        notes.append(f"調薪率固定使用 {float(profile['raise_rate']) * 100:g}%。")
+
+    # Advanced expense volatility remains a random source even with fixed rates.
+    if any(float(category.get('monthly_volatility', 0) or 0) > 0
+           for category in get_expense_categories(profile)):
+        sampled_parameters.append('variable_expense')
+        notes.append('變動支出依已啟用分類的月波動率抽樣。')
+    if not sampled_parameters and not any(shock.get('enabled', True) for shock in random_shocks):
+        notes.append('本次結果沒有隨機變動，分位數會相同。')
+    return {'sampled_parameters': sampled_parameters, 'sampling_note': ''.join(notes)}
 
 
 def run_monte_carlo(
@@ -102,7 +128,7 @@ def run_monte_carlo(
         },
         "probability_cash_shortfall": round(shortfall_probability, 4),
         "cash_shortfall_definition": "模擬期間任一月底現金小於 0 的試驗比例",
-        "sampling_note": "通膨率暫以 1%–5% 均勻抽樣；抽樣範圍為暫時設定，沒有資料來源。未提供調薪率時等於該次通膨率；使用者提供的調薪率與通膨率固定使用。",
+        **_sampling_metadata(profile, random_shocks),
         "expected_emergency_fund_shortfall": round(statistics.fmean(emergency_shortfalls), 2),
         "sample_paths": paths,
     }

@@ -44,7 +44,14 @@ def test_monte_carlo_respects_explicit_rates_and_links_omitted_salary(rates):
     })
     assert response.status_code == 200
     result = response.json()
-    assert '暫時設定' in result['sampling_note'] and '沒有資料來源' in result['sampling_note']
+    if 'inflation_rate' not in rates:
+        assert '暫時設定' in result['sampling_note'] and '沒有資料來源' in result['sampling_note']
+        expected_parameters = ['inflation_rate'] if rates.get('raise_rate') is not None else ['inflation_rate', 'raise_rate']
+    else:
+        assert '未抽樣' in result['sampling_note']
+        assert '沒有資料來源' not in result['sampling_note']
+        expected_parameters = []
+    assert result['sampled_parameters'] == expected_parameters
     for path in result['debug_paths']:
         row = path['simulation_curve'][12]
         income = row['income']
