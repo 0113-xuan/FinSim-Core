@@ -284,12 +284,11 @@ def build_simulation_transparency(
         "debt_to_income_ratio": _metric(
             baseline_summary.get("debt_to_income"), scenario_summary.get("debt_to_income")
         ),
-        "fsi": _metric(baseline_summary.get("max_fsi"), scenario_summary.get("max_fsi")),
         "negative_balance_probability": _metric(None, None),
         "monte_carlo_risk_probability": _metric(None, None),
-        "first_high_risk_month": {
-            "before": baseline_summary.get("first_risk_month"),
-            "after": scenario_summary.get("first_risk_month"),
+        "first_negative_cash_month": {
+            "before": baseline_summary.get("first_negative_cash_month"),
+            "after": scenario_summary.get("first_negative_cash_month"),
             "difference": None,
         },
     }
@@ -305,12 +304,12 @@ def build_simulation_transparency(
         }
         for item in event_ledger
     ]
-    first_risk_month = scenario_summary.get("first_risk_month")
-    if first_risk_month:
+    first_negative_cash_month = scenario_summary.get("first_negative_cash_month")
+    if first_negative_cash_month:
         markers.append(
             {
-                "name": "首次高風險月份",
-                "month": first_risk_month,
+                "name": "首次現金不足月份",
+                "month": first_negative_cash_month,
                 "cost": 0,
                 "category": "風險",
                 "source": "財務引擎計算",
@@ -395,7 +394,7 @@ def build_simulation_transparency(
                 ),
             },
             {
-                "label": "資產、現金流與 FSI",
+                "label": "現金餘額與現金流",
                 "source": display_source_label("derived"),
                 "estimated": False,
             },

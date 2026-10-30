@@ -90,8 +90,8 @@ def run_timeline(req, *, baseline=False, stress=None, round_output=True):
         events.append(dict(type='one_time', month=start, amount=-STRESS_DEFAULTS['emergency_expense']))
     result = simulate_finance(req.profile.model_dump(), months=60, events=events,
                               loans=[x.model_dump() for x in build.loans] if build else [],
-                              seed=0, evaluate_legacy_risk=False, round_output=round_output)
-    rows = [{key: value for key, value in row.items() if key not in ('fsi', 'risk_level', 'debt_to_income')} for row in result['simulation_curve']]
+                              seed=0, round_output=round_output)
+    rows = [{key: value for key, value in row.items() if key not in ('debt_to_income',)} for row in result['simulation_curve']]
     period = YearMonth.parse(req.start_period)
     for row in rows:
         row['period'] = str(period.add_months(row['month']))

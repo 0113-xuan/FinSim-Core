@@ -1,5 +1,4 @@
 from app.core.events import calculate_loan_payment
-from app.core.fsi import calculate_fsi, classify_risk
 from app.core.monte_carlo import run_monte_carlo
 from app.core.simulation import simulate_finance
 from app.schemas import ParsedScenario
@@ -24,13 +23,6 @@ def profile():
             "categories": [],
         },
     }
-
-
-def test_fsi_and_risk_classification():
-    fsi = calculate_fsi(income=60000, expense=35000, debt_payment=0, balance=500000, target_emergency_months=6)
-    assert fsi < 0.6
-    assert classify_risk(fsi, 500000) in {"low", "medium"}
-    assert classify_risk(fsi, -1) == "crisis"
 
 
 def test_loan_payment():
@@ -142,6 +134,6 @@ def test_ai_fallback_validation_and_categorization():
 
 
 def test_optimization_constraints():
-    result = optimize({"profile": profile(), "months": 12, "seed": 1, "constraints": {"maximum_fsi_below": 0.9}, "max_candidates": 5})
+    result = optimize({"profile": profile(), "months": 12, "seed": 1, "constraints": {"minimum_emergency_months_above": 3}, "max_candidates": 5})
     assert "best_scenario" in result
     assert "rejected_scenarios" in result

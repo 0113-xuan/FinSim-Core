@@ -332,10 +332,9 @@
       ['monthly_cash_flow', '每月現金流', 'currency'],
       ['emergency_fund_coverage', '緊急備用金覆蓋', 'months'],
       ['debt_to_income_ratio', '負債收入比', 'percent'],
-      ['fsi', '最高 FSI', 'number'],
       ['negative_balance_probability', '負資產機率', 'percent'],
       ['monte_carlo_risk_probability', 'Monte Carlo 風險機率', 'percent'],
-      ['first_high_risk_month', '首次高風險月份', 'month']
+      ['first_negative_cash_month', '首次現金不足月份', 'month']
     ];
     const display = (value, type) => {
       if (value == null) return '尚未計算';

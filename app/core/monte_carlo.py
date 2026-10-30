@@ -3,10 +3,8 @@ from app.core.financial_rules import emergency_shortfall
 
 import random
 import statistics
-from collections import Counter
 from typing import Any, Dict, List, Optional
 
-from app.core.fsi import classify_risk
 from app.core.simulation import simulate_finance
 
 
@@ -44,9 +42,7 @@ def run_monte_carlo(
 
     final_balances: List[float] = []
     min_balances: List[float] = []
-    max_fsis: List[float] = []
     emergency_shortfalls: List[float] = []
-    high_risk_month_counter: Counter[int] = Counter()
     paths = []
     debug_paths = []
 
@@ -69,17 +65,13 @@ def run_monte_carlo(
         curve = result["simulation_curve"]
         final_balances.append(summary["final_balance"])
         min_balances.append(summary["min_balance"])
-        max_fsis.append(summary["max_fsi"])
         target_months = float(profile.get("target_emergency_months", 3))
         emergency_shortfalls.append(emergency_shortfall(summary["final_balance"], curve[-1]["living_expense"], curve[-1]["debt_payment"], target_months))
-        for row in curve:
-            if row["risk_level"] in ("high", "crisis"):
-                high_risk_month_counter[row["month"]] += 1
         if index < sample_paths:
             paths.append(
                 {
                     "seed": path_seed,
-                    "points": [{"month": row["month"], "balance": row["balance"], "fsi": row["fsi"]} for row in curve],
+                    "points": [{"month": row["month"], "balance": row["balance"]} for row in curve],
                 }
             )
         if include_details and index < min(3, sample_paths):
@@ -87,8 +79,6 @@ def run_monte_carlo(
 
     negative_probability = sum(1 for value in min_balances if value < 0) / simulations
     bankruptcy_probability = sum(1 for value in final_balances if value < 0) / simulations
-    avg_max_fsi = statistics.fmean(max_fsis)
-    risk_level = classify_risk(avg_max_fsi, min(min_balances))
 
     response = {
         "iterations": simulations,
@@ -106,14 +96,8 @@ def run_monte_carlo(
         },
         "probability_negative_balance": round(negative_probability, 4),
         "bankrupt_probability": round(bankruptcy_probability, 4),
-        "avg_max_fsi": round(avg_max_fsi, 4),
-        "high_risk_month_distribution": [
-            {"month": month, "frequency": count, "probability": round(count / simulations, 4)}
-            for month, count in sorted(high_risk_month_counter.items())
-        ],
         "expected_emergency_fund_shortfall": round(statistics.fmean(emergency_shortfalls), 2),
         "sample_paths": paths,
-        "risk_classification": risk_level,
     }
     if include_details:
         response["debug_paths"] = debug_paths

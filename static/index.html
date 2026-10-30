@@ -295,13 +295,6 @@
               <canvas id="cashflowChart" hidden></canvas>
             </div>
           </div>
-          <div class="chart-card">
-            <h3>FSI 風險指數</h3>
-            <div class="chart-box" data-chart-shell>
-              <div id="fsiChartEmpty" class="chart-empty">尚無模擬資料。</div>
-              <canvas id="fsiChart" hidden></canvas>
-            </div>
-          </div>
         </div>
       </details>
 
@@ -343,7 +336,6 @@
             <h3>進階風險限制</h3>
             <div class="grid two">
               <label>破產機率低於 <input id="limitBankrupt" type="number" step="0.01" value="0.1"></label>
-              <label>最高 FSI 低於 <input id="limitFsi" type="number" step="0.01" value="0.6"></label>
               <label>最低備用金月數 <input id="limitEmergency" type="number" value="3"></label>
               <label class="toggle"><input id="limitNoNegative" type="checkbox" checked> 資產不可跌破零</label>
             </div>
@@ -366,7 +358,6 @@
         <div class="metric-grid compact">
           <article><span>P5 / P50 / P95</span><strong id="mcPercentiles">--</strong></article>
           <article><span>破產機率</span><strong id="mcBankrupt">--</strong></article>
-          <article><span>平均最高 FSI</span><strong id="mcFsi">--</strong></article>
         </div>
         <div class="charts">
           <div class="chart-card">

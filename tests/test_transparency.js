@@ -217,10 +217,10 @@ test('AI scenarios require confirmation and optional fields are tolerated', () =
 test('financial impact renders backend before-and-after values', () => {
   const html = T.FinancialImpactSummary({
     final_assets: { before: 100000, after: 85000, difference: -15000 },
-    fsi: { before: 0.3, after: 0.5, difference: 0.2 }
+    lowest_asset_balance: { before: 90000, after: 80000, difference: -10000 }
   });
   assert.match(html, /情境對財務|期末資產|原始|情境後|-NT\$15,000/);
-  assert.match(html, /最高 FSI/);
+  assert.match(html, /期間最低資產/);
 });
 
 test('empty chart, event markers and disabled legend behavior are implemented', () => {

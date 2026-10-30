@@ -14,8 +14,8 @@ from app.services.scenario_parser import deterministic_parse_scenario, parse_sce
     ["first", "middle", "last"],
 )
 def test_baseline_lookup_is_independent_of_position(position):
-    baseline = {"name": "Baseline", "score": 10}
-    other = [{"name": "Reduce expenses", "score": 1}, {"name": "Increase income", "score": 2}]
+    baseline = {"name": "Baseline", "median_final_balance": 10}
+    other = [{"name": "Reduce expenses", "median_final_balance": 1}, {"name": "Increase income", "median_final_balance": 2}]
     if position == "first":
         options = [baseline, *other]
     elif position == "middle":
@@ -27,11 +27,11 @@ def test_baseline_lookup_is_independent_of_position(position):
 
 def test_baseline_lookup_survives_sorting():
     options = [
-        {"name": "Baseline", "score": 10},
-        {"name": "Reduce expenses", "score": 1},
-        {"name": "Increase income", "score": 2},
+        {"name": "Baseline", "median_final_balance": 10},
+        {"name": "Reduce expenses", "median_final_balance": 1},
+        {"name": "Increase income", "median_final_balance": 2},
     ]
-    sorted_options = sorted(options, key=lambda item: item["score"])
+    sorted_options = sorted(options, key=lambda item: -item["median_final_balance"])
     assert find_baseline_option(sorted_options)["name"] == "Baseline"
 
 

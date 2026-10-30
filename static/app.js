@@ -805,19 +805,6 @@ function setupCharts() {
     })
   });
 
-  createChartController({
-    key: 'fsi',
-    canvas: $('fsiChart'),
-    hasData: rows => Array.isArray(rows) && rows.length > 0,
-    build: rows => ({
-      type: 'line',
-      data: {
-        labels: rows.map(row => T.formatPeriod(T.periodForMonth(state.referenceDate, row.month))),
-        datasets: [{ label: 'FSI', data: rows.map(row => row.fsi), borderColor: '#7c3aed', pointRadius: 0, tension: .2 }]
-      },
-      options: chartOptions('FSI', false)
-    })
-  });
 
   createChartController({
     key: 'category',
@@ -910,7 +897,6 @@ function renderTransparency(result) {
   $('sourceList').innerHTML = T.SourceList([...scenarioSources, ...(transparency.sources || []).map(item => ({ ...item, value: item.value || '' }))]);
   chartControllers.balance.render(result.simulation_curve, { markers: transparency.event_markers || [] });
   chartControllers.cashflow.render(result.simulation_curve);
-  chartControllers.fsi.render(result.simulation_curve);
 }
 
 function renderSimulation(result) {
@@ -959,7 +945,7 @@ function resetResults() {
   $('variableExpenseAllocation').innerHTML = '';
   $('expenseComparison').innerHTML = '';
   renderCostBreakdown(null);
-  ['balance', 'cashflow', 'fsi'].forEach(key => chartControllers[key].render([]));
+  ['balance', 'cashflow'].forEach(key => chartControllers[key].render([]));
 }
 
 async function runSimulation(button = $('runBtn'), allowPending = false) {
@@ -1267,7 +1253,6 @@ $('runMcBtn').addEventListener('click', async event => {
     state.lastMonteCarlo = data;
     $('mcPercentiles').textContent = `${currency(data.percentiles.p5)} / ${currency(data.percentiles.p50)} / ${currency(data.percentiles.p95)}`;
     $('mcBankrupt').textContent = T.formatPercent(data.bankrupt_probability);
-    $('mcFsi').textContent = data.avg_max_fsi;
     chartControllers.mc.render(data.sample_paths);
     if (state.lastSimulation?.transparency?.financial_impact) {
       const impact = state.lastSimulation.transparency.financial_impact;
@@ -1295,7 +1280,6 @@ $('optimizeBtn').addEventListener('click', async event => {
         constraints: {
           bankruptcy_probability_below: Number($('limitBankrupt').value) || 0.1,
           minimum_emergency_months_above: Number($('limitEmergency').value) || 3,
-          maximum_fsi_below: Number($('limitFsi').value) || 0.6,
           balance_must_not_be_negative: $('limitNoNegative').checked
         }
       })

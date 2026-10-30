@@ -201,11 +201,9 @@ def test_decision_inflation_and_cash_purchase():
     assert evaluate(low_rows, low, build)['monthly_loan_payment'] == 0
 
 
-def test_new_path_does_not_call_legacy_risk_or_ai(monkeypatch):
+def test_new_path_does_not_call_advisor_or_ai(monkeypatch):
     def forbidden(*args, **kwargs):
         raise AssertionError('Legacy risk or AI called')
-    monkeypatch.setattr('app.core.simulation.calculate_fsi', forbidden)
-    monkeypatch.setattr('app.core.simulation.classify_risk', forbidden)
     monkeypatch.setattr('app.core.advisor.compare_options', forbidden)
     monkeypatch.setattr('app.services.ai_provider.get_ai_provider', forbidden)
     simulate_vehicle_decision(req())

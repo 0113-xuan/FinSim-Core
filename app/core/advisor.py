@@ -7,15 +7,6 @@ from app.core.monte_carlo import run_monte_carlo
 from app.core.simulation import simulate_finance
 
 
-def score_option(sim_summary: Dict[str, Any], mc_summary: Dict[str, Any]) -> float:
-    score = 0.0
-    score += sim_summary["max_fsi"] * 60
-    score += max(0, -sim_summary["min_balance"]) * 0.001
-    score += mc_summary["bankrupt_probability"] * 120
-    score += max(0, sim_summary["target_emergency_months"] - sim_summary["emergency_fund_coverage"]) * 3
-    return round(score, 4)
-
-
 def _merge_profile(profile: Dict[str, Any], overrides: Dict[str, Any]) -> Dict[str, Any]:
     merged = deepcopy(profile)
     for key, value in overrides.items():
@@ -60,34 +51,32 @@ def compare_options(
                 "name": option["name"],
                 "simulation_summary": sim_result["summary"],
                 "monte_carlo_summary": mc_result,
-                "score": score_option(sim_result["summary"], mc_result),
             }
         )
 
-    option_results.sort(key=lambda item: item["score"])
-    return {"best_option": option_results[0]["name"], "options": option_results}
+    option_results.sort(key=lambda item: (
+        item["monte_carlo_summary"]["probability_negative_balance"],
+        -item["monte_carlo_summary"]["median_final_balance"],
+    ))
+    return {"best_option": option_results[0]["name"], "options": option_results,
+            "sorting_rule": "現金不足機率由低到高，再依期末現金中位數由高到低"}
 
 
 def generate_advice(compare_result: Dict[str, Any]) -> Dict[str, Any]:
     best = compare_result["options"][0]
     sim = best["simulation_summary"]
     mc = best["monte_carlo_summary"]
-    risk_level = mc["risk_classification"]
     suggestions = []
     if sim["min_balance"] < 0:
         suggestions.append("優先降低一次性支出或延後事件時程，避免資產在期間內跌破零。")
-    if sim["max_fsi"] >= 0.6:
-        suggestions.append("FSI 偏高，建議提高緊急備用金或降低固定支出。")
     if mc["bankrupt_probability"] >= 0.1:
         suggestions.append("Monte Carlo 顯示破產機率偏高，請增加收入緩衝或縮小貸款規模。")
     if not suggestions:
         suggestions.append("目前方案風險可控，可持續追蹤支出分類與重大生活事件。")
     return {
         "summary": f"根據 deterministic simulation 與 Monte Carlo，建議方案為「{best['name']}」。",
-        "risk_level": risk_level,
         "best_option": best["name"],
         "reason": [
-            f"最高 FSI：{sim['max_fsi']}",
             f"最低資產：{sim['min_balance']}",
             f"破產機率：{mc['bankrupt_probability'] * 100:.2f}%",
         ],

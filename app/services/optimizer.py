@@ -26,8 +26,6 @@ def _violations(summary: Dict[str, Any], mc: Dict[str, Any], constraints: Dict[s
     issues = []
     if constraints.get("balance_must_not_be_negative") and summary["min_balance"] < 0:
         issues.append("Balance becomes negative")
-    if constraints.get("maximum_fsi_below") is not None and summary["max_fsi"] >= constraints["maximum_fsi_below"]:
-        issues.append("Maximum FSI exceeds constraint")
     if constraints.get("bankruptcy_probability_below") is not None and mc["bankrupt_probability"] >= constraints["bankruptcy_probability_below"]:
         issues.append("Bankruptcy probability exceeds constraint")
     if constraints.get("minimum_emergency_months_above") is not None and summary["emergency_fund_coverage"] < constraints["minimum_emergency_months_above"]:
@@ -62,7 +60,7 @@ def optimize(request: Dict[str, Any]) -> Dict[str, Any]:
     for option in comparison["options"]:
         issues = _violations(option["simulation_summary"], option["monte_carlo_summary"], constraints)
         if issues:
-            rejected.append({"name": option["name"], "violations": issues, "score": option["score"]})
+            rejected.append({**option, "violations": issues})
         else:
             feasible.append(option)
     best = feasible[0] if feasible else comparison["options"][0]
@@ -72,5 +70,6 @@ def optimize(request: Dict[str, Any]) -> Dict[str, Any]:
         "feasible_scenarios": feasible,
         "rejected_scenarios": rejected,
         "baseline": baseline,
-        "explanation": f"Recommended option is {best['name']} based on deterministic scoring and constraints.",
+        "sorting_rule": comparison["sorting_rule"],
+        "explanation": f"Recommended option is {best['name']} based on cash metrics and constraints.",
     }

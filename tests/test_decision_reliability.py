@@ -47,10 +47,8 @@ def test_nominal_fixed_and_explicit_category_override():
     assert result['simulation_curve'][-1]['variable_expense'] == 10000
 
 
-def test_summary_and_fsi_share_debt_inclusive_coverage():
-    from app.core.fsi import calculate_fsi
+def test_summary_uses_debt_inclusive_coverage():
     result = simulate_finance(PROFILE, months=1, loans=[dict(principal=120000, apr=0, months=12, start_month=1)])
     row = result['simulation_curve'][0]
     assert result['summary']['emergency_fund_coverage'] == pytest.approx(row['balance']/35000, abs=.01)
     assert result['summary']['minimum_emergency_fund_months'] == pytest.approx(row['balance']/35000, abs=.0001)
-    assert calculate_fsi(45000, 25000, 10000, 35000) == pytest.approx(.5*25000/45000+.3*10000/45000+.2*(1-1/3), abs=.0001)
