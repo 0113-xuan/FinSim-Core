@@ -1252,12 +1252,12 @@ $('runMcBtn').addEventListener('click', async event => {
     const data = await api('/monte-carlo', { method: 'POST', body: JSON.stringify(payload) });
     state.lastMonteCarlo = data;
     $('mcPercentiles').textContent = `${currency(data.percentiles.p5)} / ${currency(data.percentiles.p50)} / ${currency(data.percentiles.p95)}`;
-    $('mcBankrupt').textContent = T.formatPercent(data.bankrupt_probability);
+    $('mcCashShortfall').textContent = T.formatPercent(data.probability_cash_shortfall);
+    $('mcCashShortfall').title = data.cash_shortfall_definition;
     chartControllers.mc.render(data.sample_paths);
     if (state.lastSimulation?.transparency?.financial_impact) {
       const impact = state.lastSimulation.transparency.financial_impact;
-      impact.negative_balance_probability = { before: null, after: data.probability_negative_balance, difference: null };
-      impact.monte_carlo_risk_probability = { before: null, after: data.bankrupt_probability, difference: null };
+      impact.probability_cash_shortfall = { before: null, after: data.probability_cash_shortfall, difference: null };
       $('financialImpact').innerHTML = T.FinancialImpactSummary(impact);
     }
     toast('Monte Carlo 完成');
@@ -1278,7 +1278,7 @@ $('optimizeBtn').addEventListener('click', async event => {
         months: Number($('months').value) || 60,
         seed: Number($('seed').value) || 42,
         constraints: {
-          bankruptcy_probability_below: Number($('limitBankrupt').value) || 0.1,
+          cash_shortfall_probability_below: $('limitCashShortfall').value === '' ? 0.1 : Number($('limitCashShortfall').value),
           minimum_emergency_months_above: Number($('limitEmergency').value) || 3,
           balance_must_not_be_negative: $('limitNoNegative').checked
         }

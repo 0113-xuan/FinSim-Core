@@ -78,6 +78,7 @@ def simulate_finance(
     profile = {**profile, "inflation_rate": inflation_rate}
     curve: List[Dict[str, Any]] = []
     shock_details: List[Dict[str, Any]] = []
+    first_negative_cash_month = None
 
     for month in range(1, months + 1):
         years_passed = (month - 1) // 12
@@ -113,6 +114,8 @@ def simulate_finance(
         total_expense = fixed_expense + variable_result["total"] + debt_payment + shock_expense
         net_cashflow = income - total_expense + recurring_event_amount + one_time_asset_impact
         balance += net_cashflow
+        if balance < 0 and first_negative_cash_month is None:
+            first_negative_cash_month = month
 
         row = {
             "month": month,
@@ -142,6 +145,8 @@ def simulate_finance(
         "summary": summarize_simulation(curve, profile),
         "seed": seed,
     }
+    # The zero boundary is evaluated before currency display rounding.
+    result["summary"]["first_negative_cash_month"] = first_negative_cash_month
     if include_details:
         result["shock_details"] = shock_details
     return result

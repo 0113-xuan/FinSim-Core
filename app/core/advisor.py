@@ -55,7 +55,7 @@ def compare_options(
         )
 
     option_results.sort(key=lambda item: (
-        item["monte_carlo_summary"]["probability_negative_balance"],
+        item["monte_carlo_summary"]["probability_cash_shortfall"],
         -item["monte_carlo_summary"]["median_final_balance"],
     ))
     return {"best_option": option_results[0]["name"], "options": option_results,
@@ -69,8 +69,8 @@ def generate_advice(compare_result: Dict[str, Any]) -> Dict[str, Any]:
     suggestions = []
     if sim["min_balance"] < 0:
         suggestions.append("優先降低一次性支出或延後事件時程，避免資產在期間內跌破零。")
-    if mc["bankrupt_probability"] >= 0.1:
-        suggestions.append("Monte Carlo 顯示破產機率偏高，請增加收入緩衝或縮小貸款規模。")
+    if mc["probability_cash_shortfall"] >= 0.1:
+        suggestions.append("Monte Carlo 顯示現金不足機率偏高，請增加收入緩衝或縮小貸款規模。")
     if not suggestions:
         suggestions.append("目前方案風險可控，可持續追蹤支出分類與重大生活事件。")
     return {
@@ -78,7 +78,7 @@ def generate_advice(compare_result: Dict[str, Any]) -> Dict[str, Any]:
         "best_option": best["name"],
         "reason": [
             f"最低資產：{sim['min_balance']}",
-            f"破產機率：{mc['bankrupt_probability'] * 100:.2f}%",
+            f"現金不足機率：{mc['probability_cash_shortfall'] * 100:.2f}%",
         ],
         "suggestions": suggestions,
     }

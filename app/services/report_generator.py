@@ -14,7 +14,7 @@ def generate_report(payload: Dict[str, Any]) -> Dict[str, Any]:
         },
         {
             "title": "主要風險因素",
-            "body": f"最低現金為 {summary.get('minimum_cash_balance', 'N/A')}；Monte Carlo 破產機率為 {monte_carlo.get('bankrupt_probability', 'N/A')}。",
+            "body": f"最低現金為 {summary.get('minimum_cash_balance', 'N/A')}；Monte Carlo 現金不足機率為 {monte_carlo.get('probability_cash_shortfall', 'N/A')}。",
         },
         {
             "title": "可行改善",

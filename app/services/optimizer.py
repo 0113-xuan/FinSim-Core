@@ -26,8 +26,8 @@ def _violations(summary: Dict[str, Any], mc: Dict[str, Any], constraints: Dict[s
     issues = []
     if constraints.get("balance_must_not_be_negative") and summary["min_balance"] < 0:
         issues.append("Balance becomes negative")
-    if constraints.get("bankruptcy_probability_below") is not None and mc["bankrupt_probability"] >= constraints["bankruptcy_probability_below"]:
-        issues.append("Bankruptcy probability exceeds constraint")
+    if constraints.get("cash_shortfall_probability_below") is not None and mc["probability_cash_shortfall"] >= constraints["cash_shortfall_probability_below"]:
+        issues.append("Cash shortfall probability exceeds constraint")
     if constraints.get("minimum_emergency_months_above") is not None and summary["emergency_fund_coverage"] < constraints["minimum_emergency_months_above"]:
         issues.append("Emergency fund coverage is too low")
     if constraints.get("debt_to_income_below") is not None and summary["debt_to_income"] >= constraints["debt_to_income_below"]:

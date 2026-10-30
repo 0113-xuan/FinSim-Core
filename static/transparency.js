@@ -332,8 +332,7 @@
       ['monthly_cash_flow', '每月現金流', 'currency'],
       ['emergency_fund_coverage', '緊急備用金覆蓋', 'months'],
       ['debt_to_income_ratio', '負債收入比', 'percent'],
-      ['negative_balance_probability', '負資產機率', 'percent'],
-      ['monte_carlo_risk_probability', 'Monte Carlo 風險機率', 'percent'],
+      ['probability_cash_shortfall', '現金不足機率', 'percent'],
       ['first_negative_cash_month', '首次現金不足月份', 'month']
     ];
     const display = (value, type) => {

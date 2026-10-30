@@ -41,7 +41,7 @@ def run_monte_carlo(
     master_rng = random.Random(seed)
 
     final_balances: List[float] = []
-    min_balances: List[float] = []
+    cash_shortfall_count = 0
     emergency_shortfalls: List[float] = []
     paths = []
     debug_paths = []
@@ -64,7 +64,7 @@ def run_monte_carlo(
         summary = result["summary"]
         curve = result["simulation_curve"]
         final_balances.append(summary["final_balance"])
-        min_balances.append(summary["min_balance"])
+        cash_shortfall_count += summary["first_negative_cash_month"] is not None
         target_months = float(profile.get("target_emergency_months", 3))
         emergency_shortfalls.append(emergency_shortfall(summary["final_balance"], curve[-1]["living_expense"], curve[-1]["debt_payment"], target_months))
         if index < sample_paths:
@@ -77,8 +77,7 @@ def run_monte_carlo(
         if include_details and index < min(3, sample_paths):
             debug_paths.append(result)
 
-    negative_probability = sum(1 for value in min_balances if value < 0) / simulations
-    bankruptcy_probability = sum(1 for value in final_balances if value < 0) / simulations
+    shortfall_probability = cash_shortfall_count / simulations
 
     response = {
         "iterations": simulations,
@@ -94,8 +93,8 @@ def run_monte_carlo(
             "p75": round(percentile(final_balances, 0.75), 2),
             "p95": round(percentile(final_balances, 0.95), 2),
         },
-        "probability_negative_balance": round(negative_probability, 4),
-        "bankrupt_probability": round(bankruptcy_probability, 4),
+        "probability_cash_shortfall": round(shortfall_probability, 4),
+        "cash_shortfall_definition": "模擬期間任一月底現金小於 0 的試驗比例",
         "expected_emergency_fund_shortfall": round(statistics.fmean(emergency_shortfalls), 2),
         "sample_paths": paths,
     }

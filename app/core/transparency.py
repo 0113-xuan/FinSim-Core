@@ -284,8 +284,7 @@ def build_simulation_transparency(
         "debt_to_income_ratio": _metric(
             baseline_summary.get("debt_to_income"), scenario_summary.get("debt_to_income")
         ),
-        "negative_balance_probability": _metric(None, None),
-        "monte_carlo_risk_probability": _metric(None, None),
+        "probability_cash_shortfall": _metric(None, None),
         "first_negative_cash_month": {
             "before": baseline_summary.get("first_negative_cash_month"),
             "after": scenario_summary.get("first_negative_cash_month"),

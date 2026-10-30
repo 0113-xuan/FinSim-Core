@@ -200,7 +200,7 @@ class CompareRequest(BaseModel):
 
 
 class OptimizationConstraints(BaseModel):
-    bankruptcy_probability_below: Optional[float] = Field(default=None, ge=0, le=1)
+    cash_shortfall_probability_below: Optional[float] = Field(default=None, ge=0, le=1)
     minimum_emergency_months_above: Optional[float] = Field(default=None, ge=0, le=36)
     balance_must_not_be_negative: bool = False
     debt_to_income_below: Optional[float] = Field(default=None, ge=0, le=5)
