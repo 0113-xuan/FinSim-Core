@@ -60,11 +60,26 @@ def test_sensitivity_is_deterministic_sorted_and_does_not_mutate():
     spans = [f['impact_span'] for f in result['factors']]
     assert spans == sorted(spans, reverse=True)
     salary = next(f for f in result['factors'] if f['key'] == 'salary')
-    assert salary['low']['ending_cash_change'] == -360000
-    assert salary['high']['ending_cash_change'] == 360000
+    salary_change = 6000 * 12 * sum(1.02 ** year for year in range(5))
+    assert salary['low']['ending_cash_change'] == pytest.approx(-salary_change, abs=.1)
+    assert salary['high']['ending_cash_change'] == pytest.approx(salary_change, abs=.1)
     for f in result['factors']:
-        if f['key'] != 'salary':
+        if f['key'] not in ('salary', 'inflation_rate'):
             assert f['high']['ending_cash_change'] <= f['low']['ending_cash_change']
+
+
+@pytest.mark.parametrize('raise_rate', [None, 0])
+def test_inflation_sensitivity_matches_independently_resolved_salary_defaults(raise_rate):
+    raw = data()
+    raw['profile']['raise_rate'] = raise_rate
+    result = sensitivity_analysis(request(raw))
+    inflation = next(f for f in result['factors'] if f['key'] == 'inflation_rate')
+    for direction in ('low', 'high'):
+        variant_raw = deepcopy(raw)
+        variant_raw['profile']['inflation_rate'] = inflation[direction]['value']
+        resolved, _ = resolve(request(variant_raw))
+        rows, _ = run_timeline(resolved)
+        assert inflation[direction]['metrics']['ending_cash'] == rows[-1]['balance']
 
 
 def test_invalid_price_endpoint_not_silently_changed_and_zero_inflation_clamped():

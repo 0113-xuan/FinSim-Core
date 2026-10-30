@@ -72,8 +72,9 @@ def simulate_finance(
     base_salary = float(profile["salary"])
     base_fixed_expense = float(profile["fixed_expense"])
     balance = float(profile["balance"])
-    raise_rate = float(override_raise_rate if override_raise_rate is not None else profile.get("raise_rate", 0.03))
     inflation_rate = float(override_inflation_rate if override_inflation_rate is not None else profile.get("inflation_rate", 0.02))
+    requested_raise_rate = override_raise_rate if override_raise_rate is not None else profile.get("raise_rate")
+    raise_rate = float(inflation_rate if requested_raise_rate is None else requested_raise_rate)
 
     profile = {**profile, "inflation_rate": inflation_rate}
     curve: List[Dict[str, Any]] = []

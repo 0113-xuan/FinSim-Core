@@ -366,7 +366,7 @@ function buildProfile() {
     fixed_expense: Number($('fixedExpense').value) || 0,
     variable_expense: quickTotal,
     balance: Number($('balance').value) || 0,
-    raise_rate: Number($('raiseRate').value) || 0,
+    raise_rate: $('raiseRate').value === '' ? null : Number($('raiseRate').value),
     inflation_rate: Number($('inflationRate').value) || 0,
     target_emergency_months: Number($('emergencyMonths').value) || 3,
     variable_expense_model: {

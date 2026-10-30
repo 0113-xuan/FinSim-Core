@@ -331,8 +331,8 @@ def build_simulation_transparency(
         "assumptions": [
             {
                 "label": "年調薪率",
-                "value": profile.get("raise_rate", 0.03),
-                "source": "使用者輸入",
+                "value": profile['raise_rate'] if profile.get('raise_rate') is not None else profile.get('inflation_rate', .02),
+                "source": "使用者輸入" if profile.get('raise_rate') is not None else "系統模擬假設",
                 "editable": True,
             },
             {

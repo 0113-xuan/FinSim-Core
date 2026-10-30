@@ -16,6 +16,10 @@ const form = document.querySelector('#vehicleForm');
 const $ = id => document.getElementById(id);
 let revision=0;
 let singleCostContext=false;
+function syncDefaultRaiseRate() {
+  const raise=form.elements.raise_rate, inflation=form.elements.inflation_rate;
+  if(raise && inflation && raise.dataset.source==='system_assumption') raise.value=inflation.value;
+}
 function syncFinancialProfile() {
   const compare=document.querySelector('[name="vehicleMode"]:checked')?.value==='compare';
   const personal=compare || $('includeFinancialProfile').checked;
@@ -138,6 +142,7 @@ function buildRequest() {
   const debts=Array.from(form.querySelectorAll('.debt-row')).map(r=>({name:r.querySelector('[data-debt="name"]').value.trim(),monthly_payment:Number(r.querySelector('[data-debt="payment"]').value),remaining_months:Number(r.querySelector('[data-debt="months"]').value)}));
   if(debts.length) { profile.existing_debts=debts; profile.required_monthly_debt=0; }
   ['raise_rate','inflation_rate'].forEach(k=>{ profile[k]=value(k); assumption_sources['profile.'+k]=form.elements[k].dataset.source; });
+  if(assumption_sources['profile.raise_rate']==='system_assumption') profile.raise_rate=null;
   profile.fixed_expense_inflates=form.elements.fixed_expense_inflates.checked;
   const sourced=key=>({value:value(key),source:({system_assumption:'system_assumption',backend_normalized:'backend_normalized',derived:'derived'})[form.elements[key].dataset.source] || 'user_provided',...(form.elements[key].dataset.evidence?{original_text:form.elements[key].dataset.evidence}:{})});
   const payload={scenario_type:'vehicle_purchase',payment_method:data.get('payment_method'),purchase_price:sourced('purchase_price')};
@@ -161,6 +166,7 @@ form.addEventListener('input',event=>{
     revision++;
     $('reviewed').checked=false;
     if(event.target.dataset.source) {event.target.dataset.source='user'; delete event.target.dataset.evidence; event.target.parentElement.querySelector('small').textContent='使用者修改';}
+    syncDefaultRaiseRate();
     $('decisionResults').hidden=true;
     $('singleCostResults').hidden=true;singleCostContext=false;
     invalidateVehicleAnalysis();
@@ -210,7 +216,7 @@ window.vehicleAssumptionsReady=(async()=>{
       label.append(document.createTextNode(labels[a.key])); input.name=a.key; input.type='number'; input.value=a.value; input.min=a.key==='raise_rate'?'-.5':'0'; input.step='any'; input.required=true; input.dataset.source='system_assumption'; source.textContent='系統假設'; label.append(input,source);
       $(a.key.startsWith('minimum_')?'constraintFields':'assumptionFields').append(label);
     }
-    syncFinancialProfile();$('submitDecision').disabled=false;
+    syncDefaultRaiseRate();syncFinancialProfile();$('submitDecision').disabled=false;
     return assumptions;
   } catch(error) { $('error').hidden=false; $('error').textContent=error.message; return null; }
 })();

@@ -87,6 +87,23 @@ def req(data=None):
     return VehicleDecisionRequest.model_validate(data or request_data())
 
 
+@pytest.mark.parametrize('inflation', [None, 0, .04])
+def test_default_salary_rate_and_displayed_assumptions_follow_inflation(inflation):
+    data = request_data()
+    if inflation is not None:
+        data['profile']['inflation_rate'] = inflation
+    result = simulate_vehicle_decision(req(data))
+    effective = .02 if inflation is None else inflation
+    assumption = next(a for a in result['assumptions'] if a['key'] == 'raise_rate')
+    assert assumption['value'] == effective
+    assert assumption['source'] == 'system_assumption'
+    assert assumption['description'] == '預設等於通膨率'
+    provenance = next(p for p in result['provenance'] if p['key'] == 'profile.raise_rate')
+    assert provenance['value'] == effective
+    assert provenance['source'] == 'system_assumption'
+    assert result['timeline']['baseline'][12]['income'] == round(60000 * (1 + effective), 2)
+
+
 def test_decision_deterministic_complete_and_boundary():
     result = simulate_vehicle_decision(req())
     assert result == simulate_vehicle_decision(req())

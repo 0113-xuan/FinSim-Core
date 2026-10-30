@@ -26,7 +26,9 @@ def resolve(request):
             continue
         source = req.assumption_sources.get("profile." + key, "user")
         if value is None:
-            value = ASSUMPTIONS[key]["value"]
+            value = ((req.profile.inflation_rate if req.profile.inflation_rate is not None
+                      else ASSUMPTIONS['inflation_rate']['value'])
+                     if key == 'raise_rate' else ASSUMPTIONS[key]["value"])
             setattr(req.profile, key, value)
             source = "system_assumption"
         provenance.append(dict(key="profile." + key, value=value, source=source))

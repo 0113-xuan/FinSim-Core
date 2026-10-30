@@ -10,7 +10,7 @@ from app.core.simulation import simulate_finance
 def _merge_profile(profile: Dict[str, Any], overrides: Dict[str, Any]) -> Dict[str, Any]:
     merged = deepcopy(profile)
     for key, value in overrides.items():
-        if key in merged:
+        if key in merged or key in ('raise_rate', 'inflation_rate'):
             merged[key] = value
     return merged
 

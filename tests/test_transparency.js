@@ -223,6 +223,19 @@ test('financial impact renders backend before-and-after values', () => {
   assert.match(html, /期間最低資產/);
 });
 
+test('salary growth can follow inflation while an explicit zero is retained', () => {
+  const vm = require('node:vm');
+  const inputs = {raiseRate: {value: ''}, inflationRate: {value: '.04'}, advancedMode: {checked: false}};
+  const context = {state: {categories: []}, $: id => inputs[id] || {value: '0'}};
+  vm.createContext(context);
+  vm.runInContext(appSource.slice(appSource.indexOf('function buildProfile()'), appSource.indexOf('function rebuildConfirmedEvents()')), context);
+  assert.equal(context.buildProfile().raise_rate, null);
+  assert.equal(context.buildProfile().inflation_rate, .04);
+  inputs.raiseRate.value = '0';
+  assert.equal(context.buildProfile().raise_rate, 0);
+  assert.match(htmlSource, /預設等於通膨率/);
+});
+
 test('empty chart, event markers and disabled legend behavior are implemented', () => {
   assert.match(htmlSource, /尚無模擬資料，請先確認 AI 建立的情境並執行模擬。/);
   assert.match(appSource, /event_markers/);

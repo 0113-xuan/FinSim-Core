@@ -157,6 +157,8 @@ def test_user_growth_assumption_is_reported(needs):
     result = run(needs)
     inflation = next(a for a in result['assumptions'] if a['key'] == 'inflation_rate')
     assert inflation['value'] == .03 and inflation['source'] == 'user_provided'
+    salary_growth = next(a for a in result['assumptions'] if a['key'] == 'raise_rate')
+    assert salary_growth['value'] == .03 and salary_growth['source'] == 'system_assumption'
 
 
 def test_no_charging_is_explicit_exclusion_unknown_is_not(needs):

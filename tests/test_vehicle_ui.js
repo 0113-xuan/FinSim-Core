@@ -155,7 +155,7 @@ test('untouched displayed assumptions are sent with their sources',()=>{
   vm.runInContext(js.slice(js.indexOf('function buildRequest()'),js.indexOf("form.elements.payment_method.addEventListener")),context);
   const result=JSON.parse(JSON.stringify(context.buildRequest()));
   assert.deepEqual(result.constraints,{minimum_emergency_fund_months:3,minimum_cash_balance:0,minimum_monthly_surplus:5000});
-  assert.equal(result.profile.raise_rate,0);
+  assert.equal(result.profile.raise_rate,null);
   assert.equal(result.profile.inflation_rate,.02);
   assert.equal(result.assumption_sources.minimum_monthly_surplus,'system_assumption');
   assert.equal(result.scenario.payload.annual_insurance.value,20000);
@@ -163,6 +163,20 @@ test('untouched displayed assumptions are sent with their sources',()=>{
   const edited=context.buildRequest();
   assert.equal(edited.constraints.minimum_monthly_surplus,7000);
   assert.equal(edited.assumption_sources.minimum_monthly_surplus,'user');
+  elements.raise_rate.dataset.source='user';
+  assert.equal(context.buildRequest().profile.raise_rate,0);
+});
+
+test('default salary growth display follows inflation until the user edits it',()=>{
+  const elements={raise_rate:{value:'.02',dataset:{source:'system_assumption'}},inflation_rate:{value:'.04'}};
+  const context={form:{elements}};
+  vm.createContext(context);
+  vm.runInContext(js.slice(js.indexOf('function syncDefaultRaiseRate()'),js.indexOf('function syncFinancialProfile()')),context);
+  context.syncDefaultRaiseRate();
+  assert.equal(elements.raise_rate.value,'.04');
+  elements.raise_rate.dataset.source='user';elements.raise_rate.value='0';elements.inflation_rate.value='.06';
+  context.syncDefaultRaiseRate();
+  assert.equal(elements.raise_rate.value,'0');
 });
 test('sensitivity chart and explicit confirmation are retained',()=>{
   assert.equal((html.match(/id="sensitivityChart"/g)||[]).length,1);

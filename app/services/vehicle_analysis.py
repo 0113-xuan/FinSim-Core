@@ -16,10 +16,12 @@ FACTORS = (
 )
 
 
-def evaluate_variant(req, key, value, base):
+def evaluate_variant(req, key, value, base, *, follow_inflation=False):
     candidate = req.model_copy(deep=True)
     if key in ('salary', 'inflation_rate'):
         setattr(candidate.profile, key, value)
+        if key == 'inflation_rate' and follow_inflation:
+            candidate.profile.raise_rate = value
     else:
         getattr(candidate.scenario.payload, key).value = Decimal(str(value))
         if key == 'purchase_price':
@@ -52,7 +54,8 @@ def sensitivity_analysis(request: VehicleDecisionRequest):
             # Rates cannot fall below zero; disclose the actual tested endpoint.
             if key == 'inflation_rate':
                 value = max(0, value)
-            variants[direction] = evaluate_variant(req, key, value, base)
+            variants[direction] = evaluate_variant(req, key, value, base,
+                                                  follow_inflation=request.profile.raise_rate is None)
         changes = [v['ending_cash_change'] for v in variants.values() if v['status'] == 'valid']
         factors.append(dict(key=key, label=label, original_value=original, variation=amount,
                             variation_mode=mode, **variants,

@@ -48,8 +48,15 @@ def run_monte_carlo(
 
     for index in range(simulations):
         path_seed = master_rng.randint(0, 2_147_483_647)
-        sampled_raise_rate = master_rng.uniform(0.01, 0.06)
+        # Consume the former salary draw to preserve the existing seeded sequence.
+        master_rng.uniform(0.01, 0.06)
         sampled_inflation_rate = master_rng.uniform(0.01, 0.05)
+        inflation_rate = profile.get("inflation_rate")
+        if inflation_rate is None:
+            inflation_rate = sampled_inflation_rate
+        raise_rate = profile.get("raise_rate")
+        if raise_rate is None:
+            raise_rate = inflation_rate
         result = simulate_finance(
             profile=profile,
             months=months,
@@ -58,8 +65,8 @@ def run_monte_carlo(
             random_shocks=random_shocks,
             seed=path_seed,
             include_details=include_details,
-            override_raise_rate=sampled_raise_rate,
-            override_inflation_rate=sampled_inflation_rate,
+            override_raise_rate=raise_rate,
+            override_inflation_rate=inflation_rate,
         )
         summary = result["summary"]
         curve = result["simulation_curve"]
@@ -95,6 +102,7 @@ def run_monte_carlo(
         },
         "probability_cash_shortfall": round(shortfall_probability, 4),
         "cash_shortfall_definition": "模擬期間任一月底現金小於 0 的試驗比例",
+        "sampling_note": "通膨率暫以 1%–5% 均勻抽樣；抽樣範圍為暫時設定，沒有資料來源。未提供調薪率時等於該次通膨率；使用者提供的調薪率與通膨率固定使用。",
         "expected_emergency_fund_shortfall": round(statistics.fmean(emergency_shortfalls), 2),
         "sample_paths": paths,
     }

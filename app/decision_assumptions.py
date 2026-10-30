@@ -1,7 +1,7 @@
 """Planning assumptions, not market price estimates. All are editable."""
 
 ASSUMPTIONS = {
-    "raise_rate": dict(value=0, unit="annual_rate", description="薪資維持不變"),
+    "raise_rate": dict(value=.02, unit="annual_rate", description="預設等於通膨率"),
     "inflation_rate": dict(value=.02, unit="annual_rate", description="年度支出通膨規劃假設"),
     "annual_insurance": dict(value=20000, unit="TWD/year", description="保險規劃預算，非報價"),
     "annual_tax": dict(value=12000, unit="TWD/year", description="稅費規劃預算，非稅額查詢"),

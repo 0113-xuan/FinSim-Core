@@ -181,6 +181,7 @@ def test_confirmation_is_explicit_and_validated():
     assert confirmed.confirmed_at
     assert profile["balance"] == 1_500_000
     assert profile["variable_expense"] == 15_000
+    assert profile['raise_rate'] is None
 
     draft.variable_expense_allocation[0].confirmed = False
     try:

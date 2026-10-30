@@ -41,6 +41,9 @@ def recommend_cars(needs: CarNeedsRequest, *, reference_date: date | None = None
         key = assumption['key']
         if key in ('raise_rate', 'inflation_rate') and needs.financial_profile and getattr(needs.financial_profile, key) is not None:
             assumption.update(value=getattr(needs.financial_profile, key), source='user_provided')
+    if needs.financial_profile is None or needs.financial_profile.raise_rate is None:
+        inflation = next(a['value'] for a in assumptions if a['key'] == 'inflation_rate')
+        next(a for a in assumptions if a['key'] == 'raise_rate')['value'] = inflation
     ranked, incomplete, excluded = [], [], []
     common_missing = []
     if needs.usage.monthly_distance_km is None: common_missing.append('請補充每月行駛里程（可明確填 0）')

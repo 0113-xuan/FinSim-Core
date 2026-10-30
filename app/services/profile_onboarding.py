@@ -950,7 +950,7 @@ def confirm_draft(draft: FinancialProfileDraft) -> Tuple[FinancialProfileDraft, 
         "balance": float(validated.cash_and_deposits.value or 0)
         + float(validated.investments.value or 0)
         + float(validated.other_assets.value or 0),
-        "raise_rate": 0.03,
+        "raise_rate": None,
         "inflation_rate": 0.02,
         "target_emergency_months": 3,
         "variable_expense_model": {

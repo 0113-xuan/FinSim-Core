@@ -371,6 +371,7 @@ def simulate_api(req: SimulationRequest) -> Dict[str, Any]:
 @app.post("/monte-carlo")
 def monte_carlo_api(req: MonteCarloRequest) -> Dict[str, Any]:
     data = req.model_dump()
+    data['profile'] = req.profile.sampling_profile()
     return run_monte_carlo(
         profile=data["profile"],
         base_events=data.get("events", []),
@@ -387,6 +388,7 @@ def monte_carlo_api(req: MonteCarloRequest) -> Dict[str, Any]:
 @app.post("/compare")
 def compare_api(req: CompareRequest) -> Dict[str, Any]:
     data = req.model_dump()
+    data['profile'] = req.profile.sampling_profile()
     compare_result = compare_options(
         profile=data["profile"],
         options=data["options"],
@@ -516,7 +518,9 @@ def scenario_draft_confirm_api(req: ScenarioDraftConfirmRequest) -> ScenarioDraf
 
 @app.post("/optimize")
 def optimize_api(req: OptimizeRequest) -> Dict[str, Any]:
-    return optimize(req.model_dump())
+    data = req.model_dump()
+    data['profile'] = req.profile.sampling_profile()
+    return optimize(data)
 
 
 @app.post(
