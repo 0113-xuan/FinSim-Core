@@ -128,14 +128,14 @@ def test_ai_parse_endpoint_returns_structured_vehicle_and_relocation_clarificati
 
 
 def test_legacy_scenario_route_is_deprecated_and_does_not_persist():
-    from main import CONFIRMED_DEMO_PROFILES, PROFILES, PROFILE_DRAFTS
+    from main import CONFIRMED_DEMO_PROFILES, PROFILE_DRAFTS
 
-    before = (dict(PROFILES), dict(PROFILE_DRAFTS), dict(CONFIRMED_DEMO_PROFILES))
+    before = (dict(PROFILE_DRAFTS), dict(CONFIRMED_DEMO_PROFILES))
     response = client.post(
         "/ai/parse-scenario",
         json={"text": "buy a car and travel to Japan", "months": 60},
     )
-    after = (dict(PROFILES), dict(PROFILE_DRAFTS), dict(CONFIRMED_DEMO_PROFILES))
+    after = (dict(PROFILE_DRAFTS), dict(CONFIRMED_DEMO_PROFILES))
 
     assert response.status_code == 200
     assert after == before
@@ -182,17 +182,3 @@ def test_production_entrypoint_and_openapi_routes_remain_correct():
     assert app.title == "FinSim-Core API"
     assert expected <= paths
     assert "/" not in paths
-
-
-def test_auth_protects_profile_route():
-    response = client.get("/financial-profile")
-    assert response.status_code == 401
-
-
-def test_register_login_flow():
-    body = {"username": "tester_api", "email": "tester_api@example.com", "password": "password123"}
-    register = client.post("/auth/register", json=body)
-    assert register.status_code == 200
-    token = register.json()["access_token"]
-    protected = client.get("/financial-profile", headers={"Authorization": f"Bearer {token}"})
-    assert protected.status_code == 200

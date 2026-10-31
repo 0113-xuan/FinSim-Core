@@ -12,9 +12,9 @@ from main import app
 
 
 @pytest.mark.parametrize('token', ['NaN', 'Infinity', '-Infinity', '1e9999', '-1e9999'])
-@pytest.mark.parametrize('endpoint', ['/decisions/vehicle/recommendations', '/decisions/vehicle/costs', '/financial-profile'])
+@pytest.mark.parametrize('endpoint', ['/decisions/vehicle/recommendations', '/decisions/vehicle/costs', '/simulate'])
 def test_nonfinite_raw_json_is_rejected_globally(endpoint, token):
-    # Nested arrays also exercise the formerly untyped financial-profile route.
+    # Nested arrays must be rejected before endpoint-specific validation.
     content = '{"nested": [{"value": ' + token + '}]}'
     response = TestClient(app).post(endpoint, content=content, headers={'content-type': 'application/json'})
     assert response.status_code == 422

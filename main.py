@@ -34,10 +34,8 @@ from app.schemas import (
     CategorizeExpensesRequest,
     CompareRequest,
     GenerateReportRequest,
-    LoginRequest,
     MonteCarloRequest,
     OptimizeRequest,
-    RegisterRequest,
     ScenarioParseRequest,
     SimulationRequest,
     FinancialOnboardingMessageRequest,
@@ -45,7 +43,6 @@ from app.schemas import (
     FinancialProfileDraftConfirm,
     FinancialProfileDraftUpdate,
 )
-from app.security.auth import create_access_token, current_user, hash_password, public_user, verify_password
 from app.services.expense_categorizer import categorize_expenses
 from app.services.ai_provider import AIProvider, AIProviderError, get_ai_provider
 from app.services.financial_answer_extraction import (
@@ -108,9 +105,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Graduation-project friendly fallback store. Production deployments should use Supabase Auth/RLS.
-USERS: Dict[str, Dict[str, Any]] = {}
-PROFILES: Dict[str, Dict[str, Any]] = {}
+# Existing index.html demo drafts are separate from Supabase persistence.
 PROFILE_DRAFTS: Dict[str, Any] = {}
 CONFIRMED_DEMO_PROFILES: Dict[str, Dict[str, Any]] = {}
 
@@ -154,38 +149,6 @@ def public_config(response: Response) -> Dict[str, Any]:
         'supabase_anon_key': settings.supabase_key if configured else '',
         'configured': configured,
     }
-
-
-@app.post("/auth/register")
-def register_user(req: RegisterRequest) -> Dict[str, Any]:
-    if req.username in USERS:
-        raise HTTPException(status_code=400, detail="Username already exists")
-    if any(user["email"] == req.email for user in USERS.values()):
-        raise HTTPException(status_code=400, detail="Email already exists")
-    user = public_user(req.username, str(req.email))
-    USERS[req.username] = {**user, "password_hash": hash_password(req.password)}
-    token = create_access_token(user)
-    return {"status": "success", "user": user, "access_token": token, "token_type": "bearer"}
-
-
-@app.post("/auth/login")
-def login_user(req: LoginRequest) -> Dict[str, Any]:
-    stored = USERS.get(req.username)
-    if not stored or stored["email"] != str(req.email) or not verify_password(req.password, stored["password_hash"]):
-        raise HTTPException(status_code=401, detail="Invalid username, email, or password")
-    user = {key: stored[key] for key in ("id", "username", "email")}
-    return {"status": "success", "user": user, "access_token": create_access_token(user), "token_type": "bearer"}
-
-
-@app.post("/financial-profile")
-def save_financial_profile(profile: Dict[str, Any], user: Dict[str, Any] = Depends(current_user)) -> Dict[str, Any]:
-    PROFILES[user["sub"]] = profile
-    return {"status": "success", "profile": profile}
-
-
-@app.get("/financial-profile")
-def get_financial_profile(user: Dict[str, Any] = Depends(current_user)) -> Dict[str, Any]:
-    return {"profile": PROFILES.get(user["sub"])}
 
 
 @app.post("/ai/financial-onboarding/message", response_model=FinancialOnboardingMessageResponse)

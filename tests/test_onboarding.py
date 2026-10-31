@@ -21,7 +21,6 @@ from app.services.profile_onboarding import (
 from main import (
     CONFIRMED_DEMO_PROFILES,
     PROFILE_DRAFTS,
-    PROFILES,
     app,
     get_onboarding_ai_provider,
 )
@@ -192,13 +191,13 @@ def test_confirmation_is_explicit_and_validated():
 
 
 def test_draft_api_persists_versions_and_does_not_overwrite_existing_profile():
-    PROFILES["existing-user"] = {"salary": 999}
+    before = deepcopy(CONFIRMED_DEMO_PROFILES)
     response = client.post("/ai/financial-onboarding/message", json={"text": COMPLETE_MESSAGE})
     assert response.status_code == 200
     body = response.json()
     draft_id = body["draft"]["id"]
     assert draft_id in PROFILE_DRAFTS
-    assert PROFILES["existing-user"] == {"salary": 999}
+    assert CONFIRMED_DEMO_PROFILES == before
     read = client.get(f"/financial-profile-drafts/{draft_id}")
     assert read.status_code == 200
     assert read.json()["draft"]["version"] == body["draft"]["version"]

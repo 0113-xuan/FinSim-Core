@@ -5,7 +5,7 @@ from decimal import Decimal
 from datetime import date
 from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import BaseModel, EmailStr, Field, field_serializer, field_validator, model_validator
+from pydantic import BaseModel, Field, field_serializer, field_validator, model_validator
 
 
 MAX_MONTHS = 360
@@ -357,18 +357,6 @@ class GenerateReportRequest(BaseModel):
     simulation_result: Dict[str, Any]
     monte_carlo_result: Optional[Dict[str, Any]] = None
     comparison_result: Optional[Dict[str, Any]] = None
-
-
-class RegisterRequest(BaseModel):
-    username: str = Field(..., min_length=3, max_length=40)
-    email: EmailStr
-    password: str = Field(..., min_length=8, max_length=128)
-
-
-class LoginRequest(BaseModel):
-    username: str = Field(..., min_length=3, max_length=40)
-    email: EmailStr
-    password: str = Field(..., min_length=8, max_length=128)
 
 
 class FinancialProfileCreate(BaseModel):

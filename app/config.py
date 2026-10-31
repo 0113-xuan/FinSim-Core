@@ -25,8 +25,6 @@ class Settings:
     cors_origins: List[str] = None
     supabase_url: str = ""
     supabase_key: str = ""
-    jwt_secret: str = "dev-only-change-me-please-set-a-real-secret"
-    jwt_expire_minutes: int = 60 * 24
     ai_provider: str = "openai"
     ai_api_key: str = ""
     ai_model: str = "gpt-4.1-mini"
@@ -64,8 +62,6 @@ class Settings:
             cors_origins=[item.strip() for item in origins.split(",") if item.strip()],
             supabase_url=os.getenv("SUPABASE_URL", ""),
             supabase_key=os.getenv("SUPABASE_ANON_KEY", ""),
-            jwt_secret=os.getenv("JWT_SECRET", "dev-only-change-me-please-set-a-real-secret"),
-            jwt_expire_minutes=int(os.getenv("JWT_EXPIRE_MINUTES", "1440")),
             ai_provider=ai_provider,
             ai_api_key=ai_api_key,
             ai_model=os.getenv("AI_MODEL", "gpt-4.1-mini"),
@@ -86,10 +82,8 @@ class Settings:
             warnings.append('CAR_NEEDS_SIGNING_KEY 未設定：使用強隨機程序金鑰；正式環境多 worker 或重啟會使 AI 候選失效，請設定至少 32 bytes 的固定獨立金鑰。')
         elif len(self.car_needs_signing_key.encode('utf-8')) < 32:
             warnings.append('CAR_NEEDS_SIGNING_KEY 少於 32 bytes：AI 候選簽章將拒絕運作，不會退回弱金鑰。請修正正式環境設定。')
-        if self.jwt_secret == "dev-only-change-me-please-set-a-real-secret":
-            warnings.append("JWT_SECRET is using the development default.")
         if not self.supabase_url or not self.supabase_key:
-            warnings.append("Supabase is not configured; persistence endpoints use local in-memory fallback.")
+            warnings.append("Supabase is not configured; planner sign-in and saved data are unavailable.")
         if self.ai_enabled and self.ai_provider == "openai" and not self.ai_api_key:
             warnings.append("AI_ENABLED=true 但缺少 AI_API_KEY，將使用確定性 fallback。")
         if self.ai_enabled and self.ai_provider == "gemini" and not self.gemini_api_key:

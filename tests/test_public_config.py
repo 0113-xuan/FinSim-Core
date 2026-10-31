@@ -22,3 +22,13 @@ def test_public_config_only_returns_public_fields(monkeypatch, url, public_value
         'configured': configured,
     }
     assert response.headers['cache-control'] == 'no-store'
+
+
+@pytest.mark.parametrize('method,path', [
+    ('POST', '/auth/register'), ('POST', '/auth/login'),
+    ('GET', '/financial-profile'), ('POST', '/financial-profile'),
+])
+def test_in_memory_auth_routes_are_removed(method, path):
+    # The root StaticFiles mount returns 405 for POST requests to absent routes.
+    assert TestClient(main.app).request(method, path, json={}).status_code in {404, 405}
+    assert path not in main.app.openapi()['paths']
