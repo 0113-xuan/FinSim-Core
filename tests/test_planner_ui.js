@@ -63,7 +63,10 @@ test('the independent page pins supabase-js and exposes only supported event ent
   const html=fs.readFileSync(path.join(__dirname,'../static/planner.html'),'utf8');
   assert.match(html,/@supabase\/supabase-js@2\.45\.4\/dist\/umd\/supabase\.js/);
   assert.match(html,/href="\/style.css"/);
-  assert.match(html,/投資市值尚未納入計算；每月投資金額視為現金支出/);
+  assert.doesNotMatch(html,/投資市值尚未納入計算/);
+  assert.match(html,/現金不足時也不會自動賣出/);
+  for(const id of ['endingInvestment','netWorthP5','netWorthP50','netWorthP95','realNetWorthP50','samplingNote','dataSources'])
+    assert.match(html,new RegExp(`id="${id}"`));
   const eventForm=html.slice(html.indexOf('id="eventForm"'),html.indexOf('</form>',html.indexOf('id="eventForm"')));
   assert.doesNotMatch(eventForm,/vehicle_purchase/);
   for(const type of ['one_time','range','salary_change']) assert.match(eventForm,new RegExp(`value="${type}"`));

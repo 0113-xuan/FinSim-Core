@@ -89,7 +89,7 @@
     </section>
     <section class="panel" aria-labelledby="simulationHeading">
       <h2 id="simulationHeading">5. 模擬結果</h2>
-      <p>投資市值尚未納入計算；每月投資金額視為現金支出</p>
+      <p>每月投資金額從現金轉入投資帳戶，投資市值依台股報酬指數變動，現金不足時也不會自動賣出。淨資產＝現金＋投資市值。</p>
       <form id="simulationForm"><fieldset id="simulationFields" disabled><div class="grid two">
         <label>模擬起始月份<input id="startPeriod" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
         <label>模擬期間<select id="simulationMonths"><option value="60">60 個月</option><option value="120">120 個月</option><option value="240">240 個月</option></select></label>
@@ -106,8 +106,14 @@
           <article><span>期末現金第 5 百分位數（p5）</span><strong id="cashP5">—</strong></article>
           <article><span>期末現金中位數（p50）</span><strong id="cashP50">—</strong></article>
           <article><span>期末現金第 95 百分位數（p95）</span><strong id="cashP95">—</strong></article>
+          <article><span>期末投資市值（歷史平均報酬）</span><strong id="endingInvestment">—</strong></article>
+          <article><span>期末淨資產第 5 百分位數（p5）</span><strong id="netWorthP5">—</strong></article>
+          <article><span>期末淨資產中位數（p50）</span><strong id="netWorthP50">—</strong></article>
+          <article><span>期末淨資產第 95 百分位數（p95）</span><strong id="netWorthP95">—</strong></article>
+          <article><span>以今日購買力計算的期末淨資產中位數（p50）</span><strong id="realNetWorthP50">—</strong></article>
         </div>
         <p id="shortfallDefinition"></p><p id="samplingNote"></p>
+        <ul id="dataSources" aria-label="資料來源"></ul>
       </div>
     </section>
   </div>

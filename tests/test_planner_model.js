@@ -5,19 +5,23 @@ const profile = {monthly_income:'60000',cash_balance:'900000',fixed_expense:'200
   investment_value:'500000',monthly_investment:'3000',raise_rate:null,emergency_target_months:'6'};
 const build = overrides => M.buildSimulationRequest({profile, debts:[],events:[],startPeriod:'2026-11',months:60,...overrides});
 
-test('maps saved profile values and separates investment cash outflow from market value',()=>{
+test('maps saved profile values and sends the investment account instead of a cash event',()=>{
   const {request,warnings} = build();
-  assert.deepEqual(request.profile,{salary:60000,balance:900000,fixed_expense:20000,variable_expense:10000,target_emergency_months:6});
-  assert.deepEqual(request.events,[{type:'range',name:'每月投資',start_month:1,end_month:60,monthly_amount:-3000}]);
+  assert.deepEqual(request.profile,{salary:60000,balance:900000,fixed_expense:20000,variable_expense:10000,
+    investment_value:500000,monthly_investment:3000,target_emergency_months:6});
+  assert.deepEqual(request.events,[]);
   assert.deepEqual(warnings,[]);
   assert.ok(!Object.hasOwn(request.profile,'raise_rate'));
   assert.ok(!Object.hasOwn(request.profile,'inflation_rate'));
-  assert.ok(!Object.hasOwn(request.profile,'investment_value'));
 });
-test('keeps an explicit zero salary raise and omits zero monthly investment',()=>{
+test('keeps an explicit zero salary raise and zero monthly investment',()=>{
   const {request} = build({profile:{...profile,raise_rate:0,monthly_investment:0}});
   assert.equal(request.profile.raise_rate,0);
+  assert.equal(request.profile.monthly_investment,0);
   assert.deepEqual(request.events,[]);
+});
+test('rejects a missing investment value',()=>{
+  assert.throws(()=>build({profile:{...profile,investment_value:''}}),/投資目前市值須填寫有效數字/);
 });
 test('period tools use inclusive month one and cross year boundaries',()=>{
   assert.equal(M.periodToMonth('2026-11','2026-11'),1);

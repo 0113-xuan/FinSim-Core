@@ -39,14 +39,14 @@
       balance: number(profile.cash_balance, '可動用現金'),
       fixed_expense: number(profile.fixed_expense, '每月固定支出'),
       variable_expense: number(profile.variable_expense, '每月變動支出'),
+      investment_value: number(profile.investment_value, '投資目前市值'),
+      monthly_investment: number(profile.monthly_investment, '每月投資金額'),
       target_emergency_months: number(profile.emergency_target_months, '預備金目標月數')
     }, months, events: []};
     if (profile.raise_rate != null && profile.raise_rate !== '') {
       request.profile.raise_rate = number(profile.raise_rate, '年調薪率');
     }
     const warnings = [];
-    const investment = number(profile.monthly_investment, '每月投資金額');
-    if (investment > 0) request.events.push({type: 'range', name: '每月投資', start_month: 1, end_month: months, monthly_amount: -investment});
     for (const [index, debt] of debts.entries()) {
       const name = debt.name || `貸款 ${index + 1}`;
       const remaining = number(debt.remaining_months, `${name}剩餘期數`);

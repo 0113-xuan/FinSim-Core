@@ -258,7 +258,15 @@
         $('cashShortfall').textContent = new Intl.NumberFormat('zh-TW', {style:'percent', maximumFractionDigits:2}).format(mc.probability_cash_shortfall);
         for (const [id, key] of [['cashP5','p5'],['cashP50','p50'],['cashP95','p95']]) $(id).textContent = money(mc.percentiles[key]);
         $('shortfallDefinition').textContent = mc.cash_shortfall_definition;
+        $('endingInvestment').textContent = money(summary.final_investment_value);
+        for (const [id, key] of [['netWorthP5','p5'],['netWorthP50','p50'],['netWorthP95','p95']]) $(id).textContent = money(mc.net_worth_percentiles[key]);
+        $('realNetWorthP50').textContent = money(mc.real_net_worth_percentiles.p50);
         $('samplingNote').textContent = mc.sampling_note;
+        $('dataSources').replaceChildren(...mc.data_sources.map(source => {
+          const li = root.document.createElement('li');
+          li.textContent = `資料來源：${source.publisher}「${source.name}」，${source.period_start} 至 ${source.period_end}`;
+          return li;
+        }));
         $('simulationResults').hidden = false; message('模擬完成。');
       } catch (error) {
         controller.abort();
