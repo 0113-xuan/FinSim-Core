@@ -28,14 +28,13 @@ python -m venv venv
 Copy-Item .env.example .env
 $env:AI_ENABLED = 'false'
 $env:CAR_NEEDS_SIGNING_KEY = & .\venv\Scripts\python.exe -c "import secrets; print(secrets.token_urlsafe(32))"
-$env:JWT_SECRET = & .\venv\Scripts\python.exe -c "import secrets; print(secrets.token_urlsafe(32))"
 & .\venv\Scripts\python.exe -m uvicorn main:app --host 127.0.0.1 --port 8000
 ```
 
 - 開啟 `http://127.0.0.1:8000/vehicle.html`，問卷為 `/car-needs.html`；不要用 `file:///...`。
 - 若 8000 被占用，改成 8018 並開啟對應網址。不需要停止其他人的程式。
-- Ctrl+C 停止。上述金鑰只存在此 shell，不寫入 Git；新 shell／新金鑰會使舊 AI 候選失效。
-- `.env.example` 的 JWT 值只是公開範例，不可當實際祕密沿用；每位測試者使用上方隨機值。不需共享金鑰或帳號。
+- Ctrl+C 停止。上述簽章金鑰只存在此 shell，不寫入 Git；新 shell／新金鑰會使舊 AI 候選失效。
+- 每位測試者使用上方產生的獨立簽章金鑰，不需共享金鑰或帳號。
 - 更新時在此分支執行 `git pull --ff-only`；若有本機修改先保存，不用 reset 或 force push。
 
 ## 測試 AI（選用，需自己的 API 額度）
@@ -143,5 +142,5 @@ Commit／分支：
 
 - 沒有納入 `.env`、實際 Gemini/OpenAI 金鑰、私鑰檔或本機簽章金鑰。既有未確認的規劃、審查文件與個人文件不加入此輪提交。
 - 歷史舊 main.py 有一個 Supabase `anon` 類型公開用 JWT；目前 main.py 已移除。其類型不同於高權限 `service_role`，但資料保護仍取決於權限與 RLS。[官方金鑰說明](https://supabase.com/docs/guides/getting-started/api-keys)。本輪未連線查核資料庫權限、未輪替金鑰，也未改寫歷史，因此不能宣稱歷史完全沒有 credential。
-- 本機 JWT 設定與 `.env.example` 公開範例相同；本次不更動本機或正式憑證，請依上方指令在測試 shell 產生獨立隨機值。
+- 本機暫存登入已移除，不再需要 JWT_SECRET；AI 候選簽章仍使用獨立的 CAR_NEEDS_SIGNING_KEY。
 - 本次只發布組員討論測試分支，不修改 main、不執行部署、不跑付費模型評估。

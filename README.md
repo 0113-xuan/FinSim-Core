@@ -55,7 +55,7 @@ See [Sprint 2 definitions](docs/SPRINT2_IMPLEMENTATION.md).
   - `POST /ai/parse-scenario`
   - `POST /ai/categorize-expenses`
   - `POST /ai/generate-report`
-- Frontend demo mode without login; optional JWT-protected profile endpoints remain available for future auth work
+- Frontend demo mode without login
 - Polished responsive dashboard frontend in `static/`
 - Tests that do not require real AI keys
 
