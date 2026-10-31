@@ -7,7 +7,7 @@ from typing import Any, Dict
 from contextlib import asynccontextmanager
 
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
@@ -143,6 +143,17 @@ def home() -> Dict[str, Any]:
 @app.get("/api/version")
 def version() -> Dict[str, str]:
     return {"app": settings.app_name, "version": settings.app_version}
+
+
+@app.get('/config/public')
+def public_config(response: Response) -> Dict[str, Any]:
+    configured = bool(settings.supabase_url and settings.supabase_key)
+    response.headers['Cache-Control'] = 'no-store'
+    return {
+        'supabase_url': settings.supabase_url if configured else '',
+        'supabase_anon_key': settings.supabase_key if configured else '',
+        'configured': configured,
+    }
 
 
 @app.post("/auth/register")
