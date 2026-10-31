@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, Iterable, List, Optional
 
+from app.core.market_data import load_market_history
+
 
 CATEGORY_LABELS = {
     "food": "餐飲",
@@ -178,6 +180,8 @@ def build_simulation_transparency(
 ) -> Dict[str, Any]:
     baseline_curve = baseline_result.get("simulation_curve") or []
     scenario_curve = scenario_result.get("simulation_curve") or []
+    inflation_rate = (profile["inflation_rate"] if profile.get("inflation_rate") is not None
+                      else load_market_history().annual_inflation_rate)
     candidate_months = [
         int(event.get("start_month") or event.get("month"))
         for event in events
@@ -331,14 +335,14 @@ def build_simulation_transparency(
         "assumptions": [
             {
                 "label": "年調薪率",
-                "value": profile['raise_rate'] if profile.get('raise_rate') is not None else profile.get('inflation_rate', .02),
+                "value": profile['raise_rate'] if profile.get('raise_rate') is not None else inflation_rate,
                 "source": "使用者輸入" if profile.get('raise_rate') is not None else "系統模擬假設",
                 "editable": True,
             },
             {
                 "label": "年通膨率",
-                "value": profile.get("inflation_rate", 0.02),
-                "source": "使用者輸入",
+                "value": inflation_rate,
+                "source": "使用者輸入" if profile.get("inflation_rate") is not None else "台灣 CPI 歷史年化平均",
                 "editable": True,
             },
             {

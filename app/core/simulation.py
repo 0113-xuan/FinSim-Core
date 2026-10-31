@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import random
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Sequence
 
 from app.core.events import (
     debt_to_income_for_month,
@@ -12,8 +12,36 @@ from app.core.events import (
     get_recurring_event_amount,
 )
 from app.core.expenses import calculate_variable_expenses
+from app.core.market_data import load_market_history
 from app.core.shocks import generate_shocks_for_month
-from app.core.financial_rules import emergency_fund_months, inflation_factor
+from app.core.financial_rules import emergency_fund_months
+
+
+class PriceLevel:
+    """Annual-step price multipliers from a fixed annual rate or a monthly inflation path."""
+
+    def __init__(self, months: int, annual_rate: float, monthly_path: Optional[Sequence[float]] = None):
+        self.annual_rate = annual_rate
+        self.cumulative = None
+        if monthly_path is not None:
+            if len(monthly_path) < months:
+                raise ValueError("inflation path is shorter than the simulation")
+            self.cumulative = [1.0]
+            for rate in monthly_path[:months]:
+                self.cumulative.append(self.cumulative[-1] * (1 + float(rate)))
+
+    def year_multiplier(self, month: int) -> float:
+        """Year k (months 12k+1..12k+12) uses the price change of the first 12k months."""
+        years = (month - 1) // 12
+        return self.cumulative[12 * years] if self.cumulative else (1 + self.annual_rate) ** years
+
+    def growth(self, start_month: int, years: int) -> float:
+        if not self.cumulative:
+            return (1 + self.annual_rate) ** years
+        return self.cumulative[start_month - 1 + 12 * years] / self.cumulative[start_month - 1]
+
+    def total(self, months: int) -> float:
+        return self.cumulative[months] if self.cumulative else (1 + self.annual_rate) ** (months / 12)
 
 
 def summarize_simulation(simulation_curve: List[Dict[str, Any]], profile: Dict[str, Any]) -> Dict[str, Any]:
@@ -27,6 +55,8 @@ def summarize_simulation(simulation_curve: List[Dict[str, Any]], profile: Dict[s
             "minimum_emergency_fund_months": None,
             "emergency_fund_coverage": 0.0,
             "debt_to_income": 0.0,
+            "final_investment_value": 0.0,
+            "final_net_worth": 0.0,
         }
 
     final_balance = simulation_curve[-1]["balance"]
@@ -46,6 +76,8 @@ def summarize_simulation(simulation_curve: List[Dict[str, Any]], profile: Dict[s
         "emergency_fund_coverage": round(emergency_fund_coverage, 2),
         "debt_to_income": simulation_curve[-1]["debt_to_income"],
         "target_emergency_months": profile.get("target_emergency_months", 3),
+        "final_investment_value": round(final.get("investment_value", 0.0), 2),
+        "final_net_worth": round(final.get("net_worth", final_balance), 2),
     }
 
 
@@ -60,7 +92,16 @@ def simulate_finance(
     override_raise_rate: Optional[float] = None,
     override_inflation_rate: Optional[float] = None,
     round_output: bool = True,
+    inflation_path: Optional[Sequence[float]] = None,
+    return_path: Optional[Sequence[float]] = None,
 ) -> Dict[str, Any]:
+    """Monthly cash and investment simulation.
+
+    Without paths, inflation and investment returns are constant: the user's
+    ``inflation_rate`` / ``expected_annual_return`` or the historical annual
+    averages. Monte Carlo passes sampled monthly ``inflation_path`` and
+    ``return_path`` instead.
+    """
     if months <= 0:
         raise ValueError("months must be > 0")
 
@@ -72,9 +113,28 @@ def simulate_finance(
     base_salary = float(profile["salary"])
     base_fixed_expense = float(profile["fixed_expense"])
     balance = float(profile["balance"])
-    inflation_rate = float(override_inflation_rate if override_inflation_rate is not None else profile.get("inflation_rate", 0.02))
+    investment = float(profile.get("investment_value") or 0)
+    monthly_investment = float(profile.get("monthly_investment") or 0)
+    requested_inflation = override_inflation_rate if override_inflation_rate is not None else profile.get("inflation_rate")
+    if inflation_path is not None:
+        requested_inflation = None
+    inflation_rate = float(requested_inflation if requested_inflation is not None
+                           else load_market_history().annual_inflation_rate)
+    price_level = PriceLevel(months, inflation_rate, inflation_path)
     requested_raise_rate = override_raise_rate if override_raise_rate is not None else profile.get("raise_rate")
     raise_rate = float(inflation_rate if requested_raise_rate is None else requested_raise_rate)
+    salary_growth = price_level.growth if requested_raise_rate is None and inflation_path is not None else None
+    if return_path is not None:
+        if len(return_path) < months:
+            raise ValueError("return path is shorter than the simulation")
+        monthly_returns = [float(rate) for rate in return_path[:months]]
+    elif investment or monthly_investment:
+        expected_return = profile.get("expected_annual_return")
+        annual_return = float(expected_return if expected_return is not None
+                              else load_market_history().annual_return_rate)
+        monthly_returns = [(1 + annual_return) ** (1 / 12) - 1] * months
+    else:
+        monthly_returns = [0.0] * months
 
     profile = {**profile, "inflation_rate": inflation_rate}
     curve: List[Dict[str, Any]] = []
@@ -83,9 +143,12 @@ def simulate_finance(
 
     for month in range(1, months + 1):
         years_passed = (month - 1) // 12
-        scheduled_income = base_salary * ((1 + raise_rate) ** years_passed)
-        income = get_income_for_month(month, scheduled_income, events, raise_rate=raise_rate)
-        fixed_base = base_fixed_expense * (inflation_factor(month, inflation_rate) if profile.get("fixed_expense_inflates", False) else 1)
+        price_multiplier = price_level.year_multiplier(month)
+        scheduled_income = base_salary * (price_multiplier if requested_raise_rate is None
+                                          else (1 + raise_rate) ** years_passed)
+        income = get_income_for_month(month, scheduled_income, events, raise_rate=raise_rate,
+                                      salary_growth=salary_growth)
+        fixed_base = base_fixed_expense * (price_multiplier if profile.get("fixed_expense_inflates", False) else 1)
         fixed_expense = get_fixed_expense_for_month(month, fixed_base, events)
         variable_result = calculate_variable_expenses(
             month=month,
@@ -94,6 +157,7 @@ def simulate_finance(
             base_income=max(base_salary, 1.0),
             events=events,
             rng=rng,
+            price_multiplier=price_multiplier,
         )
         existing_debts = profile.get("existing_debts")
         existing_payment = (sum(float(debt['monthly_payment']) for debt in existing_debts
@@ -113,7 +177,9 @@ def simulate_finance(
         shock_details.extend(shock_result["details"])
 
         total_expense = fixed_expense + variable_result["total"] + debt_payment + shock_expense
-        net_cashflow = income - total_expense + recurring_event_amount + one_time_asset_impact
+        # Contributions continue even when cash is negative; v1 never sells investments.
+        investment = investment * (1 + monthly_returns[month - 1]) + monthly_investment
+        net_cashflow = income - total_expense + recurring_event_amount + one_time_asset_impact - monthly_investment
         balance += net_cashflow
         if balance < 0 and first_negative_cash_month is None:
             first_negative_cash_month = month
@@ -131,12 +197,15 @@ def simulate_finance(
             "event_net": round(recurring_event_amount + one_time_asset_impact, 2),
             "net_cashflow": round(net_cashflow, 2),
             "balance": round(balance, 2),
+            "investment_value": round(investment, 2),
+            "net_worth": round(balance + investment, 2),
             "debt_to_income": debt_to_income_for_month(month, income, loans),
         }
         if not round_output:
             # Constraint searches must evaluate calculated values before display rounding.
             row.update(income=income, fixed_expense=fixed_expense, debt_payment=debt_payment,
-                       living_expense=living_expense, net_cashflow=net_cashflow, balance=balance)
+                       living_expense=living_expense, net_cashflow=net_cashflow, balance=balance,
+                       investment_value=investment, net_worth=balance + investment)
         if include_details:
             row["expense_categories"] = variable_result["categories"]
         curve.append(row)
@@ -148,6 +217,8 @@ def simulate_finance(
     }
     # The zero boundary is evaluated before currency display rounding.
     result["summary"]["first_negative_cash_month"] = first_negative_cash_month
+    # Dividing a nominal amount by this gives today's purchasing power.
+    result["summary"]["cumulative_price_multiplier"] = round(price_level.total(months), 6)
     if include_details:
         result["shock_details"] = shock_details
     return result

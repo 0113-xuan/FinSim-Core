@@ -1,12 +1,17 @@
 from __future__ import annotations
 from app.core.financial_rules import emergency_shortfall
 
+import math
 import random
 import statistics
 from typing import Any, Dict, List, Optional
 
 from app.core.expenses import get_expense_categories
+from app.core.market_data import BLOCK_MONTHS, MarketHistory, block_bootstrap_indices, load_market_history
 from app.core.simulation import simulate_finance
+
+
+PAST_PERFORMANCE_WARNING = '歷史期間台股表現特別好，過去報酬不代表未來。'
 
 
 def percentile(values: List[float], pct: float) -> float:
@@ -20,29 +25,62 @@ def percentile(values: List[float], pct: float) -> float:
     return ordered[lower] * (1 - weight) + ordered[upper] * weight
 
 
-def _sampling_metadata(profile: Dict[str, Any], random_shocks: List[Dict[str, Any]]) -> Dict[str, Any]:
+def _percentiles(values: List[float], points=(5, 25, 50, 75, 95)) -> Dict[str, float]:
+    return {f'p{point}': round(percentile(values, point / 100), 2) for point in points}
+
+
+def _has_investment(profile: Dict[str, Any]) -> bool:
+    return float(profile.get('investment_value') or 0) > 0 or float(profile.get('monthly_investment') or 0) > 0
+
+
+def _sampling_metadata(profile: Dict[str, Any], random_shocks: List[Dict[str, Any]],
+                       history: MarketHistory) -> Dict[str, Any]:
     sampled_parameters = []
-    notes = []
+    fixed_parameters = []
+    span = f'{history.start_period} 至 {history.end_period} 共 {len(history.periods)} 個月'
     if profile.get('inflation_rate') is None:
         sampled_parameters.append('inflation_rate')
-        notes.append('通膨率暫以 1%–5% 均勻抽樣，範圍為暫時設定，沒有資料來源。')
+        notes = [f'通膨率與台股報酬取自 {span}的台灣歷史月資料，每次試驗以連續 {BLOCK_MONTHS} 個月為一個區塊抽樣，'
+                 '同一個月的通膨與報酬成對抽取。']
     else:
-        notes.append(f"通膨率固定使用 {float(profile['inflation_rate']) * 100:g}%，未抽樣。")
+        fixed_parameters.append('inflation_rate')
+        notes = [f"通膨率固定使用使用者提供的 {float(profile['inflation_rate']) * 100:g}%，未抽樣；"
+                 f'台股報酬取自 {span}的歷史月資料，以連續 {BLOCK_MONTHS} 個月為一個區塊抽樣。']
     if profile.get('raise_rate') is None:
         if 'inflation_rate' in sampled_parameters:
             sampled_parameters.append('raise_rate')
-        notes.append('調薪率等於該次試驗的通膨率。')
+            notes.append('調薪率跟隨該次試驗的實際通膨，每年調整一次。')
+        else:
+            notes.append('調薪率等於固定通膨率。')
     else:
-        notes.append(f"調薪率固定使用 {float(profile['raise_rate']) * 100:g}%。")
+        fixed_parameters.append('raise_rate')
+        notes.append(f"調薪率固定使用使用者提供的 {float(profile['raise_rate']) * 100:g}%。")
+    if _has_investment(profile):
+        sampled_parameters.append('investment_return')
+        notes.append('投資市值依抽樣的台股報酬指數（含股利再投入）變動，現金不足時也不會自動賣出。')
+    notes.append('預期年報酬率（expected_annual_return）只用於確定性模擬，不影響 Monte Carlo。')
 
     # Advanced expense volatility remains a random source even with fixed rates.
     if any(float(category.get('monthly_volatility', 0) or 0) > 0
            for category in get_expense_categories(profile)):
         sampled_parameters.append('variable_expense')
         notes.append('變動支出依已啟用分類的月波動率抽樣。')
+    notes.append(PAST_PERFORMANCE_WARNING)
     if not sampled_parameters and not any(shock.get('enabled', True) for shock in random_shocks):
         notes.append('本次結果沒有隨機變動，分位數會相同。')
-    return {'sampled_parameters': sampled_parameters, 'sampling_note': ''.join(notes)}
+    return {
+        'sampled_parameters': sampled_parameters,
+        'fixed_parameters': fixed_parameters,
+        'sampling_note': ''.join(notes),
+        'sampling_method': {
+            'method': 'block_bootstrap',
+            'block_months': BLOCK_MONTHS,
+            'paired_inflation_and_return': 'inflation_rate' in sampled_parameters,
+            'history_start': history.start_period,
+            'history_end': history.end_period,
+            'history_months': len(history.periods),
+        },
+    }
 
 
 def run_monte_carlo(
@@ -65,8 +103,12 @@ def run_monte_carlo(
     loans = loans or []
     random_shocks = random_shocks or []
     master_rng = random.Random(seed)
+    history = load_market_history()
+    fixed_inflation = profile.get("inflation_rate")
 
     final_balances: List[float] = []
+    final_net_worths: List[float] = []
+    real_net_worths: List[float] = []
     cash_shortfall_count = 0
     emergency_shortfalls: List[float] = []
     paths = []
@@ -74,15 +116,10 @@ def run_monte_carlo(
 
     for index in range(simulations):
         path_seed = master_rng.randint(0, 2_147_483_647)
-        # Consume the former salary draw to preserve the existing seeded sequence.
-        master_rng.uniform(0.01, 0.06)
-        sampled_inflation_rate = master_rng.uniform(0.01, 0.05)
-        inflation_rate = profile.get("inflation_rate")
-        if inflation_rate is None:
-            inflation_rate = sampled_inflation_rate
-        raise_rate = profile.get("raise_rate")
-        if raise_rate is None:
-            raise_rate = inflation_rate
+        # Inflation and return always come from the same historical month.
+        months_drawn = block_bootstrap_indices(master_rng, months, len(history.periods))
+        return_path = [history.returns[i] for i in months_drawn]
+        inflation_path = None if fixed_inflation is not None else [history.inflation[i] for i in months_drawn]
         result = simulate_finance(
             profile=profile,
             months=months,
@@ -91,12 +128,16 @@ def run_monte_carlo(
             random_shocks=random_shocks,
             seed=path_seed,
             include_details=include_details,
-            override_raise_rate=raise_rate,
-            override_inflation_rate=inflation_rate,
+            inflation_path=inflation_path,
+            return_path=return_path,
         )
         summary = result["summary"]
         curve = result["simulation_curve"]
+        price_multiplier = (math.prod(1 + rate for rate in inflation_path) if inflation_path is not None
+                            else (1 + float(fixed_inflation)) ** (months / 12))
         final_balances.append(summary["final_balance"])
+        final_net_worths.append(summary["final_net_worth"])
+        real_net_worths.append(summary["final_net_worth"] / price_multiplier)
         cash_shortfall_count += summary["first_negative_cash_month"] is not None
         target_months = float(profile.get("target_emergency_months", 3))
         emergency_shortfalls.append(emergency_shortfall(summary["final_balance"], curve[-1]["living_expense"], curve[-1]["debt_payment"], target_months))
@@ -104,11 +145,14 @@ def run_monte_carlo(
             paths.append(
                 {
                     "seed": path_seed,
-                    "points": [{"month": row["month"], "balance": row["balance"]} for row in curve],
+                    "history_periods": [history.periods[i] for i in months_drawn[::BLOCK_MONTHS]],
+                    "points": [{"month": row["month"], "balance": row["balance"], "net_worth": row["net_worth"]}
+                               for row in curve],
                 }
             )
         if include_details and index < min(3, sample_paths):
-            debug_paths.append(result)
+            debug_paths.append({**result, "inflation_path": inflation_path, "return_path": return_path,
+                                "price_multiplier": price_multiplier})
 
     shortfall_probability = cash_shortfall_count / simulations
 
@@ -119,16 +163,14 @@ def run_monte_carlo(
         "median_final_balance": round(statistics.median(final_balances), 2),
         "min_final_balance": round(min(final_balances), 2),
         "max_final_balance": round(max(final_balances), 2),
-        "percentiles": {
-            "p5": round(percentile(final_balances, 0.05), 2),
-            "p25": round(percentile(final_balances, 0.25), 2),
-            "p50": round(percentile(final_balances, 0.50), 2),
-            "p75": round(percentile(final_balances, 0.75), 2),
-            "p95": round(percentile(final_balances, 0.95), 2),
-        },
+        "percentiles": _percentiles(final_balances),
+        "net_worth_percentiles": _percentiles(final_net_worths),
+        "real_net_worth_percentiles": _percentiles(real_net_worths, (5, 50, 95)),
+        "real_net_worth_definition": "期末淨資產（現金加投資）除以該次試驗的累積物價倍數，以今日購買力表示",
         "probability_cash_shortfall": round(shortfall_probability, 4),
         "cash_shortfall_definition": "模擬期間任一月底現金小於 0 的試驗比例",
-        **_sampling_metadata(profile, random_shocks),
+        **_sampling_metadata(profile, random_shocks, history),
+        "data_sources": [dict(source) for source in history.data_sources],
         "expected_emergency_fund_shortfall": round(statistics.fmean(emergency_shortfalls), 2),
         "sample_paths": paths,
     }

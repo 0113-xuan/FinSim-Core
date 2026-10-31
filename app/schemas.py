@@ -150,14 +150,14 @@ class ProfileInput(BaseModel):
     variable_expense: float = Field(default=0, ge=0, le=20_000_000)
     balance: float = Field(..., ge=-500_000_000, le=5_000_000_000)
     raise_rate: Optional[float] = Field(default=None, ge=-0.5, le=1)
-    inflation_rate: float = Field(default=0.02, ge=-0.5, le=1)
+    # None: deterministic runs use the historical CPI average; Monte Carlo samples history.
+    inflation_rate: Optional[float] = Field(default=None, ge=-0.5, le=1)
+    investment_value: float = Field(default=0, ge=0, le=5_000_000_000)
+    monthly_investment: float = Field(default=0, ge=0, le=20_000_000)
+    # Deterministic runs only; None uses the historical total-return average.
+    expected_annual_return: Optional[float] = Field(default=None, ge=-0.5, le=1)
     target_emergency_months: float = Field(default=3, gt=0, le=36)
     variable_expense_model: Optional[VariableExpenseModel] = None
-
-    def sampling_profile(self) -> Dict[str, Any]:
-        """Keep an omitted inflation rate distinguishable from an explicit default."""
-        excluded = {'inflation_rate'} if 'inflation_rate' not in self.model_fields_set else set()
-        return self.model_dump(exclude=excluded)
 
     @model_validator(mode="after")
     def ensure_legacy_variable_expense(self) -> "ProfileInput":

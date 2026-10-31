@@ -1,6 +1,9 @@
+import math
+
 import pytest
 from fastapi.testclient import TestClient
 
+from app.core.market_data import load_market_history
 from app.core.monte_carlo import run_monte_carlo
 from app.core.simulation import simulate_finance
 from main import app
@@ -45,27 +48,24 @@ def test_monte_carlo_respects_explicit_rates_and_links_omitted_salary(rates):
     assert response.status_code == 200
     result = response.json()
     if 'inflation_rate' not in rates:
-        assert '暫時設定' in result['sampling_note'] and '沒有資料來源' in result['sampling_note']
+        assert '歷史月資料' in result['sampling_note'] and '成對抽取' in result['sampling_note']
         expected_parameters = ['inflation_rate'] if rates.get('raise_rate') is not None else ['inflation_rate', 'raise_rate']
     else:
         assert '未抽樣' in result['sampling_note']
-        assert '沒有資料來源' not in result['sampling_note']
         expected_parameters = []
     assert result['sampled_parameters'] == expected_parameters
     for path in result['debug_paths']:
         row = path['simulation_curve'][12]
         income = row['income']
         if 'inflation_rate' in rates:
-            assert row['variable_expense'] == pytest.approx(100 * (1 + rates['inflation_rate']), abs=.06)
+            year_two_prices = 1 + rates['inflation_rate']
         else:
-            assert 101 <= row['variable_expense'] <= 105
+            year_two_prices = math.prod(1 + rate for rate in path['inflation_path'][:12])
+        assert row['variable_expense'] == pytest.approx(100 * year_two_prices, abs=.06)
         if rates.get('raise_rate') is not None:
             assert income == round(1000 * (1 + rates['raise_rate']), 2)
-        elif 'inflation_rate' in rates:
-            assert income == round(1000 * (1 + rates['inflation_rate']), 2)
         else:
-            assert 1010 <= income <= 1050
-            assert income == pytest.approx(row['variable_expense'] * 10, abs=.6)
+            assert income == round(1000 * year_two_prices, 2)
 
 
 def test_sampled_salary_and_inflation_match_each_trial():
@@ -93,7 +93,9 @@ def test_comparison_and_optimization_preserve_rate_omission(endpoint, extra):
     assert response.status_code == 200
     data = response.json()
     option = data['compare_result']['options'][0] if endpoint == '/compare' else data['baseline']
-    assert option['simulation_summary']['final_balance'] == 11720
+    # Omitted inflation uses the historical CPI average: 12 months of 900, then 1000 × (1 + rate) − 100.
+    rate = load_market_history().annual_inflation_rate
+    assert option['simulation_summary']['final_balance'] == round(12 * 900 + 1000 * (1 + rate) - 100, 2)
     paths = option['monte_carlo_summary']['sample_paths']
     assert len({path['points'][-1]['balance'] for path in paths}) > 1
 

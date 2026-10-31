@@ -9,21 +9,29 @@ PROFILE = dict(salary=60000, fixed_expense=20000, variable_expense=15000, balanc
 SHOCK = dict(name='Repair', monthly_probability=.5, min_amount=1000, max_amount=10000,
              enabled=True)
 NO_RANDOMNESS = '本次結果沒有隨機變動，分位數會相同。'
+HISTORY = '2003-02 至 2026-09 共 284 個月'
+PAIRED = (f'通膨率與台股報酬取自 {HISTORY}的台灣歷史月資料，每次試驗以連續 12 個月為一個區塊抽樣，'
+          '同一個月的通膨與報酬成對抽取。')
+
+
+def fixed(rate):
+    return f'通膨率固定使用使用者提供的 {rate}，未抽樣；台股報酬取自 {HISTORY}的歷史月資料，以連續 12 個月為一個區塊抽樣。'
+
+
+TAIL = '預期年報酬率（expected_annual_return）只用於確定性模擬，不影響 Monte Carlo。歷史期間台股表現特別好，過去報酬不代表未來。'
 
 
 @pytest.mark.parametrize('rates,shocks,parameters,note', [
-    ({}, [], ['inflation_rate', 'raise_rate'],
-     '通膨率暫以 1%–5% 均勻抽樣，範圍為暫時設定，沒有資料來源。調薪率等於該次試驗的通膨率。'),
-    ({'raise_rate': 0}, [], ['inflation_rate'],
-     '通膨率暫以 1%–5% 均勻抽樣，範圍為暫時設定，沒有資料來源。調薪率固定使用 0%。'),
-    ({'inflation_rate': .02}, [SHOCK], [],
-     '通膨率固定使用 2%，未抽樣。調薪率等於該次試驗的通膨率。'),
-    ({'inflation_rate': .02}, [], [],
-     '通膨率固定使用 2%，未抽樣。調薪率等於該次試驗的通膨率。' + NO_RANDOMNESS),
+    ({}, [], ['inflation_rate', 'raise_rate'], PAIRED + '調薪率跟隨該次試驗的實際通膨，每年調整一次。' + TAIL),
+    ({'raise_rate': 0}, [], ['inflation_rate'], PAIRED + '調薪率固定使用使用者提供的 0%。' + TAIL),
+    ({'inflation_rate': .02}, [SHOCK], [], fixed('2%') + '調薪率等於固定通膨率。' + TAIL),
+    ({'inflation_rate': .02}, [], [], fixed('2%') + '調薪率等於固定通膨率。' + TAIL + NO_RANDOMNESS),
     ({'inflation_rate': 0, 'raise_rate': .035}, [], [],
-     '通膨率固定使用 0%，未抽樣。調薪率固定使用 3.5%。' + NO_RANDOMNESS),
+     fixed('0%') + '調薪率固定使用使用者提供的 3.5%。' + TAIL + NO_RANDOMNESS),
     ({'inflation_rate': .02}, [{**SHOCK, 'enabled': False}], [],
-     '通膨率固定使用 2%，未抽樣。調薪率等於該次試驗的通膨率。' + NO_RANDOMNESS),
+     fixed('2%') + '調薪率等於固定通膨率。' + TAIL + NO_RANDOMNESS),
+    ({'inflation_rate': .02, 'investment_value': 100000}, [], ['investment_return'],
+     fixed('2%') + '調薪率等於固定通膨率。投資市值依抽樣的台股報酬指數（含股利再投入）變動，現金不足時也不會自動賣出。' + TAIL),
 ])
 def test_sampling_metadata_matches_effective_api_inputs(rates, shocks, parameters, note):
     response = TestClient(app).post('/monte-carlo', json={
@@ -34,8 +42,11 @@ def test_sampling_metadata_matches_effective_api_inputs(rates, shocks, parameter
     result = response.json()
     assert result['sampled_parameters'] == parameters
     assert result['sampling_note'] == note
+    assert result['sampling_method']['block_months'] == 12
     if NO_RANDOMNESS in note:
         assert len(set(result['percentiles'].values())) == 1
+    elif 'investment_return' in parameters:
+        assert result['net_worth_percentiles']['p95'] > result['net_worth_percentiles']['p5']
     else:
         assert result['percentiles']['p95'] > result['percentiles']['p5']
 

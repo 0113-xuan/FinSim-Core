@@ -93,7 +93,9 @@ def run_timeline(req, *, baseline=False, stress=None, round_output=True):
     result = simulate_finance(req.profile.model_dump(), months=60, events=events,
                               loans=[x.model_dump() for x in build.loans] if build else [],
                               seed=0, round_output=round_output)
-    rows = [{key: value for key, value in row.items() if key not in ('debt_to_income',)} for row in result['simulation_curve']]
+    # Vehicle profiles have no investment account; keep the timeline cash-only.
+    rows = [{key: value for key, value in row.items() if key not in ('debt_to_income', 'investment_value', 'net_worth')}
+            for row in result['simulation_curve']]
     period = YearMonth.parse(req.start_period)
     for row in rows:
         row['period'] = str(period.add_months(row['month']))

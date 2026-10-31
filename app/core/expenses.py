@@ -71,7 +71,8 @@ def get_expense_categories(profile: Dict[str, Any]) -> List[Dict[str, Any]]:
     if mode == ExpenseMode.advanced.value and categories:
         return [item for item in categories if item.get("enabled", True)]
     total = model.get("total_variable_expense", profile.get("variable_expense", 0))
-    return [{**item, "annual_inflation_rate": profile.get("inflation_rate", 0.02)}
+    # Quick categories follow the general price level; advanced ones keep their own rates.
+    return [{**item, "annual_inflation_rate": profile.get("inflation_rate", 0.02), "follows_price_level": True}
             for item in split_quick_variable_expense(float(total or 0))]
 
 
@@ -83,6 +84,7 @@ def calculate_variable_expenses(
     base_income: float,
     events: Optional[List[Dict[str, Any]]] = None,
     rng: Optional[random.Random] = None,
+    price_multiplier: Optional[float] = None,
 ) -> Dict[str, Any]:
     events = events or []
     rng = rng or random.Random(0)
@@ -94,7 +96,10 @@ def calculate_variable_expenses(
     for category in categories:
         baseline = float(category.get("baseline", 0) or 0)
         seasonal_factor = float(category.get("seasonal_factors", [1.0] * 12)[month_index])
-        inflation_growth = inflation_factor(month, float(category.get("annual_inflation_rate", profile.get("inflation_rate", 0.02))))
+        if price_multiplier is not None and category.get("follows_price_level"):
+            inflation_growth = price_multiplier
+        else:
+            inflation_growth = inflation_factor(month, float(category.get("annual_inflation_rate", profile.get("inflation_rate", 0.02))))
         income_ratio = income / base_income if base_income > 0 else 1.0
         elasticity_factor = income_ratio ** float(category.get("income_elasticity", 0.0) or 0.0)
         event_multiplier = _event_multiplier_for_category(month, category["category"], events)
