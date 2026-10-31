@@ -8,7 +8,12 @@ from typing import List
 from dotenv import load_dotenv
 
 
-load_dotenv(Path(__file__).resolve().parent.parent / ".env", override=False)
+def load_env_file(path: Path) -> bool:
+    # utf-8-sig reads files saved with or without a BOM (e.g. by Windows Notepad).
+    return load_dotenv(path, override=False, encoding="utf-8-sig")
+
+
+load_env_file(Path(__file__).resolve().parent.parent / ".env")
 
 PINNED_GEMINI_MODEL = 'gemini-3.5-flash-lite'
 
