@@ -532,7 +532,8 @@ def generate_report_api(req: GenerateReportRequest, request: Request) -> Dict[st
 
 @app.api_route("/", methods=["GET", "HEAD"], include_in_schema=False)
 def workspace_entrypoint():
-    return RedirectResponse(url="/vehicle.html", status_code=302, headers={"Cache-Control":"no-store"})
+    # The login page sends signed-in users on to the dashboard.
+    return RedirectResponse(url="/login.html", status_code=302, headers={"Cache-Control":"no-store"})
 
 
 app.mount("/", StaticFiles(directory=BASE_DIR / "static", html=True), name="static")

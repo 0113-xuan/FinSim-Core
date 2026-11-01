@@ -51,7 +51,7 @@ def test_questionnaire_catalog_dependency_and_original_entrypoints_remain_availa
         assert all({'id', 'brand', 'model', 'trim', 'price_twd'} <= vehicle.keys()
                    for vehicle in vehicles)
         root = client.get('/', follow_redirects=False)
-        assert root.headers['location'] == '/vehicle.html'
+        assert root.headers['location'] == '/login.html'
         assert client.get('/decisions/vehicle/assumptions').status_code == 200
 
 
