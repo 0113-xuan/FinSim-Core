@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>登入｜FutureWallet</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/shell.css">
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/shell.js"></script>
+<script defer src="/charts.js"></script><script defer src="/plan-page.js"></script><script defer src="/pages.js"></script>
+</head><body class="fw" data-page="login">
+<main class="login-main"><div class="page-width"><a class="shell-brand" href="/login.html">FutureWallet</a><header class="page-header"><h1 id="pageTitle">登入</h1><p class="lede">登入後，查看目前財務狀況，安排你的下一個計畫。</p></header><p id="pageStatus" role="status" aria-live="polite">正在載入…</p><p id="pageError" class="error" role="alert" hidden></p><div id="pageContent" hidden><form id="loginForm" class="panel"><fieldset><div class="field-grid">
+<label>電子郵件<input name="email" type="email" autocomplete="email" required></label>
+<label>密碼<input name="password" type="password" autocomplete="current-password" minlength="6" required></label></div>
+<div class="actions"><button class="primary" type="submit" value="login">登入</button><button type="submit" value="signup">註冊</button></div></fieldset></form></div></div></main></body></html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>計畫｜FutureWallet</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/shell.css">
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/shell.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script><script defer src="/charts.js"></script><script defer src="/plan-page.js"></script><script defer src="/pages.js"></script>
+</head><body class="fw" data-page="plan">
+<a class="skip-link" href="#pageContent">跳到主要內容</a>
+<button id="menuToggle" class="menu-toggle" type="button" aria-label="開啟選單" aria-controls="shellSidebar" aria-expanded="false">選單</button>
+<button id="drawerScrim" class="drawer-scrim" type="button" aria-label="關閉選單" tabindex="-1" hidden></button>
+<aside id="shellSidebar" class="shell-sidebar" aria-label="主要導覽"><button id="closeMenu" class="close-menu" type="button">關閉選單</button>
+<a class="shell-brand" href="/dashboard.html">FutureWallet</a><nav id="sideNav" aria-label="頁面與計畫"></nav><button type="button" data-sign-out>登出</button></aside>
+<main class="shell-main"><div class="page-width"><header class="page-header"><h1 id="pageTitle">計畫</h1><p class="lede">安排事件，再比較未來的現金與淨資產走勢。</p></header><p id="pageStatus" role="status" aria-live="polite">正在載入…</p><p id="pageError" class="error" role="alert" hidden></p><div id="pageContent" hidden><section id="notFound" class="panel" hidden><h2>找不到這個計畫</h2><a href="/dashboard.html">回儀表板</a></section>
+<div id="planWorkspace" hidden><section class="panel"><form id="planNameForm"><fieldset><label>計畫名稱<input name="name" maxlength="80" required></label><div class="actions"><button type="submit">儲存名稱</button><button id="deletePlan" type="button" class="danger">刪除計畫</button></div></fieldset></form></section>
+<section class="panel" aria-labelledby="eventsHeading"><h2 id="eventsHeading">事件時間軸</h2><ul id="eventList" class="saved-list"></ul></section>
+<section class="panel" aria-labelledby="eventEditorHeading"><h2 id="eventEditorHeading">新增事件</h2>      <form id="eventForm"><fieldset id="eventFields" disabled><div class="grid two">
+        <label>事件名稱<input name="name" maxlength="80" required></label>
+        <label>事件類型<select name="type"><option value="one_time">一次性收支</option><option value="range">期間每月收支</option><option value="salary_change">換工作／調整月薪</option><option value="vehicle_purchase">購車</option></select></label>
+        <label>開始月份<input name="start_period" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
+        <label data-event-field="end_period" hidden>結束月份（留空至模擬結束）<input name="end_period" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" disabled></label>
+        <label data-event-field="amount">一次性金額（支出為負）<input name="amount" type="number" min="-20000000" max="20000000" step="0.01" required></label>
+        <label data-event-field="monthly_amount" hidden>每月金額（支出為負）<input name="monthly_amount" type="number" min="-10000000" max="10000000" step="0.01" required disabled></label>
+        <label data-event-field="new_salary" hidden>新實領月薪<input name="new_salary" type="number" min="0" max="50000000" step="0.01" required disabled></label>
+        <label data-vehicle-field hidden>車款<select name="vehicle_catalog_id" disabled><option value="">自訂車款</option></select></label>
+        <label data-vehicle-field hidden>車價<input name="purchase_price" type="number" min="0.01" max="20000000" step="0.01" required disabled></label>
+        <label data-vehicle-field hidden>付款方式<select name="payment_method" disabled><option value="cash">現金</option><option value="financed">貸款</option></select></label>
+        <label data-vehicle-field="financed" hidden>頭期款<input name="down_payment" type="number" min="0" max="20000000" step="0.01" required disabled></label>
+        <label data-vehicle-field="financed" hidden>貸款期數（月）<input name="loan_term_months" type="number" min="1" max="600" step="1" required disabled></label>
+        <label data-vehicle-field="financed" hidden>年利率（%）<input name="annual_interest_rate" type="number" min="0" max="100" step="any" required disabled></label>
+        <label data-vehicle-field hidden>保險（年，選填）<input name="annual_insurance" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
+        <label data-vehicle-field hidden>稅費（年，選填）<input name="annual_tax" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
+        <label data-vehicle-field hidden>保養（年，選填）<input name="annual_maintenance_budget" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
+        <label data-vehicle-field hidden>油電（月，選填）<input name="monthly_fuel_or_energy" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
+        <label data-vehicle-field hidden>停車（月，選填）<input name="monthly_parking" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
+        <p id="vehicleMetadataStatus" data-vehicle-field hidden role="status"></p>
+      </div><div class="button-row"><button type="submit">新增事件</button><button id="cancelEdit" type="button" hidden>取消修改</button></div></fieldset></form></section>
+<section class="panel" aria-labelledby="simulationHeading"><h2 id="simulationHeading">模擬結果</h2>
+<p>每月投資金額從現金轉入投資帳戶，投資市值依台股報酬指數變動，現金不足時也不會自動賣出。淨資產＝現金＋投資市值。</p>
+<form id="simulationForm"><fieldset><div class="field-grid"><label>模擬起始月份<input id="startPeriod" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
+<label>模擬期間<select id="simulationMonths"><option value="60">60 個月</option><option value="120">120 個月</option><option value="240">240 個月</option></select></label></div>
+<div class="actions"><button class="primary" type="submit">執行模擬</button></div></fieldset></form>
+<ul id="simulationWarnings" aria-label="模擬注意事項"></ul>      <div id="simulationResults" hidden>
+        <div class="chart-frame"><canvas id="planChart" role="img" aria-label="現金與淨資產走勢"></canvas></div><div id="planChartSummary" class="chart-summary"></div><div class="metric-grid">
+          <article><span>最低現金</span><strong id="minimumCash">—</strong></article>
+          <article><span>最低現金發生月份</span><strong id="minimumCashPeriod">—</strong></article>
+          <article><span>第一次現金小於 0 的月份</span><strong id="firstNegativePeriod">—</strong></article>
+          <article><span>最低緊急預備金月數</span><strong id="minimumEmergency">—</strong></article>
+          <article><span>期末現金</span><strong id="endingCash">—</strong></article>
+          <article><span>現金不足機率</span><strong id="cashShortfall">—</strong></article>
+          <article><span>期末現金第 5 百分位數（p5）</span><strong id="cashP5">—</strong></article>
+          <article><span>期末現金中位數（p50）</span><strong id="cashP50">—</strong></article>
+          <article><span>期末現金第 95 百分位數（p95）</span><strong id="cashP95">—</strong></article>
+          <article><span>期末投資市值（歷史平均報酬）</span><strong id="endingInvestment">—</strong></article>
+          <article><span>期末淨資產第 5 百分位數（p5）</span><strong id="netWorthP5">—</strong></article>
+          <article><span>期末淨資產中位數（p50）</span><strong id="netWorthP50">—</strong></article>
+          <article><span>期末淨資產第 95 百分位數（p95）</span><strong id="netWorthP95">—</strong></article>
+          <article><span>以今日購買力計算的期末淨資產中位數（p50）</span><strong id="realNetWorthP50">—</strong></article>
+        </div>
+        <p id="shortfallDefinition"></p><p id="samplingNote"></p>
+        <ul id="dataSources" aria-label="資料來源"></ul>
+        <section id="vehicleResults" hidden aria-labelledby="vehicleResultsHeading">
+          <h3 id="vehicleResultsHeading">購車</h3><div id="vehicleSummaries"></div><p id="vehicleCostNote"></p>
+        </section>
+      </div>
+</section></div></div></div></main></body></html>

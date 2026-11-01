@@ -2,14 +2,14 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const {createStore,taipeiPeriod} = require('../static/planner.js');
+const {createStore,taipeiPeriod} = require('../static/shell.js');
 
 function fakeClient(data = [{id:'row'}], error = null) {
   const calls = [];
   return {calls, from(table) {
     const call = {table, steps:[]}; calls.push(call);
     const builder = {then(resolve,reject) { return Promise.resolve({data,error}).then(resolve,reject); }};
-    for (const name of ['select','eq','order','maybeSingle','single','upsert','insert','delete']) {
+    for (const name of ['select','eq','order','maybeSingle','single','upsert','insert','update','delete']) {
       builder[name] = (...args) => { call.steps.push([name,...args]); return builder; };
     }
     return builder;
@@ -60,7 +60,7 @@ test('start month is derived from Taipei time across UTC month and year boundari
   assert.equal(taipeiPeriod(new Date('2026-12-31T16:00:00Z')),'2027-01');
 });
 test('the independent page pins supabase-js and exposes only supported event entry types',()=>{
-  const html=fs.readFileSync(path.join(__dirname,'../static/planner.html'),'utf8');
+  const html=fs.readFileSync(path.join(__dirname,'../static/plan.html'),'utf8');
   assert.match(html,/@supabase\/supabase-js@2\.45\.4\/dist\/umd\/supabase\.js/);
   assert.match(html,/href="\/style.css"/);
   assert.doesNotMatch(html,/投資市值尚未納入計算/);
@@ -69,4 +69,34 @@ test('the independent page pins supabase-js and exposes only supported event ent
     assert.match(html,new RegExp(`id="${id}"`));
   const eventForm=html.slice(html.indexOf('id="eventForm"'),html.indexOf('</form>',html.indexOf('id="eventForm"')));
   for(const type of ['one_time','range','salary_change','vehicle_purchase']) assert.match(eventForm,new RegExp(`value="${type}"`));
+});
+
+test('updates retain session ownership and filter event identity and plan identity',async()=>{
+  const client=fakeClient(),store=createStore(client,'current-user');
+  await store.updatePlan('plan',{name:'新名稱',user_id:'other'});
+  await store.updateEvent('plan','event',{name:'事件',user_id:'other',plan_id:'other-plan'});
+  for(const call of client.calls){
+    assert.equal(call.steps.find(step=>step[0]==='update')[1].user_id,'current-user');
+    assert.ok(call.steps.some(step=>step[0]==='eq'&&step[1]==='user_id'&&step[2]==='current-user'));
+    assert.ok(call.steps.some(step=>step[0]==='eq'&&step[1]==='id'));
+  }
+  assert.equal(client.calls[1].steps.find(step=>step[0]==='update')[1].plan_id,'plan');
+  assert.ok(client.calls[1].steps.some(step=>step[0]==='eq'&&step[1]==='plan_id'&&step[2]==='plan'));
+});
+
+test('update errors are visible to page actions rather than swallowed',async()=>{
+  const store=createStore(fakeClient(null,{message:'修改失敗'}),'current-user');
+  await assert.rejects(()=>store.updatePlan('plan',{name:'新名稱'}),/修改失敗/);
+  await assert.rejects(()=>store.updateEvent('plan','event',{name:'新事件'}),/修改失敗/);
+});
+
+test('legacy planner only redirects and new pages pin shared libraries',()=>{
+  const read=name=>fs.readFileSync(path.join(__dirname,`../static/${name}.html`),'utf8');
+  assert.match(read('planner'),/url=\/login.html/);
+  assert.doesNotMatch(read('planner'),/<form|planner\.js/);
+  for(const page of ['login','onboarding','dashboard','plan','profile']){
+    const html=read(page);assert.match(html,/lang="zh-Hant"/);assert.match(html,/supabase-js@2\.45\.4/);
+    assert.match(html,/shell\.css/);assert.match(html,/shell\.js/);assert.match(html,/id="pageError"/);
+  }
+  for(const page of ['dashboard','plan'])assert.match(read(page),/https:\/\/cdn\.jsdelivr\.net\/npm\/chart\.js@4\.4\.8\/dist\/chart\.umd\.min\.js/);
 });
