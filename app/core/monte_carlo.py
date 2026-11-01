@@ -64,6 +64,11 @@ def _sampling_metadata(profile: Dict[str, Any], random_shocks: List[Dict[str, An
         notes.append('未設定投資市值或每月投入，抽樣報酬不影響帳戶金額。')
     notes.append('預期年報酬率（expected_annual_return）只用於確定性模擬，不影響 Monte Carlo。')
 
+    expense_model = profile.get('variable_expense_model') or {}
+    if expense_model.get('mode') == 'advanced' and any(
+            category.get('enabled', True) for category in (expense_model.get('categories') or [])):
+        notes.append('進階模式的支出分類使用各自設定的通膨率，不跟隨抽樣通膨。')
+
     # Advanced expense volatility remains a random source even with fixed rates.
     if any(float(category.get('monthly_volatility', 0) or 0) > 0
            for category in get_expense_categories(profile)):

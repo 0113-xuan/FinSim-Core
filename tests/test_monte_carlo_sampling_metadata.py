@@ -67,3 +67,26 @@ def test_advanced_expense_volatility_is_not_described_as_deterministic():
     assert '變動支出依已啟用分類的月波動率抽樣。' in result['sampling_note']
     assert NO_RANDOMNESS not in result['sampling_note']
     assert result['percentiles']['p95'] > result['percentiles']['p5']
+
+
+@pytest.mark.parametrize('mode,enabled,expected_note', [
+    ('advanced', True, True),
+    ('advanced', None, True),  # An omitted enabled flag defaults to enabled.
+    ('advanced', False, False),
+    ('quick', True, False),
+])
+def test_sampling_note_explains_only_active_advanced_categories(mode, enabled, expected_note):
+    category = dict(category='food', baseline=10000, annual_inflation_rate=0, monthly_volatility=0)
+    if isinstance(enabled, bool):
+        category['enabled'] = enabled
+    response = TestClient(app).post('/monte-carlo', json={
+        'profile': {**PROFILE, 'variable_expense_model': {'mode': mode, 'categories': [category]}},
+        'months': 25, 'simulations': 3, 'sample_paths': 3, 'include_details': True, 'seed': 42,
+    })
+    assert response.status_code == 200
+    result = response.json()
+    note = '進階模式的支出分類使用各自設定的通膨率，不跟隨抽樣通膨。'
+    assert (note in result['sampling_note']) is expected_note
+    if expected_note:
+        for path in result['debug_paths']:
+            assert all(row['variable_expense'] == 10000 for row in path['simulation_curve'])

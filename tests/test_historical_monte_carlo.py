@@ -130,16 +130,16 @@ def test_deterministic_cash_matches_historical_inflation_hand_calculation():
     assert response.json()['result']['summary']['final_balance'] == round(expected, 2)
 
 
-def test_advanced_categories_follow_the_same_annual_step_prices():
+@pytest.mark.parametrize('category_rate', [0, .03])
+def test_advanced_categories_keep_their_own_inflation_rate(category_rate):
     profile = {**PROFILE, 'variable_expense_model': {'mode': 'advanced', 'categories': [
-        dict(category='food', baseline=10000, annual_inflation_rate=0, monthly_volatility=0)]}}
+        dict(category='food', baseline=10000, annual_inflation_rate=category_rate, monthly_volatility=0)]}}
     inflation = [0.01] * 12 + [-0.005] * 12 + [0] * 12
     sampled = simulate_finance(profile, months=25, inflation_path=inflation)['simulation_curve']
-    assert sampled[11]['variable_expense'] == 10000
-    assert sampled[12]['variable_expense'] == round(10000 * 1.01 ** 12, 2)
-    assert sampled[24]['variable_expense'] == round(10000 * 1.01 ** 12 * .995 ** 12, 2)
+    assert [row['variable_expense'] for row in sampled] == [
+        round(10000 * (1 + category_rate) ** ((month - 1) // 12), 2) for month in range(1, 26)]
     fixed = simulate_finance({**profile, 'inflation_rate': .04}, months=13)['simulation_curve']
-    assert fixed[12]['variable_expense'] == 10400
+    assert fixed[12]['variable_expense'] == round(10000 * (1 + category_rate), 2)
 
 
 def test_expected_annual_return_does_not_change_monte_carlo():
