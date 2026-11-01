@@ -106,6 +106,12 @@ def simulate_finance(
         raise ValueError("months must be > 0")
 
     events = events or []
+    # Cash-only ownership ranges can be numerous in long planner horizons.
+    # Expense categories only inspect these two modifiers; keep cash transfers
+    # in the full event list but avoid rescanning them for every category.
+    expense_events = [event for event in events
+                      if event.get('variable_expense_multiplier', 1) != 1
+                      or event.get('category_monthly_adjustment', 0)]
     loans = loans or []
     random_shocks = random_shocks or []
     rng = random.Random(seed)
@@ -155,7 +161,7 @@ def simulate_finance(
             profile=profile,
             income=income,
             base_income=max(base_salary, 1.0),
-            events=events,
+            events=expense_events,
             rng=rng,
             price_multiplier=price_multiplier,
         )

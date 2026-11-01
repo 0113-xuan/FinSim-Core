@@ -9,6 +9,7 @@ from app.decision_schemas import VehicleDecisionRequest
 from app.scenario_schemas import SourcedDecimal, ValueSource
 from app.services.calendar_period import YearMonth
 from app.services.scenario_engine import build_scenario
+from app.services.vehicle_event_costs import inflate_vehicle_events
 from app.vehicle_catalog import get_vehicle
 
 
@@ -68,22 +69,7 @@ def run_timeline(req, *, baseline=False, stress=None, round_output=True):
     events = []
     start = YearMonth.parse(req.start_period).months_until(scenario.target_period)
     if build:
-        for event in build.events:
-            raw = event.model_dump()
-            if raw['type'] != 'range':
-                events.append(raw)
-                continue
-            # Inflation is constant within simulation months 1-12, 13-24, ... .
-            # Keep the same amount and active months, but avoid scanning up to
-            # 360 individual monthly ownership events in every expense category.
-            # A purchase in month 12 gets one month at year-one prices, not 12.
-            for year_start in range(1, 61, 12):
-                month = max(start, year_start)
-                end = year_start + 11
-                if month > end:
-                    continue
-                events.append({**raw, 'start_month': month, 'end_month': end,
-                               'amount': raw['amount'] * inflation_factor(month, req.profile.inflation_rate)})
+        events = inflate_vehicle_events(build.events, start, 60, req.profile.inflation_rate)
     if stress == 'income_reduction':
         events.append(dict(type='range', start_month=start, end_month=60, income_multiplier=STRESS_DEFAULTS['income_multiplier']))
     elif stress == 'unemployment':

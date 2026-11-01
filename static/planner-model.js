@@ -46,7 +46,7 @@
     if (profile.raise_rate != null && profile.raise_rate !== '') {
       request.profile.raise_rate = number(profile.raise_rate, '年調薪率');
     }
-    const warnings = [];
+    const warnings = [], vehicles = [];
     for (const [index, debt] of debts.entries()) {
       const name = debt.name || `貸款 ${index + 1}`;
       const remaining = number(debt.remaining_months, `${name}剩餘期數`);
@@ -57,8 +57,8 @@
     }
     for (const [index, event] of events.entries()) {
       const name = event.name || `事件 ${index + 1}`;
-      if (!['one_time', 'range', 'salary_change'].includes(event.type)) {
-        warnings.push(`略過「${name}」：${event.type === 'vehicle_purchase' ? '本次尚不支援購車事件' : '不支援的事件類型'}。`);
+      if (!['one_time', 'range', 'salary_change', 'vehicle_purchase'].includes(event.type)) {
+        warnings.push(`略過「${name}」：不支援的事件類型。`);
         continue;
       }
       try {
@@ -67,7 +67,9 @@
           warnings.push(`略過「${name}」：開始月份${start < 1 ? '早於模擬起始月' : '晚於模擬期間'}。`);
           continue;
         }
-        if (event.type === 'one_time') {
+        if (event.type === 'vehicle_purchase') {
+          vehicles.push({name, purchase_period:event.start_period, details:structuredClone(event.details || {})});
+        } else if (event.type === 'one_time') {
           request.events.push({type: 'one_time', name, month: start, amount: number(event.amount, `${name}金額`)});
         } else if (event.type === 'salary_change') {
           request.events.push({type: 'salary_change', name, start_month: start, new_salary: number(event.new_salary, `${name}新月薪`)});
@@ -84,10 +86,53 @@
         warnings.push(`略過「${name}」：${error.message}。`);
       }
     }
-    return {request, warnings};
+    return {request, warnings, vehicles};
   }
 
-  const api = {buildSimulationRequest, periodToMonth, monthToPeriod};
+  const ownershipFields = ['annual_insurance','annual_tax','annual_maintenance_budget','monthly_fuel_or_energy','monthly_parking'];
+  function vehicleDetails(values) {
+    const details = {purchase_price:number(values.purchase_price, '車價'), payment_method:values.payment_method};
+    if (values.vehicle_catalog_id) details.vehicle_catalog_id = values.vehicle_catalog_id;
+    if (details.payment_method === 'financed') {
+      details.down_payment = number(values.down_payment, '頭期款');
+      details.loan_term_months = number(values.loan_term_months, '貸款期數');
+      details.annual_interest_rate = number(values.annual_interest_rate, '年利率') / 100;
+      if (!Number.isInteger(details.loan_term_months) || details.loan_term_months < 1) throw new Error('貸款期數須為正整數');
+      if (details.down_payment < 0 || details.down_payment >= details.purchase_price) throw new Error('頭期款須為非負數且小於車價');
+    } else if (details.payment_method !== 'cash') throw new Error('請選擇付款方式');
+    if (details.purchase_price <= 0) throw new Error('車價須大於零');
+    for (const key of ownershipFields) {
+      if (values[key] != null && String(values[key]).trim() !== '') details[key] = number(values[key], '持有成本');
+    }
+    return details;
+  }
+  function vehicleAnalysisReason(startPeriod, purchasePeriod) {
+    try {
+      // The existing vehicle API treats start_period as the preceding base month.
+      const month = periodToMonth(startPeriod, purchasePeriod) - 1;
+      return month >= 1 && month <= 58 ? '' : '購車分析的購買月份須落在基準月後第 1 至 58 個月。';
+    } catch (_) { return '購買月份格式無效，無法執行購車分析。'; }
+  }
+  function buildVehicleDecisionRequest({profile, debts = [], event, startPeriod}) {
+    const reason = vehicleAnalysisReason(startPeriod, event.start_period);
+    if (reason) throw new Error(reason);
+    const payload = {scenario_type:'vehicle_purchase'};
+    for (const [key,value] of Object.entries(event.details || {})) {
+      if (key === 'vehicle_catalog_id' || value == null || value === '') continue;
+      payload[key] = ['payment_method','loan_term_months'].includes(key) ? value : {value,source:'user_provided'};
+    }
+    const financial = {salary:number(profile.monthly_income,'每月實領收入'),
+      fixed_expense:number(profile.fixed_expense,'固定支出'), variable_expense:number(profile.variable_expense,'變動支出'),
+      balance:number(profile.cash_balance,'可動用現金'), required_monthly_debt:0,
+      existing_debts:debts.map(debt=>({name:debt.name, monthly_payment:number(debt.monthly_payment,'每月還款'), remaining_months:number(debt.remaining_months,'剩餘期數')}))};
+    if (profile.raise_rate != null && profile.raise_rate !== '') financial.raise_rate = number(profile.raise_rate,'年調薪率');
+    const request = {profile:financial, start_period:startPeriod, scenario:{scenario_id:'planner-vehicle',
+      scenario_type:'vehicle_purchase', horizon_months:60, target_period:event.start_period, payload}};
+    if (event.details?.vehicle_catalog_id) request.vehicle_catalog_id = event.details.vehicle_catalog_id;
+    return request;
+  }
+
+  const api = {buildSimulationRequest, periodToMonth, monthToPeriod, ownershipFields, vehicleDetails, vehicleAnalysisReason, buildVehicleDecisionRequest};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PlannerModel = api;
 })(globalThis);

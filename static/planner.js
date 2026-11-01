@@ -51,6 +51,7 @@
     function invalidate() {
       $('simulationResults').hidden = true;
       $('simulationWarnings').replaceChildren();
+      for (const result of root.document.querySelectorAll('[data-vehicle-analysis-result]')) result.replaceChildren();
     }
     function controls() {
       const available = state.ready && !state.busy;
@@ -63,6 +64,13 @@
       $('reloadData').disabled = state.busy;
       $('authFields').disabled = !state.client || state.busy;
       for (const button of root.document.querySelectorAll('[data-remove]')) button.disabled = !available || (button.dataset.remove === 'event' && !state.eventsReady);
+      for (const button of root.document.querySelectorAll('[data-analyze]')) {
+        const event = state.events.find(row => row.id === button.dataset.analyze);
+        const reason = !state.profile || state.profileDirty ? '請先儲存財務資料再執行購車分析。'
+          : model.vehicleAnalysisReason(taipeiPeriod(), event?.start_period);
+        button.disabled = !available || !state.eventsReady || !!reason;
+        button.parentElement.querySelector('[data-analysis-reason]').textContent = reason;
+      }
     }
     async function perform(action) {
       if (state.busy) return;
@@ -84,6 +92,18 @@
         button.type = 'button'; button.textContent = '刪除'; button.dataset.remove = removeKind; button.dataset.id = row.id;
         button.setAttribute('aria-label', `刪除${row.name}`);
         item.append(text, button); target.append(item);
+        if (removeKind === 'event' && row.type === 'vehicle_purchase') {
+          item.classList.add('vehicle-event');
+          const line = root.document.createElement('div'); line.className = 'event-row';
+          line.append(text, button);
+          const analyze = root.document.createElement('button'); analyze.type = 'button';
+          analyze.dataset.analyze = row.id; analyze.textContent = '購車分析'; analyze.setAttribute('aria-label', `購車分析：${row.name}`);
+          const reason = root.document.createElement('small'); reason.dataset.analysisReason = '';
+          line.append(analyze, reason);
+          const result = root.document.createElement('div'); result.className = 'vehicle-analysis';
+          result.dataset.vehicleAnalysisResult = ''; result.setAttribute('aria-live','polite');
+          item.append(line, result);
+        }
       }
     }
     function renderProfile() {
@@ -114,7 +134,8 @@
         if (epoch !== state.epoch || eventEpoch !== state.eventEpoch) return;
         state.events = events; state.eventsReady = true;
         list('eventList', events, event => {
-          const detail = event.type === 'one_time' ? money(event.amount) : event.type === 'range' ? `每月 ${money(event.monthly_amount)}，至 ${event.end_period || '模擬結束'}` : event.type === 'salary_change' ? `新月薪 ${money(event.new_salary)}` : '購車事件（尚未納入計算）';
+          const car = event.details || {};
+          const detail = event.type === 'one_time' ? money(event.amount) : event.type === 'range' ? `每月 ${money(event.monthly_amount)}，至 ${event.end_period || '模擬結束'}` : event.type === 'salary_change' ? `新月薪 ${money(event.new_salary)}` : event.type === 'vehicle_purchase' ? `車價 ${money(car.purchase_price)}，${car.payment_method === 'financed' ? `貸款 ${car.loan_term_months} 期` : '現金購買'}` : '不支援的事件類型';
           return `${event.name}｜${event.start_period}｜${detail}`;
         }, 'event');
       } catch (error) { if (epoch === state.epoch && eventEpoch === state.eventEpoch) showError(error); }
@@ -165,9 +186,73 @@
       const type = $('eventForm').elements.type.value;
       for (const label of root.document.querySelectorAll('[data-event-field]')) {
         const key = label.dataset.eventField;
-        const visible = type === 'range' ? ['monthly_amount','end_period'].includes(key) : type === 'one_time' ? key === 'amount' : key === 'new_salary';
+        const visible = type === 'range' ? ['monthly_amount','end_period'].includes(key) : type === 'one_time' ? key === 'amount' : type === 'salary_change' && key === 'new_salary';
         label.hidden = !visible; label.querySelector('input').disabled = !visible;
       }
+      for (const label of root.document.querySelectorAll('[data-vehicle-field]')) {
+        const visible = type === 'vehicle_purchase' && (label.dataset.vehicleField !== 'financed' || $('eventForm').elements.payment_method.value === 'financed');
+        label.hidden = !visible;
+        const control = label.querySelector('input,select'); if (control) control.disabled = !visible;
+      }
+    }
+    const ownershipLabels = {annual_insurance:'保險',annual_tax:'稅費',annual_maintenance_budget:'保養',monthly_fuel_or_energy:'油電',monthly_parking:'停車'};
+    let vehicleCatalog = [];
+    async function loadVehicleMetadata() {
+      try {
+        const responses = await Promise.all(['/decisions/vehicle/catalog','/decisions/vehicle/assumptions'].map(url=>root.fetch(url)));
+        if (responses.some(response=>!response.ok)) throw new Error('載入失敗');
+        const [catalog, assumptions] = await Promise.all(responses.map(response=>response.json()));
+        vehicleCatalog = catalog;
+        const select = $('eventForm').elements.vehicle_catalog_id;
+        select.replaceChildren();
+        for (const car of catalog) {
+          const option = root.document.createElement('option'); option.value = car.id;
+          option.textContent = `${car.brand} ${car.model} ${car.trim}`; select.append(option);
+        }
+        const custom = root.document.createElement('option'); custom.value = ''; custom.textContent = '自訂車款'; custom.defaultSelected = true; select.append(custom); select.value = '';
+        for (const key of model.ownershipFields) {
+          const assumption = assumptions.find(item=>item.key === key);
+          if (!assumption || !Number.isFinite(Number(assumption.value))) throw new Error('預設值載入不完整');
+          $('eventForm').elements.namedItem(key).placeholder = `留空使用預設 ${Number(assumption.value).toLocaleString('zh-TW')}／${key.startsWith('annual_') ? '年' : '月'}`;
+        }
+        $('vehicleMetadataStatus').textContent = '可修改車價；留空的持有成本於計算時套用預設值。';
+      } catch (_) { $('vehicleMetadataStatus').textContent = '車款或預設值載入未完成；可使用自訂車款，留空成本由後端套用預設值。重新整理可重試。'; }
+    }
+    async function calculation(action) {
+      const controller = new AbortController(); state.controller = controller;
+      const timeout = root.setTimeout(() => controller.abort(), 30000);
+      async function post(url, payload) {
+        const response = await root.fetch(url, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:controller.signal});
+        let data; try { data = await response.json(); } catch (_) { /* A gateway may return HTML. */ }
+        if (!response.ok) {
+          const detail = typeof data?.detail === 'string' ? data.detail : Array.isArray(data?.detail) ? data.detail.map(error=>error.msg).join('；') : '';
+          throw new Error(detail || `計算失敗（HTTP ${response.status}），請檢查金額及事件後重試`);
+        }
+        if (!data) throw new Error('計算回應無法讀取，請重試');
+        return data;
+      }
+      try { return await action(post); }
+      catch (error) {
+        controller.abort();
+        if (error.name === 'AbortError') throw new Error('計算逾時或已取消，請重試；儲存資料不受影響');
+        throw error;
+      } finally { root.clearTimeout(timeout); if (state.controller === controller) state.controller = null; }
+    }
+    function paragraph(parent, text) { const p = root.document.createElement('p'); p.textContent = text; parent.append(p); }
+    function renderVehicleAnalysis(target, result) {
+      target.replaceChildren();
+      const allPassed = result.constraints.every(item=>item.applicable === false || item.passed === true);
+      paragraph(target, `財務限制：${allPassed ? '全部通過' : '未全部通過'}`);
+      const car = result.scenario;
+      paragraph(target, `每月車貸：${money(car.monthly_loan_payment)}｜總利息：${money(car.total_loan_interest)}｜購車當月一次支出：${money(car.one_time_cash_requirement)}`);
+      paragraph(target, `最低現金：${money(car.minimum_cash_balance)}｜發生月份：${car.minimum_cash_month}`);
+      const limit = result.affordability;
+      const reasons = {no_feasible_price:'目前財務限制下沒有可負擔車價',search_limit_reached:'已達搜尋上限，尚無法確認最高車價',verification_limit_reached:'已達驗證上限，尚無法確認最高車價'};
+      paragraph(target, `最高可負擔車價：${limit.maximum_affordable_vehicle_price == null ? reasons[limit.status] || '尚無法判定' : money(limit.maximum_affordable_vehicle_price)}`);
+      const stressNames = {income_reduction:'收入減少',unemployment:'失業',emergency_expense:'突發支出',interest_rate:'貸款利率上升'};
+      for (const stress of result.stress_tests) paragraph(target, `${stressNames[stress.name] || stress.name}：${stress.applicable === false ? '不適用' : stress.passed === true ? '通過' : stress.passed === false ? '未通過' : '尚未判定'}`);
+      paragraph(target, '這個分析只看這台車和現有貸款，不包含計畫中的其他事件與投資。');
+      const link = root.document.createElement('a'); link.href = '/vehicle.html'; link.textContent = '完整購車分析'; target.append(link);
     }
     function onSubmit(id, action) {
       $(id).addEventListener('submit', event => { event.preventDefault(); if ($(id).reportValidity()) perform(epoch => action($(id), event, epoch)); });
@@ -214,13 +299,23 @@
       perform(async epoch => { await state.store.removePlan(state.selectedPlan); if (epoch !== state.epoch) return; state.selectedPlan = ''; await loadAccount(epoch); });
     });
     $('eventForm').elements.type.addEventListener('change', syncEventFields);
+    $('eventForm').elements.payment_method.addEventListener('change', syncEventFields);
+    $('eventForm').elements.vehicle_catalog_id.addEventListener('change', () => {
+      const car = vehicleCatalog.find(item=>item.id === $('eventForm').elements.vehicle_catalog_id.value);
+      if (car) $('eventForm').elements.purchase_price.value = car.price_twd;
+    });
     onSubmit('eventForm', async (form, _, epoch) => {
       if (!state.selectedPlan) throw new Error('請先選擇計畫');
       const name = form.elements.name.value.trim(); if (!name) throw new Error('請填寫事件名稱');
       const values = {name, type:form.elements.type.value, start_period:form.elements.start_period.value};
       if (values.type === 'one_time') values.amount = numeric(form, 'amount');
       else if (values.type === 'salary_change') values.new_salary = numeric(form, 'new_salary');
-      else {
+      else if (values.type === 'vehicle_purchase') {
+        const raw = {};
+        for (const key of ['vehicle_catalog_id','purchase_price','payment_method','down_payment','loan_term_months','annual_interest_rate',...model.ownershipFields]) raw[key] = form.elements.namedItem(key).value;
+        values.details = model.vehicleDetails(raw);
+        Object.assign(values, {amount:null, monthly_amount:null, new_salary:null, end_period:null});
+      } else {
         values.monthly_amount = numeric(form, 'monthly_amount'); values.end_period = form.elements.end_period.value || null;
         if (values.end_period && values.end_period < values.start_period) throw new Error('結束月份不可早於開始月份');
       }
@@ -229,24 +324,36 @@
       form.reset(); form.elements.start_period.value = taipeiPeriod(); syncEventFields(); await loadEvents(epoch);
     });
     $('eventList').addEventListener('click', event => {
+      const analyze = event.target.closest('[data-analyze]');
+      if (analyze && !analyze.disabled) {
+        perform(async epoch => {
+          const car = state.events.find(row=>row.id === analyze.dataset.analyze), eventEpoch = state.eventEpoch;
+          const request = model.buildVehicleDecisionRequest({profile:state.profile,debts:state.debts,event:car,startPeriod:taipeiPeriod()});
+          const target = analyze.closest('li').querySelector('[data-vehicle-analysis-result]');
+          target.replaceChildren(); paragraph(target, '正在分析購車…');
+          try {
+            const result = await calculation(post=>post('/decisions/vehicle', request));
+            if (epoch === state.epoch && eventEpoch === state.eventEpoch) renderVehicleAnalysis(target, result);
+          } catch (error) { if (epoch === state.epoch && eventEpoch === state.eventEpoch) target.replaceChildren(); throw error; }
+        });
+        return;
+      }
       const button = event.target.closest('[data-remove="event"]');
       if (button) perform(async epoch => { await state.store.removeEvent(state.selectedPlan, button.dataset.id); if (epoch === state.epoch) await loadEvents(epoch); });
     });
     $('simulationForm').addEventListener('input', invalidate);
     onSubmit('simulationForm', async (form, _, epoch) => {
       const startPeriod = $('startPeriod').value;
-      const {request, warnings} = model.buildSimulationRequest({profile:state.profile, debts:state.debts, events:state.events, startPeriod, months:Number($('simulationMonths').value)});
+      const {request, warnings, vehicles} = model.buildSimulationRequest({profile:state.profile, debts:state.debts, events:state.events, startPeriod, months:Number($('simulationMonths').value)});
       invalidate();
       for (const warning of warnings) { const li = root.document.createElement('li'); li.textContent = warning; $('simulationWarnings').append(li); }
-      const controller = new AbortController(); state.controller = controller;
-      const timeout = root.setTimeout(() => controller.abort(), 30000);
       message('正在計算…');
-      async function post(url, payload) {
-        const response = await root.fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload), signal:controller.signal});
-        if (!response.ok) throw new Error(`計算失敗（HTTP ${response.status}），請檢查金額及事件後重試`);
-        return response.json();
-      }
-      try {
+      await calculation(async post => {
+        let converted;
+        if (vehicles.length) {
+          converted = await post('/planner/vehicle-events', {start_period:startPeriod,months:request.months,inflation_rate:request.profile.inflation_rate ?? null,vehicles});
+          request.events.push(...converted.events); request.loans = [...(request.loans || []),...converted.loans];
+        }
         const [simulation, mc] = await Promise.all([post('/simulate', {...request, seed:42}), post('/monte-carlo', {...request, simulations:300, seed:42})]);
         if (epoch !== state.epoch) return;
         const summary = simulation.result.summary;
@@ -267,14 +374,24 @@
           li.textContent = `資料來源：${source.publisher}「${source.name}」，${source.period_start} 至 ${source.period_end}`;
           return li;
         }));
+        $('vehicleResults').hidden = !converted?.vehicles.length;
+        $('vehicleSummaries').replaceChildren();
+        if (converted) {
+          for (const car of converted.vehicles) {
+            const section = root.document.createElement('article');
+            paragraph(section, `${car.name}｜${model.monthToPeriod(startPeriod, car.purchase_month)}`);
+            paragraph(section, `購車當月一次支出：${money(car.one_time_cash)}｜每月車貸：${money(car.monthly_loan_payment)}｜總利息：${money(car.total_loan_interest)}`);
+            paragraph(section, `第一年每月持有成本：${money(car.first_year_monthly_ownership_cost)}`);
+            paragraph(section, `使用預設值：${car.defaults_used.map(key=>ownershipLabels[key] || key).join('、') || '無'}`);
+            $('vehicleSummaries').append(section);
+          }
+          $('vehicleCostNote').textContent = converted.note;
+        }
         $('simulationResults').hidden = false; message('模擬完成。');
-      } catch (error) {
-        controller.abort();
-        if (error.name === 'AbortError') throw new Error('計算逾時或已取消，請重試；儲存資料不受影響');
-        throw error;
-      } finally { root.clearTimeout(timeout); if (state.controller === controller) state.controller = null; }
+      });
     });
 
+    loadVehicleMetadata();
     try {
       const response = await root.fetch('/config/public', {cache:'no-store'});
       if (!response.ok) throw new Error('無法讀取登入設定，請重新整理');

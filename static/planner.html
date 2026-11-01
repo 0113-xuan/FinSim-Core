@@ -15,6 +15,11 @@
     #planner-page .saved-list li { display:flex; align-items:center; gap:12px; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--line); }
     #planner-page .saved-list span { overflow-wrap:anywhere; }
     #planner-page .saved-list button { flex-shrink:0; padding:0 12px; }
+    #planner-page .saved-list li.vehicle-event { display:block; }
+    #planner-page .event-row { display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
+    #planner-page .event-row span { flex:1; min-width:160px; }
+    #planner-page .vehicle-analysis { margin-top:12px; overflow-wrap:anywhere; }
+    #planner-page .vehicle-analysis:empty { display:none; }
     #planner-page [role="alert"] { color:var(--danger); border:1px solid var(--danger); padding:12px; border-radius:8px; overflow-wrap:anywhere; }
     #planner-page .metric-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
     #planner-page .metric-grid strong { overflow-wrap:anywhere; }
@@ -79,12 +84,24 @@
       <ul id="eventList" class="saved-list"></ul>
       <form id="eventForm"><fieldset id="eventFields" disabled><div class="grid two">
         <label>事件名稱<input name="name" maxlength="80" required></label>
-        <label>事件類型<select name="type"><option value="one_time">一次性收支</option><option value="range">期間每月收支</option><option value="salary_change">換工作／調整月薪</option></select></label>
+        <label>事件類型<select name="type"><option value="one_time">一次性收支</option><option value="range">期間每月收支</option><option value="salary_change">換工作／調整月薪</option><option value="vehicle_purchase">購車</option></select></label>
         <label>開始月份<input name="start_period" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
         <label data-event-field="end_period" hidden>結束月份（留空至模擬結束）<input name="end_period" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" disabled></label>
         <label data-event-field="amount">一次性金額（支出為負）<input name="amount" type="number" min="-20000000" max="20000000" step="0.01" required></label>
         <label data-event-field="monthly_amount" hidden>每月金額（支出為負）<input name="monthly_amount" type="number" min="-10000000" max="10000000" step="0.01" required disabled></label>
         <label data-event-field="new_salary" hidden>新實領月薪<input name="new_salary" type="number" min="0" max="50000000" step="0.01" required disabled></label>
+        <label data-vehicle-field hidden>車款<select name="vehicle_catalog_id" disabled><option value="">自訂車款</option></select></label>
+        <label data-vehicle-field hidden>車價<input name="purchase_price" type="number" min="0.01" max="20000000" step="0.01" required disabled></label>
+        <label data-vehicle-field hidden>付款方式<select name="payment_method" disabled><option value="cash">現金</option><option value="financed">貸款</option></select></label>
+        <label data-vehicle-field="financed" hidden>頭期款<input name="down_payment" type="number" min="0" max="20000000" step="0.01" required disabled></label>
+        <label data-vehicle-field="financed" hidden>貸款期數（月）<input name="loan_term_months" type="number" min="1" max="600" step="1" required disabled></label>
+        <label data-vehicle-field="financed" hidden>年利率（%）<input name="annual_interest_rate" type="number" min="0" max="100" step="any" required disabled></label>
+        <label data-vehicle-field hidden>保險（年，選填）<input name="annual_insurance" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
+        <label data-vehicle-field hidden>稅費（年，選填）<input name="annual_tax" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
+        <label data-vehicle-field hidden>保養（年，選填）<input name="annual_maintenance_budget" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
+        <label data-vehicle-field hidden>油電（月，選填）<input name="monthly_fuel_or_energy" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
+        <label data-vehicle-field hidden>停車（月，選填）<input name="monthly_parking" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
+        <p id="vehicleMetadataStatus" data-vehicle-field hidden role="status"></p>
       </div><div class="button-row"><button type="submit">新增事件</button></div></fieldset></form>
     </section>
     <section class="panel" aria-labelledby="simulationHeading">
@@ -114,6 +131,9 @@
         </div>
         <p id="shortfallDefinition"></p><p id="samplingNote"></p>
         <ul id="dataSources" aria-label="資料來源"></ul>
+        <section id="vehicleResults" hidden aria-labelledby="vehicleResultsHeading">
+          <h3 id="vehicleResultsHeading">購車</h3><div id="vehicleSummaries"></div><p id="vehicleCostNote"></p>
+        </section>
       </div>
     </section>
   </div>

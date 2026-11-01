@@ -68,6 +68,5 @@ test('the independent page pins supabase-js and exposes only supported event ent
   for(const id of ['endingInvestment','netWorthP5','netWorthP50','netWorthP95','realNetWorthP50','samplingNote','dataSources'])
     assert.match(html,new RegExp(`id="${id}"`));
   const eventForm=html.slice(html.indexOf('id="eventForm"'),html.indexOf('</form>',html.indexOf('id="eventForm"')));
-  assert.doesNotMatch(eventForm,/vehicle_purchase/);
-  for(const type of ['one_time','range','salary_change']) assert.match(eventForm,new RegExp(`value="${type}"`));
+  for(const type of ['one_time','range','salary_change','vehicle_purchase']) assert.match(eventForm,new RegExp(`value="${type}"`));
 });

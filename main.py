@@ -14,6 +14,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.exceptions import RequestValidationError
 
 from app.config import settings
+from app.planner_api import router as planner_router
 from app.request_validation import FiniteJSONRoute, safe_validation_error
 from app.decision_schemas import VehicleDecisionRequest, VehicleComparisonRequest, VehicleWhatIfRequest
 from app.decision_assumptions import registry
@@ -96,6 +97,7 @@ app = FastAPI(
 )
 app.router.route_class = FiniteJSONRoute
 app.add_exception_handler(RequestValidationError, safe_validation_error)
+app.include_router(planner_router)
 
 app.add_middleware(
     CORSMiddleware,
