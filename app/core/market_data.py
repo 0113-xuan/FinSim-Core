@@ -34,7 +34,7 @@ SOURCES = (
         'name': '發行量加權股價報酬指數（含股利再投入，月底收盤）',
         'publisher': '臺灣證券交易所',
         'url': 'https://www.twse.com.tw/rwd/zh/TAIEX/MFI94U',
-        'downloaded': '2026-10-31',
+        'downloaded': '2026-11-01',
         'file': TOTAL_RETURN_FILE,
         'column': 'close',
     },

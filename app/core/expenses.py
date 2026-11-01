@@ -71,7 +71,8 @@ def get_expense_categories(profile: Dict[str, Any]) -> List[Dict[str, Any]]:
     if mode == ExpenseMode.advanced.value and categories:
         return [item for item in categories if item.get("enabled", True)]
     total = model.get("total_variable_expense", profile.get("variable_expense", 0))
-    # Quick categories follow the general price level; advanced ones keep their own rates.
+    # Standalone expense calculations retain category rates. The simulation engine
+    # supplies one price multiplier for all categories, including advanced mode.
     return [{**item, "annual_inflation_rate": profile.get("inflation_rate", 0.02), "follows_price_level": True}
             for item in split_quick_variable_expense(float(total or 0))]
 
@@ -96,7 +97,7 @@ def calculate_variable_expenses(
     for category in categories:
         baseline = float(category.get("baseline", 0) or 0)
         seasonal_factor = float(category.get("seasonal_factors", [1.0] * 12)[month_index])
-        if price_multiplier is not None and category.get("follows_price_level"):
+        if price_multiplier is not None:
             inflation_growth = price_multiplier
         else:
             inflation_growth = inflation_factor(month, float(category.get("annual_inflation_rate", profile.get("inflation_rate", 0.02))))

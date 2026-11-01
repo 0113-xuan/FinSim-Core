@@ -45,7 +45,8 @@ def _sampling_metadata(profile: Dict[str, Any], random_shocks: List[Dict[str, An
     else:
         fixed_parameters.append('inflation_rate')
         notes = [f"通膨率固定使用使用者提供的 {float(profile['inflation_rate']) * 100:g}%，未抽樣；"
-                 f'台股報酬取自 {span}的歷史月資料，以連續 {BLOCK_MONTHS} 個月為一個區塊抽樣。']
+                 f'台股報酬取自 {span}的歷史月資料，以連續 {BLOCK_MONTHS} 個月為一個區塊抽樣。'
+                 '歷史通膨與報酬按同一個月份成對選取，但通膨以使用者的固定值取代。']
     if profile.get('raise_rate') is None:
         if 'inflation_rate' in sampled_parameters:
             sampled_parameters.append('raise_rate')
@@ -55,9 +56,12 @@ def _sampling_metadata(profile: Dict[str, Any], random_shocks: List[Dict[str, An
     else:
         fixed_parameters.append('raise_rate')
         notes.append(f"調薪率固定使用使用者提供的 {float(profile['raise_rate']) * 100:g}%。")
+    # Return paths are drawn in every trial, even when the investment account is zero.
+    sampled_parameters.append('investment_return')
     if _has_investment(profile):
-        sampled_parameters.append('investment_return')
         notes.append('投資市值依抽樣的台股報酬指數（含股利再投入）變動，現金不足時也不會自動賣出。')
+    else:
+        notes.append('未設定投資市值或每月投入，抽樣報酬不影響帳戶金額。')
     notes.append('預期年報酬率（expected_annual_return）只用於確定性模擬，不影響 Monte Carlo。')
 
     # Advanced expense volatility remains a random source even with fixed rates.
@@ -66,7 +70,9 @@ def _sampling_metadata(profile: Dict[str, Any], random_shocks: List[Dict[str, An
         sampled_parameters.append('variable_expense')
         notes.append('變動支出依已啟用分類的月波動率抽樣。')
     notes.append(PAST_PERFORMANCE_WARNING)
-    if not sampled_parameters and not any(shock.get('enabled', True) for shock in random_shocks):
+    if (profile.get('inflation_rate') is not None and not _has_investment(profile)
+            and 'variable_expense' not in sampled_parameters
+            and not any(shock.get('enabled', True) for shock in random_shocks)):
         notes.append('本次結果沒有隨機變動，分位數會相同。')
     return {
         'sampled_parameters': sampled_parameters,

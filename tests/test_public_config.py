@@ -38,6 +38,9 @@ def test_in_memory_auth_routes_are_removed(method, path):
 @pytest.mark.parametrize('bom', [b'\xef\xbb\xbf', b''])
 def test_env_file_is_read_with_or_without_bom(tmp_path, monkeypatch, bom):
     from app.config import load_env_file
+    # Permit only this synthetic fixture when the test process disables reading
+    # the workspace's real configuration file.
+    monkeypatch.delenv('PYTHON_DOTENV_DISABLED', raising=False)
     env = tmp_path / '.env'
     env.write_bytes(bom + 'FINSIM_BOM_TEST_KEY=placeholder\nFINSIM_BOM_TEST_OTHER=二\n'.encode('utf-8'))
     for name in ('FINSIM_BOM_TEST_KEY', 'FINSIM_BOM_TEST_OTHER'):

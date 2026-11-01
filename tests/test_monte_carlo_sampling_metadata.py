@@ -15,7 +15,8 @@ PAIRED = (f'通膨率與台股報酬取自 {HISTORY}的台灣歷史月資料，�
 
 
 def fixed(rate):
-    return f'通膨率固定使用使用者提供的 {rate}，未抽樣；台股報酬取自 {HISTORY}的歷史月資料，以連續 12 個月為一個區塊抽樣。'
+    return (f'通膨率固定使用使用者提供的 {rate}，未抽樣；台股報酬取自 {HISTORY}的歷史月資料，以連續 12 個月為一個區塊抽樣。'
+            '歷史通膨與報酬按同一個月份成對選取，但通膨以使用者的固定值取代。')
 
 
 TAIL = '預期年報酬率（expected_annual_return）只用於確定性模擬，不影響 Monte Carlo。歷史期間台股表現特別好，過去報酬不代表未來。'
@@ -40,7 +41,10 @@ def test_sampling_metadata_matches_effective_api_inputs(rates, shocks, parameter
     })
     assert response.status_code == 200
     result = response.json()
-    assert result['sampled_parameters'] == parameters
+    expected_parameters = parameters if 'investment_return' in parameters else parameters + ['investment_return']
+    assert result['sampled_parameters'] == expected_parameters
+    if not rates.get('investment_value'):
+        note = note.replace(TAIL, '未設定投資市值或每月投入，抽樣報酬不影響帳戶金額。' + TAIL)
     assert result['sampling_note'] == note
     assert result['sampling_method']['block_months'] == 12
     if NO_RANDOMNESS in note:
@@ -59,7 +63,7 @@ def test_advanced_expense_volatility_is_not_described_as_deterministic():
         ],
     }}
     result = run_monte_carlo(profile, months=24, simulations=20, seed=42)
-    assert result['sampled_parameters'] == ['variable_expense']
+    assert result['sampled_parameters'] == ['investment_return', 'variable_expense']
     assert '變動支出依已啟用分類的月波動率抽樣。' in result['sampling_note']
     assert NO_RANDOMNESS not in result['sampling_note']
     assert result['percentiles']['p95'] > result['percentiles']['p5']

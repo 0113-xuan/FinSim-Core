@@ -53,7 +53,7 @@ def test_monte_carlo_respects_explicit_rates_and_links_omitted_salary(rates):
     else:
         assert '未抽樣' in result['sampling_note']
         expected_parameters = []
-    assert result['sampled_parameters'] == expected_parameters
+    assert result['sampled_parameters'] == expected_parameters + ['investment_return']
     for path in result['debug_paths']:
         row = path['simulation_curve'][12]
         income = row['income']

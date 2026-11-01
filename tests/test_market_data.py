@@ -73,11 +73,12 @@ def _load_script(name):
 
 
 def test_cpi_build_reads_only_monthly_headline_rows(tmp_path):
+    # Synthetic levels exercise the export format; these are not historical observations.
     raw = tmp_path / 'cpi.csv'
     raw.write_text('﻿,"消費者物價基本分類指數",\n,,"指數基期：民國110年=100"\n'
-                   '"統計期","總指數","一.食物類"\n"92年",81.53,62.69\n"92年1月",82.31,63.56\n'
-                   '"92年2月",81.17,62.03\n\n\n"註解："\n"最近3個月資料均可能修正。"\n', encoding='utf-8')
-    assert _load_script('build_cpi').parse_cpi(raw) == [('2003-01', '82.31'), ('2003-02', '81.17')]
+                   '"統計期","總指數","一.食物類"\n"92年",100,50\n"92年1月",101,51\n'
+                   '"92年2月",99,49\n\n\n"註解："\n"最近3個月資料均可能修正。"\n', encoding='utf-8')
+    assert _load_script('build_cpi').parse_cpi(raw) == [('2003-01', '101'), ('2003-02', '99')]
 
 
 def test_cpi_csv_matches_raw_export():
@@ -89,6 +90,6 @@ def test_cpi_csv_matches_raw_export():
 def test_total_return_csv_matches_cached_last_trading_day():
     module = _load_script('fetch_twse_total_return')
     built = read_monthly_series(MARKET_DIR / 'twse_total_return_monthly.csv', 'close')
-    for period in ('2003-01', '2015-06', '2026-09'):
+    for period in built:
         payload = json.loads((MARKET_DIR / 'raw' / 'twse_total_return' / f'{period}.json').read_text(encoding='utf-8-sig'))
         assert float(module.month_close(payload, period)) == built[period]

@@ -152,6 +152,7 @@ class ProfileInput(BaseModel):
     raise_rate: Optional[float] = Field(default=None, ge=-0.5, le=1)
     # None: deterministic runs use the historical CPI average; Monte Carlo samples history.
     inflation_rate: Optional[float] = Field(default=None, ge=-0.5, le=1)
+    fixed_expense_inflates: bool = False
     investment_value: float = Field(default=0, ge=0, le=5_000_000_000)
     monthly_investment: float = Field(default=0, ge=0, le=20_000_000)
     # Deterministic runs only; None uses the historical total-return average.

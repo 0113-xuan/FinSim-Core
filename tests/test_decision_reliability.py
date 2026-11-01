@@ -39,12 +39,12 @@ def test_zero_expense_multipliers():
     assert result['simulation_curve'][0]['expense'] == 0
 
 
-def test_nominal_fixed_and_explicit_category_override():
+def test_nominal_fixed_and_categories_follow_simulation_price_level():
     profile = {**PROFILE, 'variable_expense_model': {'mode': 'advanced', 'categories': [
         dict(category='food', baseline=10000, annual_inflation_rate=0)]}}
     result = simulate_finance(profile, override_inflation_rate=.05)
     assert result['simulation_curve'][-1]['fixed_expense'] == 15000
-    assert result['simulation_curve'][-1]['variable_expense'] == 10000
+    assert result['simulation_curve'][-1]['variable_expense'] == round(10000 * 1.05 ** 4, 2)
 
 
 def test_summary_uses_debt_inclusive_coverage():

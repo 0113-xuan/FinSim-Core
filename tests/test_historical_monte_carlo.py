@@ -125,11 +125,28 @@ def test_deterministic_cash_matches_historical_inflation_hand_calculation():
     assert result['summary']['final_balance'] == round(expected, 2)
     assert result['summary']['final_net_worth'] == result['summary']['final_balance']
     assert result['summary']['final_investment_value'] == 0
-    # The API profile has no fixed_expense_inflates field, so only salary follows inflation there.
-    api_profile = {key: value for key, value in profile.items() if key != 'fixed_expense_inflates'}
-    response = TestClient(app).post('/simulate', json={'profile': api_profile, 'months': 24})
-    api_expected = 100000 + 12 * 30000 + 12 * (round(50000 * (1 + rate), 2) - 20000)
-    assert response.json()['result']['summary']['final_balance'] == round(api_expected, 2)
+    response = TestClient(app).post('/simulate', json={'profile': profile, 'months': 24})
+    assert response.status_code == 200
+    assert response.json()['result']['summary']['final_balance'] == round(expected, 2)
+
+
+def test_advanced_categories_follow_the_same_annual_step_prices():
+    profile = {**PROFILE, 'variable_expense_model': {'mode': 'advanced', 'categories': [
+        dict(category='food', baseline=10000, annual_inflation_rate=0, monthly_volatility=0)]}}
+    inflation = [0.01] * 12 + [-0.005] * 12 + [0] * 12
+    sampled = simulate_finance(profile, months=25, inflation_path=inflation)['simulation_curve']
+    assert sampled[11]['variable_expense'] == 10000
+    assert sampled[12]['variable_expense'] == round(10000 * 1.01 ** 12, 2)
+    assert sampled[24]['variable_expense'] == round(10000 * 1.01 ** 12 * .995 ** 12, 2)
+    fixed = simulate_finance({**profile, 'inflation_rate': .04}, months=13)['simulation_curve']
+    assert fixed[12]['variable_expense'] == 10400
+
+
+def test_expected_annual_return_does_not_change_monte_carlo():
+    profile = {**PROFILE, 'investment_value': 100000}
+    low = run_monte_carlo({**profile, 'expected_annual_return': -.4}, months=24, simulations=10, seed=3)
+    high = run_monte_carlo({**profile, 'expected_annual_return': .8}, months=24, simulations=10, seed=3)
+    assert low == high
 
 
 def test_monte_carlo_response_reports_net_worth_and_sources():
