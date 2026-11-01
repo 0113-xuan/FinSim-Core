@@ -23,6 +23,7 @@ class PlannerVehicleDetails(PlannerModel):
     annual_maintenance_budget: float | None = Field(default=None, ge=0, le=20_000_000)
     monthly_fuel_or_energy: float | None = Field(default=None, ge=0, le=10_000_000)
     monthly_parking: float | None = Field(default=None, ge=0, le=10_000_000)
+    annual_depreciation_rate: float | None = Field(default=None, ge=0, le=1)
 
     @model_validator(mode='after')
     def validate_purchase(self):

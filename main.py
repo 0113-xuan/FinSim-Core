@@ -317,6 +317,7 @@ def simulate_api(req: SimulationRequest) -> Dict[str, Any]:
         random_shocks=data.get("random_shocks", []),
         seed=data.get("seed"),
         include_details=True,
+        assets=data.get("assets", []),
     )
     result = simulate_finance(
         profile=data["profile"],
@@ -326,6 +327,7 @@ def simulate_api(req: SimulationRequest) -> Dict[str, Any]:
         random_shocks=data.get("random_shocks", []),
         seed=data.get("seed"),
         include_details=True,
+        assets=data.get("assets", []),
     )
     result["transparency"] = build_simulation_transparency(
         profile=data["profile"],
@@ -357,6 +359,7 @@ def monte_carlo_api(req: MonteCarloRequest) -> Dict[str, Any]:
         seed=data.get("seed"),
         sample_paths=data.get("sample_paths", 8),
         include_details=data.get("include_details", False),
+        assets=data.get("assets", []),
     )
 
 

@@ -144,6 +144,19 @@ class RandomShockInput(BaseModel):
         return self
 
 
+class ExistingDebtInput(BaseModel):
+    name: str = Field(..., min_length=1, max_length=80)
+    monthly_payment: float = Field(..., ge=0, le=20_000_000)
+    remaining_months: int = Field(..., ge=0, le=1200)
+
+
+class AssetInput(BaseModel):
+    name: str = Field(..., min_length=1, max_length=80)
+    start_month: int = Field(..., gt=0, le=MAX_MONTHS)
+    value: float = Field(..., gt=0, le=5_000_000_000)
+    annual_depreciation_rate: float = Field(..., ge=0, le=1)
+
+
 class ProfileInput(BaseModel):
     salary: float = Field(..., ge=0, le=50_000_000)
     fixed_expense: float = Field(..., ge=0, le=20_000_000)
@@ -159,6 +172,8 @@ class ProfileInput(BaseModel):
     expected_annual_return: Optional[float] = Field(default=None, ge=-0.5, le=1)
     target_emergency_months: float = Field(default=3, gt=0, le=36)
     variable_expense_model: Optional[VariableExpenseModel] = None
+    # Payments are deducted monthly; what is still owed counts against net worth.
+    existing_debts: Optional[List[ExistingDebtInput]] = Field(default=None, max_length=50)
 
     @model_validator(mode="after")
     def ensure_legacy_variable_expense(self) -> "ProfileInput":
@@ -177,6 +192,7 @@ class SimulationRequest(BaseModel):
     months: int = Field(default=60, gt=0, le=MAX_MONTHS)
     events: List[EventInput] = Field(default_factory=list)
     loans: List[LoanInput] = Field(default_factory=list)
+    assets: List[AssetInput] = Field(default_factory=list, max_length=30)
     random_shocks: List[RandomShockInput] = Field(default_factory=list)
     seed: Optional[int] = Field(default=None, ge=0)
     include_details: bool = False

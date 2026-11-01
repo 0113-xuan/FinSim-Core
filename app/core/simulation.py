@@ -11,6 +11,7 @@ from app.core.events import (
     get_one_time_asset_impact,
     get_recurring_event_amount,
 )
+from app.core.balance_sheet import asset_value, existing_debt_balance, loan_balance
 from app.core.expenses import calculate_variable_expenses
 from app.core.market_data import load_market_history
 from app.core.shocks import generate_shocks_for_month
@@ -56,6 +57,9 @@ def summarize_simulation(simulation_curve: List[Dict[str, Any]], profile: Dict[s
             "emergency_fund_coverage": 0.0,
             "debt_to_income": 0.0,
             "final_investment_value": 0.0,
+            "final_asset_value": 0.0,
+            "final_loan_balance": 0.0,
+            "final_existing_debt_balance": 0.0,
             "final_net_worth": 0.0,
         }
 
@@ -77,6 +81,9 @@ def summarize_simulation(simulation_curve: List[Dict[str, Any]], profile: Dict[s
         "debt_to_income": simulation_curve[-1]["debt_to_income"],
         "target_emergency_months": profile.get("target_emergency_months", 3),
         "final_investment_value": round(final.get("investment_value", 0.0), 2),
+        "final_asset_value": round(final.get("asset_value", 0.0), 2),
+        "final_loan_balance": round(final.get("loan_balance", 0.0), 2),
+        "final_existing_debt_balance": round(final.get("existing_debt_balance", 0.0), 2),
         "final_net_worth": round(final.get("net_worth", final_balance), 2),
     }
 
@@ -94,8 +101,12 @@ def simulate_finance(
     round_output: bool = True,
     inflation_path: Optional[Sequence[float]] = None,
     return_path: Optional[Sequence[float]] = None,
+    assets: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
-    """Monthly cash and investment simulation.
+    """Monthly cash, investment and net worth simulation.
+
+    Net worth = cash + investments + depreciating ``assets`` − remaining loan
+    principal − undiscounted payments left on ``existing_debts``.
 
     Without paths, inflation and investment returns are constant: the user's
     ``inflation_rate`` / ``expected_annual_return`` or the historical annual
@@ -113,6 +124,7 @@ def simulate_finance(
                       if event.get('variable_expense_multiplier', 1) != 1
                       or event.get('category_monthly_adjustment', 0)]
     loans = loans or []
+    assets = assets or []
     random_shocks = random_shocks or []
     rng = random.Random(seed)
 
@@ -189,6 +201,10 @@ def simulate_finance(
         balance += net_cashflow
         if balance < 0 and first_negative_cash_month is None:
             first_negative_cash_month = month
+        owned_assets = sum(asset_value(asset, month) for asset in assets)
+        owed_loans = sum(loan_balance(loan, month, rounded=round_output) for loan in loans)
+        owed_debts = existing_debt_balance(existing_debts, month)
+        net_worth = balance + investment + owned_assets - owed_loans - owed_debts
 
         row = {
             "month": month,
@@ -204,14 +220,18 @@ def simulate_finance(
             "net_cashflow": round(net_cashflow, 2),
             "balance": round(balance, 2),
             "investment_value": round(investment, 2),
-            "net_worth": round(balance + investment, 2),
+            "asset_value": round(owned_assets, 2),
+            "loan_balance": round(owed_loans, 2),
+            "existing_debt_balance": round(owed_debts, 2),
+            "net_worth": round(net_worth, 2),
             "debt_to_income": debt_to_income_for_month(month, income, loans),
         }
         if not round_output:
             # Constraint searches must evaluate calculated values before display rounding.
             row.update(income=income, fixed_expense=fixed_expense, debt_payment=debt_payment,
                        living_expense=living_expense, net_cashflow=net_cashflow, balance=balance,
-                       investment_value=investment, net_worth=balance + investment)
+                       investment_value=investment, asset_value=owned_assets, loan_balance=owed_loans,
+                       existing_debt_balance=owed_debts, net_worth=net_worth)
         if include_details:
             row["expense_categories"] = variable_result["categories"]
         curve.append(row)

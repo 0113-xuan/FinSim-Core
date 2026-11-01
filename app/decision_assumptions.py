@@ -13,6 +13,9 @@ ASSUMPTIONS = {
     "minimum_cash_balance": dict(value=0, unit="TWD", description="最低現金要求"),
     "minimum_monthly_surplus": dict(value=5000, unit="TWD/month", description="購車後最低每月結餘要求"),
 }
+# Planner-only; kept out of ASSUMPTIONS so vehicle decision responses stay unchanged.
+VEHICLE_DEPRECIATION = dict(key="annual_depreciation_rate", value=.15, unit="annual_rate",
+                            description="車輛每年價值減少比例，規劃假設，非成交資料")
 STRESS_DEFAULTS = dict(income_multiplier=.9, unemployment_months=3, emergency_expense=100000, rate_increase=.02)
 
 

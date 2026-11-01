@@ -34,7 +34,7 @@ def _has_investment(profile: Dict[str, Any]) -> bool:
 
 
 def _sampling_metadata(profile: Dict[str, Any], random_shocks: List[Dict[str, Any]],
-                       history: MarketHistory) -> Dict[str, Any]:
+                       history: MarketHistory, assets: List[Dict[str, Any]]) -> Dict[str, Any]:
     sampled_parameters = []
     fixed_parameters = []
     span = f'{history.start_period} 至 {history.end_period} 共 {len(history.periods)} 個月'
@@ -74,6 +74,8 @@ def _sampling_metadata(profile: Dict[str, Any], random_shocks: List[Dict[str, An
            for category in get_expense_categories(profile)):
         sampled_parameters.append('variable_expense')
         notes.append('變動支出依已啟用分類的月波動率抽樣。')
+    if assets:
+        notes.append('車輛估值依固定折舊率計算，不抽樣。')
     notes.append(PAST_PERFORMANCE_WARNING)
     if (profile.get('inflation_rate') is not None and not _has_investment(profile)
             and 'variable_expense' not in sampled_parameters
@@ -104,6 +106,7 @@ def run_monte_carlo(
     seed: Optional[int] = None,
     sample_paths: int = 8,
     include_details: bool = False,
+    assets: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
     if months <= 0:
         raise ValueError("months must be > 0")
@@ -141,6 +144,7 @@ def run_monte_carlo(
             include_details=include_details,
             inflation_path=inflation_path,
             return_path=return_path,
+            assets=assets,
         )
         summary = result["summary"]
         curve = result["simulation_curve"]
@@ -180,7 +184,7 @@ def run_monte_carlo(
         "real_net_worth_definition": "期末淨資產（現金加投資）除以該次試驗的累積物價倍數，以今日購買力表示",
         "probability_cash_shortfall": round(shortfall_probability, 4),
         "cash_shortfall_definition": "模擬期間任一月底現金小於 0 的試驗比例",
-        **_sampling_metadata(profile, random_shocks, history),
+        **_sampling_metadata(profile, random_shocks, history, assets or []),
         "data_sources": [dict(source) for source in history.data_sources],
         "expected_emergency_fund_shortfall": round(statistics.fmean(emergency_shortfalls), 2),
         "sample_paths": paths,

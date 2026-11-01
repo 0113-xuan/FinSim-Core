@@ -13,6 +13,8 @@ from app.services.vehicle_event_costs import inflate_vehicle_events
 from app.vehicle_catalog import get_vehicle
 
 
+NON_CASH_ROW_FIELDS = ('debt_to_income', 'investment_value', 'asset_value', 'loan_balance',
+                       'existing_debt_balance', 'net_worth')
 OWNERSHIP = ("annual_insurance", "annual_tax", "annual_maintenance_budget", "monthly_fuel_or_energy", "monthly_parking", "monthly_transportation_offset")
 
 
@@ -80,7 +82,7 @@ def run_timeline(req, *, baseline=False, stress=None, round_output=True):
                               loans=[x.model_dump() for x in build.loans] if build else [],
                               seed=0, round_output=round_output)
     # Vehicle profiles have no investment account; keep the timeline cash-only.
-    rows = [{key: value for key, value in row.items() if key not in ('debt_to_income', 'investment_value', 'net_worth')}
+    rows = [{key: value for key, value in row.items() if key not in NON_CASH_ROW_FIELDS}
             for row in result['simulation_curve']]
     period = YearMonth.parse(req.start_period)
     for row in rows:

@@ -61,7 +61,9 @@ def test_ownership_defaults_are_from_the_registry_and_user_zero_is_preserved():
     response = CLIENT.post('/planner/vehicle-events', json=request({**DETAILS, 'monthly_parking': 0}))
     assert response.status_code == 200
     data = response.json()
-    assert data['vehicles'][0]['defaults_used'] == [field for field in OWNERSHIP_FIELDS if field != 'monthly_parking']
+    # The planner-only depreciation default is listed after the ownership defaults.
+    assert data['vehicles'][0]['defaults_used'] == [field for field in OWNERSHIP_FIELDS if field != 'monthly_parking'] + [
+        'annual_depreciation_rate']
     for field in OWNERSHIP_FIELDS:
         event = next(event for event in data['events'] if event['name'] == field)
         expected = 0 if field == 'monthly_parking' else ASSUMPTIONS[field]['value'] / (12 if field.startswith('annual_') else 1)
