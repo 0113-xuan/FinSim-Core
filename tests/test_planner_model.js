@@ -52,13 +52,16 @@ test('warns on early, late, clipped and unsupported events',()=>{
   for(const [index,reason] of ['早於模擬起始月','晚於模擬期間','截斷','不支援的事件類型'].entries()) assert.match(warnings[index],new RegExp(reason));
   assert.equal(request.events.at(-1).end_month,12);
 });
-test('debt cash outflows expire, zero remaining terms are skipped and long terms are clipped',()=>{
+test('debts are sent as liabilities, zero remaining terms are skipped and long terms are kept whole',()=>{
   const {request,warnings}=build({months:60,profile:{...profile,monthly_investment:0},debts:[
-    {name:'已還清',monthly_payment:1000,remaining_months:0},{name:'短貸',monthly_payment:'2000',remaining_months:5},
+    {name:'已還清',monthly_payment:1000,remaining_months:0},{name:'短貸',monthly_payment:'2000',remaining_months:5,id:'not-for-api'},
     {name:'長貸',monthly_payment:3000,remaining_months:100}]});
-  assert.deepEqual(request.events,[{type:'range',name:'短貸',start_month:1,end_month:5,monthly_amount:-2000},
-    {type:'range',name:'長貸',start_month:1,end_month:60,monthly_amount:-3000}]);
-  assert.equal(warnings.length,2);
+  assert.deepEqual(request.events,[]);
+  // Terms beyond the horizon stay whole so the payments still owed count against ending net worth.
+  assert.deepEqual(request.profile.existing_debts,[{name:'短貸',monthly_payment:2000,remaining_months:5},
+    {name:'長貸',monthly_payment:3000,remaining_months:100}]);
+  assert.deepEqual(warnings,['略過「已還清」：貸款剩餘期數為 0。']);
+  assert.ok(!Object.hasOwn(build({debts:[]}).request.profile,'existing_debts'));
 });
 test('invalid periods and reversed event ranges are reported without mutating input',()=>{
   const input={profile,debts:[],events:[{type:'range',name:'反向',start_period:'2027-01',end_period:'2026-12',monthly_amount:-1},
@@ -100,6 +103,9 @@ test('vehicle details omit blank optional costs, keep explicit zero and convert 
   assert.deepEqual(M.vehicleDetails({purchase_price:'100000',payment_method:'cash',down_payment:'30000',
     loan_term_months:'60',annual_interest_rate:'2.5'}),{purchase_price:100000,payment_method:'cash'});
   assert.throws(()=>M.vehicleDetails({purchase_price:100000,payment_method:'financed'}),/頭期款/);
+  assert.equal(M.vehicleDetails({purchase_price:'100000',payment_method:'cash',annual_depreciation_rate:'12.5'}).annual_depreciation_rate,.125);
+  assert.ok(!Object.hasOwn(M.vehicleDetails({purchase_price:'100000',payment_method:'cash',annual_depreciation_rate:''}),'annual_depreciation_rate'));
+  assert.throws(()=>M.vehicleDetails({purchase_price:'100000',payment_method:'cash',annual_depreciation_rate:'120'}),/折舊率/);
 });
 
 test('vehicle analysis uses saved cash finances and existing debts, excluding investments and other events',()=>{
@@ -107,7 +113,9 @@ test('vehicle analysis uses saved cash finances and existing debts, excluding in
     payment_method:'financed',down_payment:300000,loan_term_months:60,annual_interest_rate:.025,
     monthly_parking:0,vehicle_catalog_id:'toyota-cross-hybrid-luxury'}};
   const debts=[{name:'學貸',monthly_payment:3000,remaining_months:24,id:'not-for-api'}];
-  const request=M.buildVehicleDecisionRequest({profile,debts,event,startPeriod:'2026-11'});
+  const request=M.buildVehicleDecisionRequest({profile,debts,event:{...event,details:{...event.details,annual_depreciation_rate:.2}},startPeriod:'2026-11'});
+  // The vehicle API is strict and has no depreciation input.
+  assert.ok(!Object.hasOwn(request.scenario.payload,'annual_depreciation_rate'));
   assert.deepEqual(request.profile,{salary:60000,fixed_expense:20000,variable_expense:10000,
     balance:900000,required_monthly_debt:0,existing_debts:[{name:'學貸',monthly_payment:3000,remaining_months:24}]});
   assert.equal(request.scenario.horizon_months,60);

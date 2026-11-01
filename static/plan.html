@@ -32,10 +32,11 @@
         <label data-vehicle-field hidden>保養（年，選填）<input name="annual_maintenance_budget" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
         <label data-vehicle-field hidden>油電（月，選填）<input name="monthly_fuel_or_energy" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
         <label data-vehicle-field hidden>停車（月，選填）<input name="monthly_parking" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
+        <label data-vehicle-field hidden>折舊率（%／年，選填）<input name="annual_depreciation_rate" type="number" min="0" max="100" step="any" placeholder="留空使用預設 15%" disabled></label>
         <p id="vehicleMetadataStatus" data-vehicle-field hidden role="status"></p>
       </div><div class="button-row"><button type="submit">新增事件</button><button id="cancelEdit" type="button" hidden>取消修改</button></div></fieldset></form></section>
 <section class="panel" aria-labelledby="simulationHeading"><h2 id="simulationHeading">模擬結果</h2>
-<p>每月投資金額從現金轉入投資帳戶，投資市值依台股報酬指數變動，現金不足時也不會自動賣出。淨資產＝現金＋投資市值。</p>
+<p>每月投資金額從現金轉入投資帳戶，投資市值依台股報酬指數變動，現金不足時也不會自動賣出。淨資產＝現金＋投資市值＋車輛估值－車貸剩餘本金－既有貸款剩餘應還。車輛估值依固定折舊率計算，不是成交價。</p>
 <form id="simulationForm"><fieldset><div class="field-grid"><label>模擬起始月份<input id="startPeriod" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
 <label>模擬期間<select id="simulationMonths"><option value="60">60 個月</option><option value="120">120 個月</option><option value="240">240 個月</option></select></label></div>
 <div class="actions"><button class="primary" type="submit">執行模擬</button></div></fieldset></form>
@@ -59,7 +60,7 @@
         <p id="shortfallDefinition"></p><p id="samplingNote"></p>
         <ul id="dataSources" aria-label="資料來源"></ul>
         <section id="vehicleResults" hidden aria-labelledby="vehicleResultsHeading">
-          <h3 id="vehicleResultsHeading">購車</h3><div id="vehicleSummaries"></div><p id="vehicleCostNote"></p>
+          <h3 id="vehicleResultsHeading">購車</h3><div id="vehicleSummaries"></div><p>一次支出、車貸與持有成本是現金負擔；經濟成本是價值減少與費用，不是另一筆現金支出。</p><p id="vehicleCostNote"></p>
         </section>
       </div>
 </section></div></div></div></main></body></html>

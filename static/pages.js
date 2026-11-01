@@ -92,7 +92,7 @@
         const response=await ctx.calculation(post=>post('/simulate',{...built.request,seed:42}));if(!ctx.alive)return;
         const result=response.result,frame=S.element('div',null,'chart-frame mini'),canvas=S.element('canvas');canvas.setAttribute('role','img');canvas.setAttribute('aria-label',`${plan.name}淨資產走勢`);frame.append(canvas);card.append(frame);
         const text=S.element('div',null,'chart-summary');text.id=`chart-${plan.id}`;card.append(text);
-        root.WalletCharts.draw(canvas,text,result.simulation_curve,built.startPeriod,events,ctx.profile,{mini:true});
+        root.WalletCharts.draw(canvas,text,result.simulation_curve,built.startPeriod,events,ctx.profile,{mini:true,debts:ctx.debts});
         card.append(S.element('p',`期末淨資產：${M.money(result.summary.final_net_worth)}`));
         card.append(S.element('p',`第一次現金小於 0：${result.summary.first_negative_cash_month==null?'未出現':root.PlannerModel.monthToPeriod(built.startPeriod,result.summary.first_negative_cash_month)}`));
         for(const warning of built.warnings)card.append(S.element('p',warning));

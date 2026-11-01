@@ -153,6 +153,7 @@
       converted=await ctx.calculation(post=>post('/planner/vehicle-events',{start_period:startPeriod,months,inflation_rate:built.request.profile.inflation_rate??null,vehicles:built.vehicles}));
       if(!ctx.alive)throw new Error('登入狀態已變更');
       built.request.events.push(...converted.events);built.request.loans=[...(built.request.loans||[]),...converted.loans];
+      built.request.assets=[...(built.request.assets||[]),...converted.assets];
     }
     return {...built,converted,startPeriod};
   }

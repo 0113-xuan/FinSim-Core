@@ -61,3 +61,10 @@ test('initial chart position is the previous month-end, not the first projected 
   assert.equal(data.summary.netWorth.minimumPeriod,'2026-12');
   assert.equal(M.chartData([],'2027-01').summary.cash,null);
 });
+
+test('initial chart net worth matches the dashboard and subtracts remaining debts',()=>{
+  const profile={cash_balance:900000,investment_value:500000},debts=[{monthly_payment:5000,remaining_months:24}];
+  const data=M.chartData([{month:1,balance:910000,net_worth:1300000}],'2026-11',[],profile,debts);
+  assert.equal(data.netWorth[0],M.financialSummary(profile,debts).netWorth);
+  assert.equal(data.netWorth[0],1280000);
+});

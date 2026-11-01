@@ -1,8 +1,8 @@
 (function(root) {
   'use strict';
   const instances=new Map();
-  function draw(canvas,summaryTarget,curve,startPeriod,events,profile,{mini=false}={}) {
-    const m=root.ShellModel, data=m.chartData(curve,startPeriod,events,profile), target=summaryTarget;
+  function draw(canvas,summaryTarget,curve,startPeriod,events,profile,{mini=false,debts=[]}={}) {
+    const m=root.ShellModel, data=m.chartData(curve,startPeriod,events,profile,debts), target=summaryTarget;
     target.replaceChildren();
     for(const [key,label] of mini?[['netWorth','淨資產']]:[['cash','現金'],['netWorth','淨資產']]) {
       const s=data.summary[key];

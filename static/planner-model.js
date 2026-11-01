@@ -47,14 +47,16 @@
       request.profile.raise_rate = number(profile.raise_rate, '年調薪率');
     }
     const warnings = [], vehicles = [];
+    // Debts stay liabilities: payments are deducted monthly and what is still owed reduces net worth.
+    const existingDebts = [];
     for (const [index, debt] of debts.entries()) {
       const name = debt.name || `貸款 ${index + 1}`;
       const remaining = number(debt.remaining_months, `${name}剩餘期數`);
       if (!Number.isInteger(remaining) || remaining < 0) throw new Error(`${name}剩餘期數須為非負整數`);
       if (remaining === 0) { warnings.push(`略過「${name}」：貸款剩餘期數為 0。`); continue; }
-      if (remaining > months) warnings.push(`截斷「${name}」：還款期間超過模擬期間，計算至第 ${months} 個月。`);
-      request.events.push({type: 'range', name, start_month: 1, end_month: Math.min(remaining, months), monthly_amount: -number(debt.monthly_payment, `${name}每月還款`)});
+      existingDebts.push({name, monthly_payment: number(debt.monthly_payment, `${name}每月還款`), remaining_months: remaining});
     }
+    if (existingDebts.length) request.profile.existing_debts = existingDebts;
     for (const [index, event] of events.entries()) {
       const name = event.name || `事件 ${index + 1}`;
       if (!['one_time', 'range', 'salary_change', 'vehicle_purchase'].includes(event.type)) {
@@ -104,6 +106,10 @@
     for (const key of ownershipFields) {
       if (values[key] != null && String(values[key]).trim() !== '') details[key] = number(values[key], '持有成本');
     }
+    if (values.annual_depreciation_rate != null && String(values.annual_depreciation_rate).trim() !== '') {
+      details.annual_depreciation_rate = number(values.annual_depreciation_rate, '折舊率') / 100;
+      if (details.annual_depreciation_rate < 0 || details.annual_depreciation_rate > 1) throw new Error('折舊率須介於 0% 到 100%');
+    }
     return details;
   }
   function vehicleAnalysisReason(startPeriod, purchasePeriod) {
@@ -118,7 +124,7 @@
     if (reason) throw new Error(reason);
     const payload = {scenario_type:'vehicle_purchase'};
     for (const [key,value] of Object.entries(event.details || {})) {
-      if (key === 'vehicle_catalog_id' || value == null || value === '') continue;
+      if (['vehicle_catalog_id','annual_depreciation_rate'].includes(key) || value == null || value === '') continue;
       payload[key] = ['payment_method','loan_term_months'].includes(key) ? value : {value,source:'user_provided'};
     }
     const financial = {salary:number(profile.monthly_income,'每月實領收入'),

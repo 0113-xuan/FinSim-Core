@@ -34,14 +34,14 @@
     }
     return '不支援的事件類型';
   }
-  function chartData(curve,startPeriod,events=[],profile=null) {
+  function chartData(curve,startPeriod,events=[],profile=null,debts=[]) {
     const labels=curve.map(row=>planner.monthToPeriod(startPeriod,row.month));
     const cash=curve.map(row=>Number(row.balance)), netWorth=curve.map(row=>Number(row.net_worth));
     if(profile) {
       // The initial position is the preceding month-end; month 1 is the first projected month-end.
       const [year,month]=startPeriod.split('-').map(Number), previous=year*12+month-2;
       labels.unshift(`${String(Math.floor(previous/12)).padStart(4,'0')}-${String(previous%12+1).padStart(2,'0')}`);
-      cash.unshift(Number(profile.cash_balance)); netWorth.unshift(Number(profile.cash_balance)+Number(profile.investment_value));
+      cash.unshift(Number(profile.cash_balance)); netWorth.unshift(financialSummary(profile,debts).netWorth);
     }
     const markers=sortEvents(events).flatMap(event=>{
       const index=labels.indexOf(event.start_period);

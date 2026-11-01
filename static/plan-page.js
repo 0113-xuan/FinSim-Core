@@ -15,7 +15,7 @@
         const control = label.querySelector('input,select'); if (control) control.disabled = !visible;
       }
     }
-    const ownershipLabels = {annual_insurance:'保險',annual_tax:'稅費',annual_maintenance_budget:'保養',monthly_fuel_or_energy:'油電',monthly_parking:'停車'};
+    const ownershipLabels = {annual_insurance:'保險',annual_tax:'稅費',annual_maintenance_budget:'保養',monthly_fuel_or_energy:'油電',monthly_parking:'停車',annual_depreciation_rate:'折舊率'};
     let vehicleCatalog = [];
     async function loadVehicleMetadata() {
       try {
@@ -68,6 +68,8 @@
             paragraph(section, `${car.name}｜${model.monthToPeriod(startPeriod, car.purchase_month)}`);
             paragraph(section, `購車當月一次支出：${money(car.one_time_cash)}｜每月車貸：${money(car.monthly_loan_payment)}｜總利息：${money(car.total_loan_interest)}`);
             paragraph(section, `第一年每月持有成本：${money(car.first_year_monthly_ownership_cost)}`);
+            paragraph(section, `期末車輛估值：${money(car.ending_vehicle_value)}（年折舊 ${(car.annual_depreciation_rate * 100).toLocaleString('zh-TW')}%）`);
+            paragraph(section, `模擬期間經濟成本：${money(car.economic_cost_in_horizon)}＝折舊 ${money(car.depreciation_in_horizon)}＋車貸利息 ${money(car.interest_in_horizon)}＋持有成本 ${money(car.ownership_cost_in_horizon)}`);
             paragraph(section, `使用預設值：${car.defaults_used.map(key=>ownershipLabels[key] || key).join('、') || '無'}`);
             $('vehicleSummaries').append(section);
           }
@@ -118,7 +120,7 @@
       form.elements.vehicle_catalog_id.value='';
       form.elements.vehicle_catalog_id.dataset.pending=event.details?.vehicle_catalog_id||'';
       for(const[key,value]of Object.entries(event.details||{})){
-        const input=form.elements.namedItem(key);if(input)input.value=key==='annual_interest_rate'?Number(value)*100:value??'';
+        const input=form.elements.namedItem(key);if(input)input.value=['annual_interest_rate','annual_depreciation_rate'].includes(key)?Number(value)*100:value??'';
       }
       $('eventEditorHeading').textContent='修改事件';form.querySelector('[type="submit"]').textContent='儲存事件';$('cancelEdit').hidden=false;
       syncEventFields();$('eventEditorHeading').scrollIntoView({block:'start'});form.elements.name.focus();
@@ -188,7 +190,7 @@
         values.monthly_amount=numeric('monthly_amount');values.end_period=form.elements.end_period.value||null;
         if(values.end_period&&values.end_period<values.start_period)throw new Error('結束月份不可早於開始月份');
       }else{
-        const raw={};for(const key of ['vehicle_catalog_id','purchase_price','payment_method','down_payment','loan_term_months','annual_interest_rate',...model.ownershipFields])raw[key]=form.elements.namedItem(key).value;
+        const raw={};for(const key of ['vehicle_catalog_id','purchase_price','payment_method','down_payment','loan_term_months','annual_interest_rate','annual_depreciation_rate',...model.ownershipFields])raw[key]=form.elements.namedItem(key).value;
         raw.vehicle_catalog_id=form.elements.vehicle_catalog_id.dataset.pending??raw.vehicle_catalog_id;
         values.details=model.vehicleDetails(raw);
       }
@@ -204,7 +206,7 @@
       const [simulation,mc]=await ctx.calculation(post=>Promise.all([post('/simulate',{...built.request,seed:42}),post('/monte-carlo',{...built.request,simulations:300,seed:42})]));
       if(!ctx.alive)return;
       renderResults(simulation,mc,built.converted,startPeriod);
-      root.WalletCharts.draw($('planChart'),$('planChartSummary'),simulation.result.simulation_curve,startPeriod,events,ctx.profile);
+      root.WalletCharts.draw($('planChart'),$('planChartSummary'),simulation.result.simulation_curve,startPeriod,events,ctx.profile,{debts:ctx.debts});
       S.status('模擬完成。');
     });
     loadVehicleMetadata();
