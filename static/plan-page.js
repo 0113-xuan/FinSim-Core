@@ -1,7 +1,7 @@
 (function(root) {
   'use strict';
   async function start(ctx) {
-    const S=root.FutureWalletShell,M=root.ShellModel,model=root.PlannerModel,$=id=>root.document.getElementById(id),money=M.money;
+    const S=root.FutureWalletShell,M=root.ShellModel,model=root.PlannerModel,E=root.ExplanationModel,$=id=>root.document.getElementById(id),money=M.money;
     function syncEventFields() {
       const type = $('eventForm').elements.type.value;
       for (const label of root.document.querySelectorAll('[data-event-field]')) {
@@ -78,10 +78,18 @@
 
       $('simulationResults').hidden=false;
     }
-    let events=[],editing=null;
+    let events=[],editing=null,lastRun=null;
+    function clearExplanation(){
+      $('explanationResult').replaceChildren();$('explanationSource').hidden=true;$('explanationNotice').hidden=true;
+    }
     function invalidate(){
-      $('simulationResults').hidden=true;$('simulationWarnings').replaceChildren();
+      $('simulationResults').hidden=true;$('simulationWarnings').replaceChildren();lastRun=null;clearExplanation();
       for(const target of root.document.querySelectorAll('[data-analysis-result]'))target.replaceChildren();
+    }
+    function renderExplanation(data){
+      clearExplanation();
+      if(data.source==='template'){$('explanationSource').hidden=false;$('explanationNotice').textContent=E.fallbackNotice(data.fallback_reason);$('explanationNotice').hidden=false;}
+      $('explanationResult').append(...E.explanationNodes(root.document,data));
     }
     function paragraph(parent,text){parent.append(S.element('p',text));}
     function group(parent,title,rows){
@@ -205,10 +213,19 @@
       for(const warning of built.warnings)$('simulationWarnings').append(S.element('li',warning));
       const [simulation,mc]=await ctx.calculation(post=>Promise.all([post('/simulate',{...built.request,seed:42}),post('/monte-carlo',{...built.request,simulations:300,seed:42})]));
       if(!ctx.alive)return;
-      renderResults(simulation,mc,built.converted,startPeriod);
+      renderResults(simulation,mc,built.converted,startPeriod);lastRun={built,months,events};
       root.WalletCharts.draw($('planChart'),$('planChartSummary'),simulation.result.simulation_curve,startPeriod,events,ctx.profile,{debts:ctx.debts});
       S.status('模擬完成。');
     });
+    $('explainResults').addEventListener('click',()=>ctx.perform(async()=>{
+      const run=lastRun;if(!run)throw new Error('請先執行模擬');
+      clearExplanation();S.status('正在產生說明…');
+      const request=E.buildExplanationRequest({prepared:run.built,events:run.events,months:run.months,
+        emergencyTargetMonths:ctx.profile.emergency_target_months,eventSummary:M.eventSummary});
+      const data=await ctx.calculation(post=>post('/ai/plan-explanation',request));
+      if(!ctx.alive||lastRun!==run)return;
+      renderExplanation(data);S.status('說明已產生。');
+    }));
     loadVehicleMetadata();
   }
   root.PlanPage={start};

@@ -2,7 +2,7 @@
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>計畫｜FutureWallet</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/shell.css">
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/shell.js"></script>
+<script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/explanation-model.js"></script><script defer src="/shell.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script><script defer src="/charts.js"></script><script defer src="/plan-page.js"></script><script defer src="/pages.js"></script>
 </head><body class="fw" data-page="plan">
 <a class="skip-link" href="#pageContent">跳到主要內容</a>
@@ -61,6 +61,13 @@
         <ul id="dataSources" aria-label="資料來源"></ul>
         <section id="vehicleResults" hidden aria-labelledby="vehicleResultsHeading">
           <h3 id="vehicleResultsHeading">購車</h3><div id="vehicleSummaries"></div><p>一次支出、車貸與持有成本是現金負擔；經濟成本是價值減少與費用，不是另一筆現金支出。</p><p id="vehicleCostNote"></p>
+        </section>
+        <section id="explanationSection" class="analysis-group" aria-labelledby="explanationHeading">
+          <h3 id="explanationHeading">AI 白話解釋<small id="explanationSource" hidden>（系統範本）</small></h3>
+          <div class="actions"><button id="explainResults" type="button">用白話解釋結果</button></div>
+          <p><small>按下後，會把這次模擬的數字和事件名稱傳給 Google Gemini 產生說明。</small></p>
+          <p id="explanationNotice" hidden></p>
+          <div id="explanationResult" aria-live="polite"></div>
         </section>
       </div>
 </section></div></div></div></main></body></html>
