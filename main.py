@@ -54,6 +54,7 @@ from app.services.financial_answer_extraction import (
     merge_deterministic_debt_candidates,
 )
 from app.services.optimizer import optimize
+from app.services.plan_explanation import PlanExplanationRequest, explain_plan
 from app.services.rate_limit import rate_limit_ai
 from app.services.report_generator import generate_report
 from app.services.scenario_parser import parse_scenario
@@ -124,6 +125,22 @@ async def car_needs_extraction_api(req: NeedsExtractionRequest, request: Request
         return await extract_car_needs(req, provider)
     except AIProviderError:
         raise HTTPException(status_code=503, detail='AI 分析未完成，未修改需求。請重試或略過 AI，直接使用問卷推薦。') from None
+
+
+def get_plan_explanation_provider() -> AIProvider | None:
+    # A missing key is the same as AI being disabled: use the rule-based template.
+    return get_ai_provider() if settings.ai_provider_ready() else None
+
+
+@app.post('/ai/plan-explanation')
+async def plan_explanation_api(req: PlanExplanationRequest, request: Request,
+                               provider: Any = Depends(get_plan_explanation_provider)) -> Dict[str, Any]:
+    rate_limit_ai(request)
+    model = settings.gemini_model if settings.ai_provider == 'gemini' else settings.ai_model
+    try:
+        return await explain_plan(req, provider, model=model)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail='模擬資料無法計算，請確認計畫內容後再試') from exc
 
 
 @app.get("/api")
