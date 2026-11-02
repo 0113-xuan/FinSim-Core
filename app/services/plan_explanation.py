@@ -42,6 +42,12 @@ DISCLAIMER_TEMPLATE = '這段說明由系統依規則產生，數字都來自模
 PERIOD_PATTERN = r'^\d{4}-(0[1-9]|1[0-2])$'
 PLACEHOLDER = re.compile(r'\{([^{}]*)\}')
 DIGIT = re.compile(r'[0-9０-９]')
+CN_NUMERAL = '一二兩三四五六七八九十百千萬億零半'
+# A Chinese numeral run followed by a unit is a number the AI wrote itself.
+CN_NUMBER = re.compile(f'([{CN_NUMERAL}]+)(個月|萬|千|百|元|塊|年|歲|成|%|％|倍|期|次|筆)')
+CN_PERCENT = re.compile(f'百分之[{CN_NUMERAL}]')
+# Everyday words such as 一次性, 一年後, 同一個月.
+CN_ALLOWED = {('一', '年'), ('一', '次'), ('一', '個月')}
 
 
 class PlanEventInput(BaseModel):
@@ -249,6 +255,9 @@ def validate_text(text: str, facts: Dict[str, Dict[str, Any]], limit: int) -> Li
         raise ExplanationRejected('大括號格式不正確')
     if DIGIT.search(stripped):
         raise ExplanationRejected('文字中出現了阿拉伯數字')
+    if CN_PERCENT.search(stripped) or any(match.groups() not in CN_ALLOWED
+                                          for match in CN_NUMBER.finditer(stripped)):
+        raise ExplanationRejected('文字中出現了中文數字')
     segments = split_segments(text, facts)
     if not stripped.strip():
         raise ExplanationRejected('段落沒有文字')

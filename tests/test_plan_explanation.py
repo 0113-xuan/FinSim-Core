@@ -282,3 +282,46 @@ def test_logs_exclude_event_names_and_prompt(caplog):
     logged = caplog.text
     assert 'source=ai' in logged
     assert '出國' not in logged and 'NT$' not in logged
+
+
+@pytest.mark.parametrize('text', ['約三十萬元', '六個月', '十二個月', '百分之五', '兩成', '三倍', '半年',
+                                  '三十萬', '一千元', '一筆', '百分之十二'])
+def test_validation_rejects_chinese_numerals(text):
+    facts = by_id(facts_for(BODY))
+    with pytest.raises(ExplanationRejected, match='中文數字'):
+        validate_text(f'{text}的情況', facts, 200)
+
+
+@pytest.mark.parametrize('text', ['一次性支出', '第一次現金小於零', '一年後', '一起', '同一個月', '一直', '{minimum_cash}',
+                                  '一般', '一定要', '一些', '每一個月', '一部分', '{event_1_name}在同一個月'])
+def test_validation_keeps_everyday_words(text):
+    facts = by_id(facts_for(BODY))
+    assert validate_text(f'{text}的情況', facts, 200)
+
+
+def vehicle_body():
+    converted = CLIENT.post('/planner/vehicle-events', json=dict(
+        start_period='2026-11', months=60, inflation_rate=None,
+        vehicles=[dict(name='買車', purchase_period='2027-03', details=VEHICLE)])).json()
+    simulation = {**copy.deepcopy(SIMULATION), 'events': converted['events'], 'loans': converted['loans'],
+                  'assets': converted['assets']}
+    return dict(simulation=simulation, start_period='2026-11', vehicles=converted['vehicles'],
+                events=[dict(name='買車', type='vehicle_purchase', start_period='2027-03', summary='車價 $849,000.00，貸款 60 期')])
+
+
+def negative_body():
+    body = copy.deepcopy(BODY)
+    body['simulation']['events'][0]['amount'] = -2_000_000
+    return body
+
+
+@pytest.mark.parametrize('make_body', [lambda: BODY, vehicle_body, negative_body], ids=['no_vehicle', 'vehicle', 'negative'])
+def test_template_passes_chinese_numeral_rule(make_body):
+    facts = facts_for(make_body())
+    explanation = template_explanation(facts)
+    sections = validate_explanation(explanation, by_id(facts))
+    assert sections['headline'] and len(sections['paragraphs']) >= 3
+    if make_body is vehicle_body:
+        assert any('{vehicle_1_one_time_cash}' in p for p in explanation.paragraphs)
+    if make_body is negative_body:
+        assert any('{first_negative_period}' in w for w in explanation.watch_points)
