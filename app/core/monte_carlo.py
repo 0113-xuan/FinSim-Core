@@ -29,6 +29,10 @@ def _percentiles(values: List[float], points=(5, 25, 50, 75, 95)) -> Dict[str, f
     return {f'p{point}': round(percentile(values, point / 100), 2) for point in points}
 
 
+def _band(columns: List[List[float]], points) -> Dict[str, List[float]]:
+    return {f'p{point}': [round(percentile(column, point / 100), 2) for column in columns] for point in points}
+
+
 def _has_investment(profile: Dict[str, Any]) -> bool:
     return float(profile.get('investment_value') or 0) > 0 or float(profile.get('monthly_investment') or 0) > 0
 
@@ -125,6 +129,10 @@ def run_monte_carlo(
     real_net_worths: List[float] = []
     cash_shortfall_count = 0
     emergency_shortfalls: List[float] = []
+    # One list per month across trials, for the monthly percentile bands.
+    monthly_cash: List[List[float]] = [[] for _ in range(months)]
+    monthly_investment: List[List[float]] = [[] for _ in range(months)]
+    monthly_net_worth: List[List[float]] = [[] for _ in range(months)]
     paths = []
     debug_paths = []
 
@@ -154,6 +162,10 @@ def run_monte_carlo(
         final_net_worths.append(summary["final_net_worth"])
         real_net_worths.append(summary["final_net_worth"] / price_multiplier)
         cash_shortfall_count += summary["first_negative_cash_month"] is not None
+        for month_index, row in enumerate(curve):
+            monthly_cash[month_index].append(row["balance"])
+            monthly_investment[month_index].append(row["investment_value"])
+            monthly_net_worth[month_index].append(row["net_worth"])
         target_months = float(profile.get("target_emergency_months", 3))
         emergency_shortfalls.append(emergency_shortfall(summary["final_balance"], curve[-1]["living_expense"], curve[-1]["debt_payment"], target_months))
         if index < sample_paths:
@@ -188,6 +200,17 @@ def run_monte_carlo(
         "data_sources": [dict(source) for source in history.data_sources],
         "expected_emergency_fund_shortfall": round(statistics.fmean(emergency_shortfalls), 2),
         "sample_paths": paths,
+        "monthly_bands": {
+            "definition": "每個月底在所有試驗中的分位數；各分位數線不是某一次試驗的路徑",
+            "months": list(range(1, months + 1)),
+            "net_worth": _band(monthly_net_worth, (5, 25, 50, 75, 95)),
+            "cash": _band(monthly_cash, (5, 50, 95)),
+            "investment": _band(monthly_investment, (5, 50, 95)),
+        },
+        "historical_averages": {
+            "annual_inflation_rate": round(history.annual_inflation_rate, 6),
+            "annual_return_rate": round(history.annual_return_rate, 6),
+        },
     }
     if include_details:
         response["debug_paths"] = debug_paths

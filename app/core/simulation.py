@@ -132,6 +132,7 @@ def simulate_finance(
     base_fixed_expense = float(profile["fixed_expense"])
     balance = float(profile["balance"])
     investment = float(profile.get("investment_value") or 0)
+    investment_start = investment
     monthly_investment = float(profile.get("monthly_investment") or 0)
     requested_inflation = override_inflation_rate if override_inflation_rate is not None else profile.get("inflation_rate")
     if inflation_path is not None:
@@ -240,6 +241,19 @@ def simulate_finance(
         "simulation_curve": curve,
         "summary": summarize_simulation(curve, profile),
         "seed": seed,
+        # The constant rates a deterministic run used, so the page can disclose them.
+        "assumptions": {
+            "annual_inflation_rate": None if inflation_path is not None else round(inflation_rate, 6),
+            "inflation_source": ("sampled" if inflation_path is not None
+                                 else "user" if requested_inflation is not None else "historical_average"),
+            "raise_rate": None if requested_raise_rate is None else round(raise_rate, 6),
+            "raise_source": "user" if requested_raise_rate is not None else "follows_inflation",
+            "annual_return_rate": (round(annual_return, 6)
+                                   if return_path is None and (investment_start or monthly_investment) else None),
+            "return_source": ("sampled" if return_path is not None
+                              else "user" if profile.get("expected_annual_return") is not None
+                              else "historical_average"),
+        },
     }
     # The zero boundary is evaluated before currency display rounding.
     result["summary"]["first_negative_cash_month"] = first_negative_cash_month

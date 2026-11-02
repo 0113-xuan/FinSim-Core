@@ -2,7 +2,7 @@
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>計畫｜FutureWallet</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/shell.css">
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/explanation-model.js"></script><script defer src="/event-templates.js"></script><script defer src="/event-picker.js"></script><script defer src="/location-model.js"></script><script defer src="/shell.js"></script>
+<script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/results-model.js"></script><script defer src="/explanation-model.js"></script><script defer src="/event-templates.js"></script><script defer src="/event-picker.js"></script><script defer src="/location-model.js"></script><script defer src="/shell.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script><script defer src="/charts.js"></script><script defer src="/vehicle-fees-model.js"></script><script defer src="/vehicle-fees-form.js"></script><script defer src="/parking-form.js"></script><script defer src="/plan-page.js"></script><script defer src="/pages.js"></script>
 </head><body class="fw" data-page="plan">
 <a class="skip-link" href="#pageContent">跳到主要內容</a>
@@ -60,7 +60,18 @@
 <label>模擬期間<select id="simulationMonths"><option value="60">60 個月</option><option value="120">120 個月</option><option value="240">240 個月</option></select></label></div>
 <div class="actions"><button class="primary" type="submit">執行模擬</button></div></fieldset></form>
 <ul id="simulationWarnings" aria-label="模擬注意事項"></ul>      <div id="simulationResults" hidden>
-        <div class="chart-frame"><canvas id="planChart" role="img" aria-label="現金與淨資產走勢"></canvas></div><div id="planChartSummary" class="chart-summary"></div><div class="metric-grid">
+        <section class="result-block" aria-labelledby="bandHeading">
+          <h3 id="bandHeading">淨資產可能範圍</h3>
+          <p class="result-lede">用台灣過去的通膨與台股報酬抽樣 300 次。淺色是 90% 試驗的範圍（第 5 到第 95 百分位數），深色是中間一半，實線是中位數。</p>
+          <div class="chart-frame"><canvas id="bandChart" role="img" aria-label="淨資產分位數區間走勢"></canvas></div><div id="bandChartSummary" class="chart-summary"></div>
+          <div class="band-legend" aria-hidden="true"><span class="swatch outer"></span>90% 範圍<span class="swatch inner"></span>中間一半<span class="swatch line"></span>中位數</div>
+        </section>
+        <section class="result-block" aria-labelledby="splitHeading">
+          <h3 id="splitHeading">現金、投資與淨資產</h3>
+          <p class="result-lede">確定性模擬：通膨和報酬都用固定值，看資金在現金與投資之間怎麼移動。淨資產＝現金＋投資市值＋車輛估值－剩餘貸款。</p>
+          <div class="chart-frame"><canvas id="planChart" role="img" aria-label="現金、投資與淨資產走勢"></canvas></div><div id="planChartSummary" class="chart-summary"></div>
+        </section>
+        <section class="metric-group" aria-labelledby="cashMetricsHeading"><h4 id="cashMetricsHeading">現金</h4><div class="metric-grid">
           <article><span>最低現金</span><strong id="minimumCash">—</strong></article>
           <article><span>最低現金發生月份</span><strong id="minimumCashPeriod">—</strong></article>
           <article><span>第一次現金小於 0 的月份</span><strong id="firstNegativePeriod">—</strong></article>
@@ -70,14 +81,24 @@
           <article><span>期末現金第 5 百分位數（p5）</span><strong id="cashP5">—</strong></article>
           <article><span>期末現金中位數（p50）</span><strong id="cashP50">—</strong></article>
           <article><span>期末現金第 95 百分位數（p95）</span><strong id="cashP95">—</strong></article>
+        </div></section>
+        <section class="metric-group" aria-labelledby="investmentMetricsHeading"><h4 id="investmentMetricsHeading">投資</h4><div class="metric-grid">
           <article><span>期末投資市值（歷史平均報酬）</span><strong id="endingInvestment">—</strong></article>
+          <article><span>期末投資市值第 5 百分位數（p5）</span><strong id="investmentP5">—</strong></article>
+          <article><span>期末投資市值中位數（p50）</span><strong id="investmentP50">—</strong></article>
+        </div></section>
+        <section class="metric-group" aria-labelledby="netWorthMetricsHeading"><h4 id="netWorthMetricsHeading">淨資產</h4><div class="metric-grid">
           <article><span>期末淨資產第 5 百分位數（p5）</span><strong id="netWorthP5">—</strong></article>
           <article><span>期末淨資產中位數（p50）</span><strong id="netWorthP50">—</strong></article>
           <article><span>期末淨資產第 95 百分位數（p95）</span><strong id="netWorthP95">—</strong></article>
           <article><span>以今日購買力計算的期末淨資產中位數（p50）</span><strong id="realNetWorthP50">—</strong></article>
-        </div>
-        <p id="shortfallDefinition"></p><p id="samplingNote"></p>
-        <ul id="dataSources" aria-label="資料來源"></ul>
+        </div></section>
+        <details id="assumptionsPanel" class="assumptions" open>
+          <summary>這次模擬用了哪些假設</summary>
+          <dl id="assumptionList"></dl>
+          <p id="shortfallDefinition"></p><p id="samplingNote"></p>
+          <ul id="dataSources" aria-label="資料來源"></ul>
+        </details>
         <section id="vehicleResults" hidden aria-labelledby="vehicleResultsHeading">
           <h3 id="vehicleResultsHeading">購車</h3><div id="vehicleSummaries"></div><p>一次支出、車貸與持有成本是現金負擔；經濟成本是價值減少與費用，不是另一筆現金支出。</p><p id="vehicleCostNote"></p>
         </section>

@@ -60,8 +60,10 @@
         $('endingCash').textContent = money(summary.final_balance);
         $('cashShortfall').textContent = new Intl.NumberFormat('zh-TW', {style:'percent', maximumFractionDigits:2}).format(mc.probability_cash_shortfall);
         for (const [id, key] of [['cashP5','p5'],['cashP50','p50'],['cashP95','p95']]) $(id).textContent = money(mc.percentiles[key]);
-        $('shortfallDefinition').textContent = mc.cash_shortfall_definition;
+        $('shortfallDefinition').textContent = `現金不足機率的定義：${mc.cash_shortfall_definition}。`;
         $('endingInvestment').textContent = money(summary.final_investment_value);
+        const investmentBand = mc.monthly_bands?.investment;
+        for (const [id, key] of [['investmentP5','p5'],['investmentP50','p50']]) $(id).textContent = investmentBand ? money(investmentBand[key].at(-1)) : '—';
         for (const [id, key] of [['netWorthP5','p5'],['netWorthP50','p50'],['netWorthP95','p95']]) $(id).textContent = money(mc.net_worth_percentiles[key]);
         $('realNetWorthP50').textContent = money(mc.real_net_worth_percentiles.p50);
         $('samplingNote').textContent = mc.sampling_note;
@@ -235,7 +237,10 @@
       const [simulation,mc]=await ctx.calculation(post=>Promise.all([post('/simulate',{...built.request,seed:42}),post('/monte-carlo',{...built.request,simulations:300,seed:42})]));
       if(!ctx.alive)return;
       renderResults(simulation,mc,built.converted,startPeriod);lastRun={built,months,events};
+      $('assumptionList').replaceChildren(...root.ResultsModel.assumptionRows({simulation:simulation.result,mc,request:built.request,
+        startPeriod,months,simulations:300,seed:42,converted:built.converted}).flatMap(row=>[S.element('dt',row.label),S.element('dd',row.value)]));
       root.WalletCharts.draw($('planChart'),$('planChartSummary'),simulation.result.simulation_curve,startPeriod,events,ctx.profile,{debts:ctx.debts});
+      if(mc.monthly_bands)root.WalletCharts.drawBands($('bandChart'),$('bandChartSummary'),mc.monthly_bands,startPeriod,events,ctx.profile,{debts:ctx.debts});
       S.status('模擬完成。');
     });
     $('explainResults').addEventListener('click',()=>ctx.perform(async()=>{

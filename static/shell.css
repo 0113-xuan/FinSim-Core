@@ -121,3 +121,30 @@ body.fw.plan-dialog-open { overflow:hidden; }
   .fw .chart-frame { height:240px; }
 }
 @media(prefers-reduced-motion:no-preference) { .fw .shell-sidebar { transition:transform .18s ease-out; } }
+/* Plan results: percentile bands, cash/investment split, assumptions panel. */
+:root { --investment:#b45309; }
+.fw .result-block { margin:8px 0 26px; }
+.fw .result-block h3, .fw .metric-group h4 { margin:0 0 6px; }
+.fw .result-lede { margin:0 0 14px;color:var(--muted);font-size:14px;max-width:70ch; }
+.fw .band-legend { display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:13px;color:var(--muted); }
+.fw .band-legend .swatch { display:inline-block;width:18px;height:10px;border-radius:3px;margin-right:-8px;vertical-align:middle; }
+.fw .band-legend .swatch.outer { background:rgba(4,120,87,.14); }
+.fw .band-legend .swatch.inner { background:rgba(4,120,87,.36); }
+.fw .band-legend .swatch.line { height:3px;background:var(--accent); }
+.fw .metric-group { margin:0 0 22px; }
+.fw .metric-group h4 { font-size:15px;color:var(--muted); }
+.fw .assumptions { margin:8px 0 24px;padding:16px 20px;border:1px solid var(--line);border-radius:14px;background:var(--card); }
+.fw .assumptions summary { cursor:pointer;font-weight:800;color:var(--text); }
+.fw .assumptions dl { display:grid;grid-template-columns:minmax(140px,1fr) minmax(0,3fr);gap:10px 16px;margin:16px 0 8px; }
+.fw .assumptions dt { color:var(--muted);font-size:14px; }
+.fw .assumptions dd { margin:0;overflow-wrap:anywhere; }
+.fw .assumptions p, .fw .assumptions li { font-size:13px;color:var(--muted); }
+@media (max-width:760px) {
+  .fw .assumptions dl { grid-template-columns:minmax(0,1fr); gap:2px; }
+  .fw .assumptions dd { margin-bottom:10px; }
+}
+@media (max-width:420px) {
+  /* Two columns split long NT$ amounts mid-number at phone width. */
+  .fw .metric-grid { grid-template-columns:minmax(0,1fr); }
+  .fw .metric-grid strong { overflow-wrap:normal; }
+}
