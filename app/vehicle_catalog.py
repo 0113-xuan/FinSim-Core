@@ -15,11 +15,18 @@ CATALOG = [
 
 
 def catalog_list():
-    return [{**item, 'checked_on': '2026-10-11', 'currency': 'TWD'} for item in CATALOG]
+    return [{**item, 'checked_on': '2026-10-11', 'currency': 'TWD',
+             'displacement_cc': 1798 if item['brand']=='Toyota' else 1498,
+             'fuel_type': 'gasoline' if item['id']=='toyota-cross-gas-luxury' else 'hybrid',
+             'spec_source': 'https://www.toyota.com.tw/showroom/COROLLA_CROSS/fullsepc.aspx'
+                if item['brand']=='Toyota' else 'https://www.honda-taiwan.com.tw/HRV/'} for item in CATALOG]
 
 
 def get_vehicle(vehicle_id):
-    return next((item for item in catalog_list() if item['id'] == vehicle_id), None)
+    # Existing decision/preset responses embed this record verbatim. Keep their
+    # contracts unchanged; only the public catalog adds planner display specs.
+    item = next((item for item in CATALOG if item['id'] == vehicle_id), None)
+    return {**item, 'checked_on': '2026-10-11', 'currency': 'TWD'} if item else None
 
 
 class VehiclePresetRequest(BaseModel):

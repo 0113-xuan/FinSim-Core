@@ -124,7 +124,7 @@
     if (reason) throw new Error(reason);
     const payload = {scenario_type:'vehicle_purchase'};
     for (const [key,value] of Object.entries(event.details || {})) {
-      if (['vehicle_catalog_id','annual_depreciation_rate'].includes(key) || value == null || value === '') continue;
+      if (['vehicle_catalog_id','annual_depreciation_rate','displacement_cc','fuel_type','insurance_items'].includes(key) || value == null || value === '') continue;
       payload[key] = ['payment_method','loan_term_months'].includes(key) ? value : {value,source:'user_provided'};
     }
     const financial = {salary:number(profile.monthly_income,'每月實領收入'),

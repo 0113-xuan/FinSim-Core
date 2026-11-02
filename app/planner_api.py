@@ -1,13 +1,15 @@
 """Planner adapter with Traditional Chinese request validation errors."""
 import re
+from typing import Literal
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from app.planner_schemas import PlannerVehicleRequest
 from app.request_validation import FiniteJSONRoute
 from app.services.planner_vehicle import convert_vehicle_events
+from app.vehicle_fees import annual_vehicle_tax, insurance_reference
 
 
 class PlannerRoute(FiniteJSONRoute):
@@ -30,6 +32,16 @@ class PlannerRoute(FiniteJSONRoute):
 
 
 router = APIRouter(route_class=PlannerRoute)
+
+
+@router.get('/planner/vehicle-fees')
+def planner_vehicle_fees(displacement_cc: int = Query(ge=0, le=100_000),
+                         fuel_type: Literal['gasoline','hybrid','diesel','ev'] = Query(),
+                         purchase_price: float = Query(gt=0, le=20_000_000, allow_inf_nan=False)):
+    try:
+        return dict(tax=annual_vehicle_tax(displacement_cc, fuel_type),insurance=insurance_reference(purchase_price))
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from None
 
 
 @router.post('/planner/vehicle-events')

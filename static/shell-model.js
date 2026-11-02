@@ -30,7 +30,9 @@
     if (event.type==='salary_change') return `新月薪 ${money(event.new_salary)}`;
     if (event.type==='vehicle_purchase') {
       const d=event.details||{};
-      return `車價 ${money(d.purchase_price)}，${d.payment_method==='financed'?`貸款 ${d.loan_term_months} 期`:'現金購買'}`;
+      const fees=[['annual_insurance','保險'],['annual_tax','稅費']].filter(([key])=>d[key]!=null)
+        .map(([key,label])=>`${label} NT$${Number(d[key]).toLocaleString('zh-TW')}／年`);
+      return `車價 ${money(d.purchase_price)}，${d.payment_method==='financed'?`貸款 ${d.loan_term_months} 期`:'現金購買'}${fees.length?'，'+fees.join('、'):''}`;
     }
     return '不支援的事件類型';
   }

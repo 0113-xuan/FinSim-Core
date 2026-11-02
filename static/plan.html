@@ -3,7 +3,7 @@
 <title>計畫｜FutureWallet</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/shell.css">
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/explanation-model.js"></script><script defer src="/event-templates.js"></script><script defer src="/event-picker.js"></script><script defer src="/shell.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script><script defer src="/charts.js"></script><script defer src="/plan-page.js"></script><script defer src="/pages.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script><script defer src="/charts.js"></script><script defer src="/vehicle-fees-model.js"></script><script defer src="/vehicle-fees-form.js"></script><script defer src="/plan-page.js"></script><script defer src="/pages.js"></script>
 </head><body class="fw" data-page="plan">
 <a class="skip-link" href="#pageContent">跳到主要內容</a>
 <button id="menuToggle" class="menu-toggle" type="button" aria-label="開啟選單" aria-controls="shellSidebar" aria-expanded="false">選單</button>
@@ -23,18 +23,33 @@
         <label data-event-field="new_salary" hidden>新實領月薪<input name="new_salary" type="number" min="0" max="50000000" step="0.01" required disabled></label>
         <label data-vehicle-field hidden>車款<select name="vehicle_catalog_id" disabled><option value="">自訂車款</option></select></label>
         <label data-vehicle-field hidden>車價<input name="purchase_price" type="number" min="0.01" max="20000000" step="0.01" required disabled></label>
+        <label data-vehicle-field hidden>排氣量（cc）<input name="displacement_cc" type="number" min="0" max="100000" step="1" disabled></label>
+        <label data-vehicle-field hidden>燃料種類<select name="fuel_type" disabled><option value="gasoline">汽油</option><option value="hybrid">油電混合</option><option value="diesel">柴油</option><option value="ev">純電</option></select></label>
+        <p id="vehicleSpecSource" data-vehicle-field hidden></p>
         <label data-vehicle-field hidden>付款方式<select name="payment_method" disabled><option value="cash">現金</option><option value="financed">貸款</option></select></label>
         <label data-vehicle-field="financed" hidden>頭期款<input name="down_payment" type="number" min="0" max="20000000" step="0.01" required disabled></label>
         <label data-vehicle-field="financed" hidden>貸款期數（月）<input name="loan_term_months" type="number" min="1" max="600" step="1" required disabled></label>
         <label data-vehicle-field="financed" hidden>年利率（%）<input name="annual_interest_rate" type="number" min="0" max="100" step="any" required disabled></label>
-        <label data-vehicle-field hidden>保險（年，選填）<input name="annual_insurance" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
-        <label data-vehicle-field hidden>稅費（年，選填）<input name="annual_tax" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
         <label data-vehicle-field hidden>保養（年，選填）<input name="annual_maintenance_budget" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
         <label data-vehicle-field hidden>油電（月，選填）<input name="monthly_fuel_or_energy" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
         <label data-vehicle-field hidden>停車（月，選填）<input name="monthly_parking" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
         <label data-vehicle-field hidden>折舊率（%／年，選填）<input name="annual_depreciation_rate" type="number" min="0" max="100" step="any" placeholder="留空使用預設 15%" disabled></label>
         <p id="vehicleMetadataStatus" data-vehicle-field hidden role="status"></p>
-      </div><div class="button-row"><button type="submit">新增事件</button><button id="cancelEdit" type="button" hidden>取消修改</button></div></fieldset></form></section>
+      </div>
+      <section id="vehicleFeesSection" class="vehicle-fees" hidden><fieldset id="vehicleFeesFields" disabled>
+        <p id="feesStatus" role="status" aria-live="polite">請先填寫車價與排氣量。</p><button id="retryVehicleFees" type="button">重新載入稅費與保險</button>
+        <section class="fee-section" aria-labelledby="taxHeading"><h3 id="taxHeading">稅費（年）</h3><div id="officialTax"></div>
+          <label>年度稅費合計（元，可自訂）<input name="annual_tax" type="number" min="0" max="20000000" step="0.01" placeholder="請確認官方金額或手動填寫"></label>
+          <p id="taxCustomStatus" role="status"></p><button id="restoreOfficialTax" type="button" hidden>恢復官方金額</button>
+          <p><small>領牌等規費屬於購車當月的一次支出，本次尚未納入計算；首年稅費也未按日數比例計算。</small></p>
+        </section>
+        <section class="fee-section" aria-labelledby="insuranceHeading"><h3 id="insuranceHeading">保險（年）</h3>
+          <div id="legacyInsuranceHint" hidden><p>可重新選擇保險項目；目前保留這筆事件原本的保險數字。</p><button id="adoptInsuranceItems" type="button">重新選擇保險項目</button></div>
+          <div id="insuranceItems"></div><label>年度保險合計（元）<input name="annual_insurance" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用原本預設"></label>
+          <p><strong id="insuranceTotal" aria-live="polite"></strong></p><p><small>以上為網路公開資料的參考保費，各保險公司報價不同，請以實際報價為準。</small></p>
+        </section>
+      </fieldset></section>
+      <div class="button-row"><button type="submit">新增事件</button><button id="cancelEdit" type="button" hidden>取消修改</button></div></fieldset></form></section>
 <section class="panel" aria-labelledby="simulationHeading"><h2 id="simulationHeading">模擬結果</h2>
 <p>每月投資金額從現金轉入投資帳戶，投資市值依台股報酬指數變動，現金不足時也不會自動賣出。淨資產＝現金＋投資市值＋車輛估值－車貸剩餘本金－既有貸款剩餘應還。車輛估值依固定折舊率計算，不是成交價。</p>
 <form id="simulationForm"><fieldset><div class="field-grid"><label>模擬起始月份<input id="startPeriod" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>

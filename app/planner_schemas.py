@@ -1,14 +1,28 @@
 """Plain numeric inputs for saved planner vehicle events."""
 from typing import Literal
+from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from app.services.calendar_period import YearMonth
 from app.vehicle_catalog import get_vehicle
+from app.vehicle_fees import INSURANCE_IDS
 
 
 class PlannerModel(BaseModel):
     model_config = ConfigDict(extra='forbid', allow_inf_nan=False)
+
+
+class PlannerInsuranceItem(PlannerModel):
+    id: str
+    amount: float = Field(ge=0, le=20_000_000)
+
+    @field_validator('id')
+    @classmethod
+    def known_insurance(cls, value):
+        if value not in INSURANCE_IDS:
+            raise ValueError('找不到這個保險項目')
+        return value
 
 
 class PlannerVehicleDetails(PlannerModel):
@@ -24,9 +38,23 @@ class PlannerVehicleDetails(PlannerModel):
     monthly_fuel_or_energy: float | None = Field(default=None, ge=0, le=10_000_000)
     monthly_parking: float | None = Field(default=None, ge=0, le=10_000_000)
     annual_depreciation_rate: float | None = Field(default=None, ge=0, le=1)
+    displacement_cc: int | None = Field(default=None, ge=0, le=100_000, strict=True)
+    fuel_type: Literal['gasoline','hybrid','diesel','ev'] | None = None
+    insurance_items: list[PlannerInsuranceItem] | None = Field(default=None, max_length=7)
 
     @model_validator(mode='after')
     def validate_purchase(self):
+        if self.insurance_items is not None:
+            ids = [item.id for item in self.insurance_items]
+            if 'compulsory' not in ids:
+                raise ValueError('保險項目必須包含強制汽車責任保險')
+            if len(ids) != len(set(ids)):
+                raise ValueError('保險項目不可重複')
+            if sum(id.startswith('body_') for id in ids) > 1:
+                raise ValueError('甲式、乙式、丙式車體險最多只能選一種')
+            total = sum((Decimal(str(item.amount)) for item in self.insurance_items), Decimal('0'))
+            if self.annual_insurance is None or abs(total-Decimal(str(self.annual_insurance))) > Decimal('1'):
+                raise ValueError('保險合計必須等於各項保費加總，誤差不可超過1元')
         terms = (self.down_payment, self.loan_term_months, self.annual_interest_rate)
         if self.payment_method == 'cash' and any(value is not None for value in terms):
             raise ValueError('現金購車不可填寫貸款條件')

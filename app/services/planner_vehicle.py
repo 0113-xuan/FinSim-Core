@@ -28,8 +28,8 @@ def convert_vehicle_events(request: PlannerVehicleRequest):
     base = YearMonth.parse(request.start_period).add_months(-1)
     events, loans, assets, vehicles = [], [], [], []
     for index, vehicle in enumerate(request.vehicles):
-        details = vehicle.details.model_dump(exclude_none=True)
-        details.pop('vehicle_catalog_id', None)
+        details = vehicle.details.model_dump(exclude_none=True, exclude={
+            'vehicle_catalog_id', 'displacement_cc', 'fuel_type', 'insurance_items'})
         defaults = []
         for key in OWNERSHIP_FIELDS:
             if key not in details:

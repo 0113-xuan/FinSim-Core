@@ -14,9 +14,16 @@
         label.hidden = !visible;
         const control = label.querySelector('input,select'); if (control) control.disabled = !visible;
       }
+      fees.sync();
     }
     const ownershipLabels = {annual_insurance:'保險',annual_tax:'稅費',annual_maintenance_budget:'保養',monthly_fuel_or_energy:'油電',monthly_parking:'停車',annual_depreciation_rate:'折舊率'};
     let vehicleCatalog = [];
+    const fees=root.VehicleFeesForm.create({form:$('eventForm'),isAlive:()=>ctx.alive});
+    function syncVehicleSpec(){
+      const select=$('eventForm').elements.vehicle_catalog_id;
+      const id=select.dataset.pending??select.value;
+      fees.spec(vehicleCatalog.find(car=>car.id===id));
+    }
     async function loadVehicleMetadata() {
       try {
         const responses = await Promise.all(['/decisions/vehicle/catalog','/decisions/vehicle/assumptions'].map(url=>root.fetch(url)));
@@ -32,12 +39,13 @@
           option.textContent = `${car.brand} ${car.model} ${car.trim}`; select.append(option);
         }
         const custom = root.document.createElement('option'); custom.value = ''; custom.textContent = '自訂車款'; custom.defaultSelected = true; select.append(custom); select.value = selection;
-        for (const key of model.ownershipFields) {
+        for (const key of model.ownershipFields.filter(key=>!['annual_insurance','annual_tax'].includes(key))) {
           const assumption = assumptions.find(item=>item.key === key);
           if (!assumption || !Number.isFinite(Number(assumption.value))) throw new Error('預設值載入不完整');
           $('eventForm').elements.namedItem(key).placeholder = `留空使用預設 ${Number(assumption.value).toLocaleString('zh-TW')}／${key.startsWith('annual_') ? '年' : '月'}`;
         }
         $('vehicleMetadataStatus').textContent = '可修改車價；留空的持有成本於計算時套用預設值。';
+        syncVehicleSpec();
       } catch (_) { if(ctx.alive)$('vehicleMetadataStatus').textContent = '車款或預設值載入未完成；可使用自訂車款，留空成本由後端套用預設值。重新整理可重試。'; }
     }
 
@@ -115,6 +123,7 @@
       if(ctx.busy||editing||template?.status!=='available')return;
       $('eventForm').elements.type.value=template.eventType;$('eventForm').hidden=false;
       P.select($('eventTemplatePicker'),template.id);syncEventFields();
+      if(template.eventType==='vehicle_purchase')syncVehicleSpec();
     }
     function renderPicker(template=null,locked=false){
       P.render($('eventTemplatePicker'),{selected:template?.id,locked,onSelect:selectTemplate});
@@ -123,7 +132,7 @@
       editing=null;$('eventForm').reset();$('eventForm').elements.vehicle_catalog_id.value='';
       delete $('eventForm').elements.vehicle_catalog_id.dataset.pending;
       $('eventForm').elements.start_period.value=S.taipeiPeriod();$('eventEditorHeading').textContent='新增事件';
-      $('eventForm').elements.type.value='';$('eventForm').hidden=true;
+      $('eventForm').elements.type.value='';$('eventForm').hidden=true;fees.reset();
       $('eventForm').querySelector('[type="submit"]').textContent='新增事件';$('cancelEdit').hidden=true;renderPicker();syncEventFields();
     }
     function editEvent(event){
@@ -134,6 +143,7 @@
       for(const[key,value]of Object.entries(event.details||{})){
         const input=form.elements.namedItem(key);if(input)input.value=['annual_interest_rate','annual_depreciation_rate'].includes(key)?Number(value)*100:value??'';
       }
+      fees.reset(event.details);syncVehicleSpec();
       $('eventEditorHeading').textContent='修改事件';form.querySelector('[type="submit"]').textContent='儲存事件';$('cancelEdit').hidden=false;
       renderPicker(T.templateForEvent(event),true);form.hidden=false;
       syncEventFields();$('eventEditorHeading').scrollIntoView({block:'start'});form.elements.name.focus();
@@ -181,6 +191,7 @@
     $('eventForm').elements.vehicle_catalog_id.addEventListener('change',()=>{
       delete $('eventForm').elements.vehicle_catalog_id.dataset.pending;
       const car=vehicleCatalog.find(item=>item.id===$('eventForm').elements.vehicle_catalog_id.value);if(car)$('eventForm').elements.purchase_price.value=car.price_twd;
+      syncVehicleSpec();
     });
     $('cancelEdit').addEventListener('click',resetEditor);
     onSubmit('planNameForm',async()=>{
@@ -207,7 +218,7 @@
       }else{
         const raw={};for(const key of ['vehicle_catalog_id','purchase_price','payment_method','down_payment','loan_term_months','annual_interest_rate','annual_depreciation_rate',...model.ownershipFields])raw[key]=form.elements.namedItem(key).value;
         raw.vehicle_catalog_id=form.elements.vehicle_catalog_id.dataset.pending??raw.vehicle_catalog_id;
-        values.details=model.vehicleDetails(raw);
+        values.details={...model.vehicleDetails(raw),...fees.details()};
       }
       if(editing)await ctx.store.updateEvent(ctx.planId,editing,values);else await ctx.store.addEvent(ctx.planId,values);
       if(!ctx.alive)return;resetEditor();await loadEvents();S.status('事件已儲存。');
