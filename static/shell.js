@@ -61,7 +61,63 @@
     add('目前財務狀況','/profile.html',ctx.page==='profile');
     nav.append(element('h2','計畫'));
     for(const plan of ctx.plans)add(plan.name,`/plan.html?id=${encodeURIComponent(plan.id)}`,ctx.page==='plan'&&ctx.planId===plan.id);
-    add('新增計畫','/dashboard.html#new-plan');
+    const create=element('button','新增計畫');create.type='button';create.dataset.newPlan='';
+    create.addEventListener('click',()=>ctx.openPlanDialog(create));nav.append(create);
+  }
+  function setupPlanDialog(ctx,{closeDrawer,openDrawer}) {
+    const dialog=element('dialog',null,'plan-dialog');dialog.id='createPlanDialog';dialog.setAttribute('aria-labelledby','createPlanTitle');
+    const title=element('h2','建立計畫');title.id='createPlanTitle';
+    const form=element('form'),nameStep=element('div'),label=element('label','計畫名稱'),input=element('input');
+    input.name='name';input.id='createPlanName';input.required=true;input.maxLength=80;input.autocomplete='off';input.setAttribute('aria-describedby','createPlanNameHint');
+    const hint=element('small','請填寫計畫名稱，最多 80 字。');hint.id='createPlanNameHint';label.append(input,hint);nameStep.append(label);
+    const eventStep=element('div'),description=element('p','之後在計畫頁還可以加入更多事件。','lede'),picker=element('div');eventStep.append(description,picker);eventStep.hidden=true;
+    const error=element('p',null,'error');error.id='createPlanError';error.setAttribute('role','alert');error.hidden=true;
+    const actions=element('div',null,'actions'),cancel=element('button','取消'),next=element('button','下一步','primary'),back=element('button','上一步'),skip=element('button','先不加事件，直接建立'),create=element('button','建立計畫','primary');
+    for(const button of [cancel,next,back,skip,create]){button.type='button';actions.append(button);}
+    form.append(nameStep,eventStep,error,actions);dialog.append(title,form);root.document.body.append(dialog);
+    let step=1,selected=null,creating=false,opener=null,fromDrawer=false;
+    const validName=()=>input.value.trim().length>0&&input.value.length<=80;
+    function sync() {
+      nameStep.hidden=step!==1;eventStep.hidden=step!==2;
+      title.textContent=step===1?'建立計畫':'想先加入什麼事件？';
+      next.hidden=step!==1;back.hidden=skip.hidden=create.hidden=step!==2;
+      for(const button of dialog.querySelectorAll('button'))button.disabled=creating;
+      next.disabled=creating||!validName();create.disabled=creating||!selected;input.disabled=creating;
+      hint.textContent=validName()?'最多 80 字。':'請填寫計畫名稱，最多 80 字。';
+      dialog.setAttribute('aria-busy',String(creating));
+    }
+    function goNext() {
+      if(!validName()||creating)return;
+      step=2;sync();picker.querySelector('button')?.focus();dialog.scrollTop=0;
+    }
+    ctx.openPlanDialog=button=>{
+      if(!ctx.alive||ctx.busy||dialog.open)return;
+      opener=button;fromDrawer=!!button.closest('#shellSidebar')&&root.matchMedia('(max-width:760px)').matches;
+      closeDrawer(false);step=1;selected=null;input.value='';error.hidden=true;
+      root.EventPicker.render(picker,{onSelect:template=>{selected=template.id;root.EventPicker.select(picker,selected);sync();}});
+      sync();dialog.showModal();root.document.body.classList.add('plan-dialog-open');input.focus();
+    };
+    const close=()=>{if(!creating)dialog.close();};
+    cancel.addEventListener('click',close);
+    dialog.addEventListener('cancel',event=>{if(creating)event.preventDefault();});
+    dialog.addEventListener('close',()=>{
+      root.document.body.classList.remove('plan-dialog-open');
+      if(ctx.alive&&opener?.isConnected){if(fromDrawer)openDrawer();opener.focus();}
+    });
+    input.addEventListener('input',sync);next.addEventListener('click',goNext);
+    form.addEventListener('submit',event=>{event.preventDefault();if(step===1)goNext();});
+    back.addEventListener('click',()=>{step=1;sync();input.focus();dialog.scrollTop=0;});
+    async function save(withEvent) {
+      if(creating||!ctx.alive||!validName()||(withEvent&&!selected))return;
+      creating=true;ctx.busy=true;error.hidden=true;sync();
+      try {
+        const plan=await ctx.store.addPlan({name:input.value.trim(),kind:'general'});
+        if(ctx.alive)root.location.assign(`/plan.html?id=${encodeURIComponent(plan.id)}${withEvent?`&add=${encodeURIComponent(selected)}`:''}`);
+      }catch(cause){if(ctx.alive){error.textContent=`建立未完成：${textModel.errorText(cause)}。請重試。`;error.hidden=false;}}
+      finally{if(ctx.alive){creating=false;ctx.busy=false;sync();}}
+    }
+    skip.addEventListener('click',()=>save(false));create.addEventListener('click',()=>save(true));
+    ctx.destroyPlanDialog=()=>{dialog.remove();root.document.body.classList.remove('plan-dialog-open');};
   }
   async function init(page) {
     const ctx={page,planId:new URLSearchParams(root.location.search).get('id'),profile:null,debts:[],plans:[],
@@ -88,6 +144,7 @@
     };
     const dispose=()=>{
       ctx.alive=false;ctx.controllers.forEach(c=>c.abort());
+      ctx.destroyPlanDialog?.();
       root.document.getElementById('pageContent').replaceChildren();
       root.document.getElementById('sideNav')?.replaceChildren();
       root.document.getElementById('pageTitle').textContent='FutureWallet';
@@ -129,7 +186,7 @@
       if(page==='login')return ctx;
       const menu=root.document.getElementById('menuToggle'),drawer=root.document.getElementById('shellSidebar'),scrim=root.document.getElementById('drawerScrim');
       let previousFocus;
-      function close(){drawer.classList.remove('is-open');menu.setAttribute('aria-expanded','false');scrim.hidden=true;drawer.inert=root.matchMedia('(max-width:760px)').matches;previousFocus?.focus();}
+      function close(restoreFocus=true){drawer.classList.remove('is-open');menu.setAttribute('aria-expanded','false');scrim.hidden=true;drawer.inert=root.matchMedia('(max-width:760px)').matches;if(restoreFocus)previousFocus?.focus();}
       function open(){previousFocus=root.document.activeElement;drawer.inert=false;drawer.classList.add('is-open');menu.setAttribute('aria-expanded','true');scrim.hidden=false;root.document.getElementById('closeMenu').focus();}
       menu.addEventListener('click',open);scrim.addEventListener('click',close);root.document.getElementById('closeMenu').addEventListener('click',close);
       drawer.addEventListener('keydown',event=>{
@@ -143,6 +200,7 @@
       const media=root.matchMedia('(max-width:760px)');
       const sync=()=>{drawer.inert=media.matches&&!drawer.classList.contains('is-open');if(!media.matches){drawer.classList.remove('is-open');scrim.hidden=true;menu.setAttribute('aria-expanded','false');}};
       media.addEventListener('change',sync);sync();
+      setupPlanDialog(ctx,{closeDrawer:close,openDrawer:open});
       return ctx;
     }catch(error){if(ctx.alive){showError(error);status('頁面尚未載入。');}return null;}
   }

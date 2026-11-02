@@ -2,7 +2,7 @@
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>計畫｜FutureWallet</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/shell.css">
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/explanation-model.js"></script><script defer src="/shell.js"></script>
+<script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/explanation-model.js"></script><script defer src="/event-templates.js"></script><script defer src="/event-picker.js"></script><script defer src="/shell.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script><script defer src="/charts.js"></script><script defer src="/plan-page.js"></script><script defer src="/pages.js"></script>
 </head><body class="fw" data-page="plan">
 <a class="skip-link" href="#pageContent">跳到主要內容</a>
@@ -13,9 +13,9 @@
 <main class="shell-main"><div class="page-width"><header class="page-header"><h1 id="pageTitle">計畫</h1><p class="lede">安排事件，再比較未來的現金與淨資產走勢。</p></header><p id="pageStatus" role="status" aria-live="polite">正在載入…</p><p id="pageError" class="error" role="alert" hidden></p><div id="pageContent" hidden><section id="notFound" class="panel" hidden><h2>找不到這個計畫</h2><a href="/dashboard.html">回儀表板</a></section>
 <div id="planWorkspace" hidden><section class="panel"><form id="planNameForm"><fieldset><label>計畫名稱<input name="name" maxlength="80" required></label><div class="actions"><button type="submit">儲存名稱</button><button id="deletePlan" type="button" class="danger">刪除計畫</button></div></fieldset></form></section>
 <section class="panel" aria-labelledby="eventsHeading"><h2 id="eventsHeading">事件時間軸</h2><ul id="eventList" class="saved-list"></ul></section>
-<section class="panel" aria-labelledby="eventEditorHeading"><h2 id="eventEditorHeading">新增事件</h2>      <form id="eventForm"><fieldset id="eventFields" disabled><div class="grid two">
+<section class="panel" aria-labelledby="eventEditorHeading"><h2 id="eventEditorHeading">新增事件</h2><div id="eventTemplatePicker" aria-label="選擇事件範本"></div><form id="eventForm" hidden><fieldset id="eventFields" disabled><div class="grid two">
         <label>事件名稱<input name="name" maxlength="80" required></label>
-        <label>事件類型<select name="type"><option value="one_time">一次性收支</option><option value="range">期間每月收支</option><option value="salary_change">換工作／調整月薪</option><option value="vehicle_purchase">購車</option></select></label>
+        <input type="hidden" name="type" value="">
         <label>開始月份<input name="start_period" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
         <label data-event-field="end_period" hidden>結束月份（留空至模擬結束）<input name="end_period" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" disabled></label>
         <label data-event-field="amount">一次性金額（支出為負）<input name="amount" type="number" min="-20000000" max="20000000" step="0.01" required></label>

@@ -1,7 +1,7 @@
 (function(root) {
   'use strict';
   async function start(ctx) {
-    const S=root.FutureWalletShell,M=root.ShellModel,model=root.PlannerModel,E=root.ExplanationModel,$=id=>root.document.getElementById(id),money=M.money;
+    const S=root.FutureWalletShell,M=root.ShellModel,model=root.PlannerModel,E=root.ExplanationModel,T=root.EventTemplates,P=root.EventPicker,$=id=>root.document.getElementById(id),money=M.money;
     function syncEventFields() {
       const type = $('eventForm').elements.type.value;
       for (const label of root.document.querySelectorAll('[data-event-field]')) {
@@ -111,16 +111,20 @@
       paragraph(target,'這個分析只看這台車和現有貸款，不包含計畫中的其他事件與投資。');
       const link=S.element('a','完整購車分析');link.href='/vehicle.html';target.append(link);
     }
-    function icon(type){
-      const paths={one_time:'M12 4v16M4 12h16',range:'M4 8h16M4 16h16',salary_change:'M4 5h16v14H4zM8 10h8M8 14h5',vehicle_purchase:'M4 10l2-5h12l2 5v8H4zM4 10h16M7 18v3M17 18v3M7 14h2M15 14h2'};
-      const svg=root.document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');svg.classList.add('event-icon');
-      const path=root.document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[type]||paths.one_time);path.setAttribute('fill','none');path.setAttribute('stroke','currentColor');path.setAttribute('stroke-width','1.7');svg.append(path);return svg;
+    function selectTemplate(template){
+      if(ctx.busy||editing||template?.status!=='available')return;
+      $('eventForm').elements.type.value=template.eventType;$('eventForm').hidden=false;
+      P.select($('eventTemplatePicker'),template.id);syncEventFields();
+    }
+    function renderPicker(template=null,locked=false){
+      P.render($('eventTemplatePicker'),{selected:template?.id,locked,onSelect:selectTemplate});
     }
     function resetEditor(){
       editing=null;$('eventForm').reset();$('eventForm').elements.vehicle_catalog_id.value='';
       delete $('eventForm').elements.vehicle_catalog_id.dataset.pending;
       $('eventForm').elements.start_period.value=S.taipeiPeriod();$('eventEditorHeading').textContent='新增事件';
-      $('eventForm').querySelector('[type="submit"]').textContent='新增事件';$('cancelEdit').hidden=true;syncEventFields();
+      $('eventForm').elements.type.value='';$('eventForm').hidden=true;
+      $('eventForm').querySelector('[type="submit"]').textContent='新增事件';$('cancelEdit').hidden=true;renderPicker();syncEventFields();
     }
     function editEvent(event){
       const form=$('eventForm');form.reset();editing=event.id;
@@ -131,6 +135,7 @@
         const input=form.elements.namedItem(key);if(input)input.value=['annual_interest_rate','annual_depreciation_rate'].includes(key)?Number(value)*100:value??'';
       }
       $('eventEditorHeading').textContent='修改事件';form.querySelector('[type="submit"]').textContent='儲存事件';$('cancelEdit').hidden=false;
+      renderPicker(T.templateForEvent(event),true);form.hidden=false;
       syncEventFields();$('eventEditorHeading').scrollIntoView({block:'start'});form.elements.name.focus();
     }
     function renderEvents(){
@@ -138,7 +143,8 @@
       if(!events.length)list.append(S.element('li','尚無事件，從下方新增第一筆。'));
       for(const event of M.sortEvents(events)){
         const li=S.element('li'),head=S.element('div',null,'event-head'),copy=S.element('div',null,'event-copy');
-        copy.append(S.element('strong',event.name),S.element('span',`${M.eventNames[event.type]||'事件'}｜${event.start_period}｜${M.eventSummary(event)}`));head.append(icon(event.type),copy);
+        const template=T.templateForEvent(event);
+        copy.append(S.element('strong',event.name),S.element('span',`${template?.name||'事件'}｜${event.start_period}｜${M.eventSummary(event)}`));head.append(P.icon(template?.icon),copy);
         const edit=S.element('button','修改'),remove=S.element('button','刪除');edit.type=remove.type='button';edit.setAttribute('aria-label',`修改${event.name}`);remove.setAttribute('aria-label',`刪除${event.name}`);
         edit.addEventListener('click',()=>{if(!ctx.busy)editEvent(event);});
         remove.addEventListener('click',()=>ctx.perform(async()=>{
@@ -171,7 +177,6 @@
     $('eventFields').disabled=false;
     $('startPeriod').value=S.taipeiPeriod();resetEditor();await loadEvents();if(!ctx.alive)return;
     function onSubmit(id,action){$(id).addEventListener('submit',event=>{event.preventDefault();if($(id).reportValidity())ctx.perform(action);});}
-    $('eventForm').elements.type.addEventListener('change',syncEventFields);
     $('eventForm').elements.payment_method.addEventListener('change',syncEventFields);
     $('eventForm').elements.vehicle_catalog_id.addEventListener('change',()=>{
       delete $('eventForm').elements.vehicle_catalog_id.dataset.pending;
@@ -192,6 +197,8 @@
       const numeric=key=>{const raw=form.elements.namedItem(key).value.trim();if(!raw||!Number.isFinite(Number(raw)))throw new Error('請填寫有效數字');return Number(raw);};
       const values={name,type:form.elements.type.value,start_period:form.elements.start_period.value,
         amount:null,monthly_amount:null,new_salary:null,end_period:null,details:{}};
+      if(!T.templateForEvent(values))throw new Error('請先選擇可用的事件');
+      if(editing&&events.find(event=>event.id===editing)?.type!==values.type)throw new Error('修改事件時不可變更事件類型');
       if(values.type==='one_time')values.amount=numeric('amount');
       else if(values.type==='salary_change')values.new_salary=numeric('new_salary');
       else if(values.type==='range'){
@@ -226,6 +233,11 @@
       if(!ctx.alive||lastRun!==run)return;
       renderExplanation(data);S.status('說明已產生。');
     }));
+    const add=T.resolveAddParameter(root.location.search);
+    if(new URLSearchParams(root.location.search).has('add'))root.history.replaceState(root.history.state,'',`${root.location.pathname}${add.search}${root.location.hash}`);
+    if(add.template){
+      selectTemplate(add.template);$('eventForm').scrollIntoView({block:'start'});$('eventForm').elements.name.focus({preventScroll:true});
+    }
     loadVehicleMetadata();
   }
   root.PlanPage={start};

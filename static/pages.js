@@ -74,15 +74,9 @@
       const card=S.element('article',null,'plan-card'),heading=S.element('h3'),link=S.element('a',plan.name);link.href=`/plan.html?id=${encodeURIComponent(plan.id)}`;heading.append(link);card.append(heading);
       const info=S.element('p','正在讀取事件與計算走勢…');card.append(info);cards.append(card);entries.push({plan,card,info});
     }
-    const create=S.element('article',null,'plan-card');create.id='new-plan';create.append(S.element('h3','新增計畫'));
-    const form=S.element('form'),fieldset=S.element('fieldset'),label=S.element('label','計畫名稱'),input=S.element('input');
-    input.name='name';input.required=true;input.maxLength=80;label.append(input);fieldset.append(label);
-    const actions=S.element('div',null,'actions'),button=S.element('button','建立計畫','primary');button.type='submit';actions.append(button);fieldset.append(actions);form.append(fieldset);create.append(form);cards.append(create);
-    submit(form,ctx,async()=>{
-      const name=input.value.trim();if(!name)throw new Error('請填寫計畫名稱');
-      const plan=await ctx.store.addPlan({name,kind:'general'});if(ctx.alive)root.location.assign(`/plan.html?id=${encodeURIComponent(plan.id)}`);
-    });
-    if(root.location.hash==='#new-plan')input.focus();
+    const create=S.element('button',null,'plan-card new-plan-card');create.id='new-plan';create.type='button';
+    create.append(S.element('strong','新增計畫'),S.element('span','從購車、換工作或自訂收支開始。'));
+    create.addEventListener('click',()=>ctx.openPlanDialog(create));cards.append(create);
     for(const {plan,card,info}of entries){
       if(!ctx.alive)return;
       try{

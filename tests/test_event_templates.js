@@ -1,0 +1,49 @@
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const T=require('../static/event-templates.js');
+
+test('event template order and supported types match the product catalogue',()=>{
+  assert.deepEqual(T.templates.map(({id,name,group,status,eventType})=>[id,name,group,status,eventType]),[
+    ['vehicle','購車','life','available','vehicle_purchase'],
+    ['job_change','換工作','life','available','salary_change'],
+    ['home','買房','life','coming_soon',undefined],
+    ['moving','搬家','life','coming_soon',undefined],
+    ['marriage','結婚','life','coming_soon',undefined],
+    ['child','生小孩','life','coming_soon',undefined],
+    ['travel','旅遊','life','coming_soon',undefined],
+    ['study','進修','life','coming_soon',undefined],
+    ['one_time','一次性收支','custom','available','one_time'],
+    ['range','期間每月收支','custom','available','range']
+  ]);
+  for(const template of T.templates){
+    assert.ok(template.description.length>5);assert.ok(template.icon);
+    if(template.status==='coming_soon')assert.equal(Object.hasOwn(template,'eventType'),false);
+  }
+});
+test('available templates include only the four supported database event types',()=>{
+  assert.deepEqual(T.availableTemplates().map(t=>t.id),['vehicle','job_change','one_time','range']);
+  assert.ok(T.availableTemplates().every(t=>t.status==='available'&&['one_time','range','salary_change','vehicle_purchase'].includes(t.eventType)));
+});
+test('event types resolve to the same templates shown by the picker',()=>{
+  for(const[type,id]of Object.entries({one_time:'one_time',range:'range',salary_change:'job_change',vehicle_purchase:'vehicle'}))
+    assert.equal(T.templateForEvent({type}),T.templateById(id));
+  assert.equal(T.templateForEvent({type:'home'}),undefined);
+  assert.equal(T.templateForEvent(null),undefined);
+  assert.equal(T.templateById('missing'),undefined);
+});
+test('an available add parameter selects its template and preserves other query values',()=>{
+  for(const template of T.availableTemplates()){
+    const result=T.resolveAddParameter(`?id=plan-id&add=${template.id}&view=full`);
+    assert.equal(result.template,template);assert.equal(result.search,'?id=plan-id&view=full');
+  }
+});
+for(const [name,search]of [['coming soon','?id=plan&add=home'],['unknown','?id=plan&add=missing'],['absent','?id=plan']]){
+  test(`the ${name} add parameter is ignored without an error`,()=>{
+    assert.deepEqual(T.resolveAddParameter(search),{template:null,search:'?id=plan'});
+  });
+}
+test('the shared template catalogue cannot be mutated by an individual picker',()=>{
+  assert.ok(Object.isFrozen(T.templates));assert.ok(T.templates.every(Object.isFrozen));
+  const available=T.availableTemplates();available.pop();assert.equal(T.availableTemplates().length,4);
+  assert.deepEqual(T.resolveAddParameter('?add=travel'),{template:null,search:''});
+});

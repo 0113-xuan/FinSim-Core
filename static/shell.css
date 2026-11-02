@@ -64,7 +64,33 @@ body.fw { color:var(--text); }
 .fw .analysis-group h4 { margin:0 0 14px;font-size:16px; }
 .fw .skip-link { position:fixed;top:-100px;left:16px;z-index:40;background:var(--card);padding:12px; }
 .fw .skip-link:focus { top:12px; }
+.fw .shell-sidebar nav button { text-align:left;padding:11px 12px;border:0;background:transparent;color:var(--navy); }
+.fw .shell-sidebar nav button:hover { background:var(--bg); }
+.fw .new-plan-card { display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:12px;text-align:left;min-height:180px; }
+.fw .new-plan-card strong { font-size:20px;color:var(--navy); }
+.fw .new-plan-card span { font-weight:400;line-height:1.7; }
+body.fw.plan-dialog-open { overflow:hidden; }
+.fw .plan-dialog { width:min(880px,calc(100% - 48px));max-width:none;max-height:calc(100dvh - 48px);padding:32px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);box-shadow:0 18px 60px #0f172a33;overscroll-behavior:contain; }
+.fw .plan-dialog::backdrop { background:#0f172a80; }
+.fw .plan-dialog h2 { font-size:24px; }
+.fw .plan-dialog .actions { justify-content:flex-end; }
+.fw .plan-dialog small { display:block;margin-top:8px;color:var(--muted); }
+.fw .template-group { margin:26px 0; }
+.fw .template-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px; }
+.fw .template-card { display:flex;flex-direction:column;gap:10px;min-width:0;text-align:left;white-space:normal;background:var(--card);border:1px solid var(--line);padding:16px;border-radius:9px; }
+.fw .template-title { display:flex;align-items:center;gap:10px;flex-wrap:wrap; }
+.fw .template-title strong { font-size:16px; }
+.fw .template-description { font-size:14px;font-weight:400;line-height:1.6; }
+.fw .template-badge { font-size:12px;color:var(--muted);font-weight:400;margin-left:auto; }
+.fw .template-card[aria-pressed="true"] { border:2px solid var(--accent);padding:15px;background:var(--bg); }
+.fw .template-card[aria-pressed="true"] strong { color:var(--accent); }
+.fw .template-card[aria-disabled="true"] { cursor:default;background:var(--bg); }
+.fw .template-card:not([aria-disabled="true"]):not(:disabled):hover { border-color:var(--accent); }
+.fw #eventForm { padding-top:24px;border-top:1px solid var(--line); }
 @media(max-width:760px) {
+  .fw .plan-dialog { width:100%;max-height:100dvh;margin:auto 0;padding:24px 18px;border-radius:0; }
+  .fw .template-grid { grid-template-columns:1fr; }
+  .fw .plan-dialog .actions { align-items:stretch; }
   .fw .shell-main { margin-left:0;padding:80px 18px 40px; }
   .fw .shell-sidebar { transform:translateX(-100%);width:min(288px,85vw); }
   .fw .shell-sidebar.is-open { transform:translateX(0); }
