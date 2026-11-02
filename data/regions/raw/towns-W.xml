@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><townItems>
+<townItem>
+    <towncode>09020010</towncode>
+    <towncode01>W03</towncode01>
+    <townname>金城鎮</townname>
+</townItem>
+
+<townItem>
+    <towncode>09020020</towncode>
+    <towncode01>W02</towncode01>
+    <townname>金沙鎮</townname>
+</townItem>
+
+<townItem>
+    <towncode>09020030</towncode>
+    <towncode01>W01</towncode01>
+    <townname>金湖鎮</townname>
+</townItem>
+
+<townItem>
+    <towncode>09020040</towncode>
+    <towncode01>W04</towncode01>
+    <townname>金寧鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>09020050</towncode>
+    <towncode01>W05</towncode01>
+    <townname>烈嶼鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>09020060</towncode>
+    <towncode01>W06</towncode01>
+    <townname>烏坵鄉</townname>
+</townItem>
+</townItems>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><townItems>
+<townItem>
+    <towncode>64000010</towncode>
+    <towncode01>E01</towncode01>
+    <townname>鹽埕區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000020</towncode>
+    <towncode01>E02</towncode01>
+    <townname>鼓山區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000030</towncode>
+    <towncode01>E03</towncode01>
+    <townname>左營區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000040</towncode>
+    <towncode01>E04</towncode01>
+    <townname>楠梓區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000050</towncode>
+    <towncode01>E05</towncode01>
+    <townname>三民區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000060</towncode>
+    <towncode01>E06</towncode01>
+    <townname>新興區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000070</towncode>
+    <towncode01>E07</towncode01>
+    <townname>前金區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000080</towncode>
+    <towncode01>E08</towncode01>
+    <townname>苓雅區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000090</towncode>
+    <towncode01>E09</towncode01>
+    <townname>前鎮區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000100</towncode>
+    <towncode01>E10</towncode01>
+    <townname>旗津區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000110</towncode>
+    <towncode01>E11</towncode01>
+    <townname>小港區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000120</towncode>
+    <towncode01>E12</towncode01>
+    <townname>鳳山區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000130</towncode>
+    <towncode01>E13</towncode01>
+    <townname>林園區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000140</towncode>
+    <towncode01>E14</towncode01>
+    <townname>大寮區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000150</towncode>
+    <towncode01>E15</towncode01>
+    <townname>大樹區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000160</towncode>
+    <towncode01>E16</towncode01>
+    <townname>大社區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000170</towncode>
+    <towncode01>E17</towncode01>
+    <townname>仁武區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000180</towncode>
+    <towncode01>E18</towncode01>
+    <townname>鳥松區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000190</towncode>
+    <towncode01>E19</towncode01>
+    <townname>岡山區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000200</towncode>
+    <towncode01>E20</towncode01>
+    <townname>橋頭區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000210</towncode>
+    <towncode01>E21</towncode01>
+    <townname>燕巢區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000220</towncode>
+    <towncode01>E22</towncode01>
+    <townname>田寮區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000230</towncode>
+    <towncode01>E23</towncode01>
+    <townname>阿蓮區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000240</towncode>
+    <towncode01>E24</towncode01>
+    <townname>路竹區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000250</towncode>
+    <towncode01>E25</towncode01>
+    <townname>湖內區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000260</towncode>
+    <towncode01>E26</towncode01>
+    <townname>茄萣區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000270</towncode>
+    <towncode01>E27</towncode01>
+    <townname>永安區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000280</towncode>
+    <towncode01>E28</towncode01>
+    <townname>彌陀區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000290</towncode>
+    <towncode01>E29</towncode01>
+    <townname>梓官區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000300</towncode>
+    <towncode01>E30</towncode01>
+    <townname>旗山區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000310</towncode>
+    <towncode01>E31</towncode01>
+    <townname>美濃區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000320</towncode>
+    <towncode01>E32</towncode01>
+    <townname>六龜區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000330</towncode>
+    <towncode01>E33</towncode01>
+    <townname>甲仙區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000340</towncode>
+    <towncode01>E34</towncode01>
+    <townname>杉林區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000350</towncode>
+    <towncode01>E35</towncode01>
+    <townname>內門區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000360</towncode>
+    <towncode01>E36</towncode01>
+    <townname>茂林區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000370</towncode>
+    <towncode01>E37</towncode01>
+    <townname>桃源區</townname>
+</townItem>
+
+<townItem>
+    <towncode>64000380</towncode>
+    <towncode01>E38</towncode01>
+    <townname>那瑪夏區</townname>
+</townItem>
+</townItems>

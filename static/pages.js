@@ -23,8 +23,21 @@
   }
   async function finances(ctx){
     const form=$('financeForm'),pending=[];
+    const L=root.LocationModel,city=form.elements.city,district=form.elements.district;
+    let regions=[];
+    function options(select,values,empty,selected=''){
+      select.replaceChildren();for(const value of ['',...values]){const option=S.element('option',value||empty);option.value=value;select.append(option);}select.value=selected;
+    }
+    function syncDistrict(selected=''){options(district,L.districtsForCity(regions,city.value),'選擇行政區（選填）',selected);district.disabled=!city.value;}
+    city.disabled=district.disabled=true;
+    async function loadRegions(){try{
+      const response=await root.fetch('/regions');if(!response.ok)throw new Error('無法讀取行政區');regions=await response.json();if(!ctx.alive)return;
+      options(city,regions.map(r=>r.city),'選擇縣市（選填）',ctx.profile?.city||'');city.disabled=false;syncDistrict(ctx.profile?.district||'');
+    }catch(_){if(ctx.alive)$('locationStatus').textContent='所在地清單載入未完成；其他財務資料仍可儲存，重新整理可重試。';}}
+    loadRegions();
+    city.addEventListener('change',()=>syncDistrict());
     if(ctx.page==='profile')$('accountEmail').textContent=`登入帳號：${ctx.session.user.email||'未提供電子郵件'}`;
-    if(ctx.profile)for(const[key,value]of Object.entries(ctx.profile)){const input=form.elements.namedItem(key);if(input)input.value=value??'';}
+    if(ctx.profile)for(const[key,value]of Object.entries(ctx.profile)){if(['city','district'].includes(key))continue;const input=form.elements.namedItem(key);if(input)input.value=value??'';}
     function renderDebts(){
       const list=$('debtList');list.replaceChildren();
       const rows=[...ctx.debts,...pending];
@@ -53,13 +66,15 @@
       const values={};
       for(const key of ['monthly_income','fixed_expense','variable_expense','cash_balance','investment_value','monthly_investment','emergency_target_months'])values[key]=numeric(form,key);
       values.raise_rate=form.elements.raise_rate.value.trim()===''?null:numeric(form,'raise_rate');
+      // Failed optional reference loading must not erase a previously saved location.
+      if(regions.length)Object.assign(values,L.locationValues(regions,city.value,district.value));
       const profile=await ctx.store.saveProfile(values);if(!ctx.alive)return;ctx.profile=profile;
       while(pending.length){
         try{const saved=await ctx.store.addDebt(pending[0]);if(!ctx.alive)return;ctx.debts.push(saved);pending.shift();}
         catch(error){renderDebts();throw new Error(`財務資料已儲存，但部分貸款尚未儲存：${error.message}。可再次儲存剩餘貸款`);}
       }
       if(ctx.page==='onboarding')root.location.assign('/dashboard.html');
-      else{renderDebts();S.status('財務資料已儲存，儀表板會使用新的數字重新計算。');}
+      else{renderDebts();S.status(ctx.store.locationSupported?'財務資料已儲存，儀表板會使用新的數字重新計算。':'其他財務資料已儲存；所在地尚未儲存，請管理者先新增欄位。');}
     });
     renderDebts();
   }

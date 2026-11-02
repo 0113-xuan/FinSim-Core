@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><townItems>
+<townItem>
+    <towncode>10015010</towncode>
+    <towncode01>U01</towncode01>
+    <townname>花蓮市</townname>
+</townItem>
+
+<townItem>
+    <towncode>10015020</towncode>
+    <towncode01>U07</towncode01>
+    <townname>鳳林鎮</townname>
+</townItem>
+
+<townItem>
+    <towncode>10015030</towncode>
+    <towncode01>U03</towncode01>
+    <townname>玉里鎮</townname>
+</townItem>
+
+<townItem>
+    <towncode>10015040</towncode>
+    <towncode01>U04</towncode01>
+    <townname>新城鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10015050</towncode>
+    <towncode01>U05</towncode01>
+    <townname>吉安鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10015060</towncode>
+    <towncode01>U06</towncode01>
+    <townname>壽豐鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10015070</towncode>
+    <towncode01>U02</towncode01>
+    <townname>光復鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10015080</towncode>
+    <towncode01>U08</towncode01>
+    <townname>豐濱鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10015090</towncode>
+    <towncode01>U09</towncode01>
+    <townname>瑞穗鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10015100</towncode>
+    <towncode01>U10</towncode01>
+    <townname>富里鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10015110</towncode>
+    <towncode01>U11</towncode01>
+    <townname>秀林鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10015120</towncode>
+    <towncode01>U12</towncode01>
+    <townname>萬榮鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10015130</towncode>
+    <towncode01>U13</towncode01>
+    <townname>卓溪鄉</townname>
+</townItem>
+</townItems>

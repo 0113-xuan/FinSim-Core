@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><townItems>
+<townItem>
+    <towncode>10017010</towncode>
+    <towncode01>C01</towncode01>
+    <townname>中正區</townname>
+</townItem>
+
+<townItem>
+    <towncode>10017020</towncode>
+    <towncode01>C02</towncode01>
+    <townname>七堵區</townname>
+</townItem>
+
+<townItem>
+    <towncode>10017030</towncode>
+    <towncode01>C03</towncode01>
+    <townname>暖暖區</townname>
+</townItem>
+
+<townItem>
+    <towncode>10017040</towncode>
+    <towncode01>C04</towncode01>
+    <townname>仁愛區</townname>
+</townItem>
+
+<townItem>
+    <towncode>10017050</towncode>
+    <towncode01>C05</towncode01>
+    <townname>中山區</townname>
+</townItem>
+
+<townItem>
+    <towncode>10017060</towncode>
+    <towncode01>C06</towncode01>
+    <townname>安樂區</townname>
+</townItem>
+
+<townItem>
+    <towncode>10017070</towncode>
+    <towncode01>C07</towncode01>
+    <townname>信義區</townname>
+</townItem>
+</townItems>

@@ -29,7 +29,8 @@ def convert_vehicle_events(request: PlannerVehicleRequest):
     events, loans, assets, vehicles = [], [], [], []
     for index, vehicle in enumerate(request.vehicles):
         details = vehicle.details.model_dump(exclude_none=True, exclude={
-            'vehicle_catalog_id', 'displacement_cc', 'fuel_type', 'insurance_items'})
+            'vehicle_catalog_id', 'displacement_cc', 'fuel_type', 'insurance_items',
+            'has_parking_space', 'parking_lot_id'})
         defaults = []
         for key in OWNERSHIP_FIELDS:
             if key not in details:

@@ -98,6 +98,12 @@ body.fw.plan-dialog-open { overflow:hidden; }
 .fw .insurance-choice input { width:18px;height:18px;flex-shrink:0;accent-color:var(--accent); }
 .fw .insurance-body { margin-top:24px; }
 .fw .insurance-body legend { font-size:16px; }
+.fw .parking-options { display:grid;gap:12px;margin:18px 0; }
+.fw .parking-lot { text-align:left;padding:16px;border:1px solid var(--line);border-radius:8px;line-height:1.7;min-width:0;overflow-wrap:anywhere; }
+.fw .parking-lot span,.fw .parking-lot small { display:block; }
+.fw .parking-lot[aria-pressed="true"] { border:2px solid var(--accent);padding:15px;background:var(--bg); }
+.fw #parkingReference { margin-top:24px; }
+.fw #parkingSource { overflow-wrap:anywhere;font-size:13px; }
 @media(max-width:760px) {
   .fw .insurance-row { grid-template-columns:1fr; }
   .fw .insurance-row > label:not(.insurance-choice) { grid-column:1;grid-row:auto; }

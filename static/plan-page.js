@@ -15,10 +15,12 @@
         const control = label.querySelector('input,select'); if (control) control.disabled = !visible;
       }
       fees.sync();
+      parking.sync();
     }
     const ownershipLabels = {annual_insurance:'保險',annual_tax:'稅費',annual_maintenance_budget:'保養',monthly_fuel_or_energy:'油電',monthly_parking:'停車',annual_depreciation_rate:'折舊率'};
     let vehicleCatalog = [];
     const fees=root.VehicleFeesForm.create({form:$('eventForm'),isAlive:()=>ctx.alive});
+    const parking=root.ParkingForm.create({form:$('eventForm'),profile:ctx.profile,isAlive:()=>ctx.alive});
     function syncVehicleSpec(){
       const select=$('eventForm').elements.vehicle_catalog_id;
       const id=select.dataset.pending??select.value;
@@ -123,7 +125,7 @@
       if(ctx.busy||editing||template?.status!=='available')return;
       $('eventForm').elements.type.value=template.eventType;$('eventForm').hidden=false;
       P.select($('eventTemplatePicker'),template.id);syncEventFields();
-      if(template.eventType==='vehicle_purchase')syncVehicleSpec();
+      if(template.eventType==='vehicle_purchase'){syncVehicleSpec();parking.refresh();}
     }
     function renderPicker(template=null,locked=false){
       P.render($('eventTemplatePicker'),{selected:template?.id,locked,onSelect:selectTemplate});
@@ -132,7 +134,7 @@
       editing=null;$('eventForm').reset();$('eventForm').elements.vehicle_catalog_id.value='';
       delete $('eventForm').elements.vehicle_catalog_id.dataset.pending;
       $('eventForm').elements.start_period.value=S.taipeiPeriod();$('eventEditorHeading').textContent='新增事件';
-      $('eventForm').elements.type.value='';$('eventForm').hidden=true;fees.reset();
+      $('eventForm').elements.type.value='';$('eventForm').hidden=true;fees.reset();parking.reset();
       $('eventForm').querySelector('[type="submit"]').textContent='新增事件';$('cancelEdit').hidden=true;renderPicker();syncEventFields();
     }
     function editEvent(event){
@@ -144,6 +146,7 @@
         const input=form.elements.namedItem(key);if(input)input.value=['annual_interest_rate','annual_depreciation_rate'].includes(key)?Number(value)*100:value??'';
       }
       fees.reset(event.details);syncVehicleSpec();
+      parking.reset(event.details);
       $('eventEditorHeading').textContent='修改事件';form.querySelector('[type="submit"]').textContent='儲存事件';$('cancelEdit').hidden=false;
       renderPicker(T.templateForEvent(event),true);form.hidden=false;
       syncEventFields();$('eventEditorHeading').scrollIntoView({block:'start'});form.elements.name.focus();
@@ -218,7 +221,7 @@
       }else{
         const raw={};for(const key of ['vehicle_catalog_id','purchase_price','payment_method','down_payment','loan_term_months','annual_interest_rate','annual_depreciation_rate',...model.ownershipFields])raw[key]=form.elements.namedItem(key).value;
         raw.vehicle_catalog_id=form.elements.vehicle_catalog_id.dataset.pending??raw.vehicle_catalog_id;
-        values.details={...model.vehicleDetails(raw),...fees.details()};
+        values.details={...model.vehicleDetails(raw),...fees.details(),...parking.details()};
       }
       if(editing)await ctx.store.updateEvent(ctx.planId,editing,values);else await ctx.store.addEvent(ctx.planId,values);
       if(!ctx.alive)return;resetEditor();await loadEvents();S.status('事件已儲存。');

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><townItems>
+<townItem>
+    <towncode>10005010</towncode>
+    <towncode01>K01</towncode01>
+    <townname>苗栗市</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005020</towncode>
+    <towncode01>K02</towncode01>
+    <townname>苑裡鎮</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005030</towncode>
+    <towncode01>K03</towncode01>
+    <townname>通霄鎮</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005040</towncode>
+    <towncode01>K09</towncode01>
+    <townname>竹南鎮</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005050</towncode>
+    <towncode01>K10</towncode01>
+    <townname>頭份市</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005060</towncode>
+    <towncode01>K12</towncode01>
+    <townname>後龍鎮</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005070</towncode>
+    <towncode01>K16</towncode01>
+    <townname>卓蘭鎮</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005080</towncode>
+    <towncode01>K15</towncode01>
+    <townname>大湖鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005090</towncode>
+    <towncode01>K04</towncode01>
+    <townname>公館鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005100</towncode>
+    <towncode01>K05</towncode01>
+    <townname>銅鑼鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005110</towncode>
+    <towncode01>K14</towncode01>
+    <townname>南庄鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005120</towncode>
+    <towncode01>K08</towncode01>
+    <townname>頭屋鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005130</towncode>
+    <towncode01>K06</towncode01>
+    <townname>三義鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005140</towncode>
+    <towncode01>K07</towncode01>
+    <townname>西湖鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005150</towncode>
+    <towncode01>K11</towncode01>
+    <townname>造橋鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005160</towncode>
+    <towncode01>K13</towncode01>
+    <townname>三灣鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005170</towncode>
+    <towncode01>K17</towncode01>
+    <townname>獅潭鄉</townname>
+</townItem>
+
+<townItem>
+    <towncode>10005180</towncode>
+    <towncode01>K18</towncode01>
+    <townname>泰安鄉</townname>
+</townItem>
+</townItems>

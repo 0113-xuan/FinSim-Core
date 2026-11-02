@@ -41,6 +41,8 @@ class PlannerVehicleDetails(PlannerModel):
     displacement_cc: int | None = Field(default=None, ge=0, le=100_000, strict=True)
     fuel_type: Literal['gasoline','hybrid','diesel','ev'] | None = None
     insurance_items: list[PlannerInsuranceItem] | None = Field(default=None, max_length=7)
+    has_parking_space: bool | None = Field(default=None, strict=True)
+    parking_lot_id: str | None = Field(default=None, min_length=1, max_length=120)
 
     @model_validator(mode='after')
     def validate_purchase(self):

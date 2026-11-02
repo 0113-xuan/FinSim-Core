@@ -2,8 +2,8 @@
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>計畫｜FutureWallet</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/shell.css">
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/explanation-model.js"></script><script defer src="/event-templates.js"></script><script defer src="/event-picker.js"></script><script defer src="/shell.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script><script defer src="/charts.js"></script><script defer src="/vehicle-fees-model.js"></script><script defer src="/vehicle-fees-form.js"></script><script defer src="/plan-page.js"></script><script defer src="/pages.js"></script>
+<script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/explanation-model.js"></script><script defer src="/event-templates.js"></script><script defer src="/event-picker.js"></script><script defer src="/location-model.js"></script><script defer src="/shell.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script><script defer src="/charts.js"></script><script defer src="/vehicle-fees-model.js"></script><script defer src="/vehicle-fees-form.js"></script><script defer src="/parking-form.js"></script><script defer src="/plan-page.js"></script><script defer src="/pages.js"></script>
 </head><body class="fw" data-page="plan">
 <a class="skip-link" href="#pageContent">跳到主要內容</a>
 <button id="menuToggle" class="menu-toggle" type="button" aria-label="開啟選單" aria-controls="shellSidebar" aria-expanded="false">選單</button>
@@ -32,10 +32,14 @@
         <label data-vehicle-field="financed" hidden>年利率（%）<input name="annual_interest_rate" type="number" min="0" max="100" step="any" required disabled></label>
         <label data-vehicle-field hidden>保養（年，選填）<input name="annual_maintenance_budget" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
         <label data-vehicle-field hidden>油電（月，選填）<input name="monthly_fuel_or_energy" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
-        <label data-vehicle-field hidden>停車（月，選填）<input name="monthly_parking" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
         <label data-vehicle-field hidden>折舊率（%／年，選填）<input name="annual_depreciation_rate" type="number" min="0" max="100" step="any" placeholder="留空使用預設 15%" disabled></label>
         <p id="vehicleMetadataStatus" data-vehicle-field hidden role="status"></p>
       </div>
+      <section id="vehicleParkingSection" class="fee-section" hidden><fieldset id="parkingFields" disabled>
+        <legend>停車費</legend><label>你有自己的停車位嗎？<select name="has_parking_space"><option value="false">沒有</option><option value="true">有</option></select><small>例如住家自有車位、公司提供車位；有車位時預設 0 元，仍可修改。</small></label>
+        <label>停車費（月，選填）<input name="monthly_parking" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用後端預設"></label>
+        <div id="parkingReference"><h3>所在地行政區的停車場參考</h3><p id="parkingStatus" role="status" aria-live="polite"></p><div id="parkingLots" class="parking-options"></div><p id="parkingSource"></p><button id="retryParking" type="button">重新載入停車場</button></div>
+      </fieldset></section>
       <section id="vehicleFeesSection" class="vehicle-fees" hidden><fieldset id="vehicleFeesFields" disabled>
         <p id="feesStatus" role="status" aria-live="polite">請先填寫車價與排氣量。</p><button id="retryVehicleFees" type="button">重新載入稅費與保險</button>
         <section class="fee-section" aria-labelledby="taxHeading"><h3 id="taxHeading">稅費（年）</h3><div id="officialTax"></div>

@@ -1,0 +1,13 @@
+{
+  "source": {
+    "name": "交通部 TDX 臺中市路外停車場靜態資料",
+    "url": "https://tdx.transportdata.tw/api/basic/v1/Parking/OffStreet/CarPark/City/Taichung?$format=JSON",
+    "license": "政府資料開放授權條款－第1版",
+    "license_url": "https://data.gov.tw/license",
+    "snapshot_date": null,
+    "checked_on": "2026-11-03",
+    "status": "awaiting_credentials",
+    "is_sample": false
+  },
+  "lots": []
+}

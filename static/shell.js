@@ -1,6 +1,7 @@
 (function(root) {
   'use strict';
   const textModel=typeof module!=='undefined'&&module.exports?require('./shell-model.js'):root.ShellModel;
+  const locationModel=typeof module!=='undefined'&&module.exports?require('./location-model.js'):root.LocationModel;
   const fields = {
     profiles: 'user_id,monthly_income,cash_balance,fixed_expense,variable_expense,investment_value,monthly_investment,raise_rate,emergency_target_months,updated_at',
     debts: 'id,user_id,name,monthly_payment,remaining_months,created_at',
@@ -12,19 +13,29 @@
     if (error) throw new Error(textModel.errorText(error));
     return data;
   }
-  function createStore(client, userId) {
+  function createStore(client, userId, {onWarning=()=>{}}={}) {
     const owned = table => client.from(table).select(fields[table]).eq('user_id', userId);
+    let locationSupported=true;
+    async function profileQuery(action){
+      const run=()=>action(locationSupported?`${fields.profiles},city,district`:fields.profiles,locationSupported);
+      let result=await run();
+      if(result.error&&locationSupported&&locationModel.missingLocationColumns(result.error)){
+        locationSupported=false;onWarning(locationModel.schemaWarning);result=await run();
+      }
+      return checked(Promise.resolve(result));
+    }
     const remove = async query => {
       const rows = await checked(query.select('id'));
       if (!rows?.length) throw new Error('資料已不存在或無法刪除，請重新載入');
     };
     return {
-      profile: () => checked(owned('profiles').maybeSingle()),
+      get locationSupported(){return locationSupported;},
+      profile: () => profileQuery(selection=>client.from('profiles').select(selection).eq('user_id',userId).maybeSingle()),
       debts: () => checked(owned('debts').order('created_at')),
       plans: () => checked(owned('plans').order('created_at')),
       plan: id => checked(owned('plans').eq('id', id).maybeSingle()),
       events: planId => checked(owned('plan_events').eq('plan_id', planId).order('start_period')),
-      saveProfile: values => checked(client.from('profiles').upsert({...values, user_id:userId, updated_at:new Date().toISOString()}, {onConflict:'user_id'}).select(fields.profiles).single()),
+      saveProfile: values => profileQuery((selection,withLocation)=>client.from('profiles').upsert({...(withLocation?values:locationModel.withoutLocation(values)), user_id:userId, updated_at:new Date().toISOString()}, {onConflict:'user_id'}).select(selection).single()),
       addDebt: values => checked(client.from('debts').insert({...values, user_id:userId}).select(fields.debts).single()),
       removeDebt: id => remove(client.from('debts').delete().eq('user_id', userId).eq('id', id)),
       addPlan: values => checked(client.from('plans').insert({...values, user_id:userId}).select(fields.plans).single()),
@@ -166,7 +177,12 @@
       const before=authVersion, data=await checked(ctx.client.auth.getSession());
       ctx.session=authVersion!==before?observedSession:data.session;
       if(ctx.session){
-        ctx.store=createStore(ctx.client,ctx.session.user.id);
+        ctx.store=createStore(ctx.client,ctx.session.user.id,{onWarning:message=>{
+          if(!ctx.alive)return;
+          let notice=root.document.getElementById('profileSchemaNotice');
+          if(!notice){notice=element('p',null,'error');notice.id='profileSchemaNotice';notice.setAttribute('role','status');root.document.getElementById('pageError').after(notice);}
+          notice.textContent=message;
+        }});
         ctx.profile=await ctx.store.profile();
         if(!ctx.alive)return null;
         if(observedSession!==undefined&&observedSession?.user?.id!==ctx.session.user.id){dispose();root.location.replace('/login.html');return null;}

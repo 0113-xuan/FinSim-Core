@@ -1,0 +1,170 @@
+[
+  {
+    "CarParkID": "sample-be-01",
+    "CarParkName": {
+      "Zh_tw": "【測試】範例停車場 01"
+    },
+    "CountyName": "臺中市",
+    "TownName": "北屯區",
+    "Address": "【測試地址，非真實地點】",
+    "PositionLat": null,
+    "PositionLon": null,
+    "FareDescription": "月租2,000元",
+    "SpecialOfferDescription": "",
+    "SrcUpdateTime": null
+  },
+  {
+    "CarParkID": "sample-be-02",
+    "CarParkName": {
+      "Zh_tw": "【測試】範例停車場 02"
+    },
+    "CountyName": "臺中市",
+    "TownName": "北屯區",
+    "Address": "【測試地址，非真實地點】",
+    "PositionLat": null,
+    "PositionLon": null,
+    "FareDescription": "月票：2,500元",
+    "SpecialOfferDescription": "",
+    "SrcUpdateTime": null
+  },
+  {
+    "CarParkID": "sample-be-03",
+    "CarParkName": {
+      "Zh_tw": "【測試】範例停車場 03"
+    },
+    "CountyName": "臺中市",
+    "TownName": "北屯區",
+    "Address": "【測試地址，非真實地點】",
+    "PositionLat": null,
+    "PositionLon": null,
+    "FareDescription": "包月 NT$2,800",
+    "SpecialOfferDescription": "",
+    "SrcUpdateTime": null
+  },
+  {
+    "CarParkID": "sample-be-04",
+    "CarParkName": {
+      "Zh_tw": "【測試】範例停車場 04"
+    },
+    "CountyName": "臺中市",
+    "TownName": "北屯區",
+    "Address": "【測試地址，非真實地點】",
+    "PositionLat": null,
+    "PositionLon": null,
+    "FareDescription": "定期票每月3000元",
+    "SpecialOfferDescription": "",
+    "SrcUpdateTime": null
+  },
+  {
+    "CarParkID": "sample-be-05",
+    "CarParkName": {
+      "Zh_tw": "【測試】範例停車場 05"
+    },
+    "CountyName": "臺中市",
+    "TownName": "北屯區",
+    "Address": "【測試地址，非真實地點】",
+    "PositionLat": null,
+    "PositionLon": null,
+    "FareDescription": "日間月票2,000元、全日月票3,500元",
+    "SpecialOfferDescription": "",
+    "SrcUpdateTime": null
+  },
+  {
+    "CarParkID": "sample-be-06",
+    "CarParkName": {
+      "Zh_tw": "【測試】範例停車場 06"
+    },
+    "CountyName": "臺中市",
+    "TownName": "北屯區",
+    "Address": "【測試地址，非真實地點】",
+    "PositionLat": null,
+    "PositionLon": null,
+    "FareDescription": "每小時30元",
+    "SpecialOfferDescription": "",
+    "SrcUpdateTime": null
+  },
+  {
+    "CarParkID": "sample-xi-01",
+    "CarParkName": {
+      "Zh_tw": "【測試】範例停車場 07"
+    },
+    "CountyName": "臺中市",
+    "TownName": "西屯區",
+    "Address": "【測試地址，非真實地點】",
+    "PositionLat": null,
+    "PositionLon": null,
+    "FareDescription": "月租２，５００元",
+    "SpecialOfferDescription": "",
+    "SrcUpdateTime": null
+  },
+  {
+    "CarParkID": "sample-xi-02",
+    "CarParkName": {
+      "Zh_tw": "【測試】範例停車場 08"
+    },
+    "CountyName": "臺中市",
+    "TownName": "西屯區",
+    "Address": "【測試地址，非真實地點】",
+    "PositionLat": null,
+    "PositionLon": null,
+    "FareDescription": "全日月票 $3,200（含稅）",
+    "SpecialOfferDescription": "",
+    "SrcUpdateTime": null
+  },
+  {
+    "CarParkID": "sample-nan-01",
+    "CarParkName": {
+      "Zh_tw": "【測試】範例停車場 09"
+    },
+    "CountyName": "臺中市",
+    "TownName": "南屯區",
+    "Address": "【測試地址，非真實地點】",
+    "PositionLat": null,
+    "PositionLon": null,
+    "FareDescription": "月租費：2500.50元",
+    "SpecialOfferDescription": "",
+    "SrcUpdateTime": null
+  },
+  {
+    "CarParkID": "sample-nan-02",
+    "CarParkName": {
+      "Zh_tw": "【測試】範例停車場 10"
+    },
+    "CountyName": "臺中市",
+    "TownName": "南屯區",
+    "Address": "【測試地址，非真實地點】",
+    "PositionLat": null,
+    "PositionLon": null,
+    "FareDescription": "月票：2000／月",
+    "SpecialOfferDescription": "",
+    "SrcUpdateTime": null
+  },
+  {
+    "CarParkID": "sample-nan-03",
+    "CarParkName": {
+      "Zh_tw": "【測試】範例停車場 11"
+    },
+    "CountyName": "臺中市",
+    "TownName": "南屯區",
+    "Address": "【測試地址，非真實地點】",
+    "PositionLat": null,
+    "PositionLon": null,
+    "FareDescription": "包月：2,600",
+    "SpecialOfferDescription": "",
+    "SrcUpdateTime": null
+  },
+  {
+    "CarParkID": "sample-nan-04",
+    "CarParkName": {
+      "Zh_tw": "【測試】範例停車場 12"
+    },
+    "CountyName": "臺中市",
+    "TownName": "南屯區",
+    "Address": "【測試地址，非真實地點】",
+    "PositionLat": null,
+    "PositionLon": null,
+    "FareDescription": "月租另洽，計次50元",
+    "SpecialOfferDescription": "",
+    "SrcUpdateTime": null
+  }
+]
