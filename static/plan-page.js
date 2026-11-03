@@ -16,11 +16,13 @@
       }
       fees.sync();
       parking.sync();
+      salaryReference.sync();
     }
     const ownershipLabels = {annual_insurance:'保險',annual_tax:'稅費',annual_maintenance_budget:'保養',monthly_fuel_or_energy:'油電',monthly_parking:'停車',annual_depreciation_rate:'折舊率'};
     let vehicleCatalog = [];
     const fees=root.VehicleFeesForm.create({form:$('eventForm'),isAlive:()=>ctx.alive});
     const parking=root.ParkingForm.create({form:$('eventForm'),profile:ctx.profile,isAlive:()=>ctx.alive});
+    const salaryReference=root.SalaryReferenceForm.create({form:$('eventForm'),profile:ctx.profile,isAlive:()=>ctx.alive});
     function syncVehicleSpec(){
       const select=$('eventForm').elements.vehicle_catalog_id;
       const id=select.dataset.pending??select.value;
@@ -137,6 +139,7 @@
       $('eventForm').elements.type.value=template.eventType;$('eventForm').elements.name.value=T.asksForName(template)?'':template.name;
       showTemplate(template,'新增事件');syncEventFields();
       if(template.eventType==='vehicle_purchase'){syncVehicleSpec();parking.refresh();}
+      if(template.eventType==='salary_change')salaryReference.refresh();
     }
     function focusFirstField(options){
       const field=[...$('eventForm').querySelectorAll('input:not([type="hidden"]),select')].find(control=>!control.disabled&&!control.closest('[hidden]'));
@@ -149,7 +152,7 @@
       editing=null;$('eventForm').reset();$('eventForm').elements.vehicle_catalog_id.value='';
       delete $('eventForm').elements.vehicle_catalog_id.dataset.pending;
       $('eventForm').elements.start_period.value=S.taipeiPeriod();$('eventEditorHeading').textContent='新增事件';
-      $('eventForm').elements.type.value='';$('eventForm').hidden=true;fees.reset();parking.reset();
+      $('eventForm').elements.type.value='';$('eventForm').hidden=true;fees.reset();parking.reset();salaryReference.reset();
       $('eventTemplatePicker').hidden=false;$('changeTemplate').hidden=true;$('eventForm').querySelector('[data-event-name]').hidden=true;
       $('eventForm').querySelector('[type="submit"]').textContent='新增事件';$('cancelEdit').hidden=true;renderPicker();syncEventFields();
     }
@@ -163,6 +166,7 @@
       }
       fees.reset(event.details);syncVehicleSpec();
       parking.reset(event.details);
+      salaryReference.reset(event.details||{});
       form.querySelector('[type="submit"]').textContent='儲存事件';$('cancelEdit').hidden=false;
       const template=T.templateForEvent(event);renderPicker(template,true);showTemplate(template,'修改事件');
       syncEventFields();$('eventEditorHeading').scrollIntoView({block:'start'});focusFirstField();
@@ -231,7 +235,7 @@
       if(!T.templateForEvent(values))throw new Error('請先選擇可用的事件');
       if(editing&&events.find(event=>event.id===editing)?.type!==values.type)throw new Error('修改事件時不可變更事件類型');
       if(values.type==='one_time')values.amount=numeric('amount');
-      else if(values.type==='salary_change')values.new_salary=numeric('new_salary');
+      else if(values.type==='salary_change'){values.new_salary=numeric('new_salary');values.details=salaryReference.details();}
       else if(values.type==='range'){
         values.monthly_amount=numeric('monthly_amount');values.end_period=form.elements.end_period.value||null;
         if(values.end_period&&values.end_period<values.start_period)throw new Error('結束月份不可早於開始月份');

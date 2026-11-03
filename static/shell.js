@@ -17,7 +17,7 @@
     const owned = table => client.from(table).select(fields[table]).eq('user_id', userId);
     let locationSupported=true;
     async function profileQuery(action){
-      const run=()=>action(locationSupported?`${fields.profiles},city,district`:fields.profiles,locationSupported);
+      const run=()=>action(locationSupported?`${fields.profiles},city,district,occupation`:fields.profiles,locationSupported);
       let result=await run();
       if(result.error&&locationSupported&&locationModel.missingLocationColumns(result.error)){
         locationSupported=false;onWarning(locationModel.schemaWarning);result=await run();

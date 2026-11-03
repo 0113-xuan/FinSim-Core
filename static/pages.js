@@ -35,9 +35,24 @@
       options(city,regions.map(r=>r.city),'選擇縣市（選填）',ctx.profile?.city||'');city.disabled=false;syncDistrict(ctx.profile?.district||'');
     }catch(_){if(ctx.alive)$('locationStatus').textContent='所在地清單載入未完成；其他財務資料仍可儲存，重新整理可重試。';}}
     loadRegions();
+    const O=root.OccupationModel,occupation=form.elements.occupation;
+    let occupationsReady=false;
+    async function loadOccupations(){
+      occupation.disabled=true;$('occupationStatus').textContent='正在讀取職業清單…';
+      const controller=new AbortController();ctx.controllers.add(controller);const timeout=root.setTimeout(()=>controller.abort(),15000);
+      try{
+        const response=await root.fetch('/occupations',{signal:controller.signal});if(!response.ok)throw new Error('無法讀取職業');
+        const data=await response.json();if(!ctx.alive)return;
+        const selected=occupationsReady?occupation.value:ctx.profile?.occupation||'';
+        occupation.replaceChildren(...O.occupationOptions(data,selected).map(item=>{const option=S.element('option',item.label);option.value=item.value;return option;}));
+        occupation.value=selected;occupationsReady=true;occupation.disabled=false;$('occupationStatus').textContent='';
+      }catch(_){if(ctx.alive)$('occupationStatus').textContent='職業清單載入未完成；其他財務資料仍可儲存，按「重新載入職業」可重試。';}
+      finally{root.clearTimeout(timeout);ctx.controllers.delete(controller);}
+    }
+    loadOccupations();$('retryOccupations').addEventListener('click',loadOccupations);
     city.addEventListener('change',()=>syncDistrict());
     if(ctx.page==='profile')$('accountEmail').textContent=`登入帳號：${ctx.session.user.email||'未提供電子郵件'}`;
-    if(ctx.profile)for(const[key,value]of Object.entries(ctx.profile)){if(['city','district'].includes(key))continue;const input=form.elements.namedItem(key);if(input)input.value=value??'';}
+    if(ctx.profile)for(const[key,value]of Object.entries(ctx.profile)){if(['city','district','occupation'].includes(key))continue;const input=form.elements.namedItem(key);if(input)input.value=value??'';}
     function renderDebts(){
       const list=$('debtList');list.replaceChildren();
       const rows=[...ctx.debts,...pending];
@@ -68,13 +83,14 @@
       values.raise_rate=form.elements.raise_rate.value.trim()===''?null:numeric(form,'raise_rate');
       // Failed optional reference loading must not erase a previously saved location.
       if(regions.length)Object.assign(values,L.locationValues(regions,city.value,district.value));
+      if(occupationsReady&&!occupation.disabled)values.occupation=occupation.value||null;
       const profile=await ctx.store.saveProfile(values);if(!ctx.alive)return;ctx.profile=profile;
       while(pending.length){
         try{const saved=await ctx.store.addDebt(pending[0]);if(!ctx.alive)return;ctx.debts.push(saved);pending.shift();}
         catch(error){renderDebts();throw new Error(`財務資料已儲存，但部分貸款尚未儲存：${error.message}。可再次儲存剩餘貸款`);}
       }
       if(ctx.page==='onboarding')root.location.assign('/dashboard.html');
-      else{renderDebts();S.status(ctx.store.locationSupported?'財務資料已儲存，儀表板會使用新的數字重新計算。':'其他財務資料已儲存；所在地尚未儲存，請管理者先新增欄位。');}
+      else{renderDebts();S.status(ctx.store.locationSupported?'財務資料已儲存，儀表板會使用新的數字重新計算。':'其他財務資料已儲存；所在地與職業尚未儲存，請管理者先新增欄位。');}
     });
     renderDebts();
   }

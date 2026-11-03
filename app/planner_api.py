@@ -11,6 +11,7 @@ from app.request_validation import FiniteJSONRoute
 from app.services.planner_vehicle import convert_vehicle_events
 from app.vehicle_fees import annual_vehicle_tax, insurance_reference
 from app.parking import load_regions, load_parking_snapshot, parking_reference
+from app.occupations import occupations, load_salary_snapshot, salary_reference
 
 
 class PlannerRoute(FiniteJSONRoute):
@@ -38,6 +39,20 @@ router = APIRouter(route_class=PlannerRoute)
 @router.get('/regions')
 def regions():
     return load_regions()
+
+
+@router.get('/occupations')
+def occupation_list():
+    return occupations()
+
+
+@router.get('/salary-reference')
+def occupation_salary(occupation: str = Query(min_length=1, max_length=80),
+                      snapshot: dict = Depends(load_salary_snapshot)):
+    try:
+        return salary_reference(occupation, snapshot)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from None
 
 
 @router.get('/planner/parking')

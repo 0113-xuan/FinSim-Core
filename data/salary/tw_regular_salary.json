@@ -1,0 +1,141 @@
+{
+  "period": "2026-01/2026-06",
+  "source": {
+    "name": "受僱員工薪資調查：按行業別及僱用型態分（表16）",
+    "publisher": "行政院主計總處",
+    "url": "https://www.stat.gov.tw/News_Content.aspx?n=2724&s=236558",
+    "data_url": "https://ws.dgbas.gov.tw/001/Upload/463/relfile/10980/236558/%E8%A1%A816.xlsx",
+    "query_url": "https://earnings.dgbas.gov.tw/query_payroll.aspx",
+    "population": "本國籍全時受僱員工",
+    "unit": "新臺幣元／月",
+    "statistic": "平均經常性薪資（稅前）",
+    "period_label": "2026 年 1–6 月",
+    "published_date": "2026-08-10",
+    "downloaded_date": "2026-11-04",
+    "provisional": true,
+    "median_note": "同期間、同行業及同僱用型態的中位數未在此表提供，故為 null。",
+    "license": "政府資料開放授權條款－第1版",
+    "license_url": "https://www.stat.gov.tw/cp.aspx?n=3164"
+  },
+  "industries": [
+    {
+      "industry_code": "10",
+      "name": "礦業及土石採取業",
+      "average_regular_salary": 51238,
+      "median": null,
+      "source_cell": "H9"
+    },
+    {
+      "industry_code": "20",
+      "name": "製造業",
+      "average_regular_salary": 51476,
+      "median": null,
+      "source_cell": "H10"
+    },
+    {
+      "industry_code": "30",
+      "name": "電力及燃氣供應業",
+      "average_regular_salary": 66805,
+      "median": null,
+      "source_cell": "H11"
+    },
+    {
+      "industry_code": "40",
+      "name": "用水供應及污染整治業",
+      "average_regular_salary": 42267,
+      "median": null,
+      "source_cell": "H12"
+    },
+    {
+      "industry_code": "50",
+      "name": "營建工程業",
+      "average_regular_salary": 46899,
+      "median": null,
+      "source_cell": "H13"
+    },
+    {
+      "industry_code": "60",
+      "name": "批發及零售業",
+      "average_regular_salary": 50307,
+      "median": null,
+      "source_cell": "H15"
+    },
+    {
+      "industry_code": "70",
+      "name": "運輸及倉儲業",
+      "average_regular_salary": 52569,
+      "median": null,
+      "source_cell": "H16"
+    },
+    {
+      "industry_code": "80",
+      "name": "住宿及餐飲業",
+      "average_regular_salary": 38743,
+      "median": null,
+      "source_cell": "H17"
+    },
+    {
+      "industry_code": "90",
+      "name": "出版影音及資通訊業",
+      "average_regular_salary": 72533,
+      "median": null,
+      "source_cell": "H18"
+    },
+    {
+      "industry_code": "100",
+      "name": "金融及保險業",
+      "average_regular_salary": 74848,
+      "median": null,
+      "source_cell": "H19"
+    },
+    {
+      "industry_code": "110",
+      "name": "不動產業",
+      "average_regular_salary": 45611,
+      "median": null,
+      "source_cell": "H20"
+    },
+    {
+      "industry_code": "120",
+      "name": "專業、科學及技術服務業",
+      "average_regular_salary": 60383,
+      "median": null,
+      "source_cell": "H21"
+    },
+    {
+      "industry_code": "130",
+      "name": "支援服務業",
+      "average_regular_salary": 39923,
+      "median": null,
+      "source_cell": "H22"
+    },
+    {
+      "industry_code": "140",
+      "name": "教育業（不含小學以上各級公私立學校等）",
+      "average_regular_salary": 34110,
+      "median": null,
+      "source_cell": "H23"
+    },
+    {
+      "industry_code": "150",
+      "name": "醫療保健及社會工作服務業",
+      "average_regular_salary": 60187,
+      "median": null,
+      "source_cell": "H24"
+    },
+    {
+      "industry_code": "160",
+      "name": "藝術、娛樂及休閒服務業",
+      "average_regular_salary": 43238,
+      "median": null,
+      "source_cell": "H25"
+    },
+    {
+      "industry_code": "170",
+      "name": "其他服務業",
+      "average_regular_salary": 37685,
+      "median": null,
+      "source_cell": "H26"
+    }
+  ]
+}
