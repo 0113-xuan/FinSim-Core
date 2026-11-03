@@ -69,6 +69,8 @@ test('the independent page pins supabase-js and exposes only supported event ent
     assert.match(html,new RegExp(`id="${id}"`));
   const eventForm=html.slice(html.indexOf('id="eventForm"'),html.indexOf('</form>',html.indexOf('id="eventForm"')));
   assert.match(html,/id="eventTemplatePicker"/);
+  assert.match(html,/id="changeTemplate" type="button" hidden/);
+  assert.match(eventForm,/<label data-event-name hidden>事件名稱/);
   assert.match(html,/src="\/event-templates.js"/);
   assert.match(eventForm,/<input type="hidden" name="type"/);
   assert.doesNotMatch(eventForm,/<select name="type"/);

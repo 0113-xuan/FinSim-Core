@@ -47,3 +47,7 @@ test('the shared template catalogue cannot be mutated by an individual picker',(
   const available=T.availableTemplates();available.pop();assert.equal(T.availableTemplates().length,4);
   assert.deepEqual(T.resolveAddParameter('?add=travel'),{template:null,search:''});
 });
+test('only custom income and expense templates ask the user for an event name',()=>{
+  assert.deepEqual(T.availableTemplates().filter(T.asksForName).map(t=>t.id),['one_time','range']);
+  assert.equal(T.asksForName(undefined),false);
+});

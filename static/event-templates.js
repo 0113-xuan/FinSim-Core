@@ -15,12 +15,14 @@
   const availableTemplates=()=>templates.filter(template=>template.status==='available');
   const templateById=id=>templates.find(template=>template.id===id);
   const templateForEvent=event=>availableTemplates().find(template=>template.eventType===event?.type);
+  // Life events are named after their template; only custom income/expense rows need a user-written name.
+  const asksForName=template=>template?.group==='custom';
   // No location/history access here: the caller applies the returned URL once.
   function resolveAddParameter(search) {
     const params=new URLSearchParams(search),template=templateById(params.get('add'));
     params.delete('add');
     return {template:template?.status==='available'?template:null,search:params.toString()?`?${params}`:''};
   }
-  const api={templates,availableTemplates,templateById,templateForEvent,resolveAddParameter};
+  const api={templates,availableTemplates,templateById,templateForEvent,asksForName,resolveAddParameter};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.EventTemplates=api;
 })(globalThis);

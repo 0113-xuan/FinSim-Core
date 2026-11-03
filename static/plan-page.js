@@ -123,11 +123,24 @@
       paragraph(target,'這個分析只看這台車和現有貸款，不包含計畫中的其他事件與投資。');
       const link=S.element('a','完整購車分析');link.href='/vehicle.html';target.append(link);
     }
+    // Once a template is chosen the picker collapses; the heading names the event and life events take the template name.
+    function showTemplate(template,mode){
+      const form=$('eventForm'),named=T.asksForName(template);
+      $('eventTemplatePicker').hidden=true;$('changeTemplate').hidden=mode!=='新增事件';
+      $('eventEditorHeading').textContent=`${mode}：${template.name}`;
+      form.querySelector('[data-event-name]').hidden=!named;
+      if(!named&&!form.elements.name.value.trim())form.elements.name.value=template.name;
+      form.hidden=false;
+    }
     function selectTemplate(template){
       if(ctx.busy||editing||template?.status!=='available')return;
-      $('eventForm').elements.type.value=template.eventType;$('eventForm').hidden=false;
-      P.select($('eventTemplatePicker'),template.id);syncEventFields();
+      $('eventForm').elements.type.value=template.eventType;$('eventForm').elements.name.value=T.asksForName(template)?'':template.name;
+      showTemplate(template,'新增事件');syncEventFields();
       if(template.eventType==='vehicle_purchase'){syncVehicleSpec();parking.refresh();}
+    }
+    function focusFirstField(options){
+      const field=[...$('eventForm').querySelectorAll('input:not([type="hidden"]),select')].find(control=>!control.disabled&&!control.closest('[hidden]'));
+      field?.focus(options);
     }
     function renderPicker(template=null,locked=false){
       P.render($('eventTemplatePicker'),{selected:template?.id,locked,onSelect:selectTemplate});
@@ -137,6 +150,7 @@
       delete $('eventForm').elements.vehicle_catalog_id.dataset.pending;
       $('eventForm').elements.start_period.value=S.taipeiPeriod();$('eventEditorHeading').textContent='新增事件';
       $('eventForm').elements.type.value='';$('eventForm').hidden=true;fees.reset();parking.reset();
+      $('eventTemplatePicker').hidden=false;$('changeTemplate').hidden=true;$('eventForm').querySelector('[data-event-name]').hidden=true;
       $('eventForm').querySelector('[type="submit"]').textContent='新增事件';$('cancelEdit').hidden=true;renderPicker();syncEventFields();
     }
     function editEvent(event){
@@ -149,9 +163,9 @@
       }
       fees.reset(event.details);syncVehicleSpec();
       parking.reset(event.details);
-      $('eventEditorHeading').textContent='修改事件';form.querySelector('[type="submit"]').textContent='儲存事件';$('cancelEdit').hidden=false;
-      renderPicker(T.templateForEvent(event),true);form.hidden=false;
-      syncEventFields();$('eventEditorHeading').scrollIntoView({block:'start'});form.elements.name.focus();
+      form.querySelector('[type="submit"]').textContent='儲存事件';$('cancelEdit').hidden=false;
+      const template=T.templateForEvent(event);renderPicker(template,true);showTemplate(template,'修改事件');
+      syncEventFields();$('eventEditorHeading').scrollIntoView({block:'start'});focusFirstField();
     }
     function renderEvents(){
       const list=$('eventList');list.replaceChildren();
@@ -199,6 +213,7 @@
       syncVehicleSpec();
     });
     $('cancelEdit').addEventListener('click',resetEditor);
+    $('changeTemplate').addEventListener('click',()=>{if(!ctx.busy)resetEditor();});
     onSubmit('planNameForm',async()=>{
       const name=$('planNameForm').elements.name.value.trim();if(!name)throw new Error('請填寫計畫名稱');
       const saved=await ctx.store.updatePlan(ctx.planId,{name});if(!ctx.alive)return;
@@ -255,7 +270,7 @@
     const add=T.resolveAddParameter(root.location.search);
     if(new URLSearchParams(root.location.search).has('add'))root.history.replaceState(root.history.state,'',`${root.location.pathname}${add.search}${root.location.hash}`);
     if(add.template){
-      selectTemplate(add.template);$('eventForm').scrollIntoView({block:'start'});$('eventForm').elements.name.focus({preventScroll:true});
+      selectTemplate(add.template);$('eventEditorHeading').scrollIntoView({block:'start'});focusFirstField({preventScroll:true});
     }
     loadVehicleMetadata();
   }
