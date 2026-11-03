@@ -6,7 +6,8 @@
     function selected(){for(const button of $('parkingLots').querySelectorAll('[data-parking-id]'))button.setAttribute('aria-pressed',String(button.dataset.parkingId===lotId));}
     function render(data){
       const target=$('parkingLots');target.replaceChildren();$('parkingSource').replaceChildren();
-      $('parkingStatus').textContent=data.data_available?M.parkingSummary(profile.district,data.monthly_rent_stats):data.message;
+      const presentation=M.parkingPresentation(profile.district,data);
+      $('parkingStatus').replaceChildren(...[presentation.coverage,presentation.message,presentation.summary].filter(Boolean).map(text=>S.element('span',text)));
       if(data.data_available&&data.source.is_sample)$('parkingStatus').prepend(S.element('strong','測試資料，非真實停車行情。'));
       if(data.data_available){
         for(const lot of M.sortParkingLots(data.lots)){
@@ -19,10 +20,9 @@
           }
           target.append(node);
         }
-        if(!data.lots.length)target.append(S.element('p',data.message));
-        const source=S.element('a',data.source.is_sample?'測試資料來源說明':'交通部 TDX');source.href=data.source.url;source.target='_blank';source.rel='noopener noreferrer';
-        $('parkingSource').append('資料來自',source,`（快照日期 ${data.source.snapshot_date}），實際價格以停車場公告為準。`);
       }
+      const source=S.element('a','交通部 TDX');source.href=data.source.url.replace('{city}',data.tdx_city||'Taipei');source.target='_blank';source.rel='noopener noreferrer';
+      $('parkingSource').append(source,`（快照日期 ${data.source.snapshot_date}），實際價格以停車場公告為準。`);
     }
     async function refresh(){
       controller?.abort();const current=++version;

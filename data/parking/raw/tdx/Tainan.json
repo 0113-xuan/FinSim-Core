@@ -1,0 +1,5569 @@
+{
+ "UpdateTime": "2026-11-03T01:06:43+08:00",
+ "UpdateInterval": 14400,
+ "SrcUpdateTime": "2026-11-03T01:05:59+08:00",
+ "SrcUpdateInterval": -1,
+ "AuthorityCode": "TNN",
+ "VersionID": 8560,
+ "CarParks": [
+  {
+   "CarParkID": "61543240",
+   "CarParkName": {
+    "Zh_tw": "小東社宅地下停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "小型車339格(含身心障礙停車格7格、婦幼車格8格)。",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00318,
+    "PositionLon": 120.21342
+   },
+   "Address": "臺南市北區北門路2段122號地下停車場",
+   "FareDescription": "計時30元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47862936",
+   "CarParkName": {
+    "Zh_tw": "公園南路停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "70369154",
+   "Description": "平面停車場小型車280格（含身心障礙車格、婦幼車格各6格及綠能優先車位14格）大型車10格",
+   "CarParkType": 1,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00317,
+    "PositionLon": 120.20069
+   },
+   "Address": "臺南市中西區海安路三段與公園南路路口旁",
+   "FareDescription": "計時30元/時，12小時內最高150元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "88908324",
+   "CarParkName": {
+    "Zh_tw": "目加溜灣橋下停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50885758",
+   "Description": "平面小型車62格(含身心障礙停、婦幼車格各2格及綠能車位2格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.11921,
+    "PositionLon": 120.30497
+   },
+   "Address": "台南市善化區目加溜灣大道與善新西路交叉路口",
+   "FareDescription": "計時20元/時，當日最高120元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "92442263",
+   "CarParkName": {
+    "Zh_tw": "東橋十一路停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車78格（含身心障礙車2格、婦幼車格2格及綠能車位4格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.02549,
+    "PositionLon": 120.23697
+   },
+   "Address": "臺南市永康區東橋里東橋十一路與東橋十街口旁停車場",
+   "FareDescription": "計時20元/時，12小時內最高120元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "61620111-4",
+   "CarParkName": {
+    "Zh_tw": "立德停車場E區"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "64912334",
+   "Description": "小型車16格(含身心障礙停車為1格、婦幼車格1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97578,
+    "PositionLon": 120.2147
+   },
+   "Address": "台南市東區立德八路與立德一路交叉口南側",
+   "FareDescription": "計時20元/時,當日最高120元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89022098",
+   "CarParkName": {
+    "Zh_tw": "竑穗新市富中停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車77格(含身心障礙2格、婦幼車格2格及綠能車位2格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.08307,
+    "PositionLon": 120.29348
+   },
+   "Address": "台南市新市區富中街132號對面",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "94286443",
+   "CarParkName": {
+    "Zh_tw": "永康中華立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車289格(含身心障礙停5格、婦幼車格5格及綠能車位5格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00072,
+    "PositionLon": 120.23762
+   },
+   "Address": "台南市永康區華興街77號",
+   "FareDescription": "半小時10元(第一小時以小時計，當日最高收費200元,月租2400元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "61620127",
+   "CarParkName": {
+    "Zh_tw": "裕文圖書館停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "64912334",
+   "Description": "平面式小型車20格(含身心障礙停1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    19
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98213,
+    "PositionLon": 120.24566
+   },
+   "Address": "臺南市東區裕信路237號旁",
+   "FareDescription": "計時20元/時,當日最高100元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81946029",
+   "CarParkName": {
+    "Zh_tw": "竑穗兵仔市停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車32 格(含身心障礙1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00392,
+    "PositionLon": 120.2347
+   },
+   "Address": "台南市永康區中華路181號後方停車場",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "88918738",
+   "CarParkName": {
+    "Zh_tw": "竑穗新營和平停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車22格(含身心障礙1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.30004,
+    "PositionLon": 120.30997
+   },
+   "Address": "台南市新營區新進路二段109號旁   永平",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47940383",
+   "CarParkName": {
+    "Zh_tw": "億載停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式小型車86格(含身心障礙、婦幼車格及綠能車位各2格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99125,
+    "PositionLon": 120.15929
+   },
+   "Address": "台南市安平區永華路2段與光州路路口西南側",
+   "FareDescription": "臨停：20元/時，月租：3000元/月。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "92406533-2",
+   "CarParkName": {
+    "Zh_tw": "五妃街南側停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "24450981",
+   "Description": "平面停車場小型車43格（含身心障礙車1格、婦幼車格1格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    11
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98247,
+    "PositionLon": 120.20922
+   },
+   "Address": "臺南市中西區五妃街95號旁停車場",
+   "FareDescription": "計時20元/時，12小時內最高120元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47847561",
+   "CarParkName": {
+    "Zh_tw": "新營綠都心停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "立體式小型車295格(含身心障礙停7格、婦幼車格5格及綠能車位5格)。",
+   "CarParkType": 3,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    23
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.30976,
+    "PositionLon": 120.316
+   },
+   "Address": "臺南市新營區民權里中正路23-1號B1",
+   "FareDescription": "計時20/H，當日最高150元(跨日重計)，月租2200元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81305474",
+   "CarParkName": {
+    "Zh_tw": "永福路停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "28371994",
+   "Description": "平面式小型車27格(含身心障礙、婦幼、綠能車格各1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    8
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98963,
+    "PositionLon": 120.20014
+   },
+   "Address": "台南市中西區永福路一段與永福路一段275巷交叉口",
+   "FareDescription": "計時20元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81290471",
+   "CarParkName": {
+    "Zh_tw": "民生路停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車124格（含身心障礙車7格、婦幼車格6格及綠能車位6格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99796,
+    "PositionLon": 120.18823
+   },
+   "Address": "臺南市中西區民生路二段400巷旁空地停車場",
+   "FareDescription": "計時20元/時，12小時內最高120元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "58766672",
+   "CarParkName": {
+    "Zh_tw": "明大停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "85766716",
+   "Description": "立體式小型車30格(含身心障礙停、婦幼車格及綠能車位各1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    23
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.07332,
+    "PositionLon": 120.29004
+   },
+   "Address": "台南市新市區信義段822地號",
+   "FareDescription": "計時10元/半小時，當日最高100元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89050973",
+   "CarParkName": {
+    "Zh_tw": "中華路58巷停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "70369154",
+   "Description": "平面停車場小型車52格（含身心障礙車格、婦幼車格各2格及綠能車位3格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    6
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00242,
+    "PositionLon": 120.23785
+   },
+   "Address": "台南市永康區成功里中華路58巷與中華一路39巷交叉口",
+   "FareDescription": "計時20元/時，12小時內最高100元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89053916",
+   "CarParkName": {
+    "Zh_tw": "安平運河停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車149格(含身心障礙停4格、婦幼車格4格及綠能車位8格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99884,
+    "PositionLon": 120.1625
+   },
+   "Address": "台南市安平區運河路9號對面",
+   "FareDescription": "計時20/H，當日最高300元(跨日重計)，月租1800元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81368744",
+   "CarParkName": {
+    "Zh_tw": "竑穗東興停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車39 格(含身心障礙1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99118,
+    "PositionLon": 120.22881
+   },
+   "Address": "臺南市東區東興路63號旁停車場",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "92442025",
+   "CarParkName": {
+    "Zh_tw": "崇善里停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車20格（含身心障礙車1格、婦幼車格1格及綠能車位1格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97551,
+    "PositionLon": 120.22967
+   },
+   "Address": "臺南市東區仁和路70巷38號旁停車場",
+   "FareDescription": "計時20元/時，12小時內最高120元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47940378",
+   "CarParkName": {
+    "Zh_tw": "水景停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式小型車137格(含身心障礙、婦幼車格及綠能車位各4格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99951,
+    "PositionLon": 120.15789
+   },
+   "Address": "台南市安平區安北路水景公園旁",
+   "FareDescription": "臨停：20元/時，月租：3000元/月。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "85766716-1",
+   "CarParkName": {
+    "Zh_tw": "富中街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "85766716",
+   "Description": "立體式小型車129格(含身心障礙停、綠能車位各2格及婦幼車格3格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.0798,
+    "PositionLon": 120.28808
+   },
+   "Address": "台南市新市區富中街與民生路交叉口",
+   "FareDescription": "計時10元/半小時，當日最高100元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "61620111-7",
+   "CarParkName": {
+    "Zh_tw": "立德停車場H區"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "64912334",
+   "Description": "機車77格(含身心障礙停車為2格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    4
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97638,
+    "PositionLon": 120.21442
+   },
+   "Address": "台南市東區立德八路與立德一路交叉口南側",
+   "FareDescription": "不計費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "94282969-1",
+   "CarParkName": {
+    "Zh_tw": "水萍塭公園地下停車場-機車"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "機車區102格。",
+   "CarParkType": 3,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    23
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98572,
+    "PositionLon": 120.19461
+   },
+   "Address": "台南市南區夏林路2號地下停車場",
+   "FareDescription": "計次20元/次，跨日重新計費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "61620111-5",
+   "CarParkName": {
+    "Zh_tw": "立德停車場F區"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "64912334",
+   "Description": "小型車16格(含身心障礙停車為1格、婦幼車格1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97606,
+    "PositionLon": 120.21461
+   },
+   "Address": "台南市東區立德八路與立德一路交叉口南側",
+   "FareDescription": "計時20元/時,當日最高120元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "40856918",
+   "CarParkName": {
+    "Zh_tw": "廣二機車停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式機車格(含身心障礙停車位8格、綠能車位4格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    7
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97435,
+    "PositionLon": 120.21991
+   },
+   "Address": "台南市東區中華東路3段380巷西側",
+   "FareDescription": "計次20元/次，隔夜停放次日重新計次收費。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47940406",
+   "CarParkName": {
+    "Zh_tw": "林默娘停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式小型車183格(含身心障礙、婦幼車格及綠能車位各4格)。機車212格。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99287,
+    "PositionLon": 120.15683
+   },
+   "Address": "台南市安平區安億路林默娘公園旁",
+   "FareDescription": "臨停：20元/時，月租：3000元/月。機車免費。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "85766482-1",
+   "CarParkName": {
+    "Zh_tw": "南科東側停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "85766716",
+   "Description": "汽車平面式小型車62格(含身心障礙、婦幼車位和綠能車位各1格)/機車平面式小型機車236格(含身心障礙停車格及綠能車位各4格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1
+   ],
+   "ParkingSiteTypes": [
+    1
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.10798,
+    "PositionLon": 120.30256
+   },
+   "Address": "台南市善化區西拉雅大道與火車站善心西路交叉口",
+   "FareDescription": "汽車計時10元/半小時,當日最高100元時(跨日重新計費)/機車計時10元/時,當日最高30元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47927760",
+   "CarParkName": {
+    "Zh_tw": "關聖里停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車68格(含身心障礙停2格、婦幼車格2格及綠能車位2格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98516,
+    "PositionLon": 120.24064
+   },
+   "Address": "台南市東區裕平路39號(東側停車場)",
+   "FareDescription": "計時20/H，當日最高60元，月租1500元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "94282969",
+   "CarParkName": {
+    "Zh_tw": "水萍塭公園地下停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "立體式小型車362格(含身心障礙停、婦幼車格各8格及綠能車位19格)。",
+   "CarParkType": 3,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    23
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98572,
+    "PositionLon": 120.19461
+   },
+   "Address": "台南市南區夏林路2號地下停車場",
+   "FareDescription": "計時20元/時,當日最高480元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "50822121",
+   "CarParkName": {
+    "Zh_tw": "臺南圖書總館地下停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式小型車117格(含身心障礙、婦幼及綠能車位各3格)。",
+   "CarParkType": 3,
+   "ParkingGuideType": 255,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    19
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.02467,
+    "PositionLon": 120.23767
+   },
+   "Address": "臺南市永康區康橋大道255號B2",
+   "FareDescription": "平日20元/時，當日最高480元                    假日30元/時，當日最高720元              (跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "97100722",
+   "CarParkName": {
+    "Zh_tw": "臺南航空站旅客停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "97100722",
+   "Description": "立體式小型車114格(含身心障礙停3格、婦幼車格4格及綠能車位2格)。",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    2
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.94756,
+    "PositionLon": 120.21636
+   },
+   "Address": "台南市南區機場路775號B1",
+   "FareDescription": "計時30元/時,當日最高240元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "92482975",
+   "CarParkName": {
+    "Zh_tw": "正生公園地下停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "地下停車場577格(綠能30格，身障13格，婦幼12格，重機5格)",
+   "CarParkType": 3,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99129,
+    "PositionLon": 120.18725
+   },
+   "Address": "臺南市中西區中華西路二段32號",
+   "FareDescription": "計時20元/時,無當日最高(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "88909843",
+   "CarParkName": {
+    "Zh_tw": "復華一街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車55格(含身心障礙停2格、婦幼車格2格及綠能車位2格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00529,
+    "PositionLon": 120.245
+   },
+   "Address": "臺南市永康區復國里復華一街與19巷西南側",
+   "FareDescription": "每小時20元，當日最高收費400元,月租1300元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89049982",
+   "CarParkName": {
+    "Zh_tw": "台南會展中心停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式小型車442格(含身心障礙12格、婦幼6格及綠能車位11格)。",
+   "CarParkType": 6,
+   "ParkingGuideType": 255,
+   "ParkingTypes": [
+    5
+   ],
+   "ParkingSiteTypes": [
+    19
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.92013,
+    "PositionLon": 120.28639
+   },
+   "Address": "臺南市歸仁區歸仁12路3號",
+   "FareDescription": "計時40元/H，當日最高160元                        (跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81290486",
+   "CarParkName": {
+    "Zh_tw": "長榮崇明停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車16格（含身心障礙車1格、婦幼車格1格及綠能車位1格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98263,
+    "PositionLon": 120.21621
+   },
+   "Address": "臺南市東區長榮路一段83號旁空地停車場",
+   "FareDescription": "計時20元/時，12小時內最高180元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47927776",
+   "CarParkName": {
+    "Zh_tw": "竑穗台南南一停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車18格(含身心障礙停1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    11
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99384,
+    "PositionLon": 120.21553
+   },
+   "Address": "台南市東區民族路1段17巷旁",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81305489",
+   "CarParkName": {
+    "Zh_tw": "民族路停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "28371994",
+   "Description": "平面式小型車28格(含身心障礙、婦幼、綠能車格各1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99424,
+    "PositionLon": 120.21409
+   },
+   "Address": "台南市東區民族路一段45號西側停車場",
+   "FareDescription": "平日計時20元/時，當日最高120元時(跨日重新計費)、假日計時20元/時，當日最高150元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81496017",
+   "CarParkName": {
+    "Zh_tw": "五都停車場台南車寶貝站"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "25147332",
+   "Description": "小型車142格(平面式)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    1
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.92711,
+    "PositionLon": 120.28118
+   },
+   "Address": "台南市歸仁區歸仁八路與高鐵二路交叉口",
+   "FareDescription": "計時20元/時，當日最高100元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81319060",
+   "CarParkName": {
+    "Zh_tw": "竑穗富北停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車11 格(含身心障礙1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.9982,
+    "PositionLon": 120.21158
+   },
+   "Address": "臺南市北區富北街2號旁停車場",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "85744208",
+   "CarParkName": {
+    "Zh_tw": "崇善路龍山停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式小型車158格，機車24格。",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    5
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98232,
+    "PositionLon": 120.22109
+   },
+   "Address": "台南市東區崇善路25巷與龍山街55巷交叉口",
+   "FareDescription": "小型車臨停每半小時10元；遇特定時段收費如下:星期一、二、五夜間19-22時，每半小時15元。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 1,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89096083",
+   "CarParkName": {
+    "Zh_tw": "萬昌街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車32格（含身心障礙車1格、婦幼車格1格及綠能車位2格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99106,
+    "PositionLon": 120.21046
+   },
+   "Address": "臺南市北區萬昌街85號對面停車場",
+   "FareDescription": "計時20元/時，12小時內最高240元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "88864091",
+   "CarParkName": {
+    "Zh_tw": "竑穗成大勝利停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車90格(含身心障礙2格、婦幼車格2格及綠能車位2格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99301,
+    "PositionLon": 120.22009
+   },
+   "Address": "台南市東區東寧路與長榮路交叉口",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "37709940",
+   "CarParkName": {
+    "Zh_tw": "五都停車場高鐵台南二站"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "25147332",
+   "Description": "小型車89格(平面式)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.92279,
+    "PositionLon": 120.28278
+   },
+   "Address": "台南市歸仁區高鐵一路(武東段366-9至366-11地號)",
+   "FareDescription": "計時20元/時，當日最高100元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47940399-2",
+   "CarParkName": {
+    "Zh_tw": "港濱停車場 (第二區)"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式小型車22格 (含綠能優先車格2格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99486,
+    "PositionLon": 120.16338
+   },
+   "Address": "臺南市安平區安億路與平豐路口",
+   "FareDescription": "臨停：20元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "09117945",
+   "CarParkName": {
+    "Zh_tw": "台南成大醫院復健大樓停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車20格(含身心障礙停車格2格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00299,
+    "PositionLon": 120.21993
+   },
+   "Address": "台南市北區仁愛里勝利路１３８號",
+   "FareDescription": "汽車:20分鐘前免費；逾20分鐘以1 小時計20元;2小時內每半小時加收10元;超過2小時每半小時加收20元當日最高400元                           ",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "94281518",
+   "CarParkName": {
+    "Zh_tw": "國立台南生活美學館停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "27856324",
+   "Description": "總車格：166(含婦幼3格、身障4格、充電樁4格)",
+   "CarParkType": 6,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    5
+   ],
+   "ParkingSiteTypes": [
+    12
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99213,
+    "PositionLon": 120.18869
+   },
+   "Address": "臺南市中西區中華西路二段34號",
+   "FareDescription": "平日：20/H；假日：30/H(跨日重新計費) 平日當日最高收費120元、假日當日最高收費200元，身障優惠：前4H免費，第5H起半價。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89096035",
+   "CarParkName": {
+    "Zh_tw": "和平公園停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車90格（含身心障礙車2格、婦幼車格2格及綠能車格5格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.977,
+    "PositionLon": 120.2322
+   },
+   "Address": "臺南市東區文化路100號和平里活動中心旁停車場",
+   "FareDescription": "計時20元/時，12小時內最高180元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89038628",
+   "CarParkName": {
+    "Zh_tw": "友愛街機車停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "70369154",
+   "Description": "立體式機車103格（含身心障礙車格5格及綠能車位2格）",
+   "CarParkType": 2,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99099,
+    "PositionLon": 120.20589
+   },
+   "Address": "臺南市中西區友愛街七號旁停車場",
+   "FareDescription": "計次20元/次",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47911795",
+   "CarParkName": {
+    "Zh_tw": "崇明E37停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "70369154",
+   "Description": "平面式小型車28格(含身障2格，婦幼、綠能各1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    21
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97996,
+    "PositionLon": 120.21731
+   },
+   "Address": "臺南市東區崇明路與崇明五街口西南側",
+   "FareDescription": "計時20元/時當日，最高480元(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "10740980",
+   "CarParkName": {
+    "Zh_tw": "竑穗建業停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車47格(含身心障礙車格1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98787,
+    "PositionLon": 120.20545
+   },
+   "Address": "台南市中西區建業街58號",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "85567580",
+   "CarParkName": {
+    "Zh_tw": "竑穗興濟二站停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車 32格(含身心障礙1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99743,
+    "PositionLon": 120.20531
+   },
+   "Address": "台南市中西區中成路36號",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81401820",
+   "CarParkName": {
+    "Zh_tw": "竑穗華平二停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車20 格(含身心障礙1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99407,
+    "PositionLon": 120.17547
+   },
+   "Address": "台南市安平區華平路535號旁停車場",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "00343706",
+   "CarParkName": {
+    "Zh_tw": "文化中心立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "27856324",
+   "Description": "立體式小型車211格(含身心障礙車位4格、婦幼車位9格及綠能車位24格)。",
+   "CarParkType": 2,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    12
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97558,
+    "PositionLon": 120.22099
+   },
+   "Address": "臺南市東區崇明路386號",
+   "FareDescription": "小型車:30元/時，平日當日最高收費360元，假日當日最高收費480元（跨日重計）。\n機車:20元/次。\n身障優惠：停車費半價。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47931027",
+   "CarParkName": {
+    "Zh_tw": "竑穗北安停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車 17 格(含身心障礙1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    5
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.01725,
+    "PositionLon": 120.20898
+   },
+   "Address": "台南市北區北安路一段149號旁",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81320382",
+   "CarParkName": {
+    "Zh_tw": "大學路社E1停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式小型車57格(含身心障礙1、婦幼2、綠能車格2格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99613,
+    "PositionLon": 120.21574
+   },
+   "Address": "臺南市東區大學路西段與育樂街66巷交叉口",
+   "FareDescription": "平日計時20元/時，當日最高120元時(跨日重新計費)、假日計時20元/時，當日最高150元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "61543255",
+   "CarParkName": {
+    "Zh_tw": "新都安居地下停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式小型車277格(含身心障礙停車14格、婦幼車格8格及綠能車位14格)。",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.96227,
+    "PositionLon": 120.22654
+   },
+   "Address": "臺南市東區崇吉一街12號地下停車場",
+   "FareDescription": "計時30元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "61620111-6",
+   "CarParkName": {
+    "Zh_tw": "立德停車場G區"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "64912334",
+   "Description": "小型車14格(含身心障礙停車為1格、婦幼車格1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97631,
+    "PositionLon": 120.21459
+   },
+   "Address": "台南市東區立德八路與立德一路交叉口南側",
+   "FareDescription": "計時20元/時,當日最高120元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47885804",
+   "CarParkName": {
+    "Zh_tw": "萬昌停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面式小型車27格(含身心障礙停1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99107,
+    "PositionLon": 120.21055
+   },
+   "Address": "台南市中西區青年路226巷6弄路口",
+   "FareDescription": "計時20/H，當日最高200元(跨日重計)，月租2500元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "92442221",
+   "CarParkName": {
+    "Zh_tw": "小橋公園停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車40格（含身心障礙車1格、婦幼車格1格及綠能車位3格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.02151,
+    "PositionLon": 120.23381
+   },
+   "Address": "臺南市永康區東橋里東橋三路201號對面停車場",
+   "FareDescription": "計時20元/時，12小時內最高120元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "85585519",
+   "CarParkName": {
+    "Zh_tw": "竑穗永福停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "立體式小型車34 格(含身心障礙1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98117,
+    "PositionLon": 120.19992
+   },
+   "Address": "702 台南市南區大成里健康路一段367號旁停車場",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "40814707",
+   "CarParkName": {
+    "Zh_tw": "東光路地下停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "立體式小型車252格(含身心障礙停、婦幼車格各6格及綠能車位9格)。",
+   "CarParkType": 3,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99231,
+    "PositionLon": 120.23131
+   },
+   "Address": "臺南市東區東光路一段76號",
+   "FareDescription": "計時20元/時。當日最高150元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47931011",
+   "CarParkName": {
+    "Zh_tw": "竑穗西華停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車 18格(含身心障礙1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    23
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99954,
+    "PositionLon": 120.21066
+   },
+   "Address": "臺南市北區西華街36號旁",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89050740",
+   "CarParkName": {
+    "Zh_tw": "北園公兒停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "70369154",
+   "Description": "平面停車場小型車167格（含身心障礙車格、婦幼車格各4格及綠能優先車位9格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.01315,
+    "PositionLon": 120.22463
+   },
+   "Address": "臺南市北區元寶里北園街114巷停車場",
+   "FareDescription": "計時20元/時，12小時內最高100元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47847561-A",
+   "CarParkName": {
+    "Zh_tw": "大宏社區停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式小型車27格(含身心障礙停1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.30782,
+    "PositionLon": 120.31715
+   },
+   "Address": "臺南市新營區中正路6-25號北側空地(三民路1地號)",
+   "FareDescription": "計時20/H，當日最高150元(跨日重計)，月租2000元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89021751",
+   "CarParkName": {
+    "Zh_tw": "竑穗台南府連停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "立體式小型車53格(含身心障礙2格、婦幼車格2格及綠能車位2格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98394,
+    "PositionLon": 120.21198
+   },
+   "Address": "台南市東區大同路1段200號197巷18號旁停車場",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89050713",
+   "CarParkName": {
+    "Zh_tw": "平實公園地下停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "70369154",
+   "Description": "地下停車場小型車226格（含身心障礙停車位5格、婦幼車格6格、綠能優先車格12格）",
+   "CarParkType": 3,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    6
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99299,
+    "PositionLon": 120.23643
+   },
+   "Address": "臺南市東區平實路101號地下停車場",
+   "FareDescription": "計時20元/時，12小時內最高120元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89096078",
+   "CarParkName": {
+    "Zh_tw": "西門健康立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車101格（含身心障礙車3格、婦幼車格2格及綠能車位10格）",
+   "CarParkType": 2,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98169,
+    "PositionLon": 120.19734
+   },
+   "Address": "臺南市南區西門路一段469號停車場",
+   "FareDescription": "計時20元/時，12小時內最高240元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "85766716-2",
+   "CarParkName": {
+    "Zh_tw": "富安三街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "85766716",
+   "Description": "立體式小型車175格(含身心障礙停、婦幼車格各3格及綠能車位2格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.08148,
+    "PositionLon": 120.28901
+   },
+   "Address": "台南市新市區富中街與富安三街交叉口",
+   "FareDescription": "計時10元/半小時，當日最高100元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89096020",
+   "CarParkName": {
+    "Zh_tw": "環河街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車34格（含身心障礙車1格、婦幼車格1格及綠能車位2格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99312,
+    "PositionLon": 120.19214
+   },
+   "Address": "臺南市中西區環河街62號旁停車場",
+   "FareDescription": "計時20元/時，12小時內最高180元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81290514",
+   "CarParkName": {
+    "Zh_tw": "東橋八街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車91格（含身心障礙車2格、婦幼車格2格及綠能車位5格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.02071,
+    "PositionLon": 120.23356
+   },
+   "Address": "臺南市永康區東橋八街58號旁空地停車場",
+   "FareDescription": "計時20元/時，12小時內最高120元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "92370839",
+   "CarParkName": {
+    "Zh_tw": "賢北街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車53格（含身心障礙車2格、婦幼車格2格及綠能車位3格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00893,
+    "PositionLon": 120.18302
+   },
+   "Address": "臺南市北區賢北街108號活動中心旁停車場",
+   "FareDescription": "計時20元/時，12小時內最高180元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89060260",
+   "CarParkName": {
+    "Zh_tw": "竑穗中華西停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "立體式小型車28格(含身心障礙1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98503,
+    "PositionLon": 120.18627
+   },
+   "Address": "台南市南區中華西路1段與建南路口停車場",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81613227",
+   "CarParkName": {
+    "Zh_tw": "竑穗台南健康停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "立體式小型車20格(含身心障礙1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98207,
+    "PositionLon": 120.19223
+   },
+   "Address": "台南市中西區健康路2段200號後方停車場",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81386285",
+   "CarParkName": {
+    "Zh_tw": "永康大橋後站停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "97317757",
+   "Description": "平面式小型車21格(含身心障礙1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1
+   ],
+   "ParkingSiteTypes": [
+    1
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.01916,
+    "PositionLon": 120.22387
+   },
+   "Address": "台南市永康區中華路893巷口",
+   "FareDescription": "計時20元/時，當日最高100元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "92370768",
+   "CarParkName": {
+    "Zh_tw": "尚頂停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車151格（含身心障礙車3格、婦幼車格3格及綠能車位8格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    11
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.02204,
+    "PositionLon": 120.2209
+   },
+   "Address": "臺南市永康區尚頂里中華路1010號旁停車場",
+   "FareDescription": "計時20元/時，12小時內最高180元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "94286485",
+   "CarParkName": {
+    "Zh_tw": "永康興國停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車14格(含身心障礙停1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00528,
+    "PositionLon": 120.24261
+   },
+   "Address": "台南市永康區興國街266號",
+   "FareDescription": "每小時20元，當日最高收費120元,月租2400元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47941279",
+   "CarParkName": {
+    "Zh_tw": "永華停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "立體式小型車46格(含身心障礙1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99023,
+    "PositionLon": 120.17208
+   },
+   "Address": "台南市安平區永華路2段701號後方停車場",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "54555420",
+   "CarParkName": {
+    "Zh_tw": "海安路停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式小型車1036格(含身心障礙停30格、婦幼車格21格及綠能車位24格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    23
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99114,
+    "PositionLon": 120.19572
+   },
+   "Address": "台南市中西區海安路一段188號地下B1~B2",
+   "FareDescription": "小型車臨時停車收費方式：平日計時：每半小時10元，當日最高收費200元。假日計時：每半小時15元，當日最高收費300元。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81319364",
+   "CarParkName": {
+    "Zh_tw": "竑穗水交社停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車199 格(含身心障礙4格、婦幼車格4格及綠能車位4格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97607,
+    "PositionLon": 120.19894
+   },
+   "Address": "台南市南區興昌路53巷口旁停車場",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89096099",
+   "CarParkName": {
+    "Zh_tw": "崇明E6停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車115格（含身心障礙車3格、婦幼車格3格及綠能車位6格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    11
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.96888,
+    "PositionLon": 120.22556
+   },
+   "Address": "臺南市東區崇明路與崇興路交叉口停車場",
+   "FareDescription": "計時20元/時，12小時內最高180元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "37695615",
+   "CarParkName": {
+    "Zh_tw": "五都停車場高鐵台南站"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "25147332",
+   "Description": "小型車435格，機車17格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.92606,
+    "PositionLon": 120.28331
+   },
+   "Address": "台南市歸仁區沙崙里武當路及歸仁十路交叉口",
+   "FareDescription": "汽車：計時20元/時，當日最高120元時，機車：計次30/次 (跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89096062",
+   "CarParkName": {
+    "Zh_tw": "德光公園停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車20格（含身心障礙車1格、婦幼車格1格及綠能車位1格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98029,
+    "PositionLon": 120.21967
+   },
+   "Address": "臺南市東區崇德一街16號對面停車場",
+   "FareDescription": "計時20元/時，12小時內最高180元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89096106",
+   "CarParkName": {
+    "Zh_tw": "崇明五街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車28格（含身心障礙車1格、婦幼車格1格及綠能車位2格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97991,
+    "PositionLon": 120.21718
+   },
+   "Address": "臺南市東區崇明五街34號旁停車場",
+   "FareDescription": "計時20元/時，12小時內最高180元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89039534",
+   "CarParkName": {
+    "Zh_tw": "開南街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車60格(含身心障礙停1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    23
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00812,
+    "PositionLon": 120.22197
+   },
+   "Address": "臺南市北區開南街19號對面",
+   "FareDescription": "計時20元/時,當日最高220元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "00343229",
+   "CarParkName": {
+    "Zh_tw": "青年路立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "27856324",
+   "Description": "總車格：200(含婦幼5格、身障4格、電動充電專用格位4席，充電優先格位16席)",
+   "CarParkType": 2,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99148,
+    "PositionLon": 120.21386
+   },
+   "Address": "臺南市東區青年路328號",
+   "FareDescription": "計時20元/時，平日當日最高360元，假日當日最高480元。\n身障優惠：停車費半價",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "88909858",
+   "CarParkName": {
+    "Zh_tw": "復興停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車23格(含身心障礙停2格、婦幼車格2格及綠能車位2格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99882,
+    "PositionLon": 120.24455
+   },
+   "Address": "臺南市永康區光復里復興路172號旁",
+   "FareDescription": "每小時20元，當日最高收費400元,月租800元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "37621369",
+   "CarParkName": {
+    "Zh_tw": "高鐵橋下台南停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "97317757",
+   "Description": "平面小型車198格(含身心障礙、婦幼車位)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    1
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.92851,
+    "PositionLon": 120.28447
+   },
+   "Address": "台南市歸仁區歸仁八路與歸仁大道交叉口",
+   "FareDescription": "計時20元/時，半小時前免費第一小時超過30分鐘者以一小時計，第二小時起未滿30分鐘以半小時計，當日最高120元(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "61620111-3",
+   "CarParkName": {
+    "Zh_tw": "立德停車場D區"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "64912334",
+   "Description": "小型車19格(含身心障礙停車為1格、婦幼車格1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97602,
+    "PositionLon": 120.21485
+   },
+   "Address": "台南市東區立德八路與立德一路交叉口南側",
+   "FareDescription": "計時20元/時,當日最高120元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47940399-1",
+   "CarParkName": {
+    "Zh_tw": "港濱停車場 (第一區)"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式小型車38格 (含身心障礙1格、婦幼車格1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99386,
+    "PositionLon": 120.15827
+   },
+   "Address": "台南市安平區安億路232號對面",
+   "FareDescription": "臨停：20元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89050848",
+   "CarParkName": {
+    "Zh_tw": "運河星鑽停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "70369154",
+   "Description": "平面停車場小型車28格（含身心障礙車格、婦幼車格各1格及綠能車位2格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99447,
+    "PositionLon": 120.18851
+   },
+   "Address": "臺南市中西區大涼里府前一接與金華新路北側停車場",
+   "FareDescription": "計時20元/時，12小時內最高100元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "92442236",
+   "CarParkName": {
+    "Zh_tw": "東橋五路停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車58格（含身心障礙車2格、婦幼車格2格及綠能車位3格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.024,
+    "PositionLon": 120.23418
+   },
+   "Address": "臺南市永康區東橋里東橋五路335號對面停車場",
+   "FareDescription": "計時20元/時，12小時內最高180元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47939674",
+   "CarParkName": {
+    "Zh_tw": "大學路(社E2)停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50822121",
+   "Description": "平面式小型車150格(含身心障礙、婦幼車格及綠能車位各3格)。平面式機車100格(含身心障礙5格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99616,
+    "PositionLon": 120.21603
+   },
+   "Address": "台南市東區大學路西段53號西側",
+   "FareDescription": "汽車:計時20元/時，每10小時150元。機車:計次20/元，跨日重新計費。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47882362",
+   "CarParkName": {
+    "Zh_tw": "榮譽街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車352格(含身心障礙停9格、婦幼車格10格及綠能車位18格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97646,
+    "PositionLon": 120.22035
+   },
+   "Address": "臺南市東區榮譽街127巷巷口",
+   "FareDescription": "不分平假日計時20/H，當日最高230元(跨日重計)，月租2200元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "88917506",
+   "CarParkName": {
+    "Zh_tw": "太子成大勝利(太子會館)"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "立體式小型車272格(含身心障礙6格、婦幼車格6格及綠能車位6格)。",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.99611,
+    "PositionLon": 120.21841
+   },
+   "Address": "台南市東區大學路2號",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "94286470",
+   "CarParkName": {
+    "Zh_tw": "永康復國停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車39格(含身心障礙停1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00518,
+    "PositionLon": 120.24728
+   },
+   "Address": "台南市永康區復國一路150巷710內",
+   "FareDescription": "每小時20元，當日最高收費120元,月租2400元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "88908318",
+   "CarParkName": {
+    "Zh_tw": "臺鐵南科車站西側(第二區)停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50885758",
+   "Description": "平面小型車33格(含身心障礙停、婦幼車格各1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.10757,
+    "PositionLon": 120.29984
+   },
+   "Address": "台南市善化區西拉雅大道橋下與善新西路旁",
+   "FareDescription": "計時20元/時，當日最高100元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "00363651",
+   "CarParkName": {
+    "Zh_tw": "成德里立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "27856324",
+   "Description": "總車格：216(含婦幼9格、身障5格、充電樁26格)",
+   "CarParkType": 2,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00879,
+    "PositionLon": 120.20286
+   },
+   "Address": "臺南市北區立賢路一段499巷10號",
+   "FareDescription": "一般時段：20/H；週四、週六、週日的18:00-24:00：30/H；身障優惠：停車費半價",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "88915991",
+   "CarParkName": {
+    "Zh_tw": "竑穗善化中正停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車11格(含身心障礙1格、婦幼車格1格及綠能車位1格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.13053,
+    "PositionLon": 120.29435
+   },
+   "Address": "台南市善化區光明路70號旁",
+   "FareDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89050734",
+   "CarParkName": {
+    "Zh_tw": "大道停6停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "70369154",
+   "Description": "平面停車場小型車56格（含身心障礙車格、婦幼車格各2格及綠能車位3格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    6
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00947,
+    "PositionLon": 120.21571
+   },
+   "Address": "臺南市北區大光里和緯路1段與北門路2段路口西北側停車場",
+   "FareDescription": "計時20元/時，12小時內最高100元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "88908204",
+   "CarParkName": {
+    "Zh_tw": "LM陽光電城停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "50885758",
+   "Description": "平面小型車101格(含身心障礙停、婦幼車格各6格及綠能車位9格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.10965,
+    "PositionLon": 120.30657
+   },
+   "Address": "台南市新市區龍目井路北側",
+   "FareDescription": "計時20元/時，當日最高120元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "85766482-2",
+   "CarParkName": {
+    "Zh_tw": "南科西側停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "85766716",
+   "Description": "汽車平面式小型車24格(含身心障礙停、婦幼車格及綠能車位1格)/機車平面式小型機車290格(含身心障礙停車格各6格及綠能車位6格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.10785,
+    "PositionLon": 120.3016
+   },
+   "Address": "台南市善化區西拉雅大道與火車站善心西路交叉口",
+   "FareDescription": "汽車計時10元/半小時,當日最高100元時(跨日重新計費)/機車計時10元/時,當日最高30元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "81339426",
+   "CarParkName": {
+    "Zh_tw": "泉南里停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "80304384",
+   "Description": "平面停車場小型車17格（含身心障礙車1格、婦幼車格1格及綠能車位1格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98304,
+    "PositionLon": 120.21606
+   },
+   "Address": "臺南市東區府連路344巷53號旁停車場",
+   "FareDescription": "計時20元/時，12小時內最高120元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "85820845",
+   "CarParkName": {
+    "Zh_tw": "台南成大醫院門診大樓停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "立體式小型車450格(含身心障礙停4、婦幼車格各9格及綠能車位9格)。",
+   "CarParkType": 3,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.00209,
+    "PositionLon": 120.21746
+   },
+   "Address": "台南市北區小東路35號",
+   "FareDescription": "汽車:20分鐘前免費；逾20分鐘以1 小時計20元;2小時內每半小時加收10元;超過2小時每半小時加收20元當日最高400元                           ",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "61620111-2",
+   "CarParkName": {
+    "Zh_tw": "立德停車場C區"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "64912334",
+   "Description": "小型車43格(含身心障礙停車為1格、婦幼車格1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97623,
+    "PositionLon": 120.21487
+   },
+   "Address": "台南市東區立德八路與立德一路交叉口南側",
+   "FareDescription": "計時20元/時,當日最高120元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "92406533-1",
+   "CarParkName": {
+    "Zh_tw": "五妃街北側停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "24450981",
+   "Description": "平面停車場小型車43格（含身心障礙車1格、婦幼車格1格及綠能車位6格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    11
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.98255,
+    "PositionLon": 120.20921
+   },
+   "Address": "臺南市中西區五妃街72號旁停車場",
+   "FareDescription": "計時20元/時，12小時內最高120元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "47862942",
+   "CarParkName": {
+    "Zh_tw": "西門育賢停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "70369154",
+   "Description": "平面停車場小型車29格（含身心障礙車格、婦幼車格各1格及綠能車位2格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.01533,
+    "PositionLon": 120.20931
+   },
+   "Address": "臺南市北區西門路4段341巷旁停車場",
+   "FareDescription": "計時20元/時，12小時內最高100元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "89082671",
+   "CarParkName": {
+    "Zh_tw": "新建路停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "12745271",
+   "Description": "平面式小型車91格(含身心障礙停4格、婦幼車格4格及綠能車位8格)。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97642,
+    "PositionLon": 120.18592
+   },
+   "Address": "台南市南區新建路與新建路3巷口",
+   "FareDescription": "計時20/H，當日最高180元(跨日重計)，月租1500元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  },
+  {
+   "CarParkID": "61620111-1",
+   "CarParkName": {
+    "Zh_tw": "立德停車場B區"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "64912334",
+   "Description": "小型車25格(含身心障礙停車為1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 22.97654,
+    "PositionLon": 120.21495
+   },
+   "Address": "台南市東區立德八路與立德一路交叉口南側",
+   "FareDescription": "計時20元/時,當日最高120元時(跨日重新計費)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "Tainan",
+   "CityCode": "TNN"
+  }
+ ]
+}

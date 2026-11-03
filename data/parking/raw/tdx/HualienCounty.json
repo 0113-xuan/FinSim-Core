@@ -1,0 +1,4744 @@
+{
+ "UpdateTime": "2026-06-08T16:21:47+08:00",
+ "UpdateInterval": 14400,
+ "AuthorityCode": "HUA",
+ "VersionID": 88,
+ "CarParks": [
+  {
+   "CarParkID": "A00021",
+   "CarParkName": {
+    "Zh_tw": "花蓮壽豐車站停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場108登字第011號",
+   "OperatorID": "HUA54010552",
+   "Description": "高架橋下平面停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4,
+    2,
+    1
+   ],
+   "ParkingSiteTypes": [
+    20,
+    1,
+    8,
+    5,
+    4
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "0968201620",
+   "CarParkPosition": {
+    "PositionLat": 23.869020462036133,
+    "PositionLon": 121.5106430053711
+   },
+   "Email": "nobel.jwu@gmail.com",
+   "Address": "壽山路1號",
+   "FareDescription": "計時:20/小時,24小時上限60",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 1,
+   "GasStation": 0,
+   "Shop": 1,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "LandMark": "壽豐火車站",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00018",
+   "CarParkName": {
+    "Zh_tw": "彪吉利停場車(國民段469號)"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場108登字第008號",
+   "OperatorID": "HUA47041994",
+   "Description": "機車格",
+   "CarParkType": 1,
+   "ParkingGuideType": 254,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    2,
+    3
+   ],
+   "Telephone": "0919534881",
+   "EmergencyPhone": "0919534881",
+   "CarParkPosition": {
+    "PositionLat": 23.99555015563965,
+    "PositionLon": 121.60385131835938
+   },
+   "Email": "blueloveteresa@gmail.com",
+   "Address": "花蓮縣花蓮市國興一街與35-1號",
+   "FareDescription": "1.平／假日一小時$25(月租一個月$500)。2.打擋車：平日(星期一至星期四)$25，假日(星期五至星期日)$30。3.大型機車：平日(星期一至星期四)$30假日(星期五至星期日)$35。4.計算天數以每天零時為界，未滿一小時以一小時計，未滿一日以一日計。",
+   "SpecialOfferDescription": "無",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "平面式：機車格",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "LandMark": "曾記麻",
+   "BuildingName": "彪吉利停場車(國民段469號)",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00003",
+   "CarParkName": {
+    "Zh_tw": "丞捷停車場 "
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場110登字第009號",
+   "OperatorID": "HUA53478410",
+   "Description": "小型車20格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    3
+   ],
+   "Telephone": "(03)8565649",
+   "CarParkPosition": {
+    "PositionLat": 23.98822021484375,
+    "PositionLon": 121.59288024902344
+   },
+   "Email": "traffic517@gmail.com",
+   "Address": "花蓮縣吉安鄉北昌村自強路563號1樓",
+   "FareDescription": "月租1500元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00075",
+   "CarParkName": {
+    "Zh_tw": "東里一街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA86711789",
+   "Description": "身障1格、婦幼1格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "038312920",
+   "CarParkPosition": {
+    "PositionLat": 23.96799087524414,
+    "PositionLon": 121.59461212158203
+   },
+   "Email": "gohsien23@gmail.com",
+   "Address": "東里一街3號旁",
+   "FareDescription": "20元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00066",
+   "CarParkName": {
+    "Zh_tw": "花蓮國聯停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA89483140",
+   "Description": "小型車",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1,
+    3,
+    1,
+    3
+   ],
+   "Telephone": "02-22462098",
+   "EmergencyPhone": "02-22462098",
+   "CarParkPosition": {
+    "PositionLat": 23.98954,
+    "PositionLon": 121.60565
+   },
+   "Email": "fang@pss-group.com",
+   "Address": "花蓮縣花蓮市國聯五路25號旁空地",
+   "FareDescription": "計時：60元/時，月票2000元/月",
+   "SpecialOfferDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車停放",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "LandMark": ", ",
+   "LocationMapURL": "https://maps.app.goo.gl/GoameVb648hiCg828",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00070",
+   "CarParkName": {
+    "Zh_tw": "吉安站前停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA54811358",
+   "Description": "平面式小型車60格(含身心障礙停車位1格婦幼車位1格汽車充電車位1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [],
+   "ParkingSiteTypes": [],
+   "Telephone": "0911-320-915",
+   "EmergencyPhone": "",
+   "CarParkPosition": {
+    "PositionLat": 23.96878,
+    "PositionLon": 121.58271
+   },
+   "Email": "Ting.rui@msa.hinet.net",
+   "Address": "花蓮縣吉安鄉南昌北路85號",
+   "FareDescription": "10元/半小時，1400元/月租，150元/天(00-24)，充電費率每度/8元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 1,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00030",
+   "CarParkName": {
+    "Zh_tw": "吉安仁里立體停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場109登字第008號",
+   "OperatorID": "HUA53297327",
+   "Description": "小型車215格",
+   "CarParkType": 2,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [],
+   "ChargeTypes": [
+    3
+   ],
+   "Telephone": "0939008791",
+   "CarParkPosition": {
+    "PositionLat": 23.96599006652832,
+    "PositionLon": 121.59226989746094
+   },
+   "Email": "traffic517@gmail.com",
+   "Address": "花蓮縣吉安鄉中正路一段151號",
+   "FareDescription": "汽車：每1小時20元；30分鐘10元；月租3000。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00034",
+   "CarParkName": {
+    "Zh_tw": "停好停滿停車場中華國小站"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場110登字第004號",
+   "OperatorID": "HUA83381764",
+   "Description": "平面式小型車41格(含婦幼、身障車位各1格及電動車優先車位2格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    11,
+    20
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "(03)8311793",
+   "EmergencyPhone": "0988098129",
+   "CarParkPosition": {
+    "PositionLat": 23.993629455566406,
+    "PositionLon": 121.60684204101562
+   },
+   "Email": "lc83381764@gmail.com",
+   "Address": "花蓮縣花蓮市國民八街與國盛三街口",
+   "FareDescription": "臨停部分：15元/半小時，一天最高上限平日100元/天，假日180元/天；月租部分：2500元/月繳，6900元/季繳，24000元/年繳；充電樁收費：每日06:00-23:59每度電收費9元，每日00:00-05:59每度電收費8元。。",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "限停小型車",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "LandMark": "中華國小北門對面",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00067",
+   "CarParkName": {
+    "Zh_tw": "市八十三街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA91591308",
+   "Description": "平面式小型車停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    20,
+    22
+   ],
+   "ChargeTypes": [
+    3
+   ],
+   "Telephone": "0975501966",
+   "EmergencyPhone": "0975501966",
+   "CarParkPosition": {
+    "PositionLat": 23.990699768066406,
+    "PositionLon": 121.59657287597656
+   },
+   "Email": "ayennet@gmail.com",
+   "Address": "花蓮市莊敬段423地號",
+   "FareDescription": "年繳:20000元、半年繳:11000元、月繳:2000元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "LandMark": "",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00015",
+   "CarParkName": {
+    "Zh_tw": "WORLD GYM世界健身俱樂部停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場110登字第013號",
+   "OperatorID": "HUA27940499",
+   "Description": "小型車66格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    6
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(03)8335333",
+   "EmergencyPhone": "(03)833-5333",
+   "CarParkPosition": {
+    "PositionLat": 23.992069244384766,
+    "PositionLon": 121.606201171875
+   },
+   "Email": "repair@worldgymtaiwan.com",
+   "Address": "花蓮縣花蓮市富國段0326-0001、0327、0328地號",
+   "WebURL": "https://www.worldgymtaiwan.com/locations",
+   "FareDescription": "會員制:前3H免費，第4H$100/H   非會員:$100/H，單日最高收$500元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "LandMark": "花蓮縣花蓮市國聯四路71-1號",
+   "BuildingName": "無",
+   "LocationMapURL": "https://www.worldgymtaiwan.com/locations",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00013",
+   "CarParkName": {
+    "Zh_tw": "明禮路停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場108登字第001號",
+   "OperatorID": "HUA13124285",
+   "Description": "小型車106格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "02-2767-7669#210",
+   "CarParkPosition": {
+    "PositionLat": 23.97888946533203,
+    "PositionLon": 121.61102294921875
+   },
+   "Email": "traffic517@gmail.com",
+   "Address": "花蓮市明禮路7-1號",
+   "FareDescription": "小型車：每一小時20元。 月租方式：小型車1,350元/月。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00039",
+   "CarParkName": {
+    "Zh_tw": "花蓮民德二停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA70369154",
+   "Description": "小型車21格（含1身障）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2,
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "(02)27888750",
+   "EmergencyPhone": "0800-021-111",
+   "CarParkPosition": {
+    "PositionLat": 23.98348,
+    "PositionLon": 121.62176
+   },
+   "Email": "development@youparking.com.tw",
+   "Address": "花蓮縣花蓮市民權路31號",
+   "FareDescription": "臨停：40/時、月租：2,000/月（限用悠遊卡進出）",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00038",
+   "CarParkName": {
+    "Zh_tw": "花蓮民德一停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA70369154",
+   "Description": "平面式小型車35格（含1身障及1婦幼）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2,
+    4,
+    2,
+    4
+   ],
+   "ParkingSiteTypes": [
+    20,
+    4,
+    20,
+    4
+   ],
+   "ChargeTypes": [
+    1,
+    3,
+    3,
+    1
+   ],
+   "Telephone": "(02)27888750",
+   "EmergencyPhone": "0800-021-111",
+   "CarParkPosition": {
+    "PositionLat": 23.9837,
+    "PositionLon": 121.62132
+   },
+   "Email": "development@youparking.com.tw",
+   "Address": "花蓮縣花蓮市民德四街5號對面停車場",
+   "FareDescription": "臨停：40/時、月租：2,000/月。限用悠遊卡進出",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00081",
+   "CarParkName": {
+    "Zh_tw": "站前停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA86711789",
+   "Description": "身障2格、婦幼2格、充電4格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1
+   ],
+   "ParkingSiteTypes": [
+    1
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "",
+   "CarParkPosition": {
+    "PositionLat": 23.993040084838867,
+    "PositionLon": 121.60272979736328
+   },
+   "Email": "gohsien23@gmail.com",
+   "Address": "國興一街國聯四路口",
+   "FareDescription": "20元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00106",
+   "CarParkName": {
+    "Zh_tw": "花蓮三民場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA52715750",
+   "Description": "平面空地停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "02-77153105",
+   "CarParkPosition": {
+    "PositionLat": 23.97748,
+    "PositionLon": 121.61098
+   },
+   "Email": "bailiting.parking@gmail.com",
+   "Address": "花蓮縣花蓮市三民街2號",
+   "FareDescription": "計時:100元/每小時、月租:6000元/每月",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車停放",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00046",
+   "CarParkName": {
+    "Zh_tw": "國盛四街停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場109登字第022號",
+   "OperatorID": "HUA83279070",
+   "Description": "平面小型車11位",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    3
+   ],
+   "Telephone": "(03)824667",
+   "EmergencyPhone": "0915-725588",
+   "CarParkPosition": {
+    "PositionLat": 23.994300842285156,
+    "PositionLon": 121.60778045654297
+   },
+   "Email": "yahu66@hl.gov.tw",
+   "Address": "花蓮市國盛四街49",
+   "FareDescription": "汽車月租2500元/月、季繳2200元/月、年繳2000元/月。",
+   "IsFreeParkingOutOfHours": 1,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00040",
+   "CarParkName": {
+    "Zh_tw": "花蓮文化創意產業園區停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場109登字第009號",
+   "OperatorID": "HUA04153230",
+   "Description": "大型車6位，小型車52位",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    8,
+    4,
+    5,
+    2
+   ],
+   "ParkingSiteTypes": [
+    5,
+    13,
+    7,
+    4
+   ],
+   "ChargeTypes": [
+    2,
+    1
+   ],
+   "Telephone": "(02)85126580",
+   "CarParkPosition": {
+    "PositionLat": 23.977739334106445,
+    "PositionLon": 121.60442352294922
+   },
+   "Email": "uukao@moc.gov.tw",
+   "Address": "花蓮市中華路144號",
+   "FareDescription": "計時收費，每30分鐘新臺幣10元，未滿30分鐘者以30分鐘計。大型車每次60元（所稱每次係指每一車輛入場一次而言，每次不得超過4小時，未滿4小時者以4小時計）",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00095",
+   "CarParkName": {
+    "Zh_tw": "全聯花蓮美崙站停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA61861254",
+   "Description": "含身心障礙1格婦幼1格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800208333",
+   "CarParkPosition": {
+    "PositionLat": 0,
+    "PositionLon": 0
+   },
+   "Email": "hsd020@pss-group.com",
+   "Address": "中美路61號",
+   "FareDescription": "汽車臨時停車每小時新台幣120元，停車時數未滿一小時者，以一小時計算收費。停車時數逾一小時以上，其超過之不滿一小時部分，如不逾三十分鐘者，以半小時計算；如逾三十分鐘者，仍以一小時計算收費。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 1,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00017",
+   "CarParkName": {
+    "Zh_tw": "台灣國際開發事業有限公司花蓮醫院停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場108登字第007號",
+   "OperatorID": "HUA80738683",
+   "Description": "全年適用",
+   "CarParkType": 2,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4,
+    22,
+    254,
+    8,
+    11
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "062087743",
+   "CarParkPosition": {
+    "PositionLat": 23.979480743408203,
+    "PositionLon": 121.6111831665039
+   },
+   "Email": "yoyoliou@gmail.com",
+   "Address": "花蓮市中正路600號",
+   "FareDescription": "每小時20元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "限停小型車",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00031",
+   "CarParkName": {
+    "Zh_tw": " 東芥東大門停車場"
+   },
+   "CarParkShortName": {
+    "Zh_tw": " 東芥東大門停車場"
+   },
+   "CarParkRegNo": "花縣停車場109登字第017號",
+   "OperatorID": "HUA85056975",
+   "Description": "平面式161個停車位",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10,
+    21
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "(03)8527733",
+   "CarParkPosition": {
+    "PositionLat": 23.972890853881836,
+    "PositionLon": 121.60970306396484
+   },
+   "Email": "f0937977187@hotmail.com",
+   "Address": "花蓮縣花蓮市重慶路480號",
+   "FareDescription": "平日40元/時、假日60元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00096",
+   "CarParkName": {
+    "Zh_tw": "傳忠花蓮東大門夜市場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA54239682",
+   "Description": "平面式停車格49格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0917-662092",
+   "CarParkPosition": {
+    "PositionLat": 23.972789764404297,
+    "PositionLon": 121.60967254638672
+   },
+   "Email": "a4793802@yahoo.com.tw",
+   "Address": "花蓮縣花蓮市重慶路",
+   "FareDescription": "計時:60元/半小時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00044",
+   "CarParkName": {
+    "Zh_tw": "停好車停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場109登字第016號",
+   "OperatorID": "HUA87344137",
+   "Description": "平面停車場，小型車37位，機車149位。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    3
+   ],
+   "ParkingSiteTypes": [],
+   "Telephone": "(03)8246672",
+   "EmergencyPhone": "0932-935245",
+   "CarParkPosition": {
+    "PositionLat": 23.99418,
+    "PositionLon": 121.60353
+   },
+   "Email": "yahu66@hl.gov.tw",
+   "Address": "花蓮縣花蓮市國聯一路18號",
+   "FareDescription": "當日零點至當日晚上12點前為1日。 一、汽車： 30分鐘10元；每1小時30元,平常1天上限150元,假日一天上限200元,含國定假日連續假期上限200元 機車：平日30元,假日40元 ",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00009",
+   "CarParkName": {
+    "Zh_tw": "遠東百貨股份有限公司花蓮和平分公司"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場110登字第015號",
+   "OperatorID": "HUA28984733",
+   "Description": "汽車358格機車558格",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    7
+   ],
+   "ParkingSiteTypes": [
+    16
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(03)8355588",
+   "EmergencyPhone": "",
+   "CarParkPosition": {
+    "PositionLat": 23.97838020324707,
+    "PositionLon": 121.5997314453125
+   },
+   "Email": "gen43@feds.com.tw",
+   "Address": "花蓮縣花蓮市和平路581號",
+   "WebURL": "https://www.feds.com.tw/store/52/MallInfo?tab=parking",
+   "FareDescription": "計時每小時30元(限營業時間內09:00~23:00)",
+   "SpecialOfferDescription": "憑遠東百貨及愛買當日發票可免費停3小時,憑快樂購聯合集點卡免費1小時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 1,
+   "GasStation": 0,
+   "Shop": 1,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00026",
+   "CarParkName": {
+    "Zh_tw": "前站停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場109登字第004號",
+   "OperatorID": "HUA87970329",
+   "Description": "平面式",
+   "CarParkType": 1,
+   "ParkingGuideType": 5,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    3,
+    2,
+    1
+   ],
+   "Telephone": "0933480871",
+   "EmergencyPhone": "0933480871",
+   "CarParkPosition": {
+    "PositionLat": 23.993379592895508,
+    "PositionLon": 121.60394287109375
+   },
+   "Email": "blueloveteresa@gmail.com",
+   "Address": "花蓮市國聯一路37號(對面)",
+   "FareDescription": "汽車;$20／小時($160／天)；假日(及連續假日)一日$200。月租$2400元",
+   "SpecialOfferDescription": "障殘：半價優惠",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "汽車;$20／小時($160／天)；假日(及連續假日)一日$200。月租$2400元",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 255,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00088",
+   "CarParkName": {
+    "Zh_tw": "統冠重慶店停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場113登字第014號",
+   "OperatorID": "HUA90831316",
+   "Description": "平面停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    16
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "Telephone": "03-8355987",
+   "EmergencyPhone": "0938086362",
+   "CarParkPosition": {
+    "PositionLat": 23.9735107421875,
+    "PositionLon": 121.61028289794922
+   },
+   "Email": "tkacc@tkmart.com.tw",
+   "Address": "花蓮縣花蓮市重慶路415號",
+   "FareDescription": "10元/半小時",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00035",
+   "CarParkName": {
+    "Zh_tw": "林森停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場110登字第005號",
+   "OperatorID": "HUA91150196",
+   "Description": "平面式小型停車位(一般車位19格+身障車位1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [],
+   "ParkingSiteTypes": [
+    7,
+    4,
+    16,
+    5
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(03)8337266",
+   "EmergencyPhone": "0966-550601",
+   "CarParkPosition": {
+    "PositionLat": 23.97752,
+    "PositionLon": 121.59939
+   },
+   "Email": "wsk0601@gmail.com",
+   "Address": "花蓮縣花蓮市林森路145號旁空地",
+   "FareDescription": "1.平日40元/小時 2.假日60元/小時 3.過年期間80元/小時",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 254,
+   "LandMark": "紐約客牛排對面",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00101",
+   "CarParkName": {
+    "Zh_tw": "花蓮光復停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA24685973",
+   "Geometry": "",
+   "Description": "機車:130格(含3格身障車位)  小型車:平面汽車停車位18格(含1格身障車位)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1,
+    2
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "07-5853080或0980591332",
+   "EmergencyPhone": "",
+   "CarParkPosition": {
+    "PositionLat": 23.66645,
+    "PositionLon": 121.42154
+   },
+   "Email": "hcc24685973@gmail.com",
+   "Address": "花蓮縣光復鄉中正路一段7號(前)",
+   "FareDescription": "機車:每次20元 小型車:$15/半小時，最高150",
+   "SpecialOfferDescription": "15分鐘內離場不收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "LandMark": "花蓮光復火車站前",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00098",
+   "CarParkName": {
+    "Zh_tw": "傳忠花蓮國民七街場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA54239682",
+   "Description": "平面停車場9格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0917-662092",
+   "CarParkPosition": {
+    "PositionLat": 23.996959686279297,
+    "PositionLon": 121.60730743408203
+   },
+   "Email": "a4793802@yahoo.com.tw",
+   "Address": "國盛里國民七街53號對面停車場",
+   "FareDescription": "30元/半小時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00100",
+   "CarParkName": {
+    "Zh_tw": "博客停車場花蓮中正場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA70393302",
+   "Description": "提供月租與臨停",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [],
+   "ParkingSiteTypes": [],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "02-29488889",
+   "CarParkPosition": {
+    "PositionLat": 23.97197914123535,
+    "PositionLon": 121.59915161132812
+   },
+   "Email": "mrpark5353@gmail.com",
+   "Address": "花蓮市中正路202號",
+   "WebURL": "http://www.mrpark.com.tw/",
+   "FareDescription": "小型車平日每小時30元，假日每小時40元，最高上限200元。月租每月3000元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00005",
+   "CarParkName": {
+    "Zh_tw": "福廣仁愛停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場107登字第008號",
+   "OperatorID": "HUA58019180",
+   "Description": "平面式小型車133格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    9,
+    2,
+    4
+   ],
+   "ParkingSiteTypes": [
+    11,
+    7,
+    21,
+    4,
+    22,
+    23,
+    5,
+    10
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "(03)8325161",
+   "EmergencyPhone": "0912037870",
+   "CarParkPosition": {
+    "PositionLat": 23.978050231933594,
+    "PositionLon": 121.60221099853516
+   },
+   "Email": "fu58019180@gmail.com",
+   "Address": "花蓮縣花蓮市仁愛街91號",
+   "FareDescription": "10元/30分鐘，當日最高300元。",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車停靠",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00047",
+   "CarParkName": {
+    "Zh_tw": "168停車聯盟花蓮東大門場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場109登字第023號",
+   "OperatorID": "HUA97329493",
+   "Description": "平面式：小型車413位",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254,
+    5
+   ],
+   "ParkingSiteTypes": [
+    21
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "(02)27546661",
+   "EmergencyPhone": "0980-902405",
+   "CarParkPosition": {
+    "PositionLat": 23.97283935546875,
+    "PositionLon": 121.61309814453125
+   },
+   "Email": "yahu66@hl.gov.tw",
+   "Address": "花蓮縣花蓮市北濱路",
+   "FareDescription": "每小時150元，月租8,000元/月(本公司爾有限時優惠費率，另詳停車場公告)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00091",
+   "CarParkName": {
+    "Zh_tw": "特翊重慶停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA95046940",
+   "Description": "平面式小型車租賃停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    3
+   ],
+   "Telephone": "0975501966",
+   "EmergencyPhone": "0975501966",
+   "CarParkPosition": {
+    "PositionLat": 23.96862030029297,
+    "PositionLon": 121.60411834716797
+   },
+   "Email": "washtodaytw@gmail.com",
+   "Address": "花蓮市重慶路236-1",
+   "FareDescription": "年租:16000元 / 月租:1500元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00033",
+   "CarParkName": {
+    "Zh_tw": "花蓮民生停車場"
+   },
+   "CarParkShortName": {
+    "Zh_tw": "花蓮民生停車場營業所"
+   },
+   "CarParkRegNo": "花縣停車場110登字第001號",
+   "OperatorID": "HUA70369154",
+   "Description": "平面式小型車25格（含身障1格、婦幼1格）",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [],
+   "ParkingSiteTypes": [],
+   "Telephone": "(03)8310734",
+   "EmergencyPhone": "",
+   "CarParkPosition": {
+    "PositionLat": 23.975330352783203,
+    "PositionLon": 121.60730743408203
+   },
+   "Email": "development@youparking.com.tw",
+   "Address": "花蓮市南京街221號旁空地停車場",
+   "WebURL": "https://www.youparking.com.tw/parking-detail.php?id=501",
+   "FareDescription": "計時40元/時；月租2000元/月",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車停放",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "LandMark": "花蓮南京街郵局",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00083",
+   "CarParkName": {
+    "Zh_tw": "花蓮國盛停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA70369154",
+   "Description": "平面式小型車31格(含身心障礙1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "03-831-5620",
+   "CarParkPosition": {
+    "PositionLat": 23.996959686279297,
+    "PositionLon": 121.60730743408203
+   },
+   "Email": "in_out_car@yahoo.com.tw",
+   "Address": "花蓮縣花蓮市國盛二街203-1號",
+   "FareDescription": "計時：40/時、月租：2000/月",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00050",
+   "CarParkName": {
+    "Zh_tw": "國富二街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA83491663",
+   "Description": "平面式停車場共計7格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    3,
+    254
+   ],
+   "Telephone": "(03)8576111",
+   "EmergencyPhone": "0933-666911",
+   "CarParkPosition": {
+    "PositionLat": 23.990800857543945,
+    "PositionLon": 121.5943603515625
+   },
+   "Email": "hl359191@gmail.com",
+   "Address": "花蓮市國富二街136號旁",
+   "FareDescription": "月繳$2500/月、季繳$2200/月、年繳$2000/月",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00092",
+   "CarParkName": {
+    "Zh_tw": " 滿溢停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA90025811",
+   "Description": "小型車64格、機車168格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    1
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "0908676816",
+   "EmergencyPhone": "0908676816",
+   "CarParkPosition": {
+    "PositionLat": 23.99441909790039,
+    "PositionLon": 121.60336303710938
+   },
+   "Email": "cxz43844009@gmail.com",
+   "Address": "花蓮縣花蓮市富國段富國一小段4地號",
+   "FareDescription": "20元/時 平日120元/天 假日150元/天 月租2000元/月繳",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 254,
+   "LandMark": "花蓮火車站",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00028",
+   "CarParkName": {
+    "Zh_tw": "遠雄海洋公園(股)公司"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場109登字第006號",
+   "OperatorID": "HUA25019060",
+   "Description": "小型車732格/身心障礙15格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "Telephone": "03-8123100*2237",
+   "EmergencyPhone": "03-8123100*2202",
+   "CarParkPosition": {
+    "PositionLat": 23.845510482788086,
+    "PositionLon": 121.53531646728516
+   },
+   "Email": "D0376@farglory-oceanpark.com.tw",
+   "Address": "花蓮縣壽豐鄉鹽寮村福德189號",
+   "FareDescription": "機車30元,小型車100元採計次收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00079",
+   "CarParkName": {
+    "Zh_tw": "城中大樓停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA54814741",
+   "Geometry": "",
+   "Description": "平面停車場80(含2個身心障礙及2個婦幼停車位)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4,
+    2
+   ],
+   "ParkingSiteTypes": [
+    4,
+    5,
+    8,
+    20,
+    15,
+    19,
+    14,
+    10,
+    23
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "0905725798",
+   "EmergencyPhone": "0905725798",
+   "CarParkPosition": {
+    "PositionLat": 23.985210418701172,
+    "PositionLon": 121.6059799194336
+   },
+   "Email": "joe871117@gmail.com",
+   "Address": "花蓮縣花蓮市明心街1-16號",
+   "FareDescription": "10元/半小時，20元/小時，每日最高200元(以0時起算)，全程以半小時計。",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只接受小型車輛",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 0,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "LandMark": "城中大樓後方",
+   "BuildingName": "城中大樓",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00049",
+   "CarParkName": {
+    "Zh_tw": "花蓮市公園三民站"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA27579258",
+   "Description": "車牌辨識現金繳費",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2,
+    254
+   ],
+   "ParkingSiteTypes": [
+    4,
+    8,
+    20,
+    22,
+    254,
+    19
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "02-7738-1328",
+   "EmergencyPhone": "0926696187",
+   "CarParkPosition": {
+    "PositionLat": 23.977519989013672,
+    "PositionLon": 121.61151123046875
+   },
+   "Email": "fc.fucheng@gmail.com",
+   "Address": "花蓮縣花蓮市公園路7之1號旁空地",
+   "FareDescription": "計時:40元/小時;入場12小時最高收費，平日:120元，假日:160元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "LandMark": "原統帥飯店對面",
+   "BuildingName": "",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00097",
+   "CarParkName": {
+    "Zh_tw": "叭叭房中美停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA16766579",
+   "Description": "戶外平面停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    22
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "02-25282826",
+   "EmergencyPhone": "0919239830",
+   "CarParkPosition": {
+    "PositionLat": 0,
+    "PositionLon": 0
+   },
+   "Email": "ptm@yks.com.tw",
+   "Address": "中美二街4-1號旁空地",
+   "WebURL": "https://yks.com.tw/babahomes/87",
+   "FareDescription": "24小時 平日:10元/H    假日:20元/H",
+   "SpecialOfferDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小客車",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "LocationMapURL": "https://maps.app.goo.gl/xrxRA87jDLCRb1oB8",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00043",
+   "CarParkName": {
+    "Zh_tw": "中山明智停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場109登字第015號",
+   "OperatorID": "HUA85051937",
+   "Description": "平面式：汽車53格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20,
+    254
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "(03)8246672",
+   "EmergencyPhone": "0968113318",
+   "CarParkPosition": {
+    "PositionLat": 23.984699249267578,
+    "PositionLon": 121.60347747802734
+   },
+   "Email": "yahu66@hl.com.tw",
+   "Address": "花蓮市中山路與明智街口",
+   "FareDescription": "當日零點至當日晚上12點前為1日。 一、汽車：每1小時20元；30分鐘10元 。二、每日最高收費：120元 。三、月租收費：2500元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00002",
+   "CarParkName": {
+    "Zh_tw": "永發停車場-東洋站"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場107登字第002號",
+   "OperatorID": "HUA87546372",
+   "Description": "小行車格223格  ( 含身心障礙車格5格;婦幼車格2格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1
+   ],
+   "ParkingSiteTypes": [],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0986820557",
+   "CarParkPosition": {
+    "PositionLat": 23.980159759521484,
+    "PositionLon": 121.60807037353516
+   },
+   "Email": "abc835901@yahoo.com.tw",
+   "Address": "民國路76號",
+   "FareDescription": "20元/時 ",
+   "SpecialOfferDescription": "身心障礙優惠",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00011",
+   "CarParkName": {
+    "Zh_tw": "新港街停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場110登字第014號",
+   "OperatorID": "HUA89483140",
+   "Description": "小型車27格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "02-22461708",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.979219436645508,
+    "PositionLon": 121.60639190673828
+   },
+   "Email": "fang@pss-group.com",
+   "Address": "花蓮縣花蓮市新港街75號",
+   "FareDescription": "汽車：前第一小時20元；每一小時20元。 未滿30分鐘加收10元，一天最高收費480元。 月租方式：一個月3000元。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00080",
+   "CarParkName": {
+    "Zh_tw": "鉄道商圈停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA91591308",
+   "Description": "平面式小型車停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    5,
+    4,
+    20,
+    16
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0966535839",
+   "EmergencyPhone": "0966535839",
+   "CarParkPosition": {
+    "PositionLat": 23.978050231933594,
+    "PositionLon": 121.60707092285156
+   },
+   "Email": "ayennet@gmail.com",
+   "Address": "花蓮縣花蓮市明義段969地號、明義段969-1地號",
+   "FareDescription": "平日:25/每半小時、假日:40/每半小時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00105",
+   "CarParkName": {
+    "Zh_tw": "停佳安(花蓮花蓮站前一場)汽車停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA47041994",
+   "Description": "全日",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1,
+    4,
+    2
+   ],
+   "ParkingSiteTypes": [
+    23,
+    4,
+    7,
+    20,
+    1
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0919534881",
+   "CarParkPosition": {
+    "PositionLat": 23.99345,
+    "PositionLon": 121.60294
+   },
+   "Email": "47041994a@gmail.com",
+   "Address": "花蓮縣花蓮市國興一街",
+   "FareDescription": "汽車臨停20元30分鐘、平日200元/天、假日300元/天",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 255,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00045",
+   "CarParkName": {
+    "Zh_tw": "國富二十二街停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場109登字第021號",
+   "OperatorID": "HUA83278987",
+   "Description": "平面式：小型車23位",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    3
+   ],
+   "Telephone": "(03)83278987",
+   "EmergencyPhone": "0988-672532",
+   "CarParkPosition": {
+    "PositionLat": 23.992399215698242,
+    "PositionLon": 121.5947036743164
+   },
+   "Email": "yahu66@hl.gov.tw",
+   "Address": "花蓮市國富二十二街10",
+   "FareDescription": "汽車月租2500元/月、季繳2200元/月、年繳2000元/月。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00059",
+   "CarParkName": {
+    "Zh_tw": "花蓮中山路停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府建交字第1110047896號",
+   "OperatorID": "HUA83235398",
+   "Description": "超高速充電服務停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    254
+   ],
+   "Telephone": "02-27671885",
+   "EmergencyPhone": "0937-062-442",
+   "CarParkPosition": {
+    "PositionLat": 23.996469497680664,
+    "PositionLon": 121.59393310546875
+   },
+   "Email": "leon@u-power.com.tw",
+   "Address": "花蓮市中山路一段9號",
+   "FareDescription": "提供充電車輛停車之用，每度電9元至10元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00061",
+   "CarParkName": {
+    "Zh_tw": "富裕二街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA86711789",
+   "Description": "身障1格、婦幼1格、充電2格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "",
+   "CarParkPosition": {
+    "PositionLat": 23.998090744018555,
+    "PositionLon": 121.60199737548828
+   },
+   "Email": "gohsien23@gmail.com",
+   "Address": "富裕二街",
+   "FareDescription": "20元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00084",
+   "CarParkName": {
+    "Zh_tw": "中華停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA87970329",
+   "Description": "平面式",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1,
+    2,
+    3
+   ],
+   "Telephone": "0933480871",
+   "EmergencyPhone": "0933480871",
+   "CarParkPosition": {
+    "PositionLat": 23.97425079345703,
+    "PositionLon": 121.58968353271484
+   },
+   "Email": "U121260488@yahoo.com.tw",
+   "Address": "花蓮縣花蓮市中華路469之3號對面",
+   "FareDescription": "汽車;$20／小時($160／天)。月租$2000元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00089",
+   "CarParkName": {
+    "Zh_tw": "福町停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場113登字第015號",
+   "OperatorID": "HUA28362307",
+   "Description": "婦幼車位1個,殘障車位1個,一般車位28個",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1
+   ],
+   "ParkingSiteTypes": [
+    4,
+    21
+   ],
+   "ChargeTypes": [
+    1,
+    2,
+    3
+   ],
+   "Telephone": "0906182266",
+   "EmergencyPhone": "0906182266",
+   "CarParkPosition": {
+    "PositionLat": 23.975650787353516,
+    "PositionLon": 121.60929107666016
+   },
+   "Email": "a0906182266@gmail.com",
+   "Address": "花蓮縣花蓮市福町路與成功路口",
+   "FareDescription": "1.平日40元/半小時 2.假日50元/半小時",
+   "SpecialOfferDescription": "無優惠費率",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "限停小型車",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00099",
+   "CarParkName": {
+    "Zh_tw": "豐村停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA87970329",
+   "Description": "平面式",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1,
+    3,
+    2
+   ],
+   "Telephone": "0933480871",
+   "EmergencyPhone": "0933480871",
+   "CarParkPosition": {
+    "PositionLat": 24.00132942199707,
+    "PositionLon": 121.6020278930664
+   },
+   "Email": "U121260488@yahoo.com.tw",
+   "Address": "花蓮市國強里豐村27-3號對面",
+   "FareDescription": "汽車;$20／小時($160／天)。月租$1500元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00062",
+   "CarParkName": {
+    "Zh_tw": "商校街停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA86711789",
+   "Description": "身障1格、婦幼1格、充電2格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "038312920",
+   "EmergencyPhone": "",
+   "CarParkPosition": {
+    "PositionLat": 23.987119674682617,
+    "PositionLon": 121.60045623779297
+   },
+   "Email": "gohsien23@gmail.com",
+   "Address": "商校街",
+   "FareDescription": "20元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00057",
+   "CarParkName": {
+    "Zh_tw": "國聯停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA87970329",
+   "Description": "月租",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    3
+   ],
+   "Telephone": "0933480871",
+   "EmergencyPhone": "8332665",
+   "CarParkPosition": {
+    "PositionLat": 23.992050170898438,
+    "PositionLon": 121.6055908203125
+   },
+   "Email": "u121260488@yahoo.com.tw",
+   "Address": "花蓮縣花蓮市國聯四路80號",
+   "FareDescription": "We ",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 0,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00054",
+   "CarParkName": {
+    "Zh_tw": "盛昌停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA94504503",
+   "Description": "平面式小型車20格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    3
+   ],
+   "Telephone": "0911-563-854",
+   "CarParkPosition": {
+    "PositionLat": 23.996959686279297,
+    "PositionLon": 121.60730743408203
+   },
+   "Email": "lisaloosen@gamil.com",
+   "Address": "花蓮縣花蓮市裕民段555地號",
+   "FareDescription": "月租1200元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00085",
+   "CarParkName": {
+    "Zh_tw": "太昌停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場113登字第011號",
+   "OperatorID": "HUA82925352",
+   "Description": "平面柏油路",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    7,
+    20,
+    4
+   ],
+   "ChargeTypes": [
+    3
+   ],
+   "Telephone": "0963675215",
+   "CarParkPosition": {
+    "PositionLat": 23.99142074584961,
+    "PositionLon": 121.57478332519531
+   },
+   "Email": "yuchi.dod@gmail.com",
+   "Address": "吉安路一段46號",
+   "FareDescription": "月租1200",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00001",
+   "CarParkName": {
+    "Zh_tw": "彪吉利(花蓮停三)汽(紅黃牌重機)車停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場109登字第010號",
+   "OperatorID": "HUA47041994",
+   "Description": "汽車及紅黃牌重機車",
+   "CarParkType": 1,
+   "ParkingGuideType": 5,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    2,
+    3
+   ],
+   "Telephone": "0919534881",
+   "EmergencyPhone": "0919534881",
+   "CarParkPosition": {
+    "PositionLat": 23.991689682006836,
+    "PositionLon": 121.60208129882812
+   },
+   "Email": "blueloveteresa@gmail.com",
+   "Address": "花蓮縣花蓮市國聯一路138之11號",
+   "FareDescription": "臨停:$20／半小時,平日上限$$300天／天,假日上限$500／天(如有優惠則另行公告)月租:$4000／月繳(如有優惠則另行公告)",
+   "SpecialOfferDescription": "障殘車位：半價",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "臨停:$20／半小時,平日上限$$300天／天,假日上限$500／天(如有優惠則另行公告)月租:$4000／月繳(如有優惠則另行公告)",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "LandMark": "花蓮縣花蓮市國聯一路138之11號",
+   "BuildingName": "旅遊服務中心後",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00072",
+   "CarParkName": {
+    "Zh_tw": "好樂停 HAPPY PARKING–忠孝停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA90867566",
+   "Description": "平面戶外小型車停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    7,
+    5,
+    4,
+    8
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "0900408298",
+   "EmergencyPhone": "",
+   "CarParkPosition": {
+    "PositionLat": 23.97393035888672,
+    "PositionLon": 121.60623931884766
+   },
+   "Email": "service@anzen.com.tw",
+   "Address": "花蓮縣花蓮市忠孝街57號",
+   "FareDescription": "計時：10元/半小時(全日)；當日上限：100元/當日當次；汽車月租：2500元/月",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00007",
+   "CarParkName": {
+    "Zh_tw": "花蓮航空站計時收費停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場110登字第010號",
+   "OperatorID": "HUA97100722",
+   "Description": "小型車347格",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    2
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0939-625625",
+   "CarParkPosition": {
+    "PositionLat": 24.07139015197754,
+    "PositionLon": 121.61768341064453
+   },
+   "Email": "tensha.ten@msa.hinet.net",
+   "Address": "花蓮縣新城鄉機場巷1號",
+   "FareDescription": "(1) 汽車30分鐘10元，平日最高160；未滿30分鐘以30分鐘計；逾30分以一小時計。 (2) 每日最高160元(未滿一日以一日計），當日零點至當日晚上12點前為1日。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00086",
+   "CarParkName": {
+    "Zh_tw": "合歡山小風口下停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場113登字第012號",
+   "OperatorID": "HUA08147554",
+   "Geometry": "",
+   "Description": "一般汽車格位103格(尺寸2.5M*5M)，身心障礙汽車格位2格(尺寸3.5M*6M)，親子汽車格位2格(尺寸2.5M*5M)，電動汽車格位2格(尺寸2.5M*5M)，中型巴士車格15格(尺寸3M*7.6M) 機車格位26格(尺寸1M*2M) ",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10,
+    23,
+    8
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(02)2705-7716、0900-218-055",
+   "EmergencyPhone": "0900-218-055",
+   "CarParkPosition": {
+    "PositionLat": 24.023029327392578,
+    "PositionLon": 121.08567810058594
+   },
+   "Email": "service.mail@altob.com.tw",
+   "Address": "南投縣仁愛鄉松原巷546號",
+   "WebURL": "https://www.altob.com.tw/",
+   "FareDescription": "週一至週四不含國定假日每小時20元，無最高上限，週五至週日包含國定假日每小時50元，最高上限300元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "不允許大型車進入",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 1,
+   "GasStation": 0,
+   "Shop": 1,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "LandMark": "合歡山管理站",
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "A00073",
+   "CarParkName": {
+    "Zh_tw": "好樂停HAPPY PARKING-中山停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA90867566",
+   "Description": "平面戶外小型車停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1,
+    4
+   ],
+   "ParkingSiteTypes": [
+    11,
+    5,
+    10,
+    4,
+    23,
+    7,
+    8
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "0900408298",
+   "CarParkPosition": {
+    "PositionLat": 23.98488998413086,
+    "PositionLon": 121.60368347167969
+   },
+   "Email": "service@anzen.com.tw",
+   "Address": "花蓮縣花蓮市中山路412巷18號旁邊空地",
+   "FareDescription": "計時：10元/半小時(全日)；當日上限：100元/當日當次；汽車月租：1600元/月",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00019",
+   "CarParkName": {
+    "Zh_tw": "新康停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場108登字第009號",
+   "OperatorID": "HUA85207468",
+   "Description": "小型車16格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    3
+   ],
+   "Telephone": "(02)8227171",
+   "EmergencyPhone": "0911-895859",
+   "CarParkPosition": {
+    "PositionLat": 23.988719940185547,
+    "PositionLon": 121.59654235839844
+   },
+   "Email": "yahu66@hl.gov.tw",
+   "Address": "花蓮縣花蓮市國富二街-國富十街口",
+   "FareDescription": "月租2,000元，年繳20,000元。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00024",
+   "CarParkName": {
+    "Zh_tw": "停佳安(花蓮停四)機車停車場"
+   },
+   "CarParkShortName": {
+    "Zh_tw": "花蓮火車站前站機車停車場"
+   },
+   "CarParkRegNo": "花縣停車場109登字第011號",
+   "OperatorID": "HUA47041994",
+   "Description": "平面停車面",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    8,
+    4,
+    5
+   ],
+   "ChargeTypes": [
+    3,
+    1,
+    2
+   ],
+   "Telephone": "0919534881",
+   "EmergencyPhone": "0919534881",
+   "CarParkPosition": {
+    "PositionLat": 23.993310928344727,
+    "PositionLon": 121.60237884521484
+   },
+   "Email": "blueloveteresa@gmail.com",
+   "Address": "花蓮縣花蓮市國聯一路100-8號(對面)",
+   "FareDescription": "1.臨停:$40／天(如有優惠方案則另行公告)。2.月租:$900／月繳(如有優惠方案則另行公告之)。",
+   "SpecialOfferDescription": "殘障區(免費使用)",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許機車",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00104",
+   "CarParkName": {
+    "Zh_tw": "停佳安(花蓮統冠場)汽車停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA47041994",
+   "Description": "小型車格45格、充電車格2格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4,
+    2
+   ],
+   "ParkingSiteTypes": [
+    7,
+    4,
+    5
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "0919534881",
+   "CarParkPosition": {
+    "PositionLat": 23.992839813232422,
+    "PositionLon": 121.60527801513672
+   },
+   "Email": "47041994a@gmail.com",
+   "Address": "花蓮縣花蓮市國聯五路150號旁空地",
+   "FareDescription": "汽車臨停 半小時30元、平日240元/天、假日360元/天 ；月租月繳2800元、季繳8100元。",
+   "SpecialOfferDescription": "無",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "出口處有限高250公尺",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00068",
+   "CarParkName": {
+    "Zh_tw": "花蓮富國停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA70369154",
+   "Description": "平面式小型車15格(含身心障礙1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4,
+    2
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "0800-021-111",
+   "EmergencyPhone": "0800-021-111",
+   "CarParkPosition": {
+    "PositionLat": 23.994089126586914,
+    "PositionLon": 121.60443115234375
+   },
+   "Email": "development@youparking.com.tw",
+   "Address": "花蓮市國聯一路1號旁停車場",
+   "FareDescription": "計時：40/時、月租：2000/月",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00078",
+   "CarParkName": {
+    "Zh_tw": "TIMES 花蓮延平街"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA28858068",
+   "Description": "位於延平街與明智街交叉口",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [],
+   "ParkingSiteTypes": [],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "0809008924",
+   "EmergencyPhone": "0809008924",
+   "CarParkPosition": {
+    "PositionLat": 23.98438,
+    "PositionLon": 121.60285
+   },
+   "Email": "duanhj.22@park24.com.tw",
+   "Address": "花蓮縣林森段1374、1376（部分）、1389、1390（部分）地號",
+   "WebURL": "https://www.park24.com.tw/",
+   "FareDescription": "80元/時；月租8000元/月",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00014",
+   "CarParkName": {
+    "Zh_tw": "TIMES 三民街"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場112登字第007號",
+   "OperatorID": "HUA28858068",
+   "Description": "平面式小型車125格(含身障停車格3格、婦幼停車格3格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [],
+   "ParkingSiteTypes": [],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(03)8570557",
+   "EmergencyPhone": "0986830557",
+   "CarParkPosition": {
+    "PositionLat": 23.97842025756836,
+    "PositionLon": 121.6101303100586
+   },
+   "Email": "abc835901@yahoo.com.tw",
+   "Address": "花蓮縣花蓮市三民街1-1號",
+   "WebURL": "",
+   "FareDescription": "平日50元/時，假日80元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車進入",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00087",
+   "CarParkName": {
+    "Zh_tw": "哈囉玉城停車場"
+   },
+   "CarParkShortName": {
+    "Zh_tw": "哈囉玉城停車場"
+   },
+   "CarParkRegNo": "花縣停車場113登字第013號",
+   "OperatorID": "HUA24685973",
+   "Description": "小型車車格96位，機車90位",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    1
+   ],
+   "ChargeTypes": [
+    1,
+    2
+   ],
+   "Telephone": "075853080或0980591332",
+   "EmergencyPhone": "0980591332",
+   "CarParkPosition": {
+    "PositionLat": 23.331199645996094,
+    "PositionLon": 121.31195068359375
+   },
+   "Email": "hcc24685973@gmail.com",
+   "Address": "大同路183號",
+   "FareDescription": "汽車：半小時$15，當日最高150；機車：一次$30(過當日00:00重新計算)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 1,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00048",
+   "CarParkName": {
+    "Zh_tw": "博客停車場寶雅吉安場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA70393302",
+   "Description": "平面式小型車18格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    16,
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(02)29488889",
+   "CarParkPosition": {
+    "PositionLat": 23.97269058227539,
+    "PositionLon": 121.57974243164062
+   },
+   "Email": "ctp258@ms46.hinet.net",
+   "Address": "花蓮縣吉安鄉中山路二段217號",
+   "FareDescription": "計時: 平假日20元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "LandMark": "寶雅",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00076",
+   "CarParkName": {
+    "Zh_tw": "好樂停 HAPPY PARKING-中央停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA90867566",
+   "Description": "平面戶外小型車停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1,
+    4
+   ],
+   "ParkingSiteTypes": [
+    15,
+    254,
+    20,
+    19,
+    11
+   ],
+   "ChargeTypes": [
+    2,
+    3,
+    1
+   ],
+   "Telephone": "0900408298",
+   "CarParkPosition": {
+    "PositionLat": 23.994260787963867,
+    "PositionLon": 121.59317016601562
+   },
+   "Email": "service@anzen.com.tw",
+   "Address": "花蓮縣花蓮市中央路三段844號",
+   "FareDescription": "汽車計時：10元/半小時(0~24)；當日上限：200元/當日當次；機車：計次：20元/當日當次(0~24)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 1,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00016",
+   "CarParkName": {
+    "Zh_tw": "P&P停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場108登字第004號",
+   "OperatorID": "HUA82182231",
+   "Description": "身障停車位1格 婦幼停車位1格 充電車專用停車位1格 一般小型車停車位59格 共計62格停車位",
+   "CarParkType": 1,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    3
+   ],
+   "ParkingSiteTypes": [
+    16,
+    5,
+    255,
+    4,
+    23,
+    11,
+    20,
+    6,
+    10,
+    21,
+    8,
+    7
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "038333916",
+   "EmergencyPhone": "0910521109",
+   "CarParkPosition": {
+    "PositionLat": 23.97546,
+    "PositionLon": 121.60965
+   },
+   "Email": "alenf10888@gmail.com",
+   "Address": "花蓮縣民生段民生小段1地號",
+   "FareDescription": "半小時40元.1小時80元 .  單日最高上限300元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 2,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00090",
+   "CarParkName": {
+    "Zh_tw": "全支駐花蓮停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA27856324",
+   "Description": "平面停車8格(含1身障席)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4,
+    2
+   ],
+   "ParkingSiteTypes": [
+    20,
+    4,
+    10
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "06-2992256",
+   "EmergencyPhone": "06-2992256",
+   "CarParkPosition": {
+    "PositionLat": 23.9797306060791,
+    "PositionLon": 121.60713958740234
+   },
+   "Email": "npdccltd@gmail.com",
+   "Address": "花蓮縣花蓮市中山路305號",
+   "FareDescription": "平日(10:00~22:00)：30/時，假日(10:00~22:00)：40/時，不分平假日(22:00~10:00)：30/時",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車停靠",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00077",
+   "CarParkName": {
+    "Zh_tw": "哈囉東大門停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA24685973",
+   "Description": "小型車車格349位",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [],
+   "Telephone": "075853080/0980591332",
+   "EmergencyPhone": "0980591332",
+   "CarParkPosition": {
+    "PositionLat": 23.97341,
+    "PositionLon": 121.61324
+   },
+   "Email": "hcc24685973@gmail.com",
+   "Address": "花蓮縣花蓮市民主里五權街13巷1-5號",
+   "FareDescription": "平日、假日(五六日)白天(00:00-17:00)一次$50、平日晚上(17:00-23:59)一次$100，假日晚上(17:00-23:59)一次200元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "LandMark": "",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00063",
+   "CarParkName": {
+    "Zh_tw": "尚志橋停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA86711789",
+   "Description": "身障3格、婦幼3格、充電2格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20,
+    5
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "038312920",
+   "CarParkPosition": {
+    "PositionLat": 23.983030319213867,
+    "PositionLon": 121.60820770263672
+   },
+   "Email": "gohsien23@gmail.com",
+   "Address": "林森路280號旁",
+   "FareDescription": "20元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00107",
+   "CarParkName": {
+    "Zh_tw": "浤睿-花蓮站停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA83388669",
+   "Description": "總車格14；小型汽車13格；身障專用車位1格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    2,
+    1
+   ],
+   "Telephone": "0900-408-298",
+   "EmergencyPhone": "0900-408-298",
+   "CarParkPosition": {
+    "PositionLat": 23.99660073870142,
+    "PositionLon": 121.5952232758529
+   },
+   "Email": "p83388669@gmail.com",
+   "Address": "970花蓮縣花蓮市國裕里中央路四段40號",
+   "WebURL": "https://wms.yep.com.tw/login",
+   "FareDescription": "平日$50；假日$80；平假日當日最高$300；汽車月租$6000",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "限制小型車停放",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "LandMark": "花蓮麗車坊汽車百貨旁停車場",
+   "LocationMapURL": "",
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00025",
+   "CarParkName": {
+    "Zh_tw": "彪吉利停車場(國聯五路站)"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場109登字第003號",
+   "OperatorID": "HUA47041994",
+   "Description": "平面停車面",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    6,
+    7,
+    9
+   ],
+   "ChargeTypes": [
+    3,
+    1,
+    2
+   ],
+   "Telephone": "0919534881",
+   "EmergencyPhone": "0919534881",
+   "CarParkPosition": {
+    "PositionLat": 23.99224090576172,
+    "PositionLon": 121.60533142089844
+   },
+   "Email": "blueloveteresa@gmail.com",
+   "Address": "花蓮市國聯五路126號(旁邊)",
+   "FareDescription": "汽車:一小時$30。平日一日$240；假日(及連續假日)一日$400。",
+   "SpecialOfferDescription": "殘障優惠：半價",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 1,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00042",
+   "CarParkName": {
+    "Zh_tw": "臺灣基督教門諾會醫療財團法人門諾醫院收費停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場109登字第014號",
+   "OperatorID": "HUA16738841",
+   "Description": "小型車235位",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(03)8241688",
+   "CarParkPosition": {
+    "PositionLat": 23.98826026916504,
+    "PositionLon": 121.62716674804688
+   },
+   "Email": "yahu66@hl.gov.tw",
+   "Address": "花蓮市民權路44號",
+   "FareDescription": "停車未滿30分鐘免費，超過30分鐘以1小時20元計費，滿1小時起採每30分鐘以10元累加計收。單日單次停車費最高計收100元（跨日重新累加計費）。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 1,
+   "GasStation": 0,
+   "Shop": 1,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 1,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00023",
+   "CarParkName": {
+    "Zh_tw": "彪吉利停車場(國盛站)"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場109登字第001號",
+   "OperatorID": "HUA47041994",
+   "Description": "平面停車面",
+   "CarParkType": 1,
+   "ParkingGuideType": 254,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    3
+   ],
+   "Telephone": "0919534881",
+   "EmergencyPhone": "0919534881",
+   "CarParkPosition": {
+    "PositionLat": 23.99135971069336,
+    "PositionLon": 121.60582733154297
+   },
+   "Email": "blueloveteresa@gmail.com",
+   "Address": "花蓮市國民7街51號(對面)",
+   "FareDescription": "月租$1500",
+   "SpecialOfferDescription": "",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "月租$1500",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00071",
+   "CarParkName": {
+    "Zh_tw": "花蓮中山停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA70369154",
+   "Description": "平面式小型車43格(含身心障礙1格、婦幼車位1格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    5,
+    20
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "0800-021-111",
+   "EmergencyPhone": "0800-021-111",
+   "CarParkPosition": {
+    "PositionLat": 23.98657,
+    "PositionLon": 121.60129
+   },
+   "Email": "development@youparking.com.tw",
+   "Address": "花蓮縣建中街68號對面空地停車場",
+   "FareDescription": "計時：50/時、月租：4000/月",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00012",
+   "CarParkName": {
+    "Zh_tw": "節約街停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場110登字第016號",
+   "OperatorID": "HUA80304384",
+   "Description": "小型車78格。管理人員不是24小時在場。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    5,
+    4,
+    7,
+    11,
+    22
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "(03)8310734",
+   "CarParkPosition": {
+    "PositionLat": 23.97960090637207,
+    "PositionLon": 121.60990905761719
+   },
+   "Email": "development@youparking.com.tw",
+   "Address": "花蓮縣花蓮市三民街38巷10號後面空地停車場",
+   "FareDescription": "計時：小型車30元/時、大型車60元/時；月租：小型車2500/月、大型車5000/月",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 1,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00004",
+   "CarParkName": {
+    "Zh_tw": "後火車站機車停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場107登字第007號",
+   "OperatorID": "HUA80118614",
+   "Description": "機車停車位349格 (含身障車位8格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1
+   ],
+   "ParkingSiteTypes": [
+    1,
+    5,
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(03)8570557",
+   "EmergencyPhone": "0986-830557",
+   "CarParkPosition": {
+    "PositionLat": 23.99359,
+    "PositionLon": 121.5995
+   },
+   "Email": "abc835901@yahoo.com.tw",
+   "Address": "花蓮縣花蓮市裕民段577地號",
+   "FareDescription": "20元/次 (00:00~23:59)",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許機車停靠",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00060",
+   "CarParkName": {
+    "Zh_tw": "福品旅店停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA53999925",
+   "Description": "平面小型車停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20
+   ],
+   "ChargeTypes": [
+    3
+   ],
+   "Telephone": "03-8316899",
+   "EmergencyPhone": "0919-354886",
+   "CarParkPosition": {
+    "PositionLat": 23.9723,
+    "PositionLon": 121.60708
+   },
+   "Email": "perdyon1019@gmail.com",
+   "Address": "主商段1203號及1205號",
+   "FareDescription": "月租2500元/每月",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00065",
+   "CarParkName": {
+    "Zh_tw": "花蓮文化創意產業園區停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "HUA98273932",
+   "Description": "民國路收費停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    12
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "",
+   "EmergencyPhone": "",
+   "CarParkPosition": {
+    "PositionLat": 23.97620964050293,
+    "PositionLon": 121.60485076904297
+   },
+   "Email": "public@hualien1913.nat.gov.tw",
+   "Address": "花蓮縣花蓮市中華路144號",
+   "WebURL": "https://hualien1913.nat.gov.tw/",
+   "FareDescription": "20/時(00時-24時)",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "限小客車停靠",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 1,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 255,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "A00022",
+   "CarParkName": {
+    "Zh_tw": "佛教慈濟醫療財團法人花蓮慈濟醫院停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "花縣停車場108登字第012號",
+   "OperatorID": "HUA80118614",
+   "Description": "平面車格322格 (含身心障礙15格 ; 婦幼車格6格)",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2
+   ],
+   "ParkingSiteTypes": [
+    15,
+    254
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "0986830557",
+   "EmergencyPhone": "0986-820557",
+   "CarParkPosition": {
+    "PositionLat": 23.995250701904297,
+    "PositionLon": 121.593017578125
+   },
+   "Email": "abc835901@yahoo.com.tw",
+   "Address": "花蓮縣花蓮市中央路三段707號",
+   "FareDescription": "20元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許自小客車停放",
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  }
+ ]
+}

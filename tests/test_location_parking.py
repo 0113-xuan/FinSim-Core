@@ -5,10 +5,11 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.parking import parse_monthly_rent, normalize_tdx, load_parking_snapshot, parking_reference
+from scripts.fetch_tdx_parking import build_snapshot
 from main import app
 
 CLIENT=TestClient(app)
-FIXTURE=Path(__file__).parent/'fixtures/parking/taichung_carparks.sample.json'
+FIXTURE=Path(__file__).parent/'fixtures/parking/multi_city'
 # These are synthetic examples, NOT quotes from real TDX records. Anonymous
 # TDX access returned 401 on 2026-11-03; replace/extend after a real download.
 CASES=[
@@ -45,11 +46,11 @@ def test_snapshot_conversion_preserves_original_text_and_does_not_infer_district
     rows=[dict(CarParkID='test',CarParkName={'Zh_tw':'測試場'},TownName='北屯區',
                Address='測試地址',FareDescription='計次50元',SpecialOfferDescription='月票２，５００元',
                CarParkPosition=dict(PositionLat=24.1,PositionLon=120.7),SrcUpdateTime='2026-11-03T00:00:00+08:00')]
-    lot=normalize_tdx(rows)[0]
+    lot=normalize_tdx(rows,'臺中市')[0]
     assert lot['monthly_rent_twd']==2500 and lot['monthly_rent_text']=='月票２，５００元'
     assert lot['fare_description']=='計次50元' and lot['district']=='北屯區' and lot['lat']==24.1
     del rows[0]['TownName']
-    assert normalize_tdx(rows)[0]['district']==''
+    assert normalize_tdx(rows,'臺中市')[0]['district']==''
 
 
 def test_regions_are_the_complete_moi_snapshot():
@@ -63,38 +64,38 @@ def test_regions_are_the_complete_moi_snapshot():
 
 @pytest.fixture
 def sample_parking():
-    snapshot=json.loads(FIXTURE.read_text(encoding='utf-8'))
+    snapshot=build_snapshot(FIXTURE)
     app.dependency_overrides[load_parking_snapshot]=lambda:snapshot
     yield snapshot
     app.dependency_overrides.pop(load_parking_snapshot,None)
 
 
 def test_parking_endpoint_filters_sorts_and_computes_stats_before_limit(sample_parking):
-    response=CLIENT.get('/planner/parking',params=dict(city='臺中市',district='北屯區'))
+    response=CLIENT.get('/planner/parking',params=dict(city='臺北市',district='士林區'))
     assert response.status_code==200
     body=response.json()
-    assert body['supported'] and body['data_available'] and body['source']['is_sample']
-    assert all(lot['district']=='北屯區' for lot in body['lots'])
-    assert body['monthly_rent_stats']==dict(count=5,median=2800,minimum=2000,maximum=3500)
+    assert body['supported'] and body['data_available'] and not body['source']['is_sample']
+    assert all(lot['district']=='士林區' for lot in body['lots'])
+    assert body['monthly_rent_stats']==dict(count=3,median=7200,minimum=7200,maximum=7500)
     lots=body['lots']
     assert lots==sorted(lots,key=lambda lot:(lot['monthly_rent_twd'] is None,lot['name']))
-    large={**sample_parking,'lots':[{**lots[0],'id':str(i),'name':str(i),'monthly_rent_twd':i} for i in range(40)]}
-    result=parking_reference('臺中市','北屯區',large)
+    large={**sample_parking,'cities':{'臺北市':{**sample_parking['cities']['臺北市'],'lots':[{**lots[0],'id':str(i),'name':str(i),'monthly_rent_twd':i} for i in range(40)]}}}
+    result=parking_reference('臺北市','士林區',large)
     assert len(result['lots'])==30 and result['monthly_rent_stats']['count']==40
 
 
 def test_unsupported_city_and_small_sample_never_publish_a_median(sample_parking):
-    body=CLIENT.get('/planner/parking',params=dict(city='臺北市',district='中正區')).json()
+    body=CLIENT.get('/planner/parking',params=dict(city='臺中市',district='北屯區')).json()
     assert body['supported'] is False and body['lots']==[]
-    body=CLIENT.get('/planner/parking',params=dict(city='臺中市',district='西屯區')).json()
+    body=CLIENT.get('/planner/parking',params=dict(city='桃園市',district='八德區')).json()
     assert body['monthly_rent_stats']['count']==2 and body['monthly_rent_stats']['median'] is None
 
 
 def test_unavailable_production_snapshot_is_not_reported_as_zero_market_supply():
-    snapshot=dict(source=dict(status='awaiting_credentials',is_sample=False,snapshot_date=None),lots=[])
+    snapshot=dict(source=dict(status='available',is_sample=False,snapshot_date='2026-11-03'),cities={},unavailable=['臺中市'])
     body=parking_reference('臺中市','北屯區',snapshot)
-    assert body['supported'] and not body['data_available']
-    assert '尚未下載' in body['message'] and body['source']['snapshot_date'] is None
+    assert not body['supported'] and not body['data_available']
+    assert body['message']=='TDX 目前沒有臺中市的路外停車場資料，請自行填寫停車費。'
 
 
 def test_parking_metadata_does_not_change_any_vehicle_calculations():

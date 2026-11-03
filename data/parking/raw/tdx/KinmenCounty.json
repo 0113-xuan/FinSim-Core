@@ -1,0 +1,283 @@
+{
+ "UpdateTime": "2026-06-15T15:21:46+08:00",
+ "UpdateInterval": 14400,
+ "SrcUpdateTime": "2025-01-03T15:40:37+08:00",
+ "SrcUpdateInterval": 14400,
+ "AuthorityCode": "KIN",
+ "VersionID": 2,
+ "CarParks": [
+  {
+   "CarParkID": "KIN0002",
+   "CarParkName": {
+    "Zh_tw": "金門高中停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "KIN54619682",
+   "Description": "平面停車場共141格(含身障3格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    11
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "EmergencyPhone": "0800-779-979",
+   "CarParkPosition": {
+    "PositionLat": 24.435150146484375,
+    "PositionLon": 118.31405639648438
+   },
+   "Address": "金門縣金城鎮光前路94號",
+   "FareDescription": "目前免收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 255,
+   "City": "KinmenCounty",
+   "CityCode": "KIN"
+  },
+  {
+   "CarParkID": "KIN0001",
+   "CarParkName": {
+    "Zh_tw": "金門航空站第三停車站"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "KIN54619682",
+   "Description": "小客車222格(含身障5格、婦幼5格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1
+   ],
+   "ParkingSiteTypes": [
+    2
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "EmergencyPhone": "0800-779-979",
+   "CarParkPosition": {
+    "PositionLat": 24.436059951782227,
+    "PositionLon": 118.36579895019531
+   },
+   "Address": "金門縣金寧鄉機場段297-8地號",
+   "FareDescription": "前半小時免費，平日計次計日20元，假日計次計日50元",
+   "SpecialOfferDescription": "本處部份公務車免費",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "允許小客車及小客貨車停放",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "KinmenCounty",
+   "CityCode": "KIN"
+  },
+  {
+   "CarParkID": "KIN0004",
+   "CarParkName": {
+    "Zh_tw": "山外車站停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "KIN54619682",
+   "Description": "小客車格位數126格(含身障車位3格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1,
+    2
+   ],
+   "ParkingSiteTypes": [
+    4,
+    21
+   ],
+   "ChargeTypes": [
+    2,
+    3
+   ],
+   "EmergencyPhone": "0800-779-979",
+   "CarParkPosition": {
+    "PositionLat": 24.44322967529297,
+    "PositionLon": 118.41706848144531
+   },
+   "Address": "金門縣金湖鎮山外停車場西側",
+   "FareDescription": "前一小時免費，不分平、假日一律採20元/計次計日",
+   "SpecialOfferDescription": "警車免費停放",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "允許小客車及小客貨車停放",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "KinmenCounty",
+   "CityCode": "KIN"
+  },
+  {
+   "CarParkID": "KIN0003",
+   "CarParkName": {
+    "Zh_tw": "金城鎮公所後方"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "KIN54619682",
+   "Description": "平面停車格共212格(含身障3格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    19,
+    254
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "EmergencyPhone": "0800-779-979",
+   "CarParkPosition": {
+    "PositionLat": 24.438520431518555,
+    "PositionLon": 118.32100677490234
+   },
+   "Address": "金門縣金城鎮金城鎮民生路2號",
+   "FareDescription": "計日/計次20元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "KinmenCounty",
+   "CityCode": "KIN"
+  },
+  {
+   "CarParkID": "KIN0005",
+   "CarParkName": {
+    "Zh_tw": "北堤停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "KIN54619682",
+   "Description": "平面停車場共337格(含身障7格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4,
+    20
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "EmergencyPhone": "0800-779-979",
+   "CarParkPosition": {
+    "PositionLat": 24.429969787597656,
+    "PositionLon": 118.3212890625
+   },
+   "Address": "金門縣金城鎮浯江北堤路",
+   "FareDescription": "計日/計次20元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 255,
+   "City": "KinmenCounty",
+   "CityCode": "KIN"
+  }
+ ]
+}

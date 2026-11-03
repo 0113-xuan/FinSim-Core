@@ -1,0 +1,124 @@
+{
+  "UpdateTime": "2026-11-02T20:05:59+08:00",
+  "UpdateInterval": 14400,
+  "AuthorityCode": "TAO",
+  "VersionID": 1579,
+  "CarParks": [
+    {
+      "CarParkID": "AO070013",
+      "CarParkName": {
+        "Zh_tw": "八德區永福停車場"
+      },
+      "CarParkShortName": {},
+      "CarParkRegNo": "府交停第1100225652號",
+      "OperatorID": "TAO84136348",
+      "Description": "小型車109格",
+      "CarParkType": 1,
+      "ParkingGuideType": 1,
+      "ParkingTypes": [
+        4
+      ],
+      "ParkingSiteTypes": [
+        22,
+        20,
+        5
+      ],
+      "ChargeTypes": [
+        1
+      ],
+      "Telephone": "(02)24551299",
+      "EmergencyPhone": "0905083077",
+      "CarParkPosition": {
+        "PositionLat": 24.96278953552246,
+        "PositionLon": 121.29817199707031
+      },
+      "Email": "lyparking@hotmail.com",
+      "Address": "桃園市八德區永福西街36號對面",
+      "FareDescription": "計時:每小時20元當日最高100元月租2000元",
+      "IsFreeParkingOutOfHours": 0,
+      "VehicleRestriction": "限停小型汽車",
+      "IsPublic": 1,
+      "IsMotorcycle": 0,
+      "OperationType": 1,
+      "LiveOccuppancyAvailable": 0,
+      "EVRechargingAvailable": 0,
+      "MonthlyTicketAvailable": 1,
+      "SeasonTicketAvailable": 0,
+      "ReservationAvailable": 0,
+      "WheelchairAccessible": 1,
+      "OvernightPermitted": 1,
+      "TicketMachine": 1,
+      "Toilet": 0,
+      "Restaurant": 1,
+      "GasStation": 0,
+      "Shop": 1,
+      "Gated": 1,
+      "Lighting": 1,
+      "SecureParking": 1,
+      "TicketOffice": 0,
+      "ProhibitedForAnyHazardousMaterialLoads": 0,
+      "SecurityGuard": 1,
+      "Supervision": 1,
+      "City": "Taoyuan",
+      "CityCode": "TAO"
+    },
+    {
+      "CarParkID": "AO070004",
+      "CarParkName": {
+        "Zh_tw": "廣豐二停車場"
+      },
+      "CarParkShortName": {},
+      "CarParkRegNo": "府交停第1070293637號",
+      "OperatorID": "TAO54875697",
+      "Description": "小型車150格。(含身障4格;電動3格;婦幼2格)",
+      "CarParkType": 1,
+      "ParkingGuideType": 1,
+      "ParkingTypes": [
+        4,
+        9
+      ],
+      "ParkingSiteTypes": [
+        20
+      ],
+      "ChargeTypes": [
+        1,
+        3
+      ],
+      "Telephone": "0809094299",
+      "EmergencyPhone": "0809094299",
+      "CarParkPosition": {
+        "PositionLat": 24.965110778808594,
+        "PositionLon": 121.29544067382812
+      },
+      "Email": "advancejc@gmail.com",
+      "Address": "桃園市八德區334廣豐三街2號對面",
+      "FareDescription": "小型車臨停計時30元/時      小型車全日月租每月3600元。 (進場未滿30分鐘內離場免予收費。  停車時數未滿1小時者，以1小時收費。        停車時數逾1小時以上，以半小時為計費單位。)",
+      "IsFreeParkingOutOfHours": 0,
+      "IsPublic": 1,
+      "IsMotorcycle": 0,
+      "OperationType": 1,
+      "LiveOccuppancyAvailable": 0,
+      "EVRechargingAvailable": 0,
+      "MonthlyTicketAvailable": 1,
+      "SeasonTicketAvailable": 1,
+      "ReservationAvailable": 0,
+      "WheelchairAccessible": 1,
+      "OvernightPermitted": 1,
+      "TicketMachine": 1,
+      "Toilet": 0,
+      "Restaurant": 0,
+      "GasStation": 0,
+      "Shop": 0,
+      "Gated": 1,
+      "Lighting": 1,
+      "SecureParking": 0,
+      "TicketOffice": 0,
+      "ProhibitedForAnyHazardousMaterialLoads": 0,
+      "SecurityGuard": 0,
+      "Supervision": 1,
+      "SupervisionType": 1,
+      "City": "Taoyuan",
+      "CityCode": "TAO"
+    }
+  ]
+}

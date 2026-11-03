@@ -21,6 +21,15 @@ test('parking display prioritises priced lots and truncates unpriced original te
   assert.match(M.parkingSummary('北屯區',{count:2,median:null}),/不足 3 間/);
   assert.match(M.parkingSummary('北屯區',{count:5,median:2800}),/中位數 NT\$2,800/);
 });
+test('parking presentation keeps API messages and city-wide coverage visible',()=>{
+  const data={supported:true,data_available:true,lots:[{id:'lot'}],message:'',coverage:{total:673,with_monthly_rent:91},monthly_rent_stats:{count:3,median:3000},source:{snapshot_date:'2026-11-03'}};
+  const view=M.parkingPresentation('士林區',data);
+  assert.equal(view.coverage,'本縣市 673 間停車場中，91 間有月租價');assert.match(view.summary,/士林區/);
+  const unsupported=M.parkingPresentation('北屯區',{...data,supported:false,data_available:false,lots:[],coverage:null,message:'TDX 目前沒有臺中市的路外停車場資料，請自行填寫停車費。'});
+  assert.equal(unsupported.message,'TDX 目前沒有臺中市的路外停車場資料，請自行填寫停車費。');assert.equal(unsupported.summary,'');assert.equal(unsupported.coverage,'');
+  const empty=M.parkingPresentation('士林區',{...data,lots:[],message:'行政區沒有資料'});
+  assert.equal(empty.message,'行政區沒有資料');assert.equal(empty.summary,'');assert.match(empty.source,/2026-11-03/);
+});
 test('only known missing profile location columns trigger the compatibility retry',()=>{
   for(const error of [{code:'42703',message:'column profiles.city does not exist'},
     {code:'PGRST204',message:"Could not find the 'district' column in the schema cache"}])assert.equal(M.missingLocationColumns(error),true);

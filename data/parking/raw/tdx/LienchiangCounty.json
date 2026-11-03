@@ -1,0 +1,141 @@
+{
+ "UpdateTime": "2023-12-14T18:39:37+08:00",
+ "UpdateInterval": 14400,
+ "AuthorityCode": "LIE",
+ "VersionID": 0,
+ "CarParks": [
+  {
+   "CarParkID": "LIE002",
+   "CarParkName": {
+    "Zh_tw": "介壽地下停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "LIE50729011",
+   "Description": "地下一層，小型車150席(含無障礙3席)、機車82席(含無障礙2席)",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingAreas": [
+    {
+     "ParkingAreaID": "LIE002",
+     "ParkingAreaName": {
+      "Zh_tw": "介壽地下停車場",
+      "En": ""
+     },
+     "ParkingTypes": [],
+     "Geometry": ""
+    }
+   ],
+   "ParkingTypes": [
+    4,
+    1
+   ],
+   "ParkingSiteTypes": [
+    4,
+    10,
+    11,
+    19,
+    20,
+    22
+   ],
+   "ChargeTypes": [
+    1,
+    2,
+    3
+   ],
+   "Telephone": "(0836)23608",
+   "EmergencyPhone": "(0836)25125",
+   "CarParkPosition": {
+    "PositionLat": 26.155179977416992,
+    "PositionLon": 119.95120239257812
+   },
+   "Email": "db4500m@gmail.com",
+   "Address": "連江縣南竿鄉介壽村",
+   "FareDescription": "小型車：月租600元、臨停20元/時；機車：月租150元、臨停10元/次",
+   "SpecialOfferDescription": "月租一次繳交6個月以上8折優惠；身心障礙者半價收費",
+   "IsFreeParkingOutOfHours": 1,
+   "VehicleRestriction": "2米以下小型車或貨車",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 1,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "LienchiangCounty",
+   "CityCode": "LIE"
+  },
+  {
+   "CarParkID": "LIE003",
+   "CarParkName": {
+    "Zh_tw": "仁愛停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "LIE50729011",
+   "Description": "室內平面一層，小型車25席、機車13席",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    19
+   ],
+   "ChargeTypes": [
+    2,
+    3
+   ],
+   "Telephone": "(0836)23608",
+   "EmergencyPhone": "(0836)25125",
+   "CarParkPosition": {
+    "PositionLat": 26.143020629882812,
+    "PositionLon": 119.92530059814453
+   },
+   "Email": "db4500m@gmail.com",
+   "Address": "連江縣南竿鄉仁愛村",
+   "FareDescription": "小型車：月租600元、臨停20元/時；機車：月租150元、臨停10元/次",
+   "SpecialOfferDescription": "月租一次繳交6個月以上8折優惠；身心障礙者半價收費",
+   "IsFreeParkingOutOfHours": 1,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "SupervisionType": 254,
+   "City": "LienchiangCounty",
+   "CityCode": "LIE"
+  }
+ ]
+}

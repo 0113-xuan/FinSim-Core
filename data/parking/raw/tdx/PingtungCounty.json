@@ -1,0 +1,1133 @@
+{
+ "UpdateTime": "2026-11-03T00:36:03+08:00",
+ "UpdateInterval": 14400,
+ "AuthorityCode": "PIF",
+ "VersionID": 5233,
+ "CarParks": [
+  {
+   "CarParkID": "PT0014",
+   "CarParkName": {
+    "Zh_tw": "東港鎮中山路平面式路外停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF12745271",
+   "Description": "小客車停車格62格(含身障2格及婦幼2格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2,
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800208333",
+   "CarParkPosition": {
+    "PositionLat": 22.465850830078125,
+    "PositionLon": 120.45105743408203
+   },
+   "Email": "shanna@pss-group.com",
+   "Address": "屏東縣東港鎮褔德里中山路27號後方平面停車場",
+   "FareDescription": "每小時20元",
+   "SpecialOfferDescription": "身障半價",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車停放",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0003",
+   "CarParkName": {
+    "Zh_tw": "勝利星村路外停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF80738683",
+   "Description": "停車場206格(身障車格3格，婦幼車格3格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    5,
+    4
+   ],
+   "ParkingSiteTypes": [
+    4,
+    8,
+    10
+   ],
+   "ChargeTypes": [
+    1,
+    2
+   ],
+   "Telephone": "(08)7324313",
+   "CarParkPosition": {
+    "PositionLat": 22.678789138793945,
+    "PositionLon": 120.48127746582031
+   },
+   "Email": "miruai0925199627@gmail.com",
+   "Address": "屏東市博愛路261號對面",
+   "FareDescription": "平日計次30元，假日計時每小時20元最高上限160元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0001",
+   "CarParkName": {
+    "Zh_tw": "縣府立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF80738683",
+   "Description": "立體小型停車場206格(身障車格6格，婦幼車格6格)",
+   "CarParkType": 2,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    7
+   ],
+   "ParkingSiteTypes": [
+    14
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "08-7324313",
+   "CarParkPosition": {
+    "PositionLat": 22.6829891204834,
+    "PositionLon": 120.48931121826172
+   },
+   "Email": "miruai0925199627@gmail.com",
+   "Address": "忠孝路225號",
+   "FareDescription": "計時:20元(0-24)，每日上限100元，隔日重新計算。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0020",
+   "CarParkName": {
+    "Zh_tw": "東港行政中心立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF80738683",
+   "Description": "立體式停車場(四樓)",
+   "CarParkType": 2,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    1,
+    3,
+    4
+   ],
+   "ParkingSiteTypes": [
+    19
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "08-8326215",
+   "EmergencyPhone": "08-7324526、0903657498",
+   "CarParkPosition": {
+    "PositionLat": 22.462749481201172,
+    "PositionLon": 120.47514343261719
+   },
+   "Email": "deate98@gmail.com",
+   "Address": "屏東縣東港鎮新義路85號",
+   "FareDescription": "每小時20元，當日最高160元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "允許小客車及小客貨車停放",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 0,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0019",
+   "CarParkName": {
+    "Zh_tw": "潮州聯合辦公大樓停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF80738683",
+   "Description": "地下小型車停車場210格(身障車格5格，婦幼車格5格、電動車格10格)",
+   "CarParkType": 3,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    4,
+    1,
+    3
+   ],
+   "ParkingSiteTypes": [
+    19,
+    8,
+    10
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "",
+   "CarParkPosition": {
+    "PositionLat": 22.550140380859375,
+    "PositionLon": 120.54347229003906
+   },
+   "Email": "miruai0925199627@gmail.com",
+   "Address": "潮州鎮中山路32號B1",
+   "FareDescription": "計時：20元，停車時數未滿一小時者以一小時計算；月租以3600元為上限",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0012",
+   "CarParkName": {
+    "Zh_tw": "東港中山路立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF80738683",
+   "Description": "立體式停車場總車位數258格",
+   "CarParkType": 2,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    5,
+    7,
+    8,
+    4,
+    22
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800-779-979",
+   "CarParkPosition": {
+    "PositionLat": 22.466020584106445,
+    "PositionLon": 120.45117950439453
+   },
+   "Email": "goyun168@yahoo.com.tw",
+   "Address": "屏東縣東港鎮中山路27 號",
+   "FareDescription": "一小時收費20元，平日停車當日優惠上限100元、假日180元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0016",
+   "CarParkName": {
+    "Zh_tw": "東港漁港停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF12745271",
+   "Description": "立體停車場小型車147格（含身心障礙者專用停車位4格、孕婦及育有六歲以下兒童者停車位3格）",
+   "CarParkType": 2,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    1
+   ],
+   "ParkingSiteTypes": [
+    10,
+    3
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "04-23019699",
+   "CarParkPosition": {
+    "PositionLat": 22.46780014038086,
+    "PositionLon": 120.44355010986328
+   },
+   "Email": "shanna@pss-group.com",
+   "Address": "屏東縣東港鎮新生三路173號",
+   "WebURL": "https://cityparking888.com/parking.php?country=1&city=74&area=346&q=%E6%9D%B1%E6%B8%AF",
+   "FareURL": "https://cityparking888.com/parking.php?country=1&city=74&area=346&q=%E6%9D%B1%E6%B8%AF",
+   "FareDescription": "計時收費，每小時20元，第二小時起，每30分鐘加收10元，當日最高收費250元；月租每月3,600元。",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "限小型車停靠",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0008",
+   "CarParkName": {
+    "Zh_tw": "信義路立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF80738683",
+   "Description": "立體式五樓總車位225格",
+   "CarParkType": 2,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    7
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800-779-979",
+   "CarParkPosition": {
+    "PositionLat": 22.675519943237305,
+    "PositionLon": 120.4883804321289
+   },
+   "Email": "goyun168@yahoo.com.tw",
+   "Address": "屏東縣屏東市信義路116號",
+   "FareDescription": "一小時收費20元，平日停車當日優惠上限100元、假日160元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "允許小客車及小客貨車停放",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0009",
+   "CarParkName": {
+    "Zh_tw": "屏菸1936文化基地立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF80738683",
+   "Description": "小型車323格(含婦幼12格，身障7格，電動樁4格)",
+   "CarParkType": 2,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [],
+   "ParkingSiteTypes": [],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "087324313",
+   "CarParkPosition": {
+    "PositionLat": 22.66213035583496,
+    "PositionLon": 120.50489807128906
+   },
+   "Email": "miruai0925199627@gmail.com",
+   "Address": "屏東縣屏東市菸廠路3號",
+   "FareDescription": "計時:每小時20元當日最高100元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "限高2.1小型車，大型車不可停",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0007",
+   "CarParkName": {
+    "Zh_tw": "幸福公園停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF80738683",
+   "Description": "地下停車場",
+   "CarParkType": 3,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    23
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800-779-979",
+   "EmergencyPhone": "0800-779-979",
+   "CarParkPosition": {
+    "PositionLat": 22.67848014831543,
+    "PositionLon": 120.49141693115234
+   },
+   "Email": "goyun168@yahoo.com.tw",
+   "Address": "屏東縣屏東市公園里勝利路31號",
+   "FareDescription": "計時:20/小時 月租:1800/月",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "LandMark": "幸福公園",
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0015",
+   "CarParkName": {
+    "Zh_tw": "自由延平停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF24991332",
+   "Description": "平面小型車76格(含身心障礙2格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "",
+   "CarParkPosition": {
+    "PositionLat": 22.666669845581055,
+    "PositionLon": 120.48419189453125
+   },
+   "Email": "jcai.manager@gmail.com",
+   "Address": "屏東縣屏東市建國里建華三街1號",
+   "FareDescription": "30元/小時 當日最高50元 ",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0011",
+   "CarParkName": {
+    "Zh_tw": "仁愛路地下立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF80738683",
+   "Description": "地下一、二樓層小客車格位數341格",
+   "CarParkType": 3,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    8,
+    23,
+    4,
+    11
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "0800-779-979",
+   "CarParkPosition": {
+    "PositionLat": 22.676509857177734,
+    "PositionLon": 120.49397277832031
+   },
+   "Email": "goyun168@yahoo.com.tw",
+   "Address": "屏東縣屏東市仁愛路77號",
+   "FareDescription": "一小時收費20元，平日停車當日優惠上限60元、假日160元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "允許小客車及小客貨車停放",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0005",
+   "CarParkName": {
+    "Zh_tw": "機場北路路外停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF80738683",
+   "Description": "停車場67格(身障車格1格，婦幼2格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 254,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "Telephone": "(08)7324313",
+   "CarParkPosition": {
+    "PositionLat": 22.686939239501953,
+    "PositionLon": 120.47177124023438
+   },
+   "Email": "miruai0925199627@gmail.com",
+   "Address": "900屏東縣屏東市機場北路526號號",
+   "FareDescription": "計次:1次30元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0010",
+   "CarParkName": {
+    "Zh_tw": "民生路立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF54574600",
+   "Description": "小客車停車格622格(含身障13格、婦幼14格及電動停車格20格)",
+   "CarParkType": 2,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [],
+   "ParkingSiteTypes": [
+    4,
+    9,
+    22
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(08)7322092",
+   "CarParkPosition": {
+    "PositionLat": 22.66913,
+    "PositionLon": 120.4927
+   },
+   "Email": "a002238@oa.pthg.gov.tw",
+   "Address": "屏東縣屏東市仁愛路14之30號",
+   "FareDescription": "每小時20元，平日當日最高150元；國定例假日最高200元",
+   "SpecialOfferDescription": "身障半價",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車停放",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0002",
+   "CarParkName": {
+    "Zh_tw": "中華立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF70369154",
+   "Description": "立體式小型車&機車",
+   "CarParkType": 2,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    8,
+    4,
+    23,
+    6,
+    5,
+    12
+   ],
+   "ChargeTypes": [
+    2,
+    1,
+    3
+   ],
+   "Telephone": "(08)7320543",
+   "EmergencyPhone": "0958079653",
+   "CarParkPosition": {
+    "PositionLat": 22.673660278320312,
+    "PositionLon": 120.49031829833984
+   },
+   "Email": "skychung0916@youparking.com.tw",
+   "Address": "屏東縣屏東市中華路91號",
+   "WebURL": "https://www.youparking.com.tw/parking-detail.php?id=10",
+   "FareDescription": "小型車計時:10元/半小時 當日最高120元，月租2200元；機車計次每次30元，月租500元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "限高2米高小型車及機車",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 1,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "LandMark": "太平洋百貨屏東店後方",
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0018",
+   "CarParkName": {
+    "Zh_tw": "屏東榮民總醫院東側路外停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF70369154",
+   "Description": "平面式小型車129格(含身障6格,婦幼4格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4,
+    2
+   ],
+   "ParkingSiteTypes": [
+    20,
+    254
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "08-7320543",
+   "EmergencyPhone": "0958-079-653",
+   "CarParkPosition": {
+    "PositionLat": 22.662330627441406,
+    "PositionLon": 120.47657775878906
+   },
+   "Email": "skychung0916@youparking.com.tw",
+   "Address": "屏東縣屏東市榮總東路1號對面空地停車場",
+   "WebURL": "https://www.youparking.com.tw/",
+   "FareDescription": "20元/時,24小時120元",
+   "SpecialOfferDescription": "持身障停車證,當日一次前4小時免費,後續以費率半價計時收費,24小時120元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車停放",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "LandMark": "屏東榮民總醫院",
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0004",
+   "CarParkName": {
+    "Zh_tw": "自由路外停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF80738683",
+   "Description": "停車場78格(身障車格32格，大客車車格10格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 254,
+   "ParkingTypes": [
+    5,
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "Telephone": "(08)7324313",
+   "CarParkPosition": {
+    "PositionLat": 22.66653060913086,
+    "PositionLon": 120.4925308227539
+   },
+   "Email": "miruai0925199627@gmail.com",
+   "Address": "900屏東縣屏東市自由路145號對面",
+   "FareDescription": "計次:30元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0013",
+   "CarParkName": {
+    "Zh_tw": "恆春立體停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF80738683",
+   "Description": "立體式停車場總車位數231格、機車格位249格",
+   "CarParkType": 2,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    20,
+    10
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800-779-979",
+   "CarParkPosition": {
+    "PositionLat": 22.003509521484375,
+    "PositionLon": 120.74838256835938
+   },
+   "Email": "goyun168@yahoo.com.tw",
+   "Address": "屏東縣恆春鎮城南里文化路33 號對面",
+   "FareDescription": "一小時收費20元，平日停車當日優惠上限100元、假日160元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "允許小客車及小客貨車停放",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0006",
+   "CarParkName": {
+    "Zh_tw": "和平路路外停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF80738683",
+   "Description": "停車場98格(身障車格2格，婦幼車格2格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 254,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "Telephone": "(08)7324313",
+   "CarParkPosition": {
+    "PositionLat": 22.67123031616211,
+    "PositionLon": 120.47811889648438
+   },
+   "Email": "miruai0925199627@gmail.com",
+   "Address": "900屏東縣屏東市民族路403-2號",
+   "FareDescription": "計次:1次30元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  },
+  {
+   "CarParkID": "PT0017",
+   "CarParkName": {
+    "Zh_tw": "潮州車站停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "PIF54619682",
+   "Description": "小客車停車格63格(含身障2格及婦幼2格)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2,
+    4,
+    1
+   ],
+   "ParkingSiteTypes": [
+    1
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(07)3388177",
+   "CarParkPosition": {
+    "PositionLat": 22.551780700683594,
+    "PositionLon": 120.53691864013672
+   },
+   "Email": "yang19840916@gmail.com",
+   "Address": "屏東縣潮州鎮平安路45號旁路外停車場",
+   "FareDescription": "每小時20元",
+   "SpecialOfferDescription": "身障者半價優惠",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車停放",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "PingtungCounty",
+   "CityCode": "PIF"
+  }
+ ]
+}

@@ -104,6 +104,7 @@ body.fw.plan-dialog-open { overflow:hidden; }
 .fw .parking-lot[aria-pressed="true"] { border:2px solid var(--accent);padding:15px;background:var(--bg); }
 .fw #parkingReference { margin-top:24px; }
 .fw #parkingSource { overflow-wrap:anywhere;font-size:13px; }
+.fw #parkingStatus > span { display:block;line-height:1.8; }
 @media(max-width:760px) {
   .fw .insurance-row { grid-template-columns:1fr; }
   .fw .insurance-row > label:not(.insurance-choice) { grid-column:1;grid-row:auto; }

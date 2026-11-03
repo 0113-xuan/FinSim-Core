@@ -1,0 +1,230 @@
+{
+ "UpdateTime": "2026-11-03T01:35:59+08:00",
+ "UpdateInterval": 14400,
+ "SrcUpdateTime": "2026-11-03T01:35:59+08:00",
+ "SrcUpdateInterval": -1,
+ "AuthorityCode": "YUN",
+ "VersionID": 3722,
+ "CarParks": [
+  {
+   "CarParkID": "A01",
+   "CarParkName": {
+    "Zh_tw": "雲林溪加蓋停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "1083326081-4",
+   "OperatorID": "YUN87158061",
+   "Description": "平面停車場75個(含無障礙停車位)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [],
+   "ParkingSiteTypes": [
+    19,
+    20,
+    5
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.706520080566406,
+    "PositionLon": 120.53692626953125
+   },
+   "Email": "ylhg30208@mail.yunlin.gov.tw",
+   "Address": "雲林縣斗六市民生南路6號",
+   "FareDescription": "每次30元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "YunlinCounty",
+   "CityCode": "YUN"
+  },
+  {
+   "CarParkID": "yun12014",
+   "CarParkName": {
+    "Zh_tw": "DS Parking東燊停車場(國民運動中心旁)"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "1120600008-1",
+   "OperatorID": "08772486",
+   "Description": "平面停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4,
+    2
+   ],
+   "ParkingSiteTypes": [
+    5,
+    6
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.702575,
+    "PositionLon": 120.543858
+   },
+   "Address": "雲林縣斗六市公正街195巷47號",
+   "FareDescription": "平日 10元/30分，最高收費120元\r\n假日 15元/30分，最高收費150元",
+   "SpecialOfferDescription": "前10分鐘免費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "SupervisionType": 1,
+   "City": "YunlinCounty",
+   "CityCode": "YUN"
+  },
+  {
+   "CarParkID": "yun12015",
+   "CarParkName": {
+    "Zh_tw": "DS Parking東燊停車場(國民運動中心莊敬路)"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "1120600011-1",
+   "OperatorID": "08772486",
+   "Description": "平面停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2,
+    4
+   ],
+   "ParkingSiteTypes": [
+    5,
+    6
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.703273,
+    "PositionLon": 120.54337
+   },
+   "Address": "640雲林縣斗六市公正街195巷2號",
+   "FareDescription": "平日 10元/30分，最高收費120元\r\n假日 15元/30分，最高收費150元",
+   "SpecialOfferDescription": "前10分鐘免費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "SupervisionType": 1,
+   "City": "YunlinCounty",
+   "CityCode": "YUN"
+  },
+  {
+   "CarParkID": "yun12019",
+   "CarParkName": {
+    "Zh_tw": "雲林溪美食廣場停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "1130600277-1",
+   "OperatorID": "80743546",
+   "Description": "無",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    2,
+    1,
+    4
+   ],
+   "ParkingSiteTypes": [
+    8,
+    5,
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.706368,
+    "PositionLon": 120.5387749
+   },
+   "Address": "640雲林縣斗六市城頂街170號 對面",
+   "FareDescription": "一小時20元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 1,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 254,
+   "City": "YunlinCounty",
+   "CityCode": "YUN"
+  }
+ ]
+}

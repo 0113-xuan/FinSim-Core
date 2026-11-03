@@ -24,6 +24,11 @@
   function parkingSummary(district,stats){
     return `${district}有月租價的停車場 ${stats.count} 間，${stats.median==null?'不足 3 間，不提供中位數':`中位數 ${money(stats.median)}`}`;
   }
-  const api={schemaWarning,districtsForCity,locationValues,missingLocationColumns,withoutLocation,sortParkingLots,parkingLotText,parkingSummary};
+  function parkingPresentation(district,data){
+    return {message:data.message||'',summary:data.supported&&data.data_available&&data.lots.length?parkingSummary(district,data.monthly_rent_stats):'',
+      coverage:data.coverage?`本縣市 ${data.coverage.total} 間停車場中，${data.coverage.with_monthly_rent} 間有月租價`:'',
+      source:`交通部 TDX（快照日期 ${data.source.snapshot_date}），實際價格以停車場公告為準`};
+  }
+  const api={schemaWarning,districtsForCity,locationValues,missingLocationColumns,withoutLocation,sortParkingLots,parkingLotText,parkingSummary,parkingPresentation};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.LocationModel=api;
 })(globalThis);

@@ -1,0 +1,4469 @@
+{
+ "UpdateTime": "2026-07-07T15:54:56+08:00",
+ "UpdateInterval": 14400,
+ "AuthorityCode": "NAN",
+ "VersionID": 0,
+ "CarParks": [
+  {
+   "CarParkID": "NAN_007",
+   "CarParkName": {
+    "Zh_tw": "日月潭朝霧碼頭停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第1120010號",
+   "OperatorID": "NAN19301049",
+   "Description": "平面式停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10
+   ],
+   "ChargeTypes": [
+    4
+   ],
+   "Telephone": "(049)2246059",
+   "CarParkPosition": {
+    "PositionLat": 24.02872085571289,
+    "PositionLon": 121.14450073242188
+   },
+   "Email": "chenyijing0216@nantou.gov.tw",
+   "Address": "南投縣仁愛鄉霧社台八線旁",
+   "FareDescription": "免費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_028",
+   "CarParkName": {
+    "Zh_tw": "嘉和停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112006號",
+   "OperatorID": "NAN88575938",
+   "Description": "43",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0911-756988",
+   "EmergencyPhone": "0911-756988",
+   "CarParkPosition": {
+    "PositionLat": 23.89919,
+    "PositionLon": 120.68443
+   },
+   "Email": "yeh600329@gmail.com",
+   "Address": "南投縣南投市中興路 850 號旁空地",
+   "FareDescription": "小型車：20元/時。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_062",
+   "CarParkName": {
+    "Zh_tw": "太平路一段鄰近車位"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第114025號",
+   "OperatorID": "NAN52492792",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "049 222 2106",
+   "EmergencyPhone": "049 222 2106",
+   "CarParkPosition": {
+    "PositionLat": 23.96531,
+    "PositionLon": 120.6821
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "南投縣草屯鎮太平路一段395號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_030",
+   "CarParkName": {
+    "Zh_tw": "衛生福利部南投醫院路外公共停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112005號",
+   "OperatorID": "NAN61605403",
+   "Description": "未知",
+   "CarParkType": 255,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": " 049 223 5128",
+   "EmergencyPhone": " 049 223 5128",
+   "CarParkPosition": {
+    "PositionLat": 23.91419,
+    "PositionLon": 120.68565
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "南投縣南投市復興路478號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "jiji001",
+   "CarParkName": {
+    "Zh_tw": "集集鎮公所集集國小地下停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "(108)府工交字第108007號",
+   "OperatorID": "NAN61613902",
+   "Description": "地下停車場",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    1,
+    4
+   ],
+   "ParkingSiteTypes": [
+    10,
+    4,
+    8
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(049)2760555",
+   "EmergencyPhone": "0980-926536",
+   "CarParkPosition": {
+    "PositionLat": 23.83709,
+    "PositionLon": 120.78529
+   },
+   "Email": "chi086@jiji.gov.tw",
+   "Address": "南投縣民權路436號",
+   "FareDescription": "平日每小時20元，假日每小時40元，每日上限100元。",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車停放",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 1,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "LandMark": "集集火車站右前方",
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_006",
+   "CarParkName": {
+    "Zh_tw": "南投縣日月潭中興停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管字第113016號",
+   "OperatorID": "NAN19301049",
+   "Description": "平面式停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(049)2244759",
+   "CarParkPosition": {
+    "PositionLat": 23.866329193115234,
+    "PositionLon": 120.91039276123047
+   },
+   "Email": "wenchieh@nantou.gov.tw",
+   "Address": "南投縣魚池鄉水社村中興路12巷",
+   "FareDescription": "大型車:80元/時  小型車:40元/時  機車:20元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 1,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_051",
+   "CarParkName": {
+    "Zh_tw": "國姓鄉公所中興路公有停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第115001號",
+   "OperatorID": "NAN20383265",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    3
+   ],
+   "Telephone": "049 272 1002",
+   "EmergencyPhone": "049 272 1002",
+   "CarParkPosition": {
+    "PositionLat": 24.04045,
+    "PositionLon": 120.85611
+   },
+   "Email": "lys991106@gmail.com.tw",
+   "Address": "南投縣國姓鄉石門村中興路171號",
+   "FareDescription": "一般車位每月 1,800 元",
+   "SpecialOfferDescription": "貼有各縣市政府社政主管機關核發之「身心障礙者專用停車識  別證」車輛，停放本停車場身心障礙者車位，每月依一般車位月租費 8 折 1,440 元計算。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_041",
+   "CarParkName": {
+    "Zh_tw": "城市車旅-明太子站停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管字第113018號",
+   "OperatorID": "NAN12745271",
+   "Description": "小型汽車:18(含身障:1)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.97626,
+    "PositionLon": 120.682
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投縣草屯鎮明賢街110號",
+   "FareDescription": "全日計時：每半小時30元，當日最高收費220元。汽車月票(固定)：每月2,500元 汽車月票(非固定)：每月1,600元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_015",
+   "CarParkName": {
+    "Zh_tw": "清境小瑞士停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112039號",
+   "OperatorID": "NAN97702409",
+   "Description": " 汽車車位：57 身障車位：2",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800-021-111",
+   "EmergencyPhone": "0800-021-111",
+   "CarParkPosition": {
+    "PositionLat": 24.04397,
+    "PositionLon": 121.15637
+   },
+   "Email": "park_service@youparking.com.tw",
+   "Address": "南投縣仁愛鄉28號",
+   "FareDescription": "平日/日間收費 50元/1小時(08:00-21:00)。夜間收費 20元/1小時(21:00-08:00)。",
+   "SpecialOfferDescription": "逾1小時後以半小時計費。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_064",
+   "CarParkName": {
+    "Zh_tw": "嘟嘟房南投草屯停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第115005號",
+   "OperatorID": "NAN28371994",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "0226550818",
+   "EmergencyPhone": "0226550818",
+   "CarParkPosition": {
+    "PositionLat": 23.98319,
+    "PositionLon": 120.68001
+   },
+   "Email": "lys9911609@gmail.ocm",
+   "Address": "南投縣草屯鎮信義街368號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_017",
+   "CarParkName": {
+    "Zh_tw": "武嶺公有停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府授交管字第113006號",
+   "OperatorID": "NAN61204505",
+   "Description": "小型汽車:46；機車:35",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0903135728",
+   "EmergencyPhone": "0900-218-055",
+   "CarParkPosition": {
+    "PositionLat": 24.1372,
+    "PositionLon": 121.27565
+   },
+   "Email": "service.mail@altob.com.tw",
+   "Address": "南投縣仁愛鄉仁和路",
+   "FareDescription": "計時:周一至周四不含例假日，25元/半小時；週五至週日含例假日，30元/半小時；當日最高300元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_026",
+   "CarParkName": {
+    "Zh_tw": "城市車旅南投樹德停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112014號",
+   "OperatorID": "NAN12745271",
+   "Description": "小型汽車:165(含身障5親子4)",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.91691,
+    "PositionLon": 120.65726
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投市永豐里工業南六路6號",
+   "FareDescription": "全日計時：每小時60元，無當日最高收費上限。汽車月票：每月2,000元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_008",
+   "CarParkName": {
+    "Zh_tw": "東埔風景區停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112035號",
+   "OperatorID": "NAN61604805",
+   "Description": "平面式停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10
+   ],
+   "ChargeTypes": [
+    4
+   ],
+   "Telephone": "(049)2246059",
+   "CarParkPosition": {
+    "PositionLat": 23.592300415039062,
+    "PositionLon": 120.8898696899414
+   },
+   "Email": "chenyijing0216@nantou.gov.tw",
+   "Address": "南投縣信義鄉東埔村開高巷98-10號",
+   "FareDescription": "免費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_061",
+   "CarParkName": {
+    "Zh_tw": "南投復興停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第114024號",
+   "OperatorID": "NAN61604805",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "049 222 2106",
+   "EmergencyPhone": "049 222 2106",
+   "CarParkPosition": {
+    "PositionLat": 23.90527,
+    "PositionLon": 120.68757
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "南投縣南投市三和三路",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_035",
+   "CarParkName": {
+    "Zh_tw": "博客停車-埔里中正場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府授交管字第113011號",
+   "OperatorID": "NAN70393303",
+   "Description": "17",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "02-2948-8889",
+   "EmergencyPhone": "02-2948-8889",
+   "CarParkPosition": {
+    "PositionLat": 23.96797040533613,
+    "PositionLon": 120.9649304972023
+   },
+   "Email": "f168@mrpark.com.tw",
+   "Address": "南投縣埔里鎮中正路518號",
+   "FareDescription": "計時:10元/半小時，當日最高120元(臨時停車)",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_056",
+   "CarParkName": {
+    "Zh_tw": "城市車旅-竹山廣停三停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第114015號",
+   "OperatorID": "NAN62700806",
+   "Description": "小型汽車:52(含身障:1、親子:1、電動:2)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.75003,
+    "PositionLon": 120.67988
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投縣竹山鎮大智路823號",
+   "FareDescription": "全日計時：每半小時15元，當日最高收費100元，汽車月票：每月500元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_050",
+   "CarParkName": {
+    "Zh_tw": "台灣聯通南投草鞋墩停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第111006號",
+   "OperatorID": "NAN39687534",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "02-25235000",
+   "EmergencyPhone": "02-25235000",
+   "CarParkPosition": {
+    "PositionLat": 23.97735,
+    "PositionLon": 120.68171
+   },
+   "Email": "service@taiwan-parking.com.tw",
+   "Address": "南投縣草屯鎮草溪路1037號",
+   "FareDescription": "依現場為準",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_018",
+   "CarParkName": {
+    "Zh_tw": "南投車埕停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第114003號",
+   "OperatorID": "NAN19301049",
+   "Description": "汽車車位：45 身障車位：1",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "Telephone": "0800-021-111",
+   "EmergencyPhone": "0800-021-111",
+   "CarParkPosition": {
+    "PositionLat": 23.83385,
+    "PositionLon": 120.86687
+   },
+   "Email": "service@chyp.com.tw",
+   "Address": "南投縣水里鄉車埕村民權巷118號",
+   "FareDescription": " 100元/當日當次。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_058",
+   "CarParkName": {
+    "Zh_tw": "城市車旅-南投體育場站停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第114013號",
+   "OperatorID": "NAN61604805",
+   "Description": "小型汽車:83(身障:2，親子:2，電動:2)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.90495,
+    "PositionLon": 120.68152
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投縣南投市南崗一路300號",
+   "FareURL": "",
+   "FareDescription": "全日計時：每小時30元，當日最高收費150元，汽車月票：每月1,400元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_047",
+   "CarParkName": {
+    "Zh_tw": "將軍停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112002號",
+   "OperatorID": "NAN54111502",
+   "Description": "未知",
+   "CarParkType": 255,
+   "ParkingGuideType": 255,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "049 222 2106",
+   "EmergencyPhone": "049 222 2106",
+   "CarParkPosition": {
+    "PositionLat": 23.96297,
+    "PositionLon": 120.70665
+   },
+   "Email": "lys991106@gmail.com.tw",
+   "Address": "南投縣草屯鎮富寮里富頂路一段726號",
+   "FareDescription": "未知",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_033",
+   "CarParkName": {
+    "Zh_tw": "出張所停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府建城字第107007號",
+   "OperatorID": "NAN61604805",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "049 222 2106",
+   "EmergencyPhone": "049 222 2106",
+   "CarParkPosition": {
+    "PositionLat": 23.91126,
+    "PositionLon": 120.68459
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "南投縣南投市中山街260號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "tsa003",
+   "CarParkName": {
+    "Zh_tw": "草屯鎮草鞋墩停二立體停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112027號",
+   "OperatorID": "NAN61612208",
+   "Description": "地下1-2樓，地上3-6樓為停車場",
+   "CarParkType": 2,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(049)2300793",
+   "EmergencyPhone": "(049)2300793",
+   "CarParkPosition": {
+    "PositionLat": 23.975679397583008,
+    "PositionLon": 120.68536376953125
+   },
+   "Email": "ininu1122@mail.tsaotun.gov.tw",
+   "Address": "南投縣草屯鎮虎山路819號",
+   "FareDescription": "20元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 1,
+   "GasStation": 0,
+   "Shop": 1,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 255,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_002",
+   "CarParkName": {
+    "Zh_tw": "草屯鎮公有草鞋墩停二立體停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112027號",
+   "OperatorID": "NAN61612208",
+   "Description": "立體式-小型車426個車位",
+   "CarParkType": 2,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    16
+   ],
+   "ChargeTypes": [
+    1,
+    2
+   ],
+   "Telephone": "(049)2330501",
+   "CarParkPosition": {
+    "PositionLat": 23.97580909729004,
+    "PositionLon": 120.68569946289062
+   },
+   "Email": "za20080101@gmail.com",
+   "Address": "南投縣草屯鎮542虎山路819號",
+   "FareDescription": "20元/小時、每日上限200元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NANNT09",
+   "CarParkName": {
+    "Zh_tw": "南投市停九停車場"
+   },
+   "CarParkShortName": {
+    "Zh_tw": "停九"
+   },
+   "CarParkRegNo": "(105)府建城字第105003",
+   "OperatorID": "NAN61605001",
+   "Description": "平面",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    11,
+    20,
+    5
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(049)2230160",
+   "CarParkPosition": {
+    "PositionLat": 23.91250991821289,
+    "PositionLon": 120.67781829833984
+   },
+   "Email": "ldn@mail.ntc.gov.tw",
+   "Address": "南投縣南投市文林路",
+   "FareDescription": "20元/時(0-24),每日最高100元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許停靠小型車",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN27452532",
+   "CarParkName": {
+    "Zh_tw": "名間鄉停一公有立體停車場"
+   },
+   "CarParkShortName": {
+    "Zh_tw": "停一立體停車場"
+   },
+   "CarParkRegNo": "府建城字第107002號",
+   "OperatorID": "NAN61603101",
+   "Description": "小型車130格、機車50格",
+   "CarParkType": 2,
+   "ParkingGuideType": 2,
+   "ParkingTypes": [],
+   "ParkingSiteTypes": [
+    7,
+    7,
+    7
+   ],
+   "ChargeTypes": [
+    1,
+    1
+   ],
+   "Telephone": "(049)2733907",
+   "CarParkPosition": {
+    "PositionLat": 23.83711051940918,
+    "PositionLon": 120.70115661621094
+   },
+   "Email": "bu55@mnjn.gov.tw",
+   "Address": "南投縣名間鄉董門巷2號",
+   "WebURL": "http://www.xianghehotel.com.tw/",
+   "FareDescription": "20元/時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 0,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 1,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 1,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_038",
+   "CarParkName": {
+    "Zh_tw": "埔里鎮第三公有零售市場地下停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府建城字第108001號",
+   "OperatorID": "NAN61604805",
+   "Description": "小型汽車位52(含身障2，充電:2)",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "049-2984040~5",
+   "EmergencyPhone": "049-2984040~5",
+   "CarParkPosition": {
+    "PositionLat": 23.96275,
+    "PositionLon": 120.96733
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "南投縣埔里鎮南門里東華路47號",
+   "FareDescription": "(一)每小時收費新台幣二十元整，每日收費最高以十小時為限。 1.未滿一小時以一小時計算。 2.未滿一小時三十分以三十元計，超過一小時三十分未滿二小時者以 四十元計算，以下比照類推計收。 3.臨時停車證遺失者，以當日上午六時開始計算。 (二)月租每月新台幣一仟二佰元整。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "cmh923",
+   "CarParkName": {
+    "Zh_tw": "中山停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "NAN62700806",
+   "Description": "本場為平面開放式免費停車場，一般停車位季208位，身障即親子停車位各計5位。",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    19
+   ],
+   "ChargeTypes": [
+    4
+   ],
+   "Telephone": "(049)2642175",
+   "EmergencyPhone": "0955-030291",
+   "CarParkPosition": {
+    "PositionLat": 23.698190689086914,
+    "PositionLon": 120.71009826660156
+   },
+   "Email": "cmh990430@zhushan.gov.tw",
+   "Address": "南投縣竹山鎮公所路100號",
+   "WebURL": "",
+   "FareDescription": "0",
+   "SpecialOfferDescription": "開放免費停車",
+   "IsFreeParkingOutOfHours": 1,
+   "VehicleRestriction": "本場只允許小型車輛停放",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "LandMark": "員林客運竹山站後方",
+   "BuildingName": "平面式停車場",
+   "LocationMapURL": "",
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "exfop01",
+   "CarParkName": {
+    "Zh_tw": "第一停車場"
+   },
+   "CarParkShortName": {
+    "Zh_tw": "一停"
+   },
+   "CarParkRegNo": "109003",
+   "OperatorID": "NAN62592807",
+   "Geometry": "",
+   "Description": "平面式停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10,
+    8,
+    4,
+    19,
+    254
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "Telephone": "(049)2612210",
+   "CarParkPosition": {
+    "PositionLat": 23.672630310058594,
+    "PositionLon": 120.7982177734375
+   },
+   "Email": "exfoxitou@ntu.edu.tw",
+   "Address": "南投縣鹿谷鄉森林巷10號",
+   "FareURL": "http://www.exfo.ntu.edu.tw/news_detail.php?id=816",
+   "FareDescription": "小型車每日120元；大型車每日150元",
+   "SpecialOfferDescription": "(一)自然教育園區收費範圍內商（住）戶，服務於臺大實驗林及區內受託經營廠商（依核定名冊）之員工。 (二)執行公務車輛如警政、電信、電力、郵政等或處理緊急事故及辦理區內各項工程等之車輛。 (三)洽公來賓或契約林農車輛需進入自然教育園區經出示有效身分證明者。",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 1,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 1,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_055",
+   "CarParkName": {
+    "Zh_tw": "日月潭力麗溫德姆溫泉酒店停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112022號",
+   "OperatorID": "NAN42642316",
+   "Description": "小型汽車:169(含身障:4、親子:7、電動:8)",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "0492850085",
+   "EmergencyPhone": "0492850085",
+   "CarParkPosition": {
+    "PositionLat": 23.84705,
+    "PositionLon": 120.93163
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "南投縣魚池鄉日月村中正路312號",
+   "FareDescription": "計時:平日30元/半小時，假日40元/半小時，每月月租:3000元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_042",
+   "CarParkName": {
+    "Zh_tw": "草屯鎮東美街平等街停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府授交管字第113012號",
+   "OperatorID": "NAN61612208",
+   "Description": "小型汽車:42(含身障:1，親子:1) ",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "049-2338161",
+   "EmergencyPhone": "049-2338161",
+   "CarParkPosition": {
+    "PositionLat": 23.98238,
+    "PositionLon": 120.68807
+   },
+   "Email": "qwermonica0423@mail.tsaotun.gov.tw",
+   "Address": "南投縣草屯鎮玉屏路192號",
+   "FareDescription": "計時:20元/小時，每半小時10元，無上限",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_023",
+   "CarParkName": {
+    "Zh_tw": "南投縣政府停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第113021號",
+   "OperatorID": "NAN61604805",
+   "Description": "小型汽車(含身障車位)共54",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [],
+   "ParkingSiteTypes": [],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "049-2234462",
+   "EmergencyPhone": "049-2234462",
+   "CarParkPosition": {
+    "PositionLat": 23.90253,
+    "PositionLon": 120.6904
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "南投市中興路660號",
+   "FareDescription": "汽車每小時20元，前30分鐘免費，半小時停車時數未滿一小時者，以一小時計算收費，每日無上限金額。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_037",
+   "CarParkName": {
+    "Zh_tw": "城市車旅-埔里基督教醫院停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112036號",
+   "OperatorID": "NAN25477564",
+   "Description": "小型汽車:201(含身障:4，親子:5)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.97093,
+    "PositionLon": 120.9468
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投縣埔里鎮愛蘭里鐵山路1號",
+   "FareDescription": "全日計時：前半小時免費，兩小時內收20元，第三小時起每小時10元，當日最高收費100元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_013",
+   "CarParkName": {
+    "Zh_tw": "昆陽公有停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府授交管字第113005號",
+   "OperatorID": "NAN61204505",
+   "Description": "平面小型車輛47；機車12",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    8
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0903135728",
+   "EmergencyPhone": "0900218055",
+   "CarParkPosition": {
+    "PositionLat": 24.12252,
+    "PositionLon": 121.27226
+   },
+   "Email": "service.mail@altob.com.tw",
+   "Address": "南投縣仁愛鄉仁和路",
+   "FareDescription": "計時:周一至周四不含例假日，25元/半小時；週五至週日含例假日，30元/半小時；當日最高300元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_067",
+   "CarParkName": {
+    "Zh_tw": "Times南投草屯玉峰街臨時停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112016號",
+   "OperatorID": "NAN28858068",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "0809-008-924",
+   "EmergencyPhone": "0809-008-924",
+   "CarParkPosition": {
+    "PositionLat": 23.98047,
+    "PositionLon": 120.68697
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": " 南投縣草屯鎮玉峰街24-1號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_029",
+   "CarParkName": {
+    "Zh_tw": "城市車旅-南投藍田站停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112007號",
+   "OperatorID": "NAN12745271",
+   "Description": "小型汽車:159(含身障:3親子:3)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.90965,
+    "PositionLon": 120.68235
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投縣南投市藍田街138號",
+   "FareDescription": "全日計時：每半小時15元，當日最高收費150元。汽車月票：每月1,300元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_024",
+   "CarParkName": {
+    "Zh_tw": "三塊厝公共停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府授交管字第113008號",
+   "OperatorID": "NAN61604805",
+   "Description": "小型汽車:31(含婦幼:1，身障:1，充電:1)，機車:10(含身障:1)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0912315990",
+   "EmergencyPhone": " 0903-135-728",
+   "CarParkPosition": {
+    "PositionLat": 23.90942,
+    "PositionLon": 120.68879
+   },
+   "Email": "service@mycar-in.com",
+   "Address": "南投縣南投市平和里民族路200號",
+   "FareDescription": "計時:平日15元/半小時，假日20元/半小時，平日當日上限150元，假日當日無最高上限",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_043",
+   "CarParkName": {
+    "Zh_tw": "總福停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府授交管字第113007號",
+   "OperatorID": "NAN94547284",
+   "Description": "0",
+   "CarParkType": 1,
+   "ParkingGuideType": 255,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": " 049 222 2106",
+   "EmergencyPhone": " 049 222 2106",
+   "CarParkPosition": {
+    "PositionLat": 23.9658,
+    "PositionLon": 120.68386
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "南投縣草屯鎮山腳里民生路95號",
+   "FareDescription": "未知",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_010",
+   "CarParkName": {
+    "Zh_tw": "南投縣瑞龍瀑布地區公共停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府授交管字第113009號",
+   "OperatorID": "NAN61604805",
+   "Description": "平面式停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10
+   ],
+   "ChargeTypes": [
+    4
+   ],
+   "Telephone": "(049)2246059",
+   "CarParkPosition": {
+    "PositionLat": 23.62097930908203,
+    "PositionLon": 120.65615844726562
+   },
+   "Email": "chenyijing0216@nantou.gov.tw",
+   "Address": "南投縣竹山鎮山坪頂段166-859地號",
+   "FareDescription": "免費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_045",
+   "CarParkName": {
+    "Zh_tw": "草鞋墩第一停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第1120011號",
+   "OperatorID": "NAN61604805",
+   "Description": "未知",
+   "CarParkType": 255,
+   "ParkingGuideType": 255,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "049 222 2106",
+   "EmergencyPhone": "049 222 2106",
+   "CarParkPosition": {
+    "PositionLat": 23.9734,
+    "PositionLon": 120.68203
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "南投縣草屯鎮中山里草鞋墩一街12號",
+   "FareDescription": "未知",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_012",
+   "CarParkName": {
+    "Zh_tw": "溪頭自然教育園區第二停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "NAN62592807",
+   "Description": "平面式停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "Telephone": "(049)2642181",
+   "CarParkPosition": {
+    "PositionLat": 23.673189163208008,
+    "PositionLon": 120.7954330444336
+   },
+   "Email": "tsengck@ntu.edu.tw",
+   "Address": "南投縣鹿谷鄉興產路1-21號",
+   "FareDescription": "大型車:150元/時  小型車:120元/時  ",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_032",
+   "CarParkName": {
+    "Zh_tw": "南投縣政府綜合大樓停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第",
+   "OperatorID": "NAN61604805",
+   "Description": "54",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "049 224 6307",
+   "EmergencyPhone": "049 224 6307",
+   "CarParkPosition": {
+    "PositionLat": 23.9031,
+    "PositionLon": 120.6897
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "540南投縣南投市三和里三和一路8號",
+   "FareDescription": "計時:每小時20元，每日最高100元。 二、月租每月1200元。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_022",
+   "CarParkName": {
+    "Zh_tw": "南投縣政府稅務局停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第114007號",
+   "OperatorID": "NAN61604903",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "049 222 2121",
+   "EmergencyPhone": "049 222 2121",
+   "CarParkPosition": {
+    "PositionLat": 23.90153,
+    "PositionLon": 120.68862
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "南投縣南投市復興路2號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "zw0001",
+   "CarParkName": {
+    "Zh_tw": "霧社停車場"
+   },
+   "CarParkShortName": {
+    "Zh_tw": ""
+   },
+   "OperatorID": "NAN06120072",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "049 280 2534",
+   "EmergencyPhone": "049 280 2534",
+   "CarParkPosition": {
+    "PositionLat": 24.01813,
+    "PositionLon": 121.13123
+   },
+   "Email": "lys9911609@gmail.ocm",
+   "Address": "南投縣仁愛鄉仁和路29號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_057",
+   "CarParkName": {
+    "Zh_tw": "城市車旅-竹山水塔一巷停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第114016號",
+   "OperatorID": "NAN62700806",
+   "Description": "小型汽車:25(含身障:1、親子:1、電動:2)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.7518,
+    "PositionLon": 120.68049
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投縣竹山鎮中山里鯉南路19號",
+   "FareDescription": "全日計時：每半小時15元，當日最高收費100元，汽車月票：每月1,200元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_046",
+   "CarParkName": {
+    "Zh_tw": "玖霆停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112009號",
+   "OperatorID": "NAN88576991",
+   "Description": "未知",
+   "CarParkType": 255,
+   "ParkingGuideType": 255,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "049 222 2106",
+   "EmergencyPhone": "049 222 2106",
+   "CarParkPosition": {
+    "PositionLat": 23.96296,
+    "PositionLon": 120.70662
+   },
+   "Email": "lys991106@gmail.com.tw",
+   "Address": "南投縣草屯鎮富寮里富頂路一段726號",
+   "FareDescription": "未知",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_003",
+   "CarParkName": {
+    "Zh_tw": "埔里鎮仁愛立體停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府建城字第106003號",
+   "OperatorID": "NAN62302808",
+   "Description": "立體式-小型車230個車位",
+   "CarParkType": 2,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4,
+    20,
+    23,
+    7,
+    21
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "(049)2997760",
+   "CarParkPosition": {
+    "PositionLat": 23.96799087524414,
+    "PositionLon": 120.96391296386719
+   },
+   "Email": "za20080101@gmail.com",
+   "Address": "545南投縣埔里鎮中正一路16-1號",
+   "FareDescription": "20元/小時",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 1,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 1,
+   "Restaurant": 1,
+   "GasStation": 0,
+   "Shop": 1,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_059",
+   "CarParkName": {
+    "Zh_tw": "埔里平等場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第114012號",
+   "OperatorID": "NAN39687534",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "02 2523 5000",
+   "EmergencyPhone": "02 2523 5000",
+   "CarParkPosition": {
+    "PositionLat": 23.967,
+    "PositionLon": 120.97262
+   },
+   "Email": "service@taiwan-parking.com.tw",
+   "Address": "南投縣埔里鎮平等街16號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_040",
+   "CarParkName": {
+    "Zh_tw": "現代首璽停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管字第114001號",
+   "OperatorID": "NAN83552112",
+   "Description": "小型汽車:23(含身障:1)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    3,
+    255
+   ],
+   "Telephone": "049-2333357",
+   "EmergencyPhone": "049-2333357",
+   "CarParkPosition": {
+    "PositionLat": 23.9829,
+    "PositionLon": 120.67596
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "南投縣草屯鎮敦和里信義街",
+   "FareDescription": "未知",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "exfop02",
+   "CarParkName": {
+    "Zh_tw": "第二停車場"
+   },
+   "CarParkShortName": {
+    "Zh_tw": "二停"
+   },
+   "CarParkRegNo": "109004",
+   "OperatorID": "NAN62592807",
+   "Description": "平面式停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    8,
+    7,
+    254,
+    5,
+    254,
+    10,
+    4,
+    10,
+    8,
+    4
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "Telephone": "(049)2612210",
+   "CarParkPosition": {
+    "PositionLat": 23.672630310058594,
+    "PositionLon": 120.7982177734375
+   },
+   "Email": "exfoxitou@ntu.edu.tw",
+   "Address": "南投縣鹿谷鄉森林巷10號",
+   "FareURL": "http://www.exfo.ntu.edu.tw/news_detail.php?id=816",
+   "FareDescription": "小型車每日120元；大型車每日150元",
+   "SpecialOfferDescription": "(一)自然教育園區收費範圍內商（住）戶，服務於臺大實驗林及區內受託經營廠商（依核定名冊）之員工。 (二)執行公務車輛如警政、電信、電力、郵政等或處理緊急事故及辦理區內各項工程等之車輛。 (三)洽公來賓或契約林農車輛需進入自然教育園區經出示有效身分證明者。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 1,
+   "GasStation": 0,
+   "Shop": 1,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 1,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_063",
+   "CarParkName": {
+    "Zh_tw": "三和游泳池地下停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第115004號",
+   "OperatorID": "NAN61604805",
+   "Description": "未知",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "049-2248562",
+   "EmergencyPhone": "049-2248562",
+   "CarParkPosition": {
+    "PositionLat": 23.9016,
+    "PositionLon": 120.68831
+   },
+   "Email": "lys991106@gamil.com",
+   "Address": "南投縣南投市復興路1號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "tsa004",
+   "CarParkName": {
+    "Zh_tw": "草屯鎮公有零售市場地下停車場(市一停車場)"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第111005號",
+   "OperatorID": "NAN61612208",
+   "Description": "平面停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    22
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "(049)2338847",
+   "CarParkPosition": {
+    "PositionLat": 23.97825050354004,
+    "PositionLon": 120.6849136352539
+   },
+   "Email": "yupei@mail.tsaotun.gov.tw",
+   "Address": "南投縣草屯鎮和興街55號",
+   "FareDescription": "1小時20元,一天最高100元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 1,
+   "TicketMachine": 1,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 1,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_034",
+   "CarParkName": {
+    "Zh_tw": "台灣聯通埔里場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第113020號",
+   "OperatorID": "NAN39687534",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "02-25235000",
+   "EmergencyPhone": "02-25235000",
+   "CarParkPosition": {
+    "PositionLat": 23.96387,
+    "PositionLon": 120.96951
+   },
+   "Email": "service@taiwan-parking.com.tw",
+   "Address": "南投縣埔里鎮東華路110號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_016",
+   "CarParkName": {
+    "Zh_tw": "清境商場停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112038號",
+   "OperatorID": "NAN97702409",
+   "Description": "大型車車位：12 汽車車位：76 身障車位：2",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800-021-111",
+   "EmergencyPhone": "0800-021-111",
+   "CarParkPosition": {
+    "PositionLat": 24.04427,
+    "PositionLon": 121.15703
+   },
+   "Email": "park_service@youparking.com.tw",
+   "Address": "南投縣仁愛鄉仁和路",
+   "FareDescription": "平日/日間收費 50元/1小時(08:00-21:00)。  夜間收費 20元/1小時(21:00-08:00)。其他 大型車 日間:100元/1小時(08:00-21:00)。 夜間:50元/1小時(21:00-08:00)。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_053",
+   "CarParkName": {
+    "Zh_tw": "九族停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府授交管字第113003號",
+   "OperatorID": "NAN55310704",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "049-2895361",
+   "EmergencyPhone": "049-2895361",
+   "CarParkPosition": {
+    "PositionLat": 23.86955,
+    "PositionLon": 120.9453
+   },
+   "Email": "service@nine.com.tw",
+   "Address": "南投縣魚池鄉大林村金天巷45號",
+   "FareDescription": "依現場為準",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_068",
+   "CarParkName": {
+    "Zh_tw": "Times南投草屯中興路臨時停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管字第113017號",
+   "OperatorID": "NAN28858068",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "0809-008-924",
+   "EmergencyPhone": "0809-008-924",
+   "CarParkPosition": {
+    "PositionLat": 23.9747,
+    "PositionLon": 120.68177
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": " 南投縣草屯鎮中興路31號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "T0550852",
+   "CarParkName": {
+    "Zh_tw": "水里鄉公所辦公廳舍停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "004",
+   "OperatorID": "NAN27452532",
+   "Description": "小型車166位",
+   "CarParkType": 6,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    254
+   ],
+   "ParkingSiteTypes": [
+    19
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(049)2772141",
+   "CarParkPosition": {
+    "PositionLat": 23.795900344848633,
+    "PositionLon": 120.86210632324219
+   },
+   "Email": "a0923375508@gmail.com",
+   "Address": "南投縣水里鄉民生路112號",
+   "FareDescription": "每小時60元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_027",
+   "CarParkName": {
+    "Zh_tw": "城市車旅-南投信義站停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112008號",
+   "OperatorID": "NAN12745271",
+   "Description": "小型汽車:25(含身障:1)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.91196,
+    "PositionLon": 120.69112
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投縣南投市育樂路與信義街 ",
+   "FareDescription": "全日計時：每半小時30元，當日最高收費150元。汽車月票：每月1,500元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_011",
+   "CarParkName": {
+    "Zh_tw": "城市車旅溪頭自然教育園區第一停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府公交字第112019號",
+   "OperatorID": "NAN62592807",
+   "Description": "平面式停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10
+   ],
+   "ChargeTypes": [
+    2
+   ],
+   "Telephone": "(049)2642181",
+   "CarParkPosition": {
+    "PositionLat": 23.73788070678711,
+    "PositionLon": 120.78153228759766
+   },
+   "Email": "tsengck@ntu.edu.tw",
+   "Address": "南投縣鹿谷鄉內湖村森林巷10號",
+   "FareDescription": "大型車:150元/日  小型車:120元/日  ",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_052",
+   "CarParkName": {
+    "Zh_tw": "伊達邵中正停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第114002號",
+   "OperatorID": "NAN19301049",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "02-25235000",
+   "EmergencyPhone": "02-25235000",
+   "CarParkPosition": {
+    "PositionLat": 23.84641,
+    "PositionLon": 120.93208
+   },
+   "Email": "lys991106@gmail.com.tw",
+   "Address": "南投縣魚池鄉中正路325號",
+   "FareDescription": "未知",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_065",
+   "CarParkName": {
+    "Zh_tw": "Times埔里南昌街臨時停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府授交管字第113001號",
+   "OperatorID": "NAN28858068",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "0809-008-924",
+   "EmergencyPhone": "0809-008-924",
+   "CarParkPosition": {
+    "PositionLat": 23.96478,
+    "PositionLon": 120.96602
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "南投縣埔里鎮 南昌街155號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_036",
+   "CarParkName": {
+    "Zh_tw": "城市車旅-埔里家樂福停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112028號",
+   "OperatorID": "NAN12745271",
+   "Description": "小型汽車:128(含身障:3，親子:6)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.97121,
+    "PositionLon": 120.95745
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投縣埔里鎮大城里信義路1029號",
+   "FareDescription": "全日計時：每小時40元，汽車月票：每月1,200元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_005",
+   "CarParkName": {
+    "Zh_tw": "南投縣政府地下停車場(僅員工使用)"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府授交管字第112034",
+   "OperatorID": "NAN61604805",
+   "Description": "立體式停車場",
+   "CarParkType": 2,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    19
+   ],
+   "ChargeTypes": [
+    4
+   ],
+   "Telephone": "(049)2234462",
+   "CarParkPosition": {
+    "PositionLat": 23.90253,
+    "PositionLon": 120.6904
+   },
+   "Email": "ntfd419@nantou.gov.tw",
+   "Address": "南投市南投縣中興路660號(縣府地下室B1~B2)",
+   "FareDescription": "免費",
+   "IsFreeParkingOutOfHours": 1,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 1,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 1,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 254,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_014",
+   "CarParkName": {
+    "Zh_tw": "合歡山遊客中心公有停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府授交管字第113004號",
+   "OperatorID": "NAN61204505",
+   "Description": "平面小型車50；機車15",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0903135728",
+   "EmergencyPhone": "0900-218-055",
+   "CarParkPosition": {
+    "PositionLat": 24.14197,
+    "PositionLon": 121.2841
+   },
+   "Email": "service.mail@altob.com.tw",
+   "Address": "花蓮縣秀林鄉富世村7弄33號",
+   "FareDescription": "計時:周一至周四不含例假日，25元/半小時；週五至週日含例假日，30元/半小時；當日最高300元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "HualienCounty",
+   "CityCode": "HUA"
+  },
+  {
+   "CarParkID": "NAN_021",
+   "CarParkName": {
+    "Zh_tw": "竹山秀傳醫院"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府建城字第107008號",
+   "OperatorID": "NAN77393377",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [],
+   "ParkingSiteTypes": [],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "049-2624266",
+   "EmergencyPhone": "049-2624266",
+   "CarParkPosition": {
+    "PositionLat": 23.80015,
+    "PositionLon": 120.71412
+   },
+   "Email": "cs00601@csshow.org.tw",
+   "Address": "南投縣竹山鎮集山路二段75號",
+   "FareDescription": "計時：約 $30 / 小時（未滿半小時者依半小時 $15 計費）；當日上限： $200 / 日。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "tsa001",
+   "CarParkName": {
+    "Zh_tw": "大成街停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112025號",
+   "OperatorID": "NAN61612208",
+   "Description": "平面式停車位180格(含身障車位4格.婦幼車位4格)",
+   "CarParkType": 2,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4,
+    11,
+    20
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "(049)2334759",
+   "EmergencyPhone": "0963-230659",
+   "CarParkPosition": {
+    "PositionLat": 23.983369827270508,
+    "PositionLon": 120.73210906982422
+   },
+   "Email": "ab1000228@gmail.com",
+   "Address": "大成街78號",
+   "FareDescription": "20元/小時(07-19)  10元/半小時(07-19) 每日最高100元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 1,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "LandMark": "草屯國中",
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_009",
+   "CarParkName": {
+    "Zh_tw": "竹山鎮梯子吊橋公有停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府建城字第105001號",
+   "OperatorID": "NAN61604805",
+   "Description": "平面式停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    10
+   ],
+   "ChargeTypes": [
+    4
+   ],
+   "Telephone": "(049)2246059",
+   "CarParkPosition": {
+    "PositionLat": 23.65411949157715,
+    "PositionLon": 120.7652587890625
+   },
+   "Email": "chenyijing0216@nantou.gov.tw",
+   "Address": "南投縣竹山鎮圓山段654-7地號",
+   "FareDescription": "免費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_044",
+   "CarParkName": {
+    "Zh_tw": "草屯鎮山腳里集會所"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112012號",
+   "OperatorID": "NAN61612208",
+   "Description": "未知",
+   "CarParkType": 255,
+   "ParkingGuideType": 255,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "049 233 8161",
+   "EmergencyPhone": "049 233 8161",
+   "CarParkPosition": {
+    "PositionLat": 23.96496,
+    "PositionLon": 120.68538
+   },
+   "Email": "qwermonica043@mail.tsaotun.gov.tw",
+   "Address": "南投縣草屯鎮山腳里虎山路299號",
+   "FareDescription": "計時:10元/半小時，每月租:1800元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NANNT01",
+   "CarParkName": {
+    "Zh_tw": "南投市停一停車場"
+   },
+   "CarParkShortName": {
+    "Zh_tw": "停一"
+   },
+   "CarParkRegNo": "(105)府建城字第105002",
+   "OperatorID": "NAN61605001",
+   "Description": "平面型停車場",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    22,
+    19,
+    4,
+    23,
+    20
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(049)2230160",
+   "CarParkPosition": {
+    "PositionLat": 23.9218807220459,
+    "PositionLon": 120.67872619628906
+   },
+   "Email": "ldn@mail.ntc.gov.tw",
+   "Address": "南投縣南投市南陽路、玉井街",
+   "FareDescription": "20元/時(0-24),每日最高100元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車停靠",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_039",
+   "CarParkName": {
+    "Zh_tw": "城市車旅-草屯正興站停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第114006號",
+   "OperatorID": "NAN12745271",
+   "Description": "小型汽車:30(含身障;1)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.9607,
+    "PositionLon": 120.68226
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投縣草屯鎮正言街52號",
+   "FareDescription": "全日計時：每小時40元，當日最高收費180元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_048",
+   "CarParkName": {
+    "Zh_tw": "駿馬停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112003號",
+   "OperatorID": "NAN54111502",
+   "Description": "未知",
+   "CarParkType": 255,
+   "ParkingGuideType": 255,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "049 222 2106",
+   "EmergencyPhone": "049 222 2106",
+   "CarParkPosition": {
+    "PositionLat": 23.96294,
+    "PositionLon": 120.70661
+   },
+   "Email": "lys991106@gmail.com.tw",
+   "Address": "南投縣草屯鎮富寮里富頂路一段726號",
+   "FareDescription": "未知",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_060",
+   "CarParkName": {
+    "Zh_tw": "城市車旅-工藝中心站停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第1140191號",
+   "OperatorID": "NAN61218607",
+   "Description": "小型汽車:141(含身障:4、親子:4、電動:4)，大型車:10",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.98004,
+    "PositionLon": 120.69217
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投縣草屯鎮富寮里中正路573號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_031",
+   "CarParkName": {
+    "Zh_tw": "城市車旅家樂福南投店停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府公交字第110007號",
+   "OperatorID": "NAN12745271",
+   "Description": "141",
+   "CarParkType": 2,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.90492,
+    "PositionLon": 120.68901
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投縣南投市三和三路21號",
+   "FareDescription": "全日計時：每小時40元。汽車月票：每月2,000元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "tsa002",
+   "CarParkName": {
+    "Zh_tw": "草屯鎮中正路臨時停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第110004號",
+   "OperatorID": "NAN19301049",
+   "Description": "平面式小型車為88格,含身障車位4格.婦幼車位4格",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    4,
+    22,
+    11
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "(049)2322979",
+   "EmergencyPhone": "0963-2360659",
+   "CarParkPosition": {
+    "PositionLat": 23.984249114990234,
+    "PositionLon": 120.73271179199219
+   },
+   "Email": "ab1000228@gmail.com",
+   "Address": " 中正路606號",
+   "FareDescription": "計時:每小時20元",
+   "IsFreeParkingOutOfHours": 0,
+   "VehicleRestriction": "只允許小型車",
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 1,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "LandMark": "草屯郵局",
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_025",
+   "CarParkName": {
+    "Zh_tw": "城市車旅-南投民族站停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112034號",
+   "OperatorID": "NAN12745271",
+   "Description": "小型汽車:19(含身障:1)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.90867,
+    "PositionLon": 120.68712
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投縣南投市復興路236號",
+   "FareDescription": "平日計時：每小時30元，當日最高收費150元 假日計時：每半小時40元，當日最高收費150元。汽車月票：每月2,100元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_020",
+   "CarParkName": {
+    "Zh_tw": "城市車旅-東華醫院一站停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112032號",
+   "OperatorID": "NAN12745271",
+   "Description": "小型汽車:14 殘障小型汽車:1",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800-208333",
+   "EmergencyPhone": "0800-208333",
+   "CarParkPosition": {
+    "PositionLat": 23.76437,
+    "PositionLon": 120.70028
+   },
+   "Email": "sales@pss-group.com",
+   "Address": "南投縣竹山鎮集山路三段272巷16號",
+   "FareDescription": "全日計時：每小時30元，當日最高收費150元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_066",
+   "CarParkName": {
+    "Zh_tw": "Times埔里北澤街臨時停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112040號",
+   "OperatorID": "NAN28858068",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1,
+    3
+   ],
+   "Telephone": "0809-008-924",
+   "EmergencyPhone": "0809-008-924",
+   "CarParkPosition": {
+    "PositionLat": 23.96478,
+    "PositionLon": 120.96602
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": " 南投縣埔里鎮南昌街155號",
+   "FareDescription": "依現場實際收費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_054",
+   "CarParkName": {
+    "Zh_tw": "日月潭力立德姆溫泉酒店公共停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第112023號",
+   "OperatorID": "NAN42642316",
+   "Description": "小型汽車:54(含身障:2、親子:4、電動:6)",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    3,
+    1
+   ],
+   "Telephone": "0492850085",
+   "EmergencyPhone": "0492850085",
+   "CarParkPosition": {
+    "PositionLat": 23.84705,
+    "PositionLon": 120.93163
+   },
+   "Email": "lys9911609@gmail.com",
+   "Address": "南投縣魚池鄉日月村中正路312號",
+   "FareDescription": "計時:平日30元/半小時，假日40元/半小時，每月月租:3000元",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_004",
+   "CarParkName": {
+    "Zh_tw": "婦幼館附設停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "NAN27452532",
+   "Description": "平面式",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    4
+   ],
+   "Telephone": "(049)2247970",
+   "CarParkPosition": {
+    "PositionLat": 23.922040939331055,
+    "PositionLon": 120.6739273071289
+   },
+   "Email": "celeste0626@nantou.gov.tw",
+   "Address": "南投縣南投市南崗二路85、87號",
+   "FareDescription": "免費",
+   "IsFreeParkingOutOfHours": 1,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 1,
+   "OvernightPermitted": 1,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 1,
+   "SupervisionType": 254,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_049",
+   "CarParkName": {
+    "Zh_tw": "台灣聯通南投草屯停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "府工交字第111007號",
+   "OperatorID": "NAN39687534",
+   "Description": "未知",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    255
+   ],
+   "Telephone": "02-25235000",
+   "EmergencyPhone": "02-25235000",
+   "CarParkPosition": {
+    "PositionLat": 23.97714,
+    "PositionLon": 120.68135
+   },
+   "Email": "service@taiwan-parking.com.tw",
+   "Address": "南投縣草屯鎮草溪路1021號",
+   "FareDescription": "依現場為準",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 0,
+   "IsMotorcycle": 0,
+   "OperationType": 3,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  },
+  {
+   "CarParkID": "NAN_019",
+   "CarParkName": {
+    "Zh_tw": "車埕第二停車場"
+   },
+   "CarParkShortName": {},
+   "CarParkRegNo": "投交管理字第114004號",
+   "OperatorID": "NAN19301049",
+   "Description": "大型車車位：5 汽車車位：94 身障車位：2",
+   "CarParkType": 1,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    255
+   ],
+   "ParkingSiteTypes": [
+    255
+   ],
+   "ChargeTypes": [
+    1
+   ],
+   "Telephone": "0800-021-111",
+   "EmergencyPhone": "0800-021-111",
+   "CarParkPosition": {
+    "PositionLat": 23.83045,
+    "PositionLon": 120.86689
+   },
+   "Email": "service@chyp.com.tw",
+   "Address": "南投縣水里鄉車埕村光復街與民權巷",
+   "FareDescription": "全日收費 小客車:20元/半小時，當日最高100元。其他 大客車40元/半小時，當日最高200元。",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 1,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 0,
+   "SecureParking": 0,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 0,
+   "Supervision": 0,
+   "City": "NantouCounty",
+   "CityCode": "NAN"
+  }
+ ]
+}

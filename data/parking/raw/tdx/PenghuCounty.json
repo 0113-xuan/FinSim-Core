@@ -1,0 +1,166 @@
+{
+ "UpdateTime": "2026-11-03T01:36:15+08:00",
+ "UpdateInterval": 14400,
+ "SrcUpdateTime": "2026-11-03T01:36:16+08:00",
+ "SrcUpdateInterval": 86400,
+ "AuthorityCode": "PEN",
+ "VersionID": 3253,
+ "CarParks": [
+  {
+   "CarParkID": "004",
+   "CarParkName": {
+    "Zh_tw": "中正國小地下停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "069274400",
+   "Description": "每日00:00~24:00(24H)汽車：20元/H，每日最高80元，身障前三小時免費",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    254
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.568517,
+    "PositionLon": 119.564927
+   },
+   "Address": "澎湖縣馬公市中興里民生路38號",
+   "FareDescription": "汽車：20元/H，每日最高80元，身障前三小時免費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "PenghuCounty",
+   "CityCode": "PEN"
+  },
+  {
+   "CarParkID": "003",
+   "CarParkName": {
+    "Zh_tw": "縣府前廣場地下停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "069274400",
+   "Description": "每日00:00~24:00(24H)汽車：20元/H，每日最高80元，身障前三小時免費",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    254
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.569745,
+    "PositionLon": 119.566933
+   },
+   "Address": "澎湖縣馬公市治平路32號",
+   "FareDescription": "汽車：20元/H，每日最高80元，身障前三小時免費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "PenghuCounty",
+   "CityCode": "PEN"
+  },
+  {
+   "CarParkID": "002",
+   "CarParkName": {
+    "Zh_tw": "文光國中地下停車場"
+   },
+   "CarParkShortName": {},
+   "OperatorID": "069274400",
+   "Description": "每日00:00~24:00(24H)汽車：20元/H，每日最高80元，身障前三小時免費",
+   "CarParkType": 3,
+   "ParkingGuideType": 1,
+   "ParkingTypes": [
+    4
+   ],
+   "ParkingSiteTypes": [
+    254
+   ],
+   "ChargeTypes": [
+    254
+   ],
+   "CarParkPosition": {
+    "PositionLat": 23.572665,
+    "PositionLon": 119.569282
+   },
+   "Address": "澎湖縣馬公市文光路17號",
+   "FareDescription": "汽車：20元/H，每日最高80元，身障前三小時免費",
+   "IsFreeParkingOutOfHours": 0,
+   "IsPublic": 1,
+   "IsMotorcycle": 0,
+   "OperationType": 2,
+   "LiveOccuppancyAvailable": 0,
+   "EVRechargingAvailable": 0,
+   "MonthlyTicketAvailable": 0,
+   "SeasonTicketAvailable": 0,
+   "ReservationAvailable": 0,
+   "WheelchairAccessible": 0,
+   "OvernightPermitted": 0,
+   "TicketMachine": 0,
+   "Toilet": 0,
+   "Restaurant": 0,
+   "GasStation": 0,
+   "Shop": 0,
+   "Gated": 0,
+   "Lighting": 1,
+   "SecureParking": 1,
+   "TicketOffice": 0,
+   "ProhibitedForAnyHazardousMaterialLoads": 0,
+   "SecurityGuard": 1,
+   "Supervision": 1,
+   "SupervisionType": 1,
+   "City": "PenghuCounty",
+   "CityCode": "PEN"
+  }
+ ]
+}
