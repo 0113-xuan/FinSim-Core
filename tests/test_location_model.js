@@ -28,7 +28,7 @@ test('parking presentation keeps API messages and city-wide coverage visible',()
   const unsupported=M.parkingPresentation('北屯區',{...data,supported:false,data_available:false,lots:[],coverage:null,message:'TDX 目前沒有臺中市的路外停車場資料，請自行填寫停車費。'});
   assert.equal(unsupported.message,'TDX 目前沒有臺中市的路外停車場資料，請自行填寫停車費。');assert.equal(unsupported.summary,'');assert.equal(unsupported.coverage,'');
   const empty=M.parkingPresentation('士林區',{...data,lots:[],message:'行政區沒有資料'});
-  assert.equal(empty.message,'行政區沒有資料');assert.equal(empty.summary,'');assert.match(empty.source,/2026-11-03/);
+  assert.equal(empty.message,'行政區沒有資料');assert.equal(empty.summary,'');assert.equal(Object.hasOwn(empty,'source'),false);
 });
 test('only known missing profile location columns trigger the compatibility retry',()=>{
   for(const error of [{code:'42703',message:'column profiles.city does not exist'},

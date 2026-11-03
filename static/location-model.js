@@ -26,8 +26,7 @@
   }
   function parkingPresentation(district,data){
     return {message:data.message||'',summary:data.supported&&data.data_available&&data.lots.length?parkingSummary(district,data.monthly_rent_stats):'',
-      coverage:data.coverage?`本縣市 ${data.coverage.total} 間停車場中，${data.coverage.with_monthly_rent} 間有月租價`:'',
-      source:`交通部 TDX（快照日期 ${data.source.snapshot_date}），實際價格以停車場公告為準`};
+      coverage:data.coverage?`本縣市 ${data.coverage.total} 間停車場中，${data.coverage.with_monthly_rent} 間有月租價`:''};
   }
   const api={schemaWarning,districtsForCity,locationValues,missingLocationColumns,withoutLocation,sortParkingLots,parkingLotText,parkingSummary,parkingPresentation};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.LocationModel=api;

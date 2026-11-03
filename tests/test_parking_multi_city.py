@@ -6,7 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.parking import (CITY_CODES, load_regions, load_parking_snapshot, normalize_tdx,
-                         parse_monthly_rent, resolve_district)
+                         is_scooter_only, parse_monthly_rent, resolve_district)
 from main import app
 from scripts import fetch_tdx_parking as fetch
 
@@ -49,6 +49,48 @@ def test_real_tdx_wordings(name,text,expected):
     assert result['monthly_rent_twd']==expected
     if expected is not None:
         assert result['monthly_rent_text'] in text
+
+
+@pytest.mark.parametrize('text,expected',[
+ ('年租:16000元 / 月租:1500元',1500),
+ ('季租:9000元、月租:3300元',3300),
+ ('月租3000元，年租30000元',3000),
+ ('月租1500、半年租1300/月',1500),
+ ('年租:20000元',None),
+ ('16000元 / 月租:1500元',1500),
+ ('16000元 / 月繳:1500元',1500),
+ ('16000元 / 月票:1500元',1500),
+ ('10元/半小時，1400元/月租，150元/天(00-24)，充電費率每度/8元',None),
+])
+def test_annual_and_quarterly_rents_do_not_become_monthly_prices(text,expected):
+    assert parse_monthly_rent(text)['monthly_rent_twd']==expected
+
+
+@pytest.mark.parametrize('name,expected',[
+ ('捷運士林站橋下機車停車場',True),
+ ('水萍塭公園地下停車場-機車',True),
+ ('宜舍成功機車',True),
+ ('舊山線鐵道自行車停車場',False),
+ ('民生汽機車停車場',False),
+ ('福港街平面停車場',False),
+ ('汽車與機車停車場',False),
+ ('小型車及機車停車場',False),
+])
+def test_scooter_only_filter_uses_only_the_name(name,expected):
+    assert is_scooter_only(name) is expected
+
+
+def test_scooter_filter_runs_after_deduplication_and_keeps_mixed_lots(tmp_path):
+    scooter=dict(CarParkID='scooter',CarParkName={'Zh_tw':'宜舍成功機車'},FareDescription='月租300元')
+    mixed=dict(CarParkID='mixed',CarParkName={'Zh_tw':'民生汽機車停車場'},FareDescription='汽車每月3000元')
+    # Fare wording must not override the name-only exclusion rule in either direction.
+    car=dict(CarParkID='car',CarParkName={'Zh_tw':'福港街平面停車場'},FareDescription='機車每月300元')
+    (tmp_path/'Taipei.json').write_text(json.dumps([scooter,scooter,mixed,car],ensure_ascii=False),encoding='utf-8')
+    city=fetch.build_snapshot(tmp_path)['cities']['臺北市']
+    assert city['duplicates_removed']==1
+    assert city['excluded_scooter_only']==1
+    assert {lot['id'] for lot in city['lots']}=={'mixed','car'}
+    assert city['coverage']['total']==2
 
 
 @pytest.mark.parametrize('city,town,address,name,expected',[
@@ -108,11 +150,14 @@ def test_real_snapshot_integrity_and_api_coverage():
     assert set(CITY_CODES.values())=={r['city'] for r in load_regions()}
     for city,entry in snapshot['cities'].items():
         assert len({l['id'] for l in entry['lots']})==len(entry['lots'])==entry['coverage']['total']
+        assert not any(is_scooter_only(lot['name']) for lot in entry['lots'])
+        assert entry['coverage']['with_district']==sum(bool(lot['district']) for lot in entry['lots'])
+        assert entry['coverage']['with_monthly_rent']==sum(lot['monthly_rent_twd'] is not None for lot in entry['lots'])
         valid=next(r['districts'] for r in load_regions() if r['city']==city)
         assert all(l['district'] in valid or l['district']=='' for l in entry['lots'])
     client=TestClient(app)
     body=client.get('/planner/parking',params=dict(city='臺北市',district='士林區')).json()
-    assert body['supported'] and body['lots'] and body['coverage']['total']==673
+    assert body['supported'] and body['lots'] and body['coverage']['total']==663
     assert body['coverage']['with_monthly_rent']==88
     assert body['lots'][0]['monthly_rent_twd'] is not None
     for city in ['臺中市','不存在的縣市']:
@@ -121,3 +166,16 @@ def test_real_snapshot_integrity_and_api_coverage():
         assert body['message']==f'TDX 目前沒有{city}的路外停車場資料，請自行填寫停車費。'
     body=client.get('/planner/parking',params=dict(city='臺北市',district='不存在')).json()
     assert body['message']=='不存在在 TDX 資料中沒有可對應的停車場，請自行填寫停車費。'
+
+
+def test_snapshot_scooter_counts_and_real_price_correction():
+    cities=load_parking_snapshot()['cities']
+    expected={'臺北市':10,'臺南市':3,'高雄市':6,'新竹市':3,'花蓮縣':2}
+    assert {city:entry['excluded_scooter_only'] for city,entry in cities.items()}=={
+        city:expected.get(city,0) for city in cities}
+    assert sum(entry['excluded_scooter_only'] for entry in cities.values())==24
+    assert sum(entry['coverage']['total'] for entry in cities.values())==2351
+    assert any('舊山線鐵道自行車停車場' in lot['name'] for lot in cities['苗栗縣']['lots'])
+    lot=next(lot for lot in cities['花蓮縣']['lots'] if lot['name']=='特翊重慶停車場')
+    assert lot['monthly_rent_twd']==1500
+    assert lot['monthly_rent_text']=='年租:16000元 / 月租:1500元'

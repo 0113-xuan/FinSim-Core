@@ -21,7 +21,7 @@
           target.append(node);
         }
       }
-      const source=S.element('a','交通部 TDX');source.href=data.source.url.replace('{city}',data.tdx_city||'Taipei');source.target='_blank';source.rel='noopener noreferrer';
+      const source=S.element('a','交通部 TDX');source.href=data.source.url;source.target='_blank';source.rel='noopener noreferrer';
       $('parkingSource').append(source,`（快照日期 ${data.source.snapshot_date}），實際價格以停車場公告為準。`);
     }
     async function refresh(){

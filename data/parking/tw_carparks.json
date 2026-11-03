@@ -13,11 +13,12 @@
     "臺北市": {
       "tdx_city": "Taipei",
       "coverage": {
-        "total": 673,
-        "with_district": 658,
+        "total": 663,
+        "with_district": 649,
         "with_monthly_rent": 88
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 10,
       "monthly_related_count": 93,
       "unparsed_monthly_count": 5,
       "lots": [
@@ -1156,20 +1157,6 @@
           "source_updated_at": "2026-11-02T20:00:00+08:00"
         },
         {
-          "id": "TPE1605",
-          "name": "臺北大橋橋下機車停車場",
-          "district": "萬華區",
-          "district_source": "address",
-          "address": "臺北市萬華區桂林路底堤外",
-          "lat": 25.06329,
-          "lon": 121.50943,
-          "fare_description": "依現場公告為準",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-11-02T20:00:00+08:00"
-        },
-        {
           "id": "TPE1749",
           "name": "社子延平停車場",
           "district": "士林區",
@@ -1783,20 +1770,6 @@
           "special_offer_description": "",
           "monthly_rent_twd": 10000,
           "monthly_rent_text": "汽車月租10,000元/月",
-          "source_updated_at": "2026-11-02T20:00:00+08:00"
-        },
-        {
-          "id": "TPE1271",
-          "name": "遼寧街199巷17號臨時機車停車場",
-          "district": "中山區",
-          "district_source": "address",
-          "address": "臺北市中山區遼寧街199巷17號",
-          "lat": 25.05403,
-          "lon": 121.5428,
-          "fare_description": "依現場公告為準",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
           "source_updated_at": "2026-11-02T20:00:00+08:00"
         },
         {
@@ -3998,20 +3971,6 @@
           "source_updated_at": "2026-11-02T20:00:00+08:00"
         },
         {
-          "id": "TPE1765",
-          "name": "辛亥路1段100號機車平面停車場",
-          "district": "大安區",
-          "district_source": "address",
-          "address": "臺北市大安區辛亥路1段100號對面",
-          "lat": 25.02157,
-          "lon": 121.53173,
-          "fare_description": "依現場公告為準",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-11-02T20:00:00+08:00"
-        },
-        {
           "id": "TPE1680",
           "name": "百齡橋堤外足球場停車場(二)",
           "district": "士林區",
@@ -4552,20 +4511,6 @@
           "lat": 25.07826,
           "lon": 121.57505,
           "fare_description": "臨停：08:00~20:59 一小時40元，21:00~07:59 一小時10元(30分鐘內出場免費，全程以半小時計費，繳費後15分鐘內離場緩衝時間。)",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-11-02T20:00:00+08:00"
-        },
-        {
-          "id": "TPE1438",
-          "name": "延平北路2段247巷機車平面停車場",
-          "district": "萬華區",
-          "district_source": "address",
-          "address": "臺北市萬華區華中河濱公園",
-          "lat": 25.06216,
-          "lon": 121.51275,
-          "fare_description": "依現場公告為準",
           "special_offer_description": "",
           "monthly_rent_twd": null,
           "monthly_rent_text": null,
@@ -7008,20 +6953,6 @@
           "source_updated_at": "2026-11-02T20:00:00+08:00"
         },
         {
-          "id": "TPE0513",
-          "name": "捷運士林站橋下機車停車場",
-          "district": "士林區",
-          "district_source": "address",
-          "address": "臺北市士林區中山北路5段300號對面至小北街橋孔(捷運劍潭至士林站橋下)",
-          "lat": 25.09015,
-          "lon": 121.52722,
-          "fare_description": "依現場公告為準",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-11-02T20:00:00+08:00"
-        },
-        {
           "id": "TPE1840",
           "name": "中華路2段409巷平面停車場",
           "district": "大同區",
@@ -7142,20 +7073,6 @@
           "lat": 25.04639,
           "lon": 121.53958,
           "fare_description": "依現場公告",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-11-02T20:00:00+08:00"
-        },
-        {
-          "id": "TPE1586",
-          "name": "昆陽站旁機車平面停車場",
-          "district": "南港區",
-          "district_source": "address",
-          "address": "臺北市南港區忠孝東路6段403巷口",
-          "lat": 25.05013,
-          "lon": 121.59166,
-          "fare_description": "依現場公告為準",
           "special_offer_description": "",
           "monthly_rent_twd": null,
           "monthly_rent_text": null,
@@ -7351,20 +7268,6 @@
           "address": "臺北市士林區中正路17號地下",
           "lat": 25.09596,
           "lon": 121.53069,
-          "fare_description": "依現場公告為準",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-11-02T20:00:00+08:00"
-        },
-        {
-          "id": "TPE1272",
-          "name": "遼寧街185巷7弄機車平面停車場",
-          "district": "中山區",
-          "district_source": "address",
-          "address": "臺北市中山區遼寧街185巷7弄",
-          "lat": 25.05354,
-          "lon": 121.54273,
           "fare_description": "依現場公告為準",
           "special_offer_description": "",
           "monthly_rent_twd": null,
@@ -7820,20 +7723,6 @@
           "source_updated_at": "2026-11-02T20:00:00+08:00"
         },
         {
-          "id": "TPE1865",
-          "name": "遼寧街185巷機車平面停車場",
-          "district": "",
-          "district_source": "none",
-          "address": "遼寧街185巷機車平面停車場",
-          "lat": 25.05344,
-          "lon": 121.54328,
-          "fare_description": "依現場公告為準",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-11-02T20:00:00+08:00"
-        },
-        {
           "id": "TPE0631",
           "name": "台北愛國西路停車場",
           "district": "中正區",
@@ -8086,20 +7975,6 @@
           "source_updated_at": "2026-11-02T20:00:00+08:00"
         },
         {
-          "id": "TPE1729",
-          "name": "仁愛路4段512巷機車平面停車場",
-          "district": "信義區",
-          "district_source": "address",
-          "address": "臺北市信義區仁愛路4段512巷與光復南路415巷口",
-          "lat": 25.03708,
-          "lon": 121.5614,
-          "fare_description": "依現場公告為準",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-11-02T20:00:00+08:00"
-        },
-        {
           "id": "TPE0113",
           "name": "臺北市區監理所平面停車場",
           "district": "松山區",
@@ -8220,20 +8095,6 @@
           "lat": 25.12018,
           "lon": 121.4664,
           "fare_description": "洽公停車前30分鐘免費，30~60分鐘30元，逾一小時每30分鐘40元\n非洽公停車前30分鐘30元，30~60分鐘70元，逾一小時每30分鐘40元\n夜間不開放停車",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-11-02T20:00:00+08:00"
-        },
-        {
-          "id": "TPE1596",
-          "name": "民權西路160巷機車平面停車場",
-          "district": "大同區",
-          "district_source": "address",
-          "address": "臺北市大同區鄭州路、民生西路底堤防外",
-          "lat": 25.06273,
-          "lon": 121.51556,
-          "fare_description": "依現場公告為準",
           "special_offer_description": "",
           "monthly_rent_twd": null,
           "monthly_rent_text": null,
@@ -9453,6 +9314,7 @@
         "with_monthly_rent": 66
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 73,
       "unparsed_monthly_count": 7,
       "lots": [
@@ -11617,11 +11479,12 @@
     "臺南市": {
       "tdx_city": "Tainan",
       "coverage": {
-        "total": 109,
-        "with_district": 109,
+        "total": 106,
+        "with_district": 106,
         "with_monthly_rent": 15
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 3,
       "monthly_related_count": 15,
       "unparsed_monthly_count": 0,
       "lots": [
@@ -11948,20 +11811,6 @@
           "source_updated_at": "2026-11-03T01:05:59+08:00"
         },
         {
-          "id": "94282969-1",
-          "name": "水萍塭公園地下停車場-機車",
-          "district": "南區",
-          "district_source": "address",
-          "address": "台南市南區夏林路2號地下停車場",
-          "lat": 22.98572,
-          "lon": 120.19461,
-          "fare_description": "計次20元/次，跨日重新計費",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-11-03T01:05:59+08:00"
-        },
-        {
           "id": "61620111-5",
           "name": "立德停車場F區",
           "district": "東區",
@@ -11970,20 +11819,6 @@
           "lat": 22.97606,
           "lon": 120.21461,
           "fare_description": "計時20元/時,當日最高120元時(跨日重新計費)",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-11-03T01:05:59+08:00"
-        },
-        {
-          "id": "40856918",
-          "name": "廣二機車停車場",
-          "district": "東區",
-          "district_source": "address",
-          "address": "台南市東區中華東路3段380巷西側",
-          "lat": 22.97435,
-          "lon": 120.21991,
-          "fare_description": "計次20元/次，隔夜停放次日重新計次收費。",
           "special_offer_description": "",
           "monthly_rent_twd": null,
           "monthly_rent_text": null,
@@ -12292,20 +12127,6 @@
           "lat": 22.977,
           "lon": 120.2322,
           "fare_description": "計時20元/時，12小時內最高180元",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-11-03T01:05:59+08:00"
-        },
-        {
-          "id": "89038628",
-          "name": "友愛街機車停車場",
-          "district": "中西區",
-          "district_source": "address",
-          "address": "臺南市中西區友愛街七號旁停車場",
-          "lat": 22.99099,
-          "lon": 120.20589,
-          "fare_description": "計次20元/次",
           "special_offer_description": "",
           "monthly_rent_twd": null,
           "monthly_rent_text": null,
@@ -13156,12 +12977,13 @@
     "高雄市": {
       "tdx_city": "Kaohsiung",
       "coverage": {
-        "total": 757,
-        "with_district": 400,
-        "with_monthly_rent": 367
+        "total": 751,
+        "with_district": 397,
+        "with_monthly_rent": 363
       },
       "duplicates_removed": 0,
-      "monthly_related_count": 370,
+      "excluded_scooter_only": 6,
+      "monthly_related_count": 366,
       "unparsed_monthly_count": 3,
       "lots": [
         {
@@ -15055,20 +14877,6 @@
           "source_updated_at": "2026-11-03T01:05:59+08:00"
         },
         {
-          "id": "KHA00058",
-          "name": "宜舍前鎮高中站捷運站機車",
-          "district": "前鎮區",
-          "district_source": "address",
-          "address": "高雄市前鎮區鎮中路、翠亨北路口",
-          "lat": 22.58774,
-          "lon": 120.32163,
-          "fare_description": "計次15元/次",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-11-03T01:05:59+08:00"
-        },
-        {
           "id": "KHB00557",
           "name": "統強凱旺凱福第三停車場",
           "district": "",
@@ -15276,20 +15084,6 @@
           "special_offer_description": "",
           "monthly_rent_twd": null,
           "monthly_rent_text": null,
-          "source_updated_at": "2026-11-03T01:05:59+08:00"
-        },
-        {
-          "id": "KHB00068",
-          "name": "棨賢滇池機車停車場",
-          "district": "",
-          "district_source": "none",
-          "address": "中山二路258巷近與滇池街",
-          "lat": 22.61318,
-          "lon": 120.30567,
-          "fare_description": "計次收費：當日每次30元(離場再停則另次計費)。月租收費：每月500元。",
-          "special_offer_description": "",
-          "monthly_rent_twd": 500,
-          "monthly_rent_text": "月租收費：每月500元",
           "source_updated_at": "2026-11-03T01:05:59+08:00"
         },
         {
@@ -16287,20 +16081,6 @@
           "source_updated_at": "2026-11-03T01:05:59+08:00"
         },
         {
-          "id": "KHB00067",
-          "name": "棨賢中山機車停車場",
-          "district": "",
-          "district_source": "none",
-          "address": "一心二路與中山二路258巷口",
-          "lat": 22.61326,
-          "lon": 120.30579,
-          "fare_description": "計次收費：當日每次30元(離場再停則另次計費)。月租收費：每月500元。",
-          "special_offer_description": "",
-          "monthly_rent_twd": 500,
-          "monthly_rent_text": "月租收費：每月500元",
-          "source_updated_at": "2026-11-03T01:05:59+08:00"
-        },
-        {
           "id": "KHB00784",
           "name": "城市車旅九如銘傳停車場",
           "district": "",
@@ -17152,20 +16932,6 @@
           "special_offer_description": "",
           "monthly_rent_twd": null,
           "monthly_rent_text": null,
-          "source_updated_at": "2026-11-03T01:05:59+08:00"
-        },
-        {
-          "id": "KHB00875",
-          "name": "俥亭左營高鐵機車停車場",
-          "district": "左營區",
-          "district_source": "address",
-          "address": "左營區站前北路與站前路口東側空地",
-          "lat": 22.689,
-          "lon": 120.30813,
-          "fare_description": "計次收費:每次50元(離場再停或跨日另計次收費)。月租收費:每月1000元。",
-          "special_offer_description": "",
-          "monthly_rent_twd": 1000,
-          "monthly_rent_text": "月租收費:每月1000元",
           "source_updated_at": "2026-11-03T01:05:59+08:00"
         },
         {
@@ -21075,20 +20841,6 @@
           "source_updated_at": "2026-11-03T01:05:59+08:00"
         },
         {
-          "id": "KHB00725",
-          "name": "寶盛文府路機車停車場",
-          "district": "",
-          "district_source": "none",
-          "address": "重和路與文府路口北側",
-          "lat": 22.68729,
-          "lon": 120.31001,
-          "fare_description": "(1)計次收費：每次50元(離場再停或跨日則另計次收費)。(2)月租收費：每月1,000元。",
-          "special_offer_description": "",
-          "monthly_rent_twd": 1000,
-          "monthly_rent_text": "(2)月租收費：每月1,000元",
-          "source_updated_at": "2026-11-03T01:05:59+08:00"
-        },
-        {
           "id": "KHB01007",
           "name": "新長越自強一路停車場",
           "district": "",
@@ -22388,20 +22140,6 @@
           "special_offer_description": "",
           "monthly_rent_twd": 1800,
           "monthly_rent_text": "月租1800元",
-          "source_updated_at": "2026-11-03T01:05:59+08:00"
-        },
-        {
-          "id": "KHA00050",
-          "name": "宜舍成功機車",
-          "district": "前金區",
-          "district_source": "address",
-          "address": "高雄市前金區成功一路、前金二街",
-          "lat": 22.6271,
-          "lon": 120.29284,
-          "fare_description": "計次15/6小時",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
           "source_updated_at": "2026-11-03T01:05:59+08:00"
         },
         {
@@ -23767,12 +23505,13 @@
     "新竹市": {
       "tdx_city": "Hsinchu",
       "coverage": {
-        "total": 24,
+        "total": 21,
         "with_district": 14,
-        "with_monthly_rent": 3
+        "with_monthly_rent": 0
       },
       "duplicates_removed": 0,
-      "monthly_related_count": 3,
+      "excluded_scooter_only": 3,
+      "monthly_related_count": 0,
       "unparsed_monthly_count": 0,
       "lots": [
         {
@@ -23787,20 +23526,6 @@
           "special_offer_description": "",
           "monthly_rent_twd": null,
           "monthly_rent_text": null,
-          "source_updated_at": "2026-09-10T14:50:42+08:00"
-        },
-        {
-          "id": "HSZ_RA",
-          "name": "後站機車第二停車場",
-          "district": "",
-          "district_source": "none",
-          "address": "新竹市南大路218巷內",
-          "lat": 24.800310134887695,
-          "lon": 120.97322082519531,
-          "fare_description": "計次20元/次，月租300元/月",
-          "special_offer_description": "",
-          "monthly_rent_twd": 300,
-          "monthly_rent_text": "計次20元/次，月租300元/月",
           "source_updated_at": "2026-09-10T14:50:42+08:00"
         },
         {
@@ -23944,20 +23669,6 @@
           "source_updated_at": "2026-09-10T14:50:42+08:00"
         },
         {
-          "id": "HSZ_MN",
-          "name": "南大路機車停車場",
-          "district": "",
-          "district_source": "none",
-          "address": "新竹市南大路206號旁",
-          "lat": 24.800310134887695,
-          "lon": 120.97398376464844,
-          "fare_description": "計次20元/次，月租300元/月",
-          "special_offer_description": "",
-          "monthly_rent_twd": 300,
-          "monthly_rent_text": "計次20元/次，月租300元/月",
-          "source_updated_at": "2026-09-10T14:50:42+08:00"
-        },
-        {
           "id": "HSZ_MI",
           "name": "民富機械停車場",
           "district": "",
@@ -24042,20 +23753,6 @@
           "source_updated_at": "2026-09-10T14:50:42+08:00"
         },
         {
-          "id": "HSZ_LA",
-          "name": "勞山新村機車停車場",
-          "district": "",
-          "district_source": "none",
-          "address": "新竹市南大路140巷內",
-          "lat": 24.80147933959961,
-          "lon": 120.9754409790039,
-          "fare_description": "計次$20元/次，月租300元/月",
-          "special_offer_description": "",
-          "monthly_rent_twd": 300,
-          "monthly_rent_text": "計次$20元/次，月租300元/月",
-          "source_updated_at": "2026-09-10T14:50:42+08:00"
-        },
-        {
           "id": "HSZ_FU",
           "name": "府後地下停車場",
           "district": "北區",
@@ -24121,6 +23818,7 @@
         "with_monthly_rent": 0
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 0,
       "unparsed_monthly_count": 0,
       "lots": [
@@ -24680,6 +24378,7 @@
         "with_monthly_rent": 59
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 59,
       "unparsed_monthly_count": 0,
       "lots": [
@@ -25981,6 +25680,7 @@
         "with_monthly_rent": 5
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 5,
       "unparsed_monthly_count": 0,
       "lots": [
@@ -28318,6 +28018,7 @@
         "with_monthly_rent": 15
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 16,
       "unparsed_monthly_count": 1,
       "lots": [
@@ -29451,6 +29152,7 @@
         "with_monthly_rent": 0
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 0,
       "unparsed_monthly_count": 0,
       "lots": [
@@ -29520,6 +29222,7 @@
         "with_monthly_rent": 6
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 6,
       "unparsed_monthly_count": 0,
       "lots": [
@@ -30247,6 +29950,7 @@
         "with_monthly_rent": 0
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 0,
       "unparsed_monthly_count": 0,
       "lots": [
@@ -30680,6 +30384,7 @@
         "with_monthly_rent": 4
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 4,
       "unparsed_monthly_count": 0,
       "lots": [
@@ -30973,6 +30678,7 @@
         "with_monthly_rent": 0
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 0,
       "unparsed_monthly_count": 0,
       "lots": [
@@ -32087,13 +31793,14 @@
     "花蓮縣": {
       "tdx_city": "HualienCounty",
       "coverage": {
-        "total": 83,
-        "with_district": 66,
-        "with_monthly_rent": 40
+        "total": 81,
+        "with_district": 64,
+        "with_monthly_rent": 38
       },
       "duplicates_removed": 0,
-      "monthly_related_count": 40,
-      "unparsed_monthly_count": 0,
+      "excluded_scooter_only": 2,
+      "monthly_related_count": 39,
+      "unparsed_monthly_count": 1,
       "lots": [
         {
           "id": "A00021",
@@ -32175,8 +31882,8 @@
           "lon": 121.58271,
           "fare_description": "10元/半小時，1400元/月租，150元/天(00-24)，充電費率每度/8元",
           "special_offer_description": "",
-          "monthly_rent_twd": 1400,
-          "monthly_rent_text": "10元/半小時，1400元/月租，150元/天(00-24)，充電費率每度/8元",
+          "monthly_rent_twd": null,
+          "monthly_rent_text": null,
           "source_updated_at": "2026-06-08T16:21:47+08:00"
         },
         {
@@ -32539,7 +32246,7 @@
           "lon": 121.60411834716797,
           "fare_description": "年租:16000元 / 月租:1500元",
           "special_offer_description": "",
-          "monthly_rent_twd": 16000,
+          "monthly_rent_twd": 1500,
           "monthly_rent_text": "年租:16000元 / 月租:1500元",
           "source_updated_at": "2026-06-08T16:21:47+08:00"
         },
@@ -32950,20 +32657,6 @@
           "source_updated_at": "2026-06-08T16:21:47+08:00"
         },
         {
-          "id": "A00024",
-          "name": "停佳安(花蓮停四)機車停車場",
-          "district": "花蓮市",
-          "district_source": "address",
-          "address": "花蓮縣花蓮市國聯一路100-8號(對面)",
-          "lat": 23.993310928344727,
-          "lon": 121.60237884521484,
-          "fare_description": "1.臨停:$40／天(如有優惠方案則另行公告)。2.月租:$900／月繳(如有優惠方案則另行公告之)。",
-          "special_offer_description": "殘障區(免費使用)",
-          "monthly_rent_twd": 900,
-          "monthly_rent_text": "2.月租:$900／月繳(如有優惠方案則另行公告之)",
-          "source_updated_at": "2026-06-08T16:21:47+08:00"
-        },
-        {
           "id": "A00104",
           "name": "停佳安(花蓮統冠場)汽車停車場",
           "district": "花蓮市",
@@ -33202,20 +32895,6 @@
           "source_updated_at": "2026-06-08T16:21:47+08:00"
         },
         {
-          "id": "A00004",
-          "name": "後火車站機車停車場",
-          "district": "花蓮市",
-          "district_source": "address",
-          "address": "花蓮縣花蓮市裕民段577地號",
-          "lat": 23.99359,
-          "lon": 121.5995,
-          "fare_description": "20元/次 (00:00~23:59)",
-          "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
-          "source_updated_at": "2026-06-08T16:21:47+08:00"
-        },
-        {
           "id": "A00060",
           "name": "福品旅店停車場",
           "district": "",
@@ -33267,6 +32946,7 @@
         "with_monthly_rent": 1
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 1,
       "unparsed_monthly_count": 0,
       "lots": [
@@ -33336,6 +33016,7 @@
         "with_monthly_rent": 0
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 0,
       "unparsed_monthly_count": 0,
       "lots": [
@@ -33419,6 +33100,7 @@
         "with_monthly_rent": 0
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 0,
       "unparsed_monthly_count": 0,
       "lots": [
@@ -33474,6 +33156,7 @@
         "with_monthly_rent": 2
       },
       "duplicates_removed": 0,
+      "excluded_scooter_only": 0,
       "monthly_related_count": 2,
       "unparsed_monthly_count": 0,
       "lots": [

@@ -16,7 +16,7 @@ import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from app.parking import CITY_CODES, MONTHLY, normalize_tdx
+from app.parking import CITY_CODES, MONTHLY, is_scooter_only, normalize_tdx
 
 URL = 'https://tdx.transportdata.tw/api/basic/v1/Parking/OffStreet/CarPark/City/{city}?$format=JSON'
 TOKEN_URL = 'https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token'
@@ -82,11 +82,13 @@ def build_snapshot(folder, snapshot_date='2026-11-03'):
         if not rows:
             unavailable.append(city)
             continue
-        lots=normalize_tdx(payload,city)
+        normalized=normalize_tdx(payload,city)
+        lots=[lot for lot in normalized if not is_scooter_only(lot['name'])]
         coverage=dict(total=len(lots),with_district=sum(bool(l['district']) for l in lots),
                       with_monthly_rent=sum(l['monthly_rent_twd'] is not None for l in lots))
         related=[l for l in lots if MONTHLY.search(l['fare_description']+'；'+l['special_offer_description'])]
-        cities[city]=dict(tdx_city=code,coverage=coverage,duplicates_removed=len(rows)-len(lots),
+        cities[city]=dict(tdx_city=code,coverage=coverage,duplicates_removed=len(rows)-len(normalized),
+                          excluded_scooter_only=len(normalized)-len(lots),
                           monthly_related_count=len(related),
                           unparsed_monthly_count=sum(l['monthly_rent_twd'] is None for l in related),lots=lots)
     if not cities:

@@ -19,9 +19,9 @@ CITY_CODES = {
 MONTHLY = re.compile(r'月租|月票|月繳|每月|/月|／月|包月|定期票')
 PREFIX_MONTHLY = re.compile(r'月租|月票|月繳|每月|包月|定期票')
 AMOUNT = re.compile(r'(?P<prefix>NT\s*\$|新臺幣|新台幣|\$)?\s*(?P<number>\d{1,3}(?:,\d{3})+|\d+)(?:\.(?P<cents>\d{1,2}))?\s*(?P<unit>元|圓|TWD|NTD)?', re.I)
-RATE = re.compile(r'半年繳|季繳|年繳|每季|每年|季票|年票|一年|半年|每週|每周|'
+RATE = re.compile(r'半年租|年租|季租|半年繳|季繳|年繳|每季|每年|季票|年票|一年|半年|每週|每周|'
                   r'月租|月票|月繳|每月|包月|定期票|計時|計次|臨停|小時|分鐘|每日|每天|當日|日票|/時|/次')
-OTHER_PERIOD = re.compile(r'半年繳|季繳|年繳|每季|每年|季票|年票|一年|半年|每週|每周')
+OTHER_PERIOD = re.compile(r'半年租|年租|季租|半年繳|季繳|年繳|每季|每年|季票|年票|一年|半年|每週|每周')
 VEHICLE = re.compile(r'小型採購車|自用車|小型車|小客車|電動汽車|汽車|機車|公車|大型車|大客車|大貨車|小貨車|貨車|遊覽車|自行車')
 CAR_TYPES = {'小型採購車','自用車','小型車','小客車','電動汽車','汽車'}
 ALTERNATIVE = re.compile(r'^\s*(?:全日|全天|日間|夜間|平日|假日|汽車|機車|小型車|大型車|每月|租金|里民|身障|一般|住戶|學生|校外)')
@@ -88,7 +88,7 @@ def parse_monthly_rent(text):
                 if windows:
                     full_day = bool(re.fullmatch(r'全日|全天|24\s*小時', windows[-1]))
                 tail = normalized[match.end():]
-                suffix_month = bool(re.match(r'\s*/\s*月', tail))
+                suffix_month = bool(re.match(r'\s*/\s*月(?!租|繳|票)', tail))
                 suffix_other = bool(re.match(r'\s*/\s*(?:季|年|半年|一年)', tail))
                 if re.match(r'\s*個月', tail) and int(match['number'].replace(',','')) > 1:
                     duration = True
@@ -141,6 +141,11 @@ def resolve_district(city, town_name, address, lot_name):
         if len(matches)==1:
             return matches[0], source
     return '', 'none'
+
+
+def is_scooter_only(name):
+    """Exclude scooter-only names, retaining mixed car/scooter lots and attractions."""
+    return '機車' in name and not any(kind in name for kind in ('汽車', '汽機車', '小型車'))
 
 
 def normalize_tdx(payload, city):
