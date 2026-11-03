@@ -60,7 +60,11 @@ def test_real_tdx_wordings(name,text,expected):
  ('16000元 / 月租:1500元',1500),
  ('16000元 / 月繳:1500元',1500),
  ('16000元 / 月票:1500元',1500),
- ('10元/半小時，1400元/月租，150元/天(00-24)，充電費率每度/8元',None),
+ ('10元/半小時，1400元/月租，150元/天(00-24)，充電費率每度/8元',1400),
+ ('16000元 / 月繳 1500元',1500),
+ ('16000元 / 月票：1500元',1500),
+ ('16000元 / 月租 NT$ 1500元',1500),
+ ('16000元 / 月票： $1500元',1500),
 ])
 def test_annual_and_quarterly_rents_do_not_become_monthly_prices(text,expected):
     assert parse_monthly_rent(text)['monthly_rent_twd']==expected

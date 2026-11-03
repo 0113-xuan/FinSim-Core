@@ -88,7 +88,7 @@ def parse_monthly_rent(text):
                 if windows:
                     full_day = bool(re.fullmatch(r'全日|全天|24\s*小時', windows[-1]))
                 tail = normalized[match.end():]
-                suffix_month = bool(re.match(r'\s*/\s*月(?!租|繳|票)', tail))
+                suffix_month = bool(re.match(r'\s*/\s*月(?!(?:租|繳|票)\s*[:：]?\s*(?:NT\s*\$|\$)?\s*\d)', tail, flags=re.I))
                 suffix_other = bool(re.match(r'\s*/\s*(?:季|年|半年|一年)', tail))
                 if re.match(r'\s*個月', tail) and int(match['number'].replace(',','')) > 1:
                     duration = True

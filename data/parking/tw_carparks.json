@@ -31795,12 +31795,12 @@
       "coverage": {
         "total": 81,
         "with_district": 64,
-        "with_monthly_rent": 38
+        "with_monthly_rent": 39
       },
       "duplicates_removed": 0,
       "excluded_scooter_only": 2,
       "monthly_related_count": 39,
-      "unparsed_monthly_count": 1,
+      "unparsed_monthly_count": 0,
       "lots": [
         {
           "id": "A00021",
@@ -31882,8 +31882,8 @@
           "lon": 121.58271,
           "fare_description": "10元/半小時，1400元/月租，150元/天(00-24)，充電費率每度/8元",
           "special_offer_description": "",
-          "monthly_rent_twd": null,
-          "monthly_rent_text": null,
+          "monthly_rent_twd": 1400,
+          "monthly_rent_text": "10元/半小時，1400元/月租，150元/天(00-24)，充電費率每度/8元",
           "source_updated_at": "2026-06-08T16:21:47+08:00"
         },
         {
