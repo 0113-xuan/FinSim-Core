@@ -1,0 +1,20 @@
+.fw #qaSection { margin-top:32px;padding-top:24px;border-top:1px solid var(--line);min-width:0;scroll-margin-top:72px; }
+.fw #qaSection h3 small { display:inline-block;margin-left:8px;font-weight:400; }
+.fw #qaSection small { color:var(--text); }
+.fw #qaSection p { max-width:72ch;overflow-wrap:anywhere; }
+.fw #qaSection .qa-questions { display:flex;flex-wrap:wrap;gap:8px;margin:16px 0; }
+.fw #qaSection .qa-questions button { min-height:44px;text-align:left;white-space:normal;overflow-wrap:anywhere;max-width:100%; }
+.fw #qaSection label { display:block;margin-bottom:8px;font-weight:600; }
+.fw #qaSection textarea { width:100%;box-sizing:border-box;resize:vertical;min-height:88px;padding:12px;border:1px solid var(--line);border-radius:8px;font:inherit;line-height:1.6;background:var(--card);color:var(--text);caret-color:var(--accent); }
+.fw #qaSection textarea::placeholder { color:var(--text);opacity:.75; }
+.fw #qaSection .qa-controls { display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:10px; }
+.fw #qaSection .qa-controls button { min-height:44px; }
+.fw #qaCount { font-variant-numeric:tabular-nums; }
+.fw #qaPrivacy { margin:12px 0 20px; }
+.fw #qaPrivacy small { display:block; }
+.fw #qaResult:empty { display:none; }
+.fw #qaResult { margin-top:24px; }
+.fw #qaResult h4 { margin:24px 0 8px; }
+.fw #qaSection .qa-paragraph-source { display:block;margin-top:4px; }
+.fw #qaSection .qa-citations { padding-left:20px;overflow-wrap:anywhere; }
+.fw #qaSection .qa-citations li + li { margin-top:8px; }

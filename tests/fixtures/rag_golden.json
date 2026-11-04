@@ -1,0 +1,37 @@
+{
+  "answerable": [
+    {"question": "最低現金是什麼，為什麼會有發生月份？", "expected": ["minimum-cash"]},
+    {"question": "緊急預備金月數怎麼算？", "expected": ["emergency-months"]},
+    {"question": "現金不足機率是什麼意思？", "expected": ["cash-shortfall"]},
+    {"question": "淨資產是怎麼算的？", "expected": ["net-worth"]},
+    {"question": "一般情況和較差情況差在哪？", "expected": ["percentile-cases"]},
+    {"question": "圖上淺色和深色的範圍代表什麼？", "expected": ["percentile-bands"]},
+    {"question": "以今日購買力計算是什麼？", "expected": ["purchasing-power"]},
+    {"question": "計畫頁抽樣幾次未來？", "expected": ["simulation-count"]},
+    {"question": "歷史通膨和台股如何一起抽樣？", "expected": ["historical-sampling"]},
+    {"question": "確定性模擬和 Monte Carlo 差別在哪？", "expected": ["deterministic-vs-mc"]},
+    {"question": "為什麼重跑結果相同，固定種子是什麼？", "expected": ["fixed-seed"]},
+    {"question": "這個工具能預測未來嗎？", "expected": ["not-prediction"]},
+    {"question": "沒填年調薪率會怎樣？", "expected": ["salary-growth"]},
+    {"question": "車輛折舊率的預設值是多少？", "expected": ["depreciation-default"]},
+    {"question": "保養與油電費用預設多少？", "expected": ["running-cost-defaults"]},
+    {"question": "現金不足會自動賣出投資嗎？", "expected": ["no-auto-sell"]},
+    {"question": "每月投資是從現金轉入嗎？", "expected": ["monthly-investment"]},
+    {"question": "現金購買和貸款購車差在哪？", "expected": ["vehicle-payment"]},
+    {"question": "現金負擔和經濟成本有什麼不同？", "expected": ["cash-vs-economic"]},
+    {"question": "強制險和任意險是什麼？", "expected": ["vehicle-insurance"]},
+    {"question": "純電車免稅期限到何時？", "expected": ["ev-exemption"]},
+    {"question": "停車費參考怎麼用？", "expected": ["parking-budget"]},
+    {"question": "官方車款清單的查核日是即時報價嗎？", "expected": ["catalog-sources"]},
+    {"question": "主計總處行業平均薪資是稅前還是實領？", "expected": ["salary-population"]},
+    {"question": "TDX 停車場月租如何解析？", "expected": ["parking-sources"]},
+    {"question": "保險資料是個人報價嗎？", "expected": ["insurance-sources"]},
+    {"question": "通膨與台股報酬資料從哪裡來？", "expected": ["market-sources"]},
+    {"question": "為什麼不能保證報酬？", "expected": ["no-guaranteed-return"]},
+    {"question": "工具有提供所得稅規劃嗎？", "expected": ["no-tax-planning"]},
+    {"question": "我的職業會調整車貸利率嗎？", "expected": ["occupation-and-rate"]}
+  ],
+  "unanswerable": [
+    "明天會下雨嗎？", "午餐要吃什麼？", "東京地鐵如何搭乘？", "恐龍為什麼滅絕？", "香蕉蛋糕怎麼烘焙？", "火星上有外星人嗎？", "今天的棒球比賽誰獲勝？"
+  ]
+}

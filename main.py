@@ -55,6 +55,7 @@ from app.services.financial_answer_extraction import (
 )
 from app.services.optimizer import optimize
 from app.services.plan_explanation import PlanExplanationRequest, explain_plan
+from app.services.plan_qa import PlanQARequest, answer_plan_question
 from app.services.rate_limit import rate_limit_ai
 from app.services.report_generator import generate_report
 from app.services.scenario_parser import parse_scenario
@@ -141,6 +142,30 @@ async def plan_explanation_api(req: PlanExplanationRequest, request: Request,
         return await explain_plan(req, provider, model=model)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail='模擬資料無法計算，請確認計畫內容後再試') from exc
+
+
+def get_plan_qa_provider():
+    if not settings.ai_provider_ready():
+        return None
+    try:
+        return get_ai_provider()
+    except Exception:
+        # Keep initialization failures inside Q&A's extractive fallback boundary.
+        class UnavailableProvider:
+            async def generate_structured(self, **kwargs):
+                raise AIProviderError('AI provider unavailable')
+        return UnavailableProvider()
+
+
+@app.post('/ai/plan-qa')
+async def plan_qa_api(req: PlanQARequest, request: Request,
+                      provider: Any = Depends(get_plan_qa_provider)) -> Dict[str, Any]:
+    rate_limit_ai(request)
+    model = settings.gemini_model if settings.ai_provider == 'gemini' else settings.ai_model
+    try:
+        return await answer_plan_question(req, provider, model=model)
+    except ValueError:
+        raise HTTPException(status_code=422, detail='資料無法使用，請確認計畫內容後再試') from None
 
 
 @app.get("/api")

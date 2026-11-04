@@ -96,12 +96,13 @@
 
       $('simulationResults').hidden=false;
     }
-    let events=[],editing=null,lastRun=null;
+    let events=[],editing=null,lastRun=null,qa=null;
     function clearExplanation(){
       $('explanationResult').replaceChildren();$('explanationSource').hidden=true;$('explanationNotice').hidden=true;
     }
     function invalidate(){
       $('simulationResults').hidden=true;$('simulationWarnings').replaceChildren();lastRun=null;clearExplanation();
+      qa?.clear();
       for(const target of root.document.querySelectorAll('[data-analysis-result]'))target.replaceChildren();
     }
     function renderExplanation(data){
@@ -215,7 +216,12 @@
     const plan=await ctx.store.plan(ctx.planId);if(!ctx.alive)return;if(!plan){notFound();return;}
     $('planWorkspace').hidden=false;$('pageTitle').textContent=plan.name;$('planNameForm').elements.name.value=plan.name;
     $('eventFields').disabled=false;
-    $('startPeriod').value=S.taipeiPeriod();resetEditor();await loadEvents();if(!ctx.alive)return;
+    $('startPeriod').value=S.taipeiPeriod();
+    qa=root.PlanQAForm.mount({after:$('simulationResults'),ctx,getRequest:()=>lastRun
+      ? E.buildExplanationRequest({prepared:lastRun.built,events:lastRun.events,months:lastRun.months,
+          emergencyTargetMonths:ctx.profile.emergency_target_months,eventSummary:M.eventSummary})
+      : {start_period:$('startPeriod').value}});
+    resetEditor();await loadEvents();if(!ctx.alive)return;
     function onSubmit(id,action){$(id).addEventListener('submit',event=>{event.preventDefault();if($(id).reportValidity())ctx.perform(action);});}
     $('eventForm').elements.payment_method.addEventListener('change',syncEventFields);
     $('eventForm').elements.vehicle_catalog_id.addEventListener('change',()=>{
@@ -254,7 +260,7 @@
       if(editing)await ctx.store.updateEvent(ctx.planId,editing,values);else await ctx.store.addEvent(ctx.planId,values);
       if(!ctx.alive)return;resetEditor();await loadEvents();S.status('事件已儲存。');
     });
-    $('simulationForm').addEventListener('input',()=>{$('simulationResults').hidden=true;});
+    $('simulationForm').addEventListener('input',invalidate);
     onSubmit('simulationForm',async()=>{
       invalidate();S.status('正在計算…');
       const startPeriod=$('startPeriod').value,months=Number($('simulationMonths').value);
