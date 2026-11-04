@@ -301,3 +301,30 @@ def test_initialization_failure_degrades_without_changing_other_providers(monkey
     assert response.status_code == 200
     assert response.json()['fallback_reason'] == 'provider_error'
     assert 'never-display-this' not in response.text
+
+
+@pytest.mark.parametrize('text', [
+    '你的最低現金大約是三十萬元。', '現金不足的機率約五成。', '約有百分之十五的機率。', '大約是兩千元。', '預備金約六個月。',
+])
+def test_chinese_numerals_not_in_cited_text_are_rejected(text):
+    payload = dict(answerable=True, paragraphs=[dict(text=text, sources=['minimum-cash'])], follow_ups=[])
+    with pytest.raises(QARejected):
+        validate(payload, question='最低現金是什麼')
+
+
+def test_chinese_numerals_are_allowed_only_when_the_cited_text_says_them():
+    question = '最低現金是什麼'
+    payload = dict(answerable=True, paragraphs=[dict(text='最低現金是各月底餘額中最低的一筆，也不到一年。', sources=['minimum-cash'])], follow_ups=[])
+    assert validate(payload, question=question)['answerable']
+    payload['paragraphs'][0]['text'] = '現金不足是最低的一筆。'
+    payload['paragraphs'][0]['sources'] = ['cash-shortfall']
+    with pytest.raises(QARejected):
+        validate(payload, question='現金不足機率是什麼意思？')
+
+
+def test_chinese_amount_from_model_never_reaches_the_user():
+    provider = mock(dict(answerable=True, paragraphs=[dict(text='你的最低現金大約是三十萬元。', sources=['minimum-cash'])], follow_ups=[]))
+    response = ask(provider, question='最低現金是什麼？')
+    assert len(provider.calls) == 2
+    assert response['source'] == 'extractive' and response['fallback_reason'] == 'invalid_output'
+    assert '三十萬' not in str(response)

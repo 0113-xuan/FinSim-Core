@@ -18,7 +18,7 @@ from app.schemas import SimulationRequest
 from app.services.ai_provider import AIProviderError
 from app.services.knowledge_base import is_relevant, normalize, retrieve
 from app.services.plan_explanation import (
-    PERIOD_PATTERN, PLACEHOLDER, PlanExplanationRequest, build_facts,
+    CN_ALLOWED, CN_NUMBER, CN_PERCENT, PERIOD_PATTERN, PLACEHOLDER, PlanExplanationRequest, build_facts,
     run_plan_calculations, split_segments,
 )
 from app.services.prompt_loader import load_prompt
@@ -123,6 +123,12 @@ def validate_answer(answer: AIPlanQA, facts: list[dict], references: list[dict])
         allowed = {number for source in paragraph.sources for number in NUMBERS.findall(retrieved[source]['text'])}
         if any(number not in allowed for number in NUMBERS.findall(literal)):
             raise QARejected('數字未原樣出現在引用段落')
+        # Chinese numerals are numbers too: allowed only when the cited text already says them.
+        cited = ''.join(retrieved[source]['text'] for source in paragraph.sources)
+        written = [match.group(0) for match in CN_PERCENT.finditer(literal)]
+        written += [match.group(0) for match in CN_NUMBER.finditer(literal) if match.groups() not in CN_ALLOWED]
+        if any(number not in cited for number in written):
+            raise QARejected('中文數字未原樣出現在引用段落')
         segments = split_segments(text, by_id)
         rendered = ''.join(segment.get('text', segment.get('value', '')) for segment in segments)
         if any(word in normalize(rendered) for word in FORBIDDEN_PHRASES):
