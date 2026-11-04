@@ -54,6 +54,15 @@ test('Supabase errors and zero-row deletion are surfaced to the page controller'
   }
   await assert.rejects(()=>createStore(fakeClient([]),'current-user').removePlan('missing'),/資料已不存在/);
 });
+test('the event picker panel is hidden once a plan has an event and results avoid statistics jargon',()=>{
+  const html=fs.readFileSync(path.join(__dirname,'../static/plan.html'),'utf8');
+  const page=fs.readFileSync(path.join(__dirname,'../static/plan-page.js'),'utf8');
+  assert.match(html,/<section id="eventEditorPanel" class="panel"/);
+  assert.match(page,/eventEditorPanel'\)\.hidden=events\.length>0&&!editing/);
+  assert.match(page,/if\(ctx\.busy\|\|editing\|\|events\.length\|\|template\?\.status!=='available'\)return;/);
+  const results=html.slice(html.indexOf('id="simulationResults"'));
+  assert.doesNotMatch(results,/百分位|中位數|分位數|（p\d+）/);
+});
 test('insurance items live in a modal dialog outside the event form',()=>{
   const html=fs.readFileSync(path.join(__dirname,'../static/plan.html'),'utf8');
   const start=html.indexOf('id="eventForm"'),eventForm=html.slice(start,html.indexOf('</form>',start));

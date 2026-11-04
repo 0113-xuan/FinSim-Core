@@ -138,8 +138,10 @@
       if(!named&&!form.elements.name.value.trim())form.elements.name.value=template.name;
       form.hidden=false;
     }
+    // A plan holds one event: once it exists the picker is gone and the event can only be edited or deleted.
+    function syncEditorPanel(){$('eventEditorPanel').hidden=events.length>0&&!editing;}
     function selectTemplate(template){
-      if(ctx.busy||editing||template?.status!=='available')return;
+      if(ctx.busy||editing||events.length||template?.status!=='available')return;
       $('eventForm').elements.type.value=template.eventType;$('eventForm').elements.name.value=T.asksForName(template)?'':template.name;
       showTemplate(template,'新增事件');syncEventFields();
       if(template.eventType==='vehicle_purchase'){syncVehicleSpec();parking.refresh();}
@@ -158,7 +160,7 @@
       $('eventForm').elements.start_period.value=S.taipeiPeriod();$('eventEditorHeading').textContent='新增事件';
       $('eventForm').elements.type.value='';$('eventForm').hidden=true;fees.reset();parking.reset();salaryReference.reset();
       $('eventTemplatePicker').hidden=false;$('changeTemplate').hidden=true;$('eventForm').querySelector('[data-event-name]').hidden=true;
-      $('eventForm').querySelector('[type="submit"]').textContent='新增事件';$('cancelEdit').hidden=true;renderPicker();syncEventFields();
+      $('eventForm').querySelector('[type="submit"]').textContent='新增事件';$('cancelEdit').hidden=true;renderPicker();syncEventFields();syncEditorPanel();
     }
     function editEvent(event){
       const form=$('eventForm');form.reset();editing=event.id;
@@ -173,7 +175,7 @@
       salaryReference.reset(event.details||{});
       form.querySelector('[type="submit"]').textContent='儲存事件';$('cancelEdit').hidden=false;
       const template=T.templateForEvent(event);renderPicker(template,true);showTemplate(template,'修改事件');
-      syncEventFields();$('eventEditorHeading').scrollIntoView({block:'start'});focusFirstField();
+      syncEditorPanel();syncEventFields();$('eventEditorHeading').scrollIntoView({block:'start'});focusFirstField();
     }
     function renderEvents(){
       const list=$('eventList');list.replaceChildren();
@@ -202,6 +204,7 @@
         }
         list.append(li);
       }
+      syncEditorPanel();
     }
     async function loadEvents(){
       const rows=await ctx.store.events(ctx.planId);if(!ctx.alive)return;

@@ -22,7 +22,7 @@
     return `${lot.name}｜${lot.address||'未提供地址'}｜${fee}`;
   }
   function parkingSummary(district,stats){
-    return `${district}有月租價的停車場 ${stats.count} 間，${stats.median==null?'不足 3 間，不提供中位數':`中位數 ${money(stats.median)}`}`;
+    return `${district}有月租價的停車場 ${stats.count} 間，${stats.median==null?'不足 3 間，不提供中間價':`中間價 ${money(stats.median)}（一半的停車場比這便宜）`}`;
   }
   function parkingPresentation(district,data){
     return {message:data.message||'',summary:data.supported&&data.data_available&&data.lots.length?parkingSummary(district,data.monthly_rent_stats):'',

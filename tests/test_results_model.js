@@ -28,12 +28,14 @@ test('band markers point at event months but never at the starting month-end', (
   assert.deepEqual(data.markers, [{index: 2, period: '2027-02', name: '買車'}]);
 });
 
-test('band summary states the 90% and middle-half ranges and that lines are not paths', () => {
+test('band summary states the typical, 9-in-10 and most-common ranges in plain words', () => {
   const text = results.bandSummaryText({period: '2046-10', p5: 100, p25: 200, p50: 300, p75: 400, p95: 500}).join('');
   assert.match(text, /2046-10/);
-  assert.match(text, /90% 的試驗/);
-  assert.match(text, /一半的試驗/);
-  assert.match(text, /不是某一次試驗的實際路徑/);
+  assert.match(text, /一般情況下淨資產約/);
+  assert.match(text, /9 成的模擬/);
+  assert.doesNotMatch(text, /百分位|中位數|分位數/);
+  assert.match(text, /最常見的 5 成/);
+  assert.match(text, /不是某一次模擬的實際路徑/);
 });
 
 test('splitData separates cash, investment and net worth with a starting point', () => {

@@ -183,12 +183,12 @@ def build_facts(
 
     shortfall = mc['probability_cash_shortfall']
     add('shortfall_probability', '現金不足機率（任一月底現金小於零的試驗比例）', format_percent(shortfall), shortfall)
-    for key, label in (('p5', '期末淨資產（較不理想的情況，第五百分位數）'), ('p50', '期末淨資產中位數'),
-                       ('p95', '期末淨資產（較理想的情況，第九十五百分位數）')):
+    for key, label in (('p5', '期末淨資產（較差情況，20 次模擬裡有 1 次比這低）'), ('p50', '期末淨資產（一般情況，一半比這好、一半比這差）'),
+                       ('p95', '期末淨資產（順利情況，20 次模擬裡有 1 次比這高）')):
         value = mc['net_worth_percentiles'][key]
         add(f'net_worth_{key}', label, format_money(value), value)
     real = mc['real_net_worth_percentiles']['p50']
-    add('real_net_worth_p50', '以今日購買力計算的期末淨資產中位數', format_money(real), real)
+    add('real_net_worth_p50', '以今日購買力計算的期末淨資產（一般情況）', format_money(real), real)
 
     add('months', '模擬期間', f'{months} 個月', months)
     add('start_period', '模擬起始月份', start_period, start_period)
@@ -341,9 +341,9 @@ def template_explanation(facts: List[Dict[str, Any]]) -> AIPlanExplanation:
     if events_text:
         paragraphs.append(events_text)
 
-    market = ('依台灣過去的通膨與股市資料多次抽樣，期末淨資產中位數是 {net_worth_p50}，'
-              '較不理想的情況是 {net_worth_p5}，較理想的情況是 {net_worth_p95}；'
-              '換算成今日購買力，中位數約是 {real_net_worth_p50}。')
+    market = ('依台灣過去的通膨與股市資料模擬多種可能，一般情況下期末淨資產約是 {net_worth_p50}，'
+              '較差情況約是 {net_worth_p5}，順利情況約是 {net_worth_p95}；'
+              '換算成今日購買力，一般情況約是 {real_net_worth_p50}。')
     paragraphs.append(market)
 
     watch_points = []

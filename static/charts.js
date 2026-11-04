@@ -52,12 +52,12 @@
     const s=data.series;
     const datasets=[
       // Outer band fills P95 down to P5; the inner P75–P25 band on top makes the middle half darker.
-      edge('第 95 百分位數',s.p95,'+4',14),
-      edge('第 75 百分位數',s.p75,'+2',22),
-      {label:'中位數',data:s.p50,borderColor:accent,backgroundColor:accent,borderWidth:2.5,tension:0,
+      edge('順利情況',s.p95,'+4',14),
+      edge('最常見範圍上緣',s.p75,'+2',22),
+      {label:'一般情況',data:s.p50,borderColor:accent,backgroundColor:accent,borderWidth:2.5,tension:0,
         pointRadius:pointRadius(data,markers),pointHoverRadius:5,fill:false},
-      edge('第 25 百分位數',s.p25,false,0),
-      edge('第 5 百分位數',s.p5,false,0)];
+      edge('最常見範圍下緣',s.p25,false,0),
+      edge('較差情況',s.p5,false,0)];
     const options=baseOptions(m,data,{legend:false});
     finish(canvas,target,new root.Chart(canvas,{type:'line',data:{labels:data.labels,datasets},options}));
   }

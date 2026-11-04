@@ -17,7 +17,7 @@
       $('applySalaryReference').disabled=!M.canApply(reference);
       if(reference?.available){
         for(const text of [reference.note,`統計對象：${reference.source.population}；資料期間：${reference.source.period_label}。`,
-          reference.median==null?'此期間未提供同行業、同僱用型態的中位數。':`經常性薪資中位數 NT$${Number(reference.median).toLocaleString('zh-TW')}。`])
+          reference.median==null?'此期間未提供同行業「一半員工低於此數」的中間薪資。':`中間薪資（一半員工低於此數）NT$${Number(reference.median).toLocaleString('zh-TW')}。`])
           $('salaryReferenceDetails').append(S.element('p',text));
         const source=S.element('a',reference.source.name);source.href=reference.source.url;source.target='_blank';source.rel='noopener noreferrer';
         $('salaryReferenceDetails').append(source,S.element('small',`下載日期 ${reference.source.downloaded_date}；${reference.source.license}。`));

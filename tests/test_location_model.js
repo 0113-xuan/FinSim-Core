@@ -19,7 +19,7 @@ test('parking display prioritises priced lots and truncates unpriced original te
   assert.match(M.parkingLotText(lots[1]),/NT\$2,000／月/);
   assert.equal(M.parkingLotText(lots[0]).split('｜')[2],Array.from(lots[0].fare_description).slice(0,40).join(''));
   assert.match(M.parkingSummary('北屯區',{count:2,median:null}),/不足 3 間/);
-  assert.match(M.parkingSummary('北屯區',{count:5,median:2800}),/中位數 NT\$2,800/);
+  assert.match(M.parkingSummary('北屯區',{count:5,median:2800}),/中間價 NT\$2,800/);
 });
 test('parking presentation keeps API messages and city-wide coverage visible',()=>{
   const data={supported:true,data_available:true,lots:[{id:'lot'}],message:'',coverage:{total:673,with_monthly_rent:91},monthly_rent_stats:{count:3,median:3000},source:{snapshot_date:'2026-11-03'}};

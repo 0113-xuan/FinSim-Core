@@ -13,7 +13,7 @@
 <main class="shell-main"><div class="page-width"><header class="page-header"><h1 id="pageTitle">計畫</h1><p class="lede">安排事件，再比較未來的現金與淨資產走勢。</p></header><p id="pageStatus" role="status" aria-live="polite">正在載入…</p><p id="pageError" class="error" role="alert" hidden></p><div id="pageContent" hidden><section id="notFound" class="panel" hidden><h2>找不到這個計畫</h2><a href="/dashboard.html">回儀表板</a></section>
 <div id="planWorkspace" hidden><section class="panel"><form id="planNameForm"><fieldset><label>計畫名稱<input name="name" maxlength="80" required></label><div class="actions"><button type="submit">儲存名稱</button><button id="deletePlan" type="button" class="danger">刪除計畫</button></div></fieldset></form></section>
 <section class="panel" aria-labelledby="eventsHeading"><h2 id="eventsHeading">事件時間軸</h2><ul id="eventList" class="saved-list"></ul></section>
-<section class="panel" aria-labelledby="eventEditorHeading"><h2 id="eventEditorHeading">新增事件</h2><button id="changeTemplate" type="button" hidden>改選其他事件</button><div id="eventTemplatePicker" aria-label="選擇事件範本"></div><form id="eventForm" hidden><fieldset id="eventFields" disabled><div class="grid two">
+<section id="eventEditorPanel" class="panel" aria-labelledby="eventEditorHeading"><h2 id="eventEditorHeading">新增事件</h2><button id="changeTemplate" type="button" hidden>改選其他事件</button><div id="eventTemplatePicker" aria-label="選擇事件範本"></div><form id="eventForm" hidden><fieldset id="eventFields" disabled><div class="grid two">
         <label data-event-name hidden>事件名稱<input name="name" maxlength="80" required></label>
         <input type="hidden" name="type" value="">
         <label>開始月份<input name="start_period" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
@@ -72,9 +72,9 @@
 <ul id="simulationWarnings" aria-label="模擬注意事項"></ul>      <div id="simulationResults" hidden>
         <section class="result-block" aria-labelledby="bandHeading">
           <h3 id="bandHeading">淨資產可能範圍</h3>
-          <p class="result-lede">用台灣過去的通膨與台股報酬抽樣 300 次。淺色是 90% 試驗的範圍（第 5 到第 95 百分位數），深色是中間一半，實線是中位數。</p>
-          <div class="chart-frame"><canvas id="bandChart" role="img" aria-label="淨資產分位數區間走勢"></canvas></div><div id="bandChartSummary" class="chart-summary"></div>
-          <div class="band-legend" aria-hidden="true"><span class="swatch outer"></span>90% 範圍<span class="swatch inner"></span>中間一半<span class="swatch line"></span>中位數</div>
+          <p class="result-lede">用台灣過去的通膨與台股報酬模擬 300 種可能的未來。淺色區域涵蓋其中 9 成的結果，深色涵蓋最常見的 5 成，實線是正中間的一般情況。</p>
+          <div class="chart-frame"><canvas id="bandChart" role="img" aria-label="淨資產可能範圍走勢"></canvas></div><div id="bandChartSummary" class="chart-summary"></div>
+          <div class="band-legend" aria-hidden="true"><span class="swatch outer"></span>9 成情況落在這裡<span class="swatch inner"></span>最常見的 5 成<span class="swatch line"></span>一般情況</div>
         </section>
         <section class="result-block" aria-labelledby="splitHeading">
           <h3 id="splitHeading">現金、投資與淨資產</h3>
@@ -88,20 +88,20 @@
           <article><span>最低緊急預備金月數</span><strong id="minimumEmergency">—</strong></article>
           <article><span>期末現金</span><strong id="endingCash">—</strong></article>
           <article><span>現金不足機率</span><strong id="cashShortfall">—</strong></article>
-          <article><span>期末現金第 5 百分位數（p5）</span><strong id="cashP5">—</strong></article>
-          <article><span>期末現金中位數（p50）</span><strong id="cashP50">—</strong></article>
-          <article><span>期末現金第 95 百分位數（p95）</span><strong id="cashP95">—</strong></article>
+          <article><span>期末現金：較差情況（20 次裡有 1 次比這低）</span><strong id="cashP5">—</strong></article>
+          <article><span>期末現金：一般情況（一半比這好、一半比這差）</span><strong id="cashP50">—</strong></article>
+          <article><span>期末現金：順利情況（20 次裡有 1 次比這高）</span><strong id="cashP95">—</strong></article>
         </div></section>
         <section class="metric-group" aria-labelledby="investmentMetricsHeading"><h4 id="investmentMetricsHeading">投資</h4><div class="metric-grid">
           <article><span>期末投資市值（歷史平均報酬）</span><strong id="endingInvestment">—</strong></article>
-          <article><span>期末投資市值第 5 百分位數（p5）</span><strong id="investmentP5">—</strong></article>
-          <article><span>期末投資市值中位數（p50）</span><strong id="investmentP50">—</strong></article>
+          <article><span>期末投資市值：較差情況（20 次裡有 1 次比這低）</span><strong id="investmentP5">—</strong></article>
+          <article><span>期末投資市值：一般情況（一半比這好、一半比這差）</span><strong id="investmentP50">—</strong></article>
         </div></section>
         <section class="metric-group" aria-labelledby="netWorthMetricsHeading"><h4 id="netWorthMetricsHeading">淨資產</h4><div class="metric-grid">
-          <article><span>期末淨資產第 5 百分位數（p5）</span><strong id="netWorthP5">—</strong></article>
-          <article><span>期末淨資產中位數（p50）</span><strong id="netWorthP50">—</strong></article>
-          <article><span>期末淨資產第 95 百分位數（p95）</span><strong id="netWorthP95">—</strong></article>
-          <article><span>以今日購買力計算的期末淨資產中位數（p50）</span><strong id="realNetWorthP50">—</strong></article>
+          <article><span>期末淨資產：較差情況（20 次裡有 1 次比這低）</span><strong id="netWorthP5">—</strong></article>
+          <article><span>期末淨資產：一般情況（一半比這好、一半比這差）</span><strong id="netWorthP50">—</strong></article>
+          <article><span>期末淨資產：順利情況（20 次裡有 1 次比這高）</span><strong id="netWorthP95">—</strong></article>
+          <article><span>以今日購買力計算的期末淨資產：一般情況</span><strong id="realNetWorthP50">—</strong></article>
         </div></section>
         <details id="assumptionsPanel" class="assumptions" open>
           <summary>這次模擬用了哪些假設</summary>

@@ -38,10 +38,10 @@
 
   function bandSummaryText(summary) {
     const money = shell.money;
-    const lines = [`到 ${summary.period}，淨資產中位數是 ${money(summary.p50)}；90% 的試驗落在 ${money(summary.p5)} 到 ${money(summary.p95)} 之間。`];
+    const lines = [`到 ${summary.period}，一般情況下淨資產約 ${money(summary.p50)}；9 成的模擬落在 ${money(summary.p5)} 到 ${money(summary.p95)} 之間。`];
     if (summary.p25 != null && summary.p75 != null)
-      lines.push(`一半的試驗落在 ${money(summary.p25)} 到 ${money(summary.p75)} 之間（圖中顏色較深的區間）。`);
-    lines.push('每條分位數線是每個月分別排序的結果，不是某一次試驗的實際路徑。');
+      lines.push(`最常見的 5 成落在 ${money(summary.p25)} 到 ${money(summary.p75)} 之間（圖中顏色較深的區間）。`);
+    lines.push('每個月的範圍是分別整理的，不是某一次模擬的實際路徑。');
     return lines;
   }
 
