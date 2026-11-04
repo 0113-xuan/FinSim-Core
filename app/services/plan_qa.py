@@ -86,12 +86,18 @@ def should_decline(question: str) -> bool:
     if any(re.search(pattern, text) for pattern in injection):
         return True
     product = r'股票|基金|保險|etf|個股|台積電|[0-9]{4,6}'
-    action = r'推薦|建議|該買|買哪|買什麼|值得買|適合買|買不買|買進|買入|投保哪|選哪|挑.{0,4}(支|檔|款)|選.{0,4}(支|檔|款)'
+    action = (r'推薦|建議|該買|買哪|買什麼|值得買|適合買|買不買|要不要買|買進|買入|投保哪|選哪'
+              r'|(?:幫我|替我|應該|適合).{0,8}(?:買|選|挑|投保|投資)'
+              r'|(?:挑|選).{0,4}(?:支|檔|款|個)|適合我')
     if (re.search(product, compact) and re.search(action, compact)) or re.search(r'(recommend|which).{0,30}(stock|fund|insurance|etf)', text):
         return True
-    # Explanations of this limitation are allowed; demands for a promise are not.
+    # An explicit demand wins even when an educational phrase is appended.
+    # Keep the example "為什麼不能保證報酬" available as a knowledge question.
+    promise = r'保證|承諾|一定賺|穩賺|必賺'
+    if re.search(rf'(?:請|我要|給我|幫我|替我|能否|能不能|可不可以|要求)(?:你|系統|工具)?(?:{promise})', compact):
+        return True
     educational = any(word in compact for word in ('不能保證', '不保證', '為什麼', '為何', '為何不能', '為何不', '意思'))
-    return not educational and bool(re.search(r'(保證|承諾|一定賺|穩賺|必賺).{0,15}(報酬|獲利|收益|賺錢)|保證我|保證能賺', compact))
+    return not educational and bool(re.search(r'(保證|承諾).{0,15}(報酬|獲利|收益|賺錢)|一定賺|穩賺|必賺|保證我|保證能賺', compact))
 
 
 def validate_answer(answer: AIPlanQA, facts: list[dict], references: list[dict]) -> dict:
