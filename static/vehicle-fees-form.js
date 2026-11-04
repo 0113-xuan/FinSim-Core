@@ -21,17 +21,24 @@
       field('fuel_type').disabled=!vehicle||field('fuel_type').dataset.catalog==='true';
       field('displacement_cc').required=vehicle&&!legacy;
     }
+    // The total is shown both on the form and inside the insurance dialog.
+    function setTotal(text){$('insuranceTotal').textContent=text;$('insuranceDialogTotal').textContent=text;}
+    function summarize(){
+      $('insuranceSummary').textContent=legacy||!refs.length?'':`已選：${rows.filter(row=>row.selected).map(row=>refs.find(ref=>ref.id===row.id)?.name).filter(Boolean).join('、')||'無'}`;
+    }
     function sum(){
       if(legacy)return;
-      try{const result=M.insuranceSelection(rows);field('annual_insurance').value=result.annual_insurance;$('insuranceTotal').textContent=`保險合計：${M.money(result.annual_insurance)}／年`;}
-      catch(error){field('annual_insurance').value='';$('insuranceTotal').textContent=error.message;}
+      try{const result=M.insuranceSelection(rows);field('annual_insurance').value=result.annual_insurance;setTotal(`保險合計：${M.money(result.annual_insurance)}／年`);}
+      catch(error){field('annual_insurance').value='';setTotal(error.message);}
+      summarize();
     }
     function renderInsurance(){
       $('insuranceItems').hidden=legacy;$('legacyInsuranceHint').hidden=!legacy;
       field('annual_insurance').readOnly=!legacy;
+      $('openInsuranceDialog').disabled=legacy||!refs.length;summarize();
       const container=$('insuranceItems');container.replaceChildren();
-      if(legacy){$('insuranceTotal').textContent='保留原本的保險預算；可重新選擇保險項目。';return;}
-      if(!refs.length){$('insuranceTotal').textContent='填寫車價與排氣量後載入保險參考資料。';return;}
+      if(legacy){setTotal('保留原本的保險預算；可重新選擇保險項目。');return;}
+      if(!refs.length){setTotal('填寫車價與排氣量後載入保險參考資料。');return;}
       const body=el('fieldset',null,'insurance-body');body.append(el('legend','車體損失險（三擇一，也可不保）'));
       const noneLabel=el('label',null,'insurance-choice'),none=el('input');none.type='radio';none.name='body_coverage';none.value='none';none.checked=!rows.some(row=>row.id.startsWith('body_')&&row.selected);
       noneLabel.append(none,el('span','不保車體損失險'));body.append(noneLabel);
@@ -120,6 +127,16 @@
     $('restoreOfficialTax').addEventListener('click',()=>{if(latest?.tax.total!=null){taxCustom=false;field('annual_tax').value=latest.tax.total;taxStatus();}});
     $('adoptInsuranceItems').addEventListener('click',()=>{legacy=false;savedItems=undefined;dirty.clear();rows=M.restoreInsurance(undefined,refs);renderInsurance();sync();refresh();});
     $('retryVehicleFees').addEventListener('click',refresh);
+    const dialog=$('insuranceDialog'),opener=$('openInsuranceDialog');
+    const selectionValid=()=>{try{M.insuranceSelection(rows);return true;}catch(error){setTotal(error.message);return false;}};
+    opener.addEventListener('click',()=>{
+      if(dialog.open||!refs.length)return;
+      dialog.showModal();root.document.body.classList.add('plan-dialog-open');dialog.scrollTop=0;
+    });
+    $('closeInsuranceDialog').addEventListener('click',()=>{if(selectionValid())dialog.close();});
+    // An invalid selection keeps the dialog open so the error stays next to the field.
+    dialog.addEventListener('cancel',event=>{if(!selectionValid())event.preventDefault();});
+    dialog.addEventListener('close',()=>{root.document.body.classList.remove('plan-dialog-open');if(isAlive())opener.focus();});
     root.addEventListener('pagehide',()=>{version++;controller?.abort();root.clearTimeout(timer);},{once:true});
     return {reset,spec,sync,refresh,details};
   }

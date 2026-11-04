@@ -58,8 +58,9 @@
         </section>
         <section class="fee-section" aria-labelledby="insuranceHeading"><h3 id="insuranceHeading">保險（年）</h3>
           <div id="legacyInsuranceHint" hidden><p>可重新選擇保險項目；目前保留這筆事件原本的保險數字。</p><button id="adoptInsuranceItems" type="button">重新選擇保險項目</button></div>
-          <div id="insuranceItems"></div><label>年度保險合計（元）<input name="annual_insurance" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用原本預設"></label>
-          <p><strong id="insuranceTotal" aria-live="polite"></strong></p><p><small>以上為網路公開資料的參考保費，各保險公司報價不同，請以實際報價為準。</small></p>
+          <label>年度保險合計（元）<input name="annual_insurance" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用原本預設"></label>
+          <p><strong id="insuranceTotal" aria-live="polite"></strong></p><p id="insuranceSummary"></p>
+          <button id="openInsuranceDialog" type="button" aria-haspopup="dialog" disabled>選擇保險項目</button>
         </section>
       </fieldset></section>
       <div class="button-row"><button type="submit">新增事件</button><button id="cancelEdit" type="button" hidden>取消修改</button></div></fieldset></form></section>
@@ -119,4 +120,12 @@
           <div id="explanationResult" aria-live="polite"></div>
         </section>
       </div>
-</section></div></div></div></main></body></html>
+</section></div></div></div></main>
+<dialog id="insuranceDialog" class="plan-dialog" aria-labelledby="insuranceDialogTitle">
+  <h2 id="insuranceDialogTitle">選擇保險項目</h2>
+  <p>強制險依法必保；其他項目可自行勾選，金額可依實際報價修改。</p>
+  <div id="insuranceItems"></div>
+  <p><strong id="insuranceDialogTotal" aria-live="polite"></strong></p>
+  <p><small>以上為網路公開資料的參考保費，各保險公司報價不同，請以實際報價為準。</small></p>
+  <div class="actions"><button id="closeInsuranceDialog" class="primary" type="button">完成</button></div>
+</dialog></body></html>

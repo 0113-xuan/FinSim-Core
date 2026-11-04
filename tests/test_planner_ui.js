@@ -54,6 +54,16 @@ test('Supabase errors and zero-row deletion are surfaced to the page controller'
   }
   await assert.rejects(()=>createStore(fakeClient([]),'current-user').removePlan('missing'),/資料已不存在/);
 });
+test('insurance items live in a modal dialog outside the event form',()=>{
+  const html=fs.readFileSync(path.join(__dirname,'../static/plan.html'),'utf8');
+  const start=html.indexOf('id="eventForm"'),eventForm=html.slice(start,html.indexOf('</form>',start));
+  const dialog=html.slice(html.indexOf('<dialog id="insuranceDialog"'),html.indexOf('</dialog>',html.indexOf('<dialog id="insuranceDialog"')));
+  assert.match(html,/<dialog id="insuranceDialog" class="plan-dialog" aria-labelledby="insuranceDialogTitle">/);
+  assert.match(eventForm,/id="openInsuranceDialog" type="button" aria-haspopup="dialog" disabled/);
+  assert.doesNotMatch(eventForm,/id="insuranceItems"/);
+  assert.match(eventForm,/name="annual_insurance"/);
+  for(const id of ['insuranceItems','insuranceDialogTotal','closeInsuranceDialog'])assert.match(dialog,new RegExp(`id="${id}"`));
+});
 test('start month is derived from Taipei time across UTC month and year boundaries',()=>{
   assert.equal(taipeiPeriod(new Date('2026-10-31T15:59:59Z')),'2026-10');
   assert.equal(taipeiPeriod(new Date('2026-10-31T16:00:00Z')),'2026-11');
