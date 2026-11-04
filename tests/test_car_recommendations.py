@@ -197,11 +197,11 @@ def test_record_requires_explicit_seats_and_source():
     with pytest.raises(TypeError):
         record(*args)
     for seats in (5, 7, None):
-        car = record(*args, seats=seats, seats_source='https://example.test/seats' if seats else None,
+        car = record(*args, checked_on='2026-01-01', seats=seats, seats_source='https://example.test/seats' if seats else None,
                      seats_source_type='unknown', seats_verification='unverified', seats_note='Synthetic test fixture, not a real vehicle')
         assert car['seats'] == seats
     with pytest.raises(ValueError):
-        record(*args, seats=5, seats_source=None, seats_source_type='unknown', seats_verification='unverified', seats_note='fixture')
+        record(*args, checked_on='2026-01-01', seats=5, seats_source=None, seats_source_type='unknown', seats_verification='unverified', seats_note='fixture')
 
 
 def test_five_seven_and_unknown_seat_filtering(needs, monkeypatch):

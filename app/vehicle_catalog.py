@@ -1,32 +1,26 @@
-"""Small reviewed catalog; no live-price or real-world fuel-efficiency claims."""
+"""Official Taiwan catalog snapshots; prices and test efficiency are not live quotes."""
 from decimal import Decimal
 from pydantic import BaseModel, ConfigDict, Field
 
 
-TOYOTA_SOURCE = 'https://www.toyota.com.tw/showroom/COROLLA_CROSS/'
-HONDA_SOURCE = 'https://www.honda-taiwan.com.tw/Auto/News/Detail/629aabd8-440e-4c7f-8e2f-ab844dc0ad34'
+TOYOTA_SOURCE = 'https://www.toyota.com.tw/showroom/COROLLA_CROSS/fullsepc.aspx'
+HONDA_SOURCE = 'https://www.honda-taiwan.com.tw/Auto/Calculator'
 CATALOG = [
-    dict(id='toyota-cross-gas-luxury', brand='Toyota', model='Corolla Cross', trim='汽油豪華', price_twd=809000, efficiency_km_l=14.3, source_url=TOYOTA_SOURCE, source_period='2026-10'),
-    dict(id='toyota-cross-hybrid-luxury', brand='Toyota', model='Corolla Cross', trim='HYBRID 豪華', price_twd=849000, efficiency_km_l=23.5, source_url=TOYOTA_SOURCE, source_period='2026-10'),
-    dict(id='toyota-cross-hybrid-flagship', brand='Toyota', model='Corolla Cross', trim='HYBRID 旗艦', price_twd=989000, efficiency_km_l=23.5, source_url=TOYOTA_SOURCE, source_period='2026-10'),
-    dict(id='honda-hrv-hybrid-s', brand='Honda', model='HR-V', trim='e:HEV S', price_twd=899000, efficiency_km_l=23.5, source_url=HONDA_SOURCE, source_period='2025-06-17'),
-    dict(id='honda-hrv-hybrid-prestige', brand='Honda', model='HR-V', trim='e:HEV Prestige', price_twd=959000, efficiency_km_l=23.5, source_url=HONDA_SOURCE, source_period='2025-06-17'),
+    dict(id='toyota-cross-gas-luxury', brand='Toyota', model='Corolla Cross', trim='汽油豪華', price_twd=809000, efficiency_km_l=14.3, source_url=TOYOTA_SOURCE, source_period='2026-11', checked_on='2026-11-04', displacement_cc=1798, fuel_type='gasoline', spec_source=TOYOTA_SOURCE),
+    dict(id='toyota-cross-hybrid-luxury', brand='Toyota', model='Corolla Cross', trim='HYBRID 豪華', price_twd=849000, efficiency_km_l=23.5, source_url=TOYOTA_SOURCE, source_period='2026-11', checked_on='2026-11-04', displacement_cc=1798, fuel_type='hybrid', spec_source=TOYOTA_SOURCE),
+    dict(id='toyota-cross-hybrid-flagship', brand='Toyota', model='Corolla Cross', trim='HYBRID 旗艦', price_twd=989000, efficiency_km_l=23.5, source_url=TOYOTA_SOURCE, source_period='2026-11', checked_on='2026-11-04', displacement_cc=1798, fuel_type='hybrid', spec_source=TOYOTA_SOURCE),
+    dict(id='honda-hrv-hybrid-s', brand='Honda', model='HR-V', trim='e:HEV S', price_twd=899000, efficiency_km_l=23.5, source_url=HONDA_SOURCE, source_period='2026-11', checked_on='2026-11-04', displacement_cc=1498, fuel_type='hybrid', spec_source='https://www.honda-taiwan.com.tw/HRV/'),
+    dict(id='honda-hrv-hybrid-prestige', brand='Honda', model='HR-V', trim='e:HEV Prestige', price_twd=959000, efficiency_km_l=23.5, source_url=HONDA_SOURCE, source_period='2026-11', checked_on='2026-11-04', displacement_cc=1498, fuel_type='hybrid', spec_source='https://www.honda-taiwan.com.tw/HRV/'),
 ]
 
 
 def catalog_list():
-    return [{**item, 'checked_on': '2026-10-11', 'currency': 'TWD',
-             'displacement_cc': 1798 if item['brand']=='Toyota' else 1498,
-             'fuel_type': 'gasoline' if item['id']=='toyota-cross-gas-luxury' else 'hybrid',
-             'spec_source': 'https://www.toyota.com.tw/showroom/COROLLA_CROSS/fullsepc.aspx'
-                if item['brand']=='Toyota' else 'https://www.honda-taiwan.com.tw/HRV/'} for item in CATALOG]
+    return [{**item, 'currency': 'TWD'} for item in CATALOG]
 
 
 def get_vehicle(vehicle_id):
-    # Existing decision/preset responses embed this record verbatim. Keep their
-    # contracts unchanged; only the public catalog adds planner display specs.
     item = next((item for item in CATALOG if item['id'] == vehicle_id), None)
-    return {**item, 'checked_on': '2026-10-11', 'currency': 'TWD'} if item else None
+    return {**item, 'currency': 'TWD'} if item else None
 
 
 class VehiclePresetRequest(BaseModel):
