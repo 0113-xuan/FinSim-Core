@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 from app.recommendation_catalog import recommendation_catalog, record
+from app.vehicle_catalog import catalog_list
 from app.recommendation_schemas import CarNeedsRequest
 from app.services.car_recommendations import recommend_cars
 from main import app
@@ -141,7 +142,7 @@ def test_api_valid_response_and_original_catalog_unchanged(needs):
         assert response.status_code == 200, response.text
         assert response.json()['provider'] == 'deterministic'
         assert client.get('/decisions/vehicle/catalog').json() == before
-        assert len(before) == 5
+        assert len(before) == len(catalog_list())
 
 
 def test_actual_p1_serialization_is_accepted():

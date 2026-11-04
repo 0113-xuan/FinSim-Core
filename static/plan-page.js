@@ -30,7 +30,7 @@
     }
     async function loadVehicleMetadata() {
       try {
-        const responses = await Promise.all(['/decisions/vehicle/catalog','/decisions/vehicle/assumptions'].map(url=>root.fetch(url)));
+        const responses = await Promise.all(['/decisions/vehicle/catalog?include_ev=true','/decisions/vehicle/assumptions'].map(url=>root.fetch(url)));
         if (responses.some(response=>!response.ok)) throw new Error('載入失敗');
         const [catalog, assumptions] = await Promise.all(responses.map(response=>response.json()));
         if(!ctx.alive)return;
@@ -38,9 +38,13 @@
         const select = $('eventForm').elements.vehicle_catalog_id;
         const selection = select.dataset.pending ?? select.value;
         select.replaceChildren();
-        for (const car of catalog) {
-          const option = root.document.createElement('option'); option.value = car.id;
-          option.textContent = `${car.brand} ${car.model} ${car.trim}`; select.append(option);
+        for (const {brand, vehicles} of model.groupVehicleCatalog(catalog)) {
+          const group = root.document.createElement('optgroup'); group.label = brand;
+          for (const car of vehicles) {
+            const option = root.document.createElement('option'); option.value = car.id;
+            option.textContent = car.label; group.append(option);
+          }
+          select.append(group);
         }
         const custom = root.document.createElement('option'); custom.value = ''; custom.textContent = '自訂車款'; custom.defaultSelected = true; select.append(custom); select.value = selection;
         for (const key of model.ownershipFields.filter(key=>!['annual_insurance','annual_tax'].includes(key))) {

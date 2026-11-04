@@ -1,6 +1,20 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const M = require('../static/planner-model.js');
+test('vehicle catalog groups brands alphabetically, sorts prices and preserves every ID',()=>{
+  const catalog=[
+    {id:'toyota-old',brand:'Toyota',model:'Corolla Cross',trim:'豪華',price_twd:809000},
+    {id:'honda-high',brand:'Honda',model:'HR-V',trim:'e:HEV',price_twd:899000},
+    {id:'honda-low',brand:'Honda',model:'FIT',trim:'HOME',price_twd:759000}
+  ];
+  const original=JSON.stringify(catalog), groups=M.groupVehicleCatalog(catalog);
+  assert.deepEqual(groups.map(group=>group.brand),['Honda','Toyota']);
+  assert.deepEqual(groups[0].vehicles.map(car=>car.id),['honda-low','honda-high']);
+  assert.equal(groups[1].vehicles[0].label,'Corolla Cross 豪華 · NT$809,000');
+  assert.deepEqual(groups.flatMap(group=>group.vehicles.map(car=>car.id)).sort(),catalog.map(car=>car.id).sort());
+  assert.equal(JSON.stringify(catalog),original);
+  assert.deepEqual(M.groupVehicleCatalog([]),[]);
+});
 const profile = {monthly_income:'60000',cash_balance:'900000',fixed_expense:'20000',variable_expense:'10000',
   investment_value:'500000',monthly_investment:'3000',raise_rate:null,emergency_target_months:'6'};
 const build = overrides => M.buildSimulationRequest({profile, debts:[],events:[],startPeriod:'2026-11',months:60,...overrides});

@@ -403,8 +403,8 @@ def scenario_compare_api(req: ScenarioComparisonRequest) -> ScenarioComparisonRe
 
 
 @app.get("/decisions/vehicle/catalog")
-def vehicle_catalog_api():
-    return catalog_list()
+def vehicle_catalog_api(include_ev: bool = False):
+    return catalog_list(include_ev=include_ev)
 
 
 @app.post('/decisions/vehicle/recommendations')

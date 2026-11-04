@@ -138,7 +138,13 @@
     return request;
   }
 
-  const api = {buildSimulationRequest, periodToMonth, monthToPeriod, ownershipFields, vehicleDetails, vehicleAnalysisReason, buildVehicleDecisionRequest};
+  function groupVehicleCatalog(catalog) {
+    const brands = [...new Set(catalog.map(car=>car.brand))].sort((a,b)=>a.localeCompare(b,'en'));
+    return brands.map(brand=>({brand, vehicles:catalog.filter(car=>car.brand===brand)
+      .slice().sort((a,b)=>a.price_twd-b.price_twd || a.id.localeCompare(b.id,'en'))
+      .map(car=>({...car, label:`${car.model} ${car.trim} · NT$${car.price_twd.toLocaleString('zh-TW')}`}))}));
+  }
+  const api = {buildSimulationRequest, periodToMonth, monthToPeriod, ownershipFields, vehicleDetails, vehicleAnalysisReason, buildVehicleDecisionRequest, groupVehicleCatalog};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PlannerModel = api;
 })(globalThis);

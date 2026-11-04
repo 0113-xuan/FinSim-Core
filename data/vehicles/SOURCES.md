@@ -19,3 +19,23 @@
 ## Regression fixture
 
 `tests/fixtures/p0/vehicle_api_snapshots.json` 只同步 3 筆成本比較 snapshot 內的車款 metadata（`source_url`、`source_period`、`checked_on`，以及新增的 `displacement_cc`、`fuel_type`、`spec_source`）；價格未變。逐一呼叫全部 9 筆 snapshot 的真實 API，替換車款 metadata 後與原 fixture 完全一致，月付、總成本、現金流、淨資產等計算結果均未改動。
+
+## 新增 26 筆（總數 31 筆）
+
+逐筆價格、排氣量、燃料、油耗及兩種來源網址保存在 `new_vehicle_audit_20261104.json`；均於 2026-11-04 實際讀取官方資料。分類為大眾品牌 15 筆（含既有 5 筆）、入門小車 5 筆、純電 5 筆、豪華 6 筆。豪華品牌另有 2 筆放在純電分類，不重複計數。新車型最多兩等級；既有 Corolla Cross 三等級因 ID 相容性保留。
+
+- Toyota：YARiS CROSS、ALTIS、RAV4、CAMRY、VIOS、bZ4X、URBAN CRUISER 各車型官網的完整規配表（逐筆網址見 JSON），價格與規格同表。RAV4 只取非插電油電版，不取 PHEV；Camry 取汽油最低等級與油電最低等級。
+- Honda：FIT 價格與規格同頁；CR-V、Civic、ZR-V 價格來自現行購車試算，規格取該車型官網連出的官方 PDF。PDF 為圖片，實際轉成圖片閱讀末頁規格，未使用搜尋摘要。CR-V VTi-S 為 1498 cc／15.0 km/L；e:HEV S 為 1993 cc／20.5 km/L；Civic 為 1993 cc／23.7 km/L；ZR-V 為 1993 cc／20.4 km/L。
+- Kia：Picanto 與 EV6 的台灣官方特色頁逐等級建議售價，並配對同站規格頁。Picanto Trendy、Apex 不含加價選配；EV6 選最低等級 Light 標準版。
+- Volvo：台灣 EX30 官方選配器讀到 Core／Single Motor Extended Range 基本售價 1,399,000 元，不加付費車色與其他選配；純電規格另取台灣官方 specifications 頁。
+- Lexus：各台灣 showroom 頁的 `window.showroomData` 公開資料列出等級名稱與 ID；同一官方頁引用的 `showroom_2024.js` 透過 `/xml/carspec_xml.ashx?c1=<等級 ID>&typ=1` 讀規格。實際讀取此官方 JSON 的 `010101` 建議售價（萬元）、`010306` 排氣量、`010603` 平均油耗，並核對頁面的欄位順序；各車的 `spec_source` 保留具體等級端點。NX 選 200 最低等級與 350h 最低等級；ES 選 300h 與 500e 各最低等級。500e 引擎與燃油油耗欄為「-」，採純電規格，並非以 0 取代油耗。
+
+純電車的 `efficiency_km_l` 是 null，不提供充電費估算。舊購車頁預設 API 清單排除這些車；計畫頁以 `include_ev=true` 取得全部資料。此改動不修改保險、稅費、持有成本或任何財務計算公式。
+
+## 未加入與選擇範圍
+
+- Tesla Model 3／Model Y：官方訂購頁被阻擋，無法讀到可核對的基準價格，未新增；推薦清單原 Model 3 維持 indexed_only。
+- Suzuki Swift：已讀官方型錄（1197 cc／24.5 km/L／輕油電），但本次可讀車型頁未顯示與確切等級對應的基準售價，只見全站「起」價，不以此補出等級價格。入門小車改採官方逐等級價格清楚的 Picanto 兩等級。
+- Hyundai INSTER、Suzuki e VITARA：頁面可見起價，但本次未完成基準等級價格的明確對應，未新增；純電名額改採 EX30、ES 500e 等已核對等級。
+- Toyota Yaris／Mitsubishi Colt Plus／非 PHEV Outlander，以及 Nissan、Mazda、Ford、BMW、Mercedes-Benz、其他 Hyundai／Kia／Volvo 候選：本次選用上列能完整核對的替代車型，未逐款查核，不能據此判定停售或官網不可讀。
+- 未新增 PHEV，未擴充推薦清單。既有規格未發現需要改動的差異；Corolla Cross 88.9 萬屬等級差異，非原汽油豪華價格變更。
