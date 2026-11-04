@@ -50,7 +50,7 @@
     function sync(){
       const visible=active();$('salaryReferenceSection').hidden=!visible;select.disabled=!visible||!items;
       if(!visible)cancel();
-      const note=M.publicLoanNote(profile.occupation);$('publicSectorLoanNote').textContent=note;
+      const note=M.publicLoanNote(profile?.occupation);$('publicSectorLoanNote').textContent=note;
       $('publicSectorLoanNote').hidden=!(note&&form.elements.type.value==='vehicle_purchase'&&form.elements.payment_method.value==='financed');
     }
     function reset(details){

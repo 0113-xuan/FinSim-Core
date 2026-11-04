@@ -1,6 +1,6 @@
 (function(root){
   'use strict';
-  const taxNote='官方統計為稅前金額，實領約少 5–10%，請依實際情況調整。';
+  const taxNote='官方統計為稅前金額，實領會低於稅前，請依薪資單上的實領金額調整。';
   const publicLoanNote=occupation=>occupation==='public_sector'?'軍公教可向銀行詢問專案車貸利率。':'';
   const initialOccupation=(profile,details)=>details===undefined?profile?.occupation||'':details?.occupation||'';
   function chooseOccupation(state,occupation){return {...state,occupation,reference:null};}

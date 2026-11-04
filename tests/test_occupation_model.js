@@ -23,7 +23,7 @@ test('selecting industry or receiving salary data never fills or replaces the us
   assert.equal(selected.new_salary,'43210');assert.equal(loaded.new_salary,'43210');
   assert.equal(original.occupation,'');assert.equal(original.reference,null);
   assert.match(M.referenceText(reference),/同行業平均經常性薪資 NT\$51,476.*2026 年 1–6 月/);
-  assert.match(M.taxNote,/稅前.*5–10%/);
+  assert.match(M.taxNote,/稅前.*實領會低於稅前/);
   assert.equal(M.applyReference(loaded).new_salary,'51476');
   assert.equal(loaded.new_salary,'43210');
 });
