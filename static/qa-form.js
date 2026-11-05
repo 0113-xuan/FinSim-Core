@@ -5,7 +5,7 @@
     const element=(tag,text)=>{const node=document.createElement(tag);if(text!=null)node.textContent=text;return node;};
     const section=element('section'),heading=element('h3','問問題'),mode=element('small');
     section.id='qaSection';section.setAttribute('aria-labelledby','qaHeading');heading.id='qaHeading';mode.hidden=true;heading.append(mode);
-    const hint=element('p','可以先問名詞與資料來源；執行模擬後，也能問這次計畫的結果。');
+    const hint=element('p','可以先問名詞與資料來源；執行模擬後，也能問這次計畫的結果。點範例問題只會填入文字，按「送出」才會送出。');
     const examples=element('div');examples.className='qa-questions';examples.setAttribute('aria-label','範例問題');
     const form=element('form'),fieldset=element('fieldset'),label=element('label','你的問題'),input=element('textarea');
     input.id='qaQuestion';input.maxLength=Q.MAX_QUESTION_LENGTH;input.rows=2;input.required=true;
@@ -16,13 +16,14 @@
     const privacy=element('p'),privacyText=element('small','按下後，會把你的問題和相關的說明資料傳給 Google Gemini 產生回答；沒有啟用 AI 時不會傳出任何資料。');
     privacy.id='qaPrivacy';privacy.append(privacyText,element('small','模擬完成後也會附上這次計畫的事實表，不含帳號資料。'));
     const result=element('div');result.id='qaResult';result.setAttribute('aria-live','polite');result.setAttribute('aria-atomic','true');
-    section.append(heading,hint,examples,form,privacy,result);after.after(section);
+    // The disclosure comes before anything that can send, so it is read first.
+    section.append(heading,hint,privacy,examples,form,result);after.after(section);
     let sending=false,version=0,active=null;
     function sync(){const state=Q.questionState(input.value);count.textContent=`還可輸入 ${Math.max(0,state.remaining)} 字`;submit.disabled=sending||!state.valid;}
     function buttons(parent,items){
       for(const question of Q.questions(items)){
         const button=element('button',question);button.type='button';button.disabled=sending;
-        button.addEventListener('click',()=>{if(sending||ctx.busy)return;input.value=question;sync();send();});parent.append(button);
+        button.addEventListener('click',()=>{if(sending||ctx.busy)return;input.value=question;sync();input.focus();});parent.append(button);
       }
     }
     function clear(){version++;active?.abort();result.replaceChildren();mode.hidden=true;}
