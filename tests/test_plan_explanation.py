@@ -97,7 +97,7 @@ def test_facts_without_vehicle_have_formatted_values_and_no_vehicle_entries():
     assert facts['minimum_cash_period']['value'] == '2027-03'
     assert facts['end_period']['value'] == '2031-10'
     assert facts['months']['value'] == '60 個月'
-    assert facts['emergency_target_months']['value'] == '6.0 個月'
+    assert facts['emergency_target_months']['value'] == '6 個月'
     assert 'first_negative_period' not in facts and facts['never_negative']['raw'] is True
     assert facts['shortfall_probability']['value'].endswith('%')
     assert facts['event_1_name']['value'] == '出國' and facts['event_1_summary']['value'] == '-$80,000.00'
@@ -325,3 +325,15 @@ def test_template_passes_chinese_numeral_rule(make_body):
         assert any('{vehicle_1_one_time_cash}' in p for p in explanation.paragraphs)
     if make_body is negative_body:
         assert any('{first_negative_period}' in w for w in explanation.watch_points)
+
+
+def test_amounts_percents_and_months_are_rounded_without_decimals():
+    from app.services.plan_explanation import format_money, format_months, format_percent
+
+    assert format_money(1234567.89) == 'NT$1,234,600'
+    assert format_money(-249.9) == '-NT$200'
+    assert format_money(-30) == 'NT$0'
+    assert format_percent(0.0333) == '3%'
+    assert format_percent(0.002) == '不到 1%'
+    assert format_percent(0) == '0%'
+    assert format_months(6.4) == '6 個月'

@@ -94,9 +94,8 @@
   // `tone` only reinforces the sentence visually; the sentence itself carries the meaning.
   // `baseline` is the fixed-value summary of the same plan without its events; it is optional.
   function conclusion({summary, mc, startPeriod, months, simulations, baseline = null}) {
-    // The headline numbers are model output, not ledger entries: whole dollars avoid false precision.
-    const wholeDollars = new Intl.NumberFormat('zh-TW', {style:'currency', currency:'TWD', maximumFractionDigits:0});
-    const money = value => wholeDollars.format(value), probability = Number(mc.probability_cash_shortfall);
+    // Model output is shown to the nearest 100 (shell.money) and whole percents: more digits would be false precision.
+    const money = shell.money, probability = Number(mc.probability_cash_shortfall);
     const lowest = planner.monthToPeriod(startPeriod, summary.minimum_cash_month);
     const endPeriod = planner.monthToPeriod(startPeriod, months);
     const negative = summary.first_negative_cash_month == null ? null : planner.monthToPeriod(startPeriod, summary.first_negative_cash_month);
@@ -109,14 +108,14 @@
       headline = '固定值模擬顯示現金不會低於 0，但在較差的隨機情況下可能會。';
     }
     const net = mc.net_worth_percentiles;
-    const gap = value => Math.abs(value) < 0.5 ? '沒有差別' : value < 0 ? `少了 ${money(-value)}` : `多了 ${money(value)}`;
+    const gap = value => Math.abs(value) < 50 ? '沒有差別' : value < 0 ? `少了 ${money(-value)}` : `多了 ${money(value)}`;
     const comparison = baseline ? {
       lead: '和沒有這個計畫事件相比（固定值模擬）',
       text: `${endPeriod} 的現金${gap(summary.final_balance - baseline.final_balance)}，最低現金${gap(summary.minimum_cash_balance - baseline.minimum_cash_balance)}。`,
     } : null;
     return {tone, headline, comparison, facts:[
       {label:'現金最低會到（固定值模擬）', value:money(summary.minimum_cash_balance), note:`發生在 ${lowest}`},
-      {label:'現金不足機率（隨機模擬）', value:percent(probability), note:`${simulations} 次模擬中，現金曾低於 0 的比例`},
+      {label:'現金不足機率（隨機模擬）', value:shell.wholePercent(probability), note:`${simulations} 次模擬中，現金曾低於 0 的比例`},
       {label:`${endPeriod} 的淨資產（隨機模擬，一般情況）`, value:money(net.p50), note:`9 成的模擬落在 ${money(net.p5)} 到 ${money(net.p95)}`},
     ], caveat:`固定值模擬用一組固定數字；隨機模擬從台灣歷史資料抽取 ${simulations} 次。兩者都不是預測，也不保證會發生。`};
   }

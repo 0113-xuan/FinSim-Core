@@ -108,9 +108,9 @@
         $('minimumCash').textContent = money(summary.minimum_cash_balance);
         $('minimumCashPeriod').textContent = model.monthToPeriod(startPeriod, summary.minimum_cash_month);
         $('firstNegativePeriod').textContent = summary.first_negative_cash_month == null ? '未出現' : model.monthToPeriod(startPeriod, summary.first_negative_cash_month);
-        $('minimumEmergency').textContent = summary.minimum_emergency_fund_months == null ? '不適用（無必要支出）' : `${Number(summary.minimum_emergency_fund_months).toFixed(2)} 個月`;
+        $('minimumEmergency').textContent = summary.minimum_emergency_fund_months == null ? '不適用（無必要支出）' : `${Math.round(Number(summary.minimum_emergency_fund_months))} 個月`;
         $('endingCash').textContent = money(summary.final_balance);
-        $('cashShortfall').textContent = new Intl.NumberFormat('zh-TW', {style:'percent', maximumFractionDigits:2}).format(mc.probability_cash_shortfall);
+        $('cashShortfall').textContent = M.wholePercent(mc.probability_cash_shortfall);
         for (const [id, key] of [['cashP5','p5'],['cashP50','p50'],['cashP95','p95']]) $(id).textContent = money(mc.percentiles[key]);
         $('shortfallDefinition').textContent = `現金不足機率的定義：${mc.cash_shortfall_definition}。`;
         $('endingInvestment').textContent = money(summary.final_investment_value);
@@ -132,7 +132,7 @@
             paragraph(section, `${car.name}｜${model.monthToPeriod(startPeriod, car.purchase_month)}`);
             paragraph(section, `購車當月一次支出：${money(car.one_time_cash)}｜每月車貸：${money(car.monthly_loan_payment)}｜總利息：${money(car.total_loan_interest)}`);
             paragraph(section, `第一年每月持有成本：${money(car.first_year_monthly_ownership_cost)}`);
-            paragraph(section, `期末車輛估值：${money(car.ending_vehicle_value)}（年折舊 ${(car.annual_depreciation_rate * 100).toLocaleString('zh-TW')}%）`);
+            paragraph(section, `期末車輛估值：${money(car.ending_vehicle_value)}（年折舊 ${Math.round(car.annual_depreciation_rate * 100)}%）`);
             paragraph(section, `模擬期間經濟成本：${money(car.economic_cost_in_horizon)}＝折舊 ${money(car.depreciation_in_horizon)}＋車貸利息 ${money(car.interest_in_horizon)}＋持有成本 ${money(car.ownership_cost_in_horizon)}`);
             paragraph(section, `使用預設值：${car.defaults_used.map(key=>ownershipLabels[key] || key).join('、') || '無'}`);
             $('vehicleSummaries').append(section);

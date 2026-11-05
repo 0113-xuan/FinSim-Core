@@ -94,17 +94,19 @@ def _round(value: float, places: str = '1') -> Decimal:
 
 
 def format_money(value: float) -> str:
-    amount = _round(value)
+    # Shown to the nearest 100, matching the plan page.
+    amount = _round(value / 100, '1') * 100
     return f"{'-' if amount < 0 else ''}NT${abs(int(amount)):,}"
 
 
 def format_percent(probability: float) -> str:
-    text = format(_round(probability * 100, '0.01').normalize(), 'f')
-    return f'{text}%'
+    if 0 < probability < 0.005:
+        return '不到 1%'
+    return f"{_round(probability * 100, '1')}%"
 
 
 def format_months(value: float) -> str:
-    return f'{_round(value, "0.1")} 個月'
+    return f'{_round(value, "1")} 個月'
 
 
 def _period(start: YearMonth, month: int) -> str:

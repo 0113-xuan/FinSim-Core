@@ -104,9 +104,9 @@ test('conclusion states the cash answer first and keeps the limits of the model 
   assert.doesNotMatch(caution.headline + caution.facts.map(fact => fact.label).join(''), /平均/);
   assert.equal(caution.facts.length, 3);
   assert.equal(caution.facts[0].note, '發生在 2027-03');
-  assert.equal(caution.facts[1].value, '3.33%');
+  assert.equal(caution.facts[1].value, '3%');
   assert.equal(caution.facts[0].value, '$12,000');
-  assert.equal(results.conclusion({...base, summary: {...base.summary, minimum_cash_balance: 1234.56}}).facts[0].value, '$1,235');
+  assert.equal(results.conclusion({...base, summary: {...base.summary, minimum_cash_balance: 1234.56}}).facts[0].value, '$1,200');
   assert.doesNotMatch(caution.facts[2].note, /\.00/);
   assert.match(caution.facts[2].label, /2031-12/);
   assert.match(caution.caveat, /不是預測，也不保證/);
@@ -131,4 +131,16 @@ test('conclusion compares the plan with the same plan without its events', () =>
   assert.equal(worse.text, '2031-12 的現金少了 $600,000，最低現金少了 $240,000。');
   const better = results.conclusion({...base, baseline: {final_balance: 100000, minimum_cash_balance: 10000}}).comparison;
   assert.equal(better.text, '2031-12 的現金多了 $300,000，最低現金沒有差別。');
+});
+
+test('amounts round to the nearest 100 and percents to whole numbers, without turning a real chance into 0%', () => {
+  const shell = require('../static/shell-model.js');
+  assert.equal(shell.money(1234567.89), '$1,234,600');
+  assert.equal(shell.money(-249.9), '-$200');
+  assert.equal(shell.money(-30), '$0');
+  assert.equal(shell.money(null), '不適用');
+  assert.doesNotMatch(shell.money(98765.43), /[.]/);
+  assert.equal(shell.wholePercent(0.0333), '3%');
+  assert.equal(shell.wholePercent(0.002), '不到 1%');
+  assert.equal(shell.wholePercent(0), '0%');
 });

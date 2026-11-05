@@ -1,7 +1,7 @@
 (function(root) {
   'use strict';
   const instances=new Map();
-  const compact=value=>new Intl.NumberFormat('zh-TW',{notation:'compact'}).format(value);
+  const compact=value=>new Intl.NumberFormat('zh-TW',{notation:'compact',maximumFractionDigits:0}).format(value);
   function prepare(canvas,target) {
     instances.get(canvas)?.destroy();instances.delete(canvas);
     if(root.Chart)return true;

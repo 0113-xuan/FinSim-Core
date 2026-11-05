@@ -1,7 +1,11 @@
 (function(root) {
   'use strict';
   const planner = typeof module !== 'undefined' && module.exports ? require('./planner-model.js') : root.PlannerModel;
-  const money = value => value == null ? '不適用' : new Intl.NumberFormat('zh-TW', {style:'currency',currency:'TWD',maximumFractionDigits:2}).format(value);
+  // Every amount is shown to the nearest 100 with no decimals; `+ 0` turns a rounded -0 into 0.
+  const wholeDollars = new Intl.NumberFormat('zh-TW', {style:'currency',currency:'TWD',maximumFractionDigits:0});
+  const money = value => value == null ? '不適用' : wholeDollars.format(Math.round(Number(value) / 100) * 100 + 0);
+  // Whole percent; a real but tiny chance is said as such instead of rounding down to a reassuring 0%.
+  const wholePercent = probability => probability > 0 && probability < 0.005 ? '不到 1%' : `${Math.round(probability * 100)}%`;
   function errorText(error) {
     const auth={invalid_credentials:'電子郵件或密碼不正確，請確認後再試',email_not_confirmed:'請先到信箱點確認連結後再登入',
       email_exists:'這個電子郵件已註冊，請改用登入',weak_password:'密碼強度不足，請使用較長且不易猜測的密碼',
@@ -56,6 +60,6 @@
     };
     return {labels,cash,netWorth,markers,summary:{cash:summarize(cash),netWorth:summarize(netWorth)}};
   }
-  const api={money,errorText,financialSummary,routeFor,sortEvents,eventNames,eventSummary,chartData};
+  const api={money,wholePercent,errorText,financialSummary,routeFor,sortEvents,eventNames,eventSummary,chartData};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ShellModel=api;
 })(globalThis);
