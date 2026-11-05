@@ -57,8 +57,8 @@
     if(className)node.className=className;
     return node;
   }
-  function showError(error) {
-    const target=root.document.getElementById('pageError');
+  function showError(error,id='pageError') {
+    const target=root.document.getElementById(id);
     target.textContent=`操作未完成：${textModel.errorText(error)}。請修正後重試；也可以重新整理頁面。`;
     target.hidden=false;
   }
@@ -81,7 +81,7 @@
     const form=element('form'),nameStep=element('div'),label=element('label','計畫名稱'),input=element('input');
     input.name='name';input.id='createPlanName';input.required=true;input.maxLength=80;input.autocomplete='off';input.setAttribute('aria-describedby','createPlanNameHint');
     const hint=element('small','請填寫計畫名稱，最多 80 字。');hint.id='createPlanNameHint';label.append(input,hint);nameStep.append(label);
-    const eventStep=element('div'),description=element('p','之後在計畫頁還可以加入更多事件。','lede'),picker=element('div');eventStep.append(description,picker);eventStep.hidden=true;
+    const eventStep=element('div'),description=element('p','一個計畫放一個事件；想比較其他情況，可以另外建立計畫。','lede'),picker=element('div');eventStep.append(description,picker);eventStep.hidden=true;
     const error=element('p',null,'error');error.id='createPlanError';error.setAttribute('role','alert');error.hidden=true;
     const actions=element('div',null,'actions'),cancel=element('button','取消'),next=element('button','下一步','primary'),back=element('button','上一步'),skip=element('button','先不加事件，直接建立'),create=element('button','建立計畫','primary');
     for(const button of [cancel,next,back,skip,create]){button.type='button';actions.append(button);}
@@ -90,7 +90,7 @@
     const validName=()=>input.value.trim().length>0&&input.value.length<=80;
     function sync() {
       nameStep.hidden=step!==1;eventStep.hidden=step!==2;
-      title.textContent=step===1?'建立計畫':'想先加入什麼事件？';
+      title.textContent=step===1?'建立計畫':'這個計畫要安排什麼事件？';
       next.hidden=step!==1;back.hidden=skip.hidden=create.hidden=step!==2;
       for(const button of dialog.querySelectorAll('button'))button.disabled=creating;
       next.disabled=creating||!validName();create.disabled=creating||!selected;input.disabled=creating;
@@ -133,13 +133,23 @@
   async function init(page) {
     const ctx={page,planId:new URLSearchParams(root.location.search).get('id'),profile:null,debts:[],plans:[],
       session:null,store:null,alive:true,busy:false,controllers:new Set()};
-    ctx.perform=async action=>{
-      if(ctx.busy||!ctx.alive)return;
-      ctx.busy=true;root.document.getElementById('pageError').hidden=true;
-      const controls=[...root.document.querySelectorAll('#pageContent fieldset,#pageContent button')].map(node=>[node,node.disabled]);
-      controls.forEach(([node])=>node.disabled=true);
-      try{await action();}catch(error){if(ctx.alive)showError(error);}
-      finally{if(ctx.alive){controls.forEach(([node,disabled])=>{if(node.isConnected)node.disabled=disabled;});ctx.busy=false;}}
+    // `scope` limits the lock to one section and `errorId` shows a failure next to the button that was pressed.
+    // The action may return an element to focus afterwards; otherwise focus goes back to where it was.
+    ctx.perform=async(action,{scope='pageContent',errorId='pageError'}={})=>{
+      if(!ctx.alive)return;
+      if(ctx.busy){ctx.busyNotice=true;status('上一個操作還在進行，請稍候。');return;}
+      ctx.busy=true;root.document.getElementById('pageError').hidden=true;root.document.getElementById(errorId).hidden=true;
+      const area=root.document.getElementById(scope),focused=root.document.activeElement;
+      const controls=[...area.querySelectorAll('fieldset,button')].map(node=>[node,node.disabled]);
+      controls.forEach(([node])=>node.disabled=true);area.setAttribute('aria-busy','true');
+      let next;
+      try{next=await action();}catch(error){if(ctx.alive)showError(error,errorId);}
+      finally{if(ctx.alive){
+        controls.forEach(([node,disabled])=>{if(node.isConnected)node.disabled=disabled;});area.removeAttribute('aria-busy');ctx.busy=false;
+        if(ctx.busyNotice){ctx.busyNotice=false;status('');}
+        const target=next instanceof root.Element?next:focused;
+        if(target?.isConnected&&!target.disabled&&target!==root.document.body)target.focus();
+      }}
     };
     ctx.calculation=async action=>{
       const controller=new AbortController();ctx.controllers.add(controller);

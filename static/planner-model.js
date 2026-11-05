@@ -144,7 +144,17 @@
       .slice().sort((a,b)=>a.price_twd-b.price_twd || a.id.localeCompare(b.id,'en'))
       .map(car=>({...car, label:`${car.model} ${car.trim} · NT$${car.price_twd.toLocaleString('zh-TW')}`}))}));
   }
-  const api = {buildSimulationRequest, periodToMonth, monthToPeriod, ownershipFields, vehicleDetails, vehicleAnalysisReason, buildVehicleDecisionRequest, groupVehicleCatalog};
+  // Amounts are typed as positive numbers; the income/expense choice sets the sign that is stored.
+  function signedAmount(value, direction) {
+    const amount = number(value, '金額');
+    if (amount < 0) throw new Error('金額請填 0 以上的數字，收入或支出用上方選項決定');
+    return direction === 'expense' && amount !== 0 ? -amount : amount;
+  }
+  function splitAmount(stored) {
+    const amount = Number(stored);
+    return {value: Math.abs(amount), direction: amount < 0 ? 'expense' : 'income'};
+  }
+  const api = {signedAmount, splitAmount, buildSimulationRequest, periodToMonth, monthToPeriod, ownershipFields, vehicleDetails, vehicleAnalysisReason, buildVehicleDecisionRequest, groupVehicleCatalog};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PlannerModel = api;
 })(globalThis);

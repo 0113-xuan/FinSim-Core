@@ -33,7 +33,7 @@ test('explanation renders headline, paragraphs, watch points, suggestions, then 
     watch_points:[[{text:'注意'}]],suggestions:[[{text:'建議'}]],disclaimer:'這是模擬結果，不是財務建議。'});
   assert.deepEqual(nodes.map(node=>node.tagName),['P','P','P','H4','UL','H4','UL','P']);
   assert.equal(nodes[0].children[0].tagName,'STRONG');
-  assert.deepEqual([nodes[3].textContent,nodes[5].textContent],['要注意','可以考慮']);
+  assert.deepEqual([nodes[3].textContent,nodes[5].textContent],['要注意','可以在計畫裡試試']);
   assert.equal(nodes.at(-1).textContent,'這是模擬結果，不是財務建議。');
   const empty=E.explanationNodes(document,{headline:[],paragraphs:[[{text:'段落'}]],watch_points:[],suggestions:[],disclaimer:'d'});
   assert.ok(!empty.some(node=>node.tagName==='H4'));

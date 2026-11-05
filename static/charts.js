@@ -9,13 +9,16 @@
     return false;
   }
   function finish(canvas,target,chart){instances.set(canvas,chart);canvas.setAttribute('aria-describedby',target.id);}
+  // Chart.js defaults to 12px Helvetica; match the page's type so axis and legend text stay readable.
+  const chartFont=()=>({family:root.getComputedStyle(root.document.body).fontFamily,size:14});
   function baseOptions(m,data,{mini=false,legend=!mini}={}) {
+    const font=chartFont();
     return {responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},
-      plugins:{legend:{display:legend,labels:{boxWidth:22,boxHeight:2,filter:item=>!item.text.startsWith('_')}},
-        tooltip:{filter:item=>!item.dataset.label.startsWith('_'),callbacks:{label:item=>`${item.dataset.label}：${m.money(item.parsed.y)}`,
+      plugins:{legend:{display:legend,labels:{font,boxWidth:22,boxHeight:2,filter:item=>!item.text.startsWith('_')}},
+        tooltip:{titleFont:font,bodyFont:font,filter:item=>!item.dataset.label.startsWith('_'),callbacks:{label:item=>`${item.dataset.label}：${m.money(item.parsed.y)}`,
           afterBody:items=>data.markers.filter(marker=>marker.index===items[0]?.dataIndex).map(marker=>`事件：${marker.name}`)}}},
-      scales:{x:{grid:{display:false},ticks:{maxTicksLimit:mini?4:6,maxRotation:0}},
-        y:{ticks:{maxTicksLimit:4,callback:compact}}}};
+      scales:{x:{grid:{display:false},ticks:{font,maxTicksLimit:mini?4:6,maxRotation:0}},
+        y:{ticks:{font,maxTicksLimit:4,callback:compact}}}};
   }
   const pointRadius=(data,markers)=>data.labels.map((_,i)=>markers.has(i)?3:0);
   function summaryLine(m,label,s) {

@@ -51,3 +51,25 @@ test('only custom income and expense templates ask the user for an event name',(
   assert.deepEqual(T.availableTemplates().filter(T.asksForName).map(t=>t.id),['one_time','range']);
   assert.equal(T.asksForName(undefined),false);
 });
+
+test('the picker shows only usable templates and mentions planned ones in one line',()=>{
+  const node=tag=>({tag,children:[],attrs:{},textContent:'',className:'',dataset:{},classList:{add(){}},
+    append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},
+    setAttribute(key,value){this.attrs[key]=value;},addEventListener(){},querySelectorAll(){return [];}});
+  globalThis.EventTemplates=require('../static/event-templates.js');
+  globalThis.document={createElement:node,createElementNS:(ns,tag)=>node(tag)};
+  require('../static/event-picker.js');
+  const walk=(item,out=[])=>{out.push(item);for(const child of item.children||[])walk(child,out);return out;};
+  const container=node('div');
+  globalThis.EventPicker.render(container,{});
+  const all=walk(container);
+  assert.deepEqual(all.filter(n=>n.tag==='button').map(n=>n.dataset.templateId),['vehicle','job_change','one_time','range']);
+  assert.ok(all.every(n=>n.textContent!=='即將推出'));
+  const upcoming=all.filter(n=>n.className==='template-upcoming');
+  assert.equal(upcoming.length,1);
+  assert.equal(upcoming[0].textContent,'之後會加入：買房、搬家、結婚、生小孩、旅遊、進修。');
+  const locked=node('div');
+  globalThis.EventPicker.render(locked,{selected:'vehicle',locked:true});
+  assert.equal(walk(locked).filter(n=>n.className==='template-upcoming').length,0);
+  delete globalThis.EventTemplates;delete globalThis.document;delete globalThis.EventPicker;
+});

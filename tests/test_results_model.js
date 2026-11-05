@@ -62,19 +62,21 @@ const mc = {
 };
 const request = {profile: {monthly_investment: 3000, target_emergency_months: 6}};
 
-test('assumption rows disclose historical defaults, sampling, seed and vehicle note', () => {
+test('assumption rows disclose historical defaults, sampling, run count and vehicle note in plain words', () => {
   const simulation = {assumptions: {annual_inflation_rate: 0.0134, inflation_source: 'historical_average', raise_rate: null,
     raise_source: 'follows_inflation', annual_return_rate: 0.1397, return_source: 'historical_average'}};
   const rows = results.assumptionRows({simulation, mc, request, startPeriod: '2026-11', months: 240,
     simulations: 300, seed: 42, converted: {note: '購車持有成本以固定通膨率每年調整。'}});
   const text = Object.fromEntries(rows.map(row => [row.label, row.value]));
   assert.equal(text['模擬期間'], '2026-11 起共 240 個月（至 2046-10）');
-  assert.match(text['確定性模擬的通膨率'], /1\.34%.*2003-01 至 2026-09/);
-  assert.match(text['Monte Carlo 的通膨'], /連續 12 個月一組/);
+  assert.match(text['固定值模擬的通膨率'], /1\.34%.*2003-01 至 2026-09/);
+  assert.match(text['隨機模擬的通膨'], /連續 12 個月/);
   assert.equal(text['調薪率'], '跟著通膨，每年調整一次');
-  assert.match(text['確定性模擬的投資報酬率'], /13\.97%/);
-  assert.match(text['Monte Carlo 試驗'], /300 次，亂數種子 42/);
+  assert.match(text['固定值模擬的投資報酬率'], /13\.97%/);
+  assert.match(text['隨機模擬次數'], /300 次/);
   assert.equal(text['購車成本'], '購車持有成本以固定通膨率每年調整。');
+  const shown = rows.map(row => `${row.label}${row.value}`).join('');
+  assert.doesNotMatch(shown, /Monte Carlo|亂數種子|確定性|抽樣|42/);
 });
 
 test('assumption rows show user rates and no investment', () => {
@@ -84,9 +86,49 @@ test('assumption rows show user rates and no investment', () => {
   const rows = results.assumptionRows({simulation, mc: fixed, request: {profile: {inflation_rate: 0.02}},
     startPeriod: '2026-11', months: 60, simulations: 300, seed: 42});
   const text = Object.fromEntries(rows.map(row => [row.label, row.value]));
-  assert.match(text['確定性模擬的通膨率'], /你設定的固定值/);
-  assert.match(text['Monte Carlo 的通膨'], /固定為每年 2%/);
+  assert.match(text['固定值模擬的通膨率'], /你設定的固定值/);
+  assert.match(text['隨機模擬的通膨'], /固定為每年 2%，不隨機抽取/);
   assert.equal(text['調薪率'], '每年固定 3%');
   assert.match(text['投資'], /沒有設定投資/);
   assert.equal(text['購車成本'], undefined);
+});
+
+test('conclusion states the cash answer first and keeps the limits of the model in view', () => {
+  const mc = {probability_cash_shortfall: 0.0333, net_worth_percentiles: {p5: 100, p50: 500, p95: 900}};
+  const base = {summary: {minimum_cash_balance: 12000, minimum_cash_month: 3, first_negative_cash_month: null},
+    mc, startPeriod: '2027-01', months: 60, simulations: 300};
+  const caution = results.conclusion(base);
+  assert.equal(caution.tone, 'caution');
+  assert.match(caution.headline, /固定值模擬顯示現金不會低於 0，但在較差的隨機情況下可能會/);
+  assert.deepEqual(caution.facts.map(fact => fact.label.replace(/ ?\d{4}-\d{2} ?/, '')), ['現金最低會到（固定值模擬）', '現金不足機率（隨機模擬）', '的淨資產（隨機模擬，一般情況）']);
+  assert.doesNotMatch(caution.headline + caution.facts.map(fact => fact.label).join(''), /平均/);
+  assert.equal(caution.facts.length, 3);
+  assert.equal(caution.facts[0].note, '發生在 2027-03');
+  assert.equal(caution.facts[1].value, '3.33%');
+  assert.equal(caution.facts[0].value, '$12,000');
+  assert.equal(results.conclusion({...base, summary: {...base.summary, minimum_cash_balance: 1234.56}}).facts[0].value, '$1,235');
+  assert.doesNotMatch(caution.facts[2].note, /\.00/);
+  assert.match(caution.facts[2].label, /2031-12/);
+  assert.match(caution.caveat, /不是預測，也不保證/);
+
+  const alert = results.conclusion({...base, summary: {...base.summary, first_negative_cash_month: 7}});
+  assert.equal(alert.tone, 'alert');
+  assert.match(alert.headline, /固定值模擬顯示，現金會在 2027-07 第一次低於 0/);
+  assert.match(alert.caveat, /固定值模擬是.*隨機模擬是.*300 次.*不是預測，也不保證/);
+
+  const calm = results.conclusion({...base, mc: {...mc, probability_cash_shortfall: 0}});
+  assert.equal(calm.tone, 'calm');
+  assert.match(calm.headline, /300 次隨機模擬中，現金都沒有低於 0/);
+});
+
+test('conclusion compares the plan with the same plan without its events', () => {
+  const mc = {probability_cash_shortfall: 0, net_worth_percentiles: {p5: 100, p50: 500, p95: 900}};
+  const summary = {minimum_cash_balance: 10000, minimum_cash_month: 3, first_negative_cash_month: null, final_balance: 400000};
+  const base = {summary, mc, startPeriod: '2027-01', months: 60, simulations: 300};
+  assert.equal(results.conclusion(base).comparison, null);
+  const worse = results.conclusion({...base, baseline: {final_balance: 1000000, minimum_cash_balance: 250000.4}}).comparison;
+  assert.equal(worse.lead, '和沒有這個計畫事件相比（固定值模擬）');
+  assert.equal(worse.text, '2031-12 的現金少了 $600,000，最低現金少了 $240,000。');
+  const better = results.conclusion({...base, baseline: {final_balance: 100000, minimum_cash_balance: 10000}}).comparison;
+  assert.equal(better.text, '2031-12 的現金多了 $300,000，最低現金沒有差別。');
 });

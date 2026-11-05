@@ -2,12 +2,14 @@
   'use strict';
   async function start(ctx) {
     const S=root.FutureWalletShell,M=root.ShellModel,model=root.PlannerModel,E=root.ExplanationModel,T=root.EventTemplates,P=root.EventPicker,$=id=>root.document.getElementById(id),money=M.money;
+    // Buying a car is entered in three steps; every other event type shows its fields at once.
+    let vehicleStep=1;
     function syncEventFields() {
       const type = $('eventForm').elements.type.value;
       for (const label of root.document.querySelectorAll('[data-event-field]')) {
         const key = label.dataset.eventField;
         const visible = type === 'range' ? ['monthly_amount','end_period'].includes(key) : type === 'one_time' ? key === 'amount' : type === 'salary_change' && key === 'new_salary';
-        label.hidden = !visible; label.querySelector('input').disabled = !visible;
+        label.hidden = !visible; for (const control of label.querySelectorAll('input,select')) control.disabled = !visible;
       }
       for (const label of root.document.querySelectorAll('[data-vehicle-field]')) {
         const visible = type === 'vehicle_purchase' && (label.dataset.vehicleField !== 'financed' || $('eventForm').elements.payment_method.value === 'financed');
@@ -17,6 +19,33 @@
       fees.sync();
       parking.sync();
       salaryReference.sync();
+      syncVehicleSteps();
+    }
+    const stepControls=step=>[...$('eventForm').querySelectorAll(`[data-vehicle-step="${step}"] input,[data-vehicle-step="${step}"] select`)];
+    function syncVehicleSteps() {
+      const form=$('eventForm'),active=form.elements.type.value==='vehicle_purchase';
+      // The browser cannot focus a control on a hidden step, so the steps validate themselves instead.
+      form.noValidate=active;
+      if(active)form.dataset.activeStep=String(vehicleStep);else delete form.dataset.activeStep;
+      $('vehicleSteps').hidden=!active;
+      for(const button of $('vehicleSteps').querySelectorAll('[data-step-button]')){
+        if(Number(button.dataset.stepButton)===vehicleStep)button.setAttribute('aria-current','step');else button.removeAttribute('aria-current');
+      }
+      $('vehiclePrev').hidden=!active||vehicleStep===1;$('vehicleNext').hidden=!active||vehicleStep===3;
+      form.querySelector('[type="submit"]').hidden=active&&vehicleStep<3;
+    }
+    function showVehicleStep(step,{focus=true}={}) {
+      vehicleStep=step;syncVehicleSteps();
+      if(focus)stepControls(step).find(control=>!control.disabled&&!control.closest('[hidden]'))?.focus();
+    }
+    function firstInvalidStep(from,to) {
+      for(let step=from;step<=to;step++){const control=stepControls(step).find(item=>!item.checkValidity());if(control)return {step,control};}
+      return null;
+    }
+    function advanceVehicleStep(target) {
+      const invalid=firstInvalidStep(vehicleStep,target-1);
+      if(invalid){showVehicleStep(invalid.step,{focus:false});invalid.control.reportValidity();return false;}
+      showVehicleStep(target);return true;
     }
     const ownershipLabels = {annual_insurance:'保險',annual_tax:'稅費',annual_maintenance_budget:'保養',monthly_fuel_or_energy:'油電',monthly_parking:'停車',annual_depreciation_rate:'折舊率'};
     let vehicleCatalog = [];
@@ -54,11 +83,28 @@
         }
         $('vehicleMetadataStatus').textContent = '可修改車價；留空的持有成本於計算時套用預設值。';
         syncVehicleSpec();
-      } catch (_) { if(ctx.alive)$('vehicleMetadataStatus').textContent = '車款或預設值載入未完成；可使用自訂車款，留空成本由後端套用預設值。重新整理可重試。'; }
+      } catch (_) { if(ctx.alive)$('vehicleMetadataStatus').textContent = '車款或預設值載入未完成；可使用自訂車款，留空的成本會用系統預設值。重新整理可重試。'; }
     }
 
-    function renderResults(simulation,mc,converted,startPeriod) {
+    function renderConclusion(summary,mc,startPeriod,months,baseline) {
+        const view = root.ResultsModel.conclusion({summary, mc, startPeriod, months, simulations:300, baseline});
+        $('conclusion').dataset.tone = view.tone;
+        $('conclusionHeadline').textContent = view.headline;
+        $('conclusionFacts').replaceChildren(...view.facts.map(fact => {
+          const value = S.element('dd'), item = S.element('div');
+          value.append(S.element('strong', fact.value), S.element('small', fact.note));
+          item.append(S.element('dt', fact.label), value);
+          return item;
+        }));
+        const compare = $('conclusionCompare');
+        compare.hidden = !view.comparison;
+        if (view.comparison) { compare.querySelector('strong').textContent = `${view.comparison.lead}：`; compare.querySelector('span').textContent = view.comparison.text; }
+        $('conclusionAction').hidden = view.tone === 'calm';
+        $('conclusionCaveat').textContent = view.caveat;
+    }
+    function renderResults(simulation,mc,converted,startPeriod,months,baseline) {
         const summary = simulation.result.summary;
+        renderConclusion(summary, mc, startPeriod, months, baseline?.result?.summary);
         $('minimumCash').textContent = money(summary.minimum_cash_balance);
         $('minimumCashPeriod').textContent = model.monthToPeriod(startPeriod, summary.minimum_cash_month);
         $('firstNegativePeriod').textContent = summary.first_negative_cash_month == null ? '未出現' : model.monthToPeriod(startPeriod, summary.first_negative_cash_month);
@@ -97,11 +143,19 @@
       $('simulationResults').hidden=false;
     }
     let events=[],editing=null,lastRun=null,qa=null;
+    // Progress and failures of a long action show next to its button, where the user is looking.
+    function runStatus(id,text,working=false){
+      const node=$(id);node.textContent=text;
+      if(working)node.dataset.state='working';else delete node.dataset.state;
+    }
     function clearExplanation(){
-      $('explanationResult').replaceChildren();$('explanationSource').hidden=true;$('explanationNotice').hidden=true;
+      $('explanationResult').replaceChildren();$('explanationSource').hidden=true;$('explanationNotice').hidden=true;runStatus('explanationStatus','');
+      $('explanationError').hidden=true;$('explanationError').textContent='';
     }
     function invalidate(){
-      $('simulationResults').hidden=true;$('simulationWarnings').replaceChildren();lastRun=null;clearExplanation();
+      const hadResults=!$('simulationResults').hidden;
+      $('simulationResults').hidden=true;$('simulationWarnings').replaceChildren();lastRun=null;clearExplanation();runStatus('simulationStatus',hadResults?'計畫或輸入已變更，上一次的結果已清除，請重新執行模擬。':'');
+      $('simulationError').hidden=true;$('simulationError').textContent='';
       qa?.clear();
       for(const target of root.document.querySelectorAll('[data-analysis-result]'))target.replaceChildren();
     }
@@ -140,10 +194,14 @@
       form.hidden=false;
     }
     // A plan holds one event: once it exists the picker is gone and the event can only be edited or deleted.
-    function syncEditorPanel(){$('eventEditorPanel').hidden=events.length>0&&!editing;}
+    function syncEditorPanel(){
+      $('eventEditorPanel').hidden=events.length>0&&!editing;
+      // Say why the add button is gone instead of leaving the user to wonder.
+      $('eventLimitNote').hidden=events.length===0||!!editing;
+    }
     function selectTemplate(template){
       if(ctx.busy||editing||events.length||template?.status!=='available')return;
-      $('eventForm').elements.type.value=template.eventType;$('eventForm').elements.name.value=T.asksForName(template)?'':template.name;
+      vehicleStep=1;$('eventForm').elements.type.value=template.eventType;$('eventForm').elements.name.value=T.asksForName(template)?'':template.name;
       showTemplate(template,'新增事件');syncEventFields();
       if(template.eventType==='vehicle_purchase'){syncVehicleSpec();parking.refresh();}
       if(template.eventType==='salary_change')salaryReference.refresh();
@@ -156,7 +214,7 @@
       P.render($('eventTemplatePicker'),{selected:template?.id,locked,onSelect:selectTemplate});
     }
     function resetEditor(){
-      editing=null;$('eventForm').reset();$('eventForm').elements.vehicle_catalog_id.value='';
+      editing=null;vehicleStep=1;$('vehicleOptionalCosts').open=false;$('eventForm').reset();$('eventForm').elements.vehicle_catalog_id.value='';
       delete $('eventForm').elements.vehicle_catalog_id.dataset.pending;
       $('eventForm').elements.start_period.value=S.taipeiPeriod();$('eventEditorHeading').textContent='新增事件';
       $('eventForm').elements.type.value='';$('eventForm').hidden=true;fees.reset();parking.reset();salaryReference.reset();
@@ -164,13 +222,18 @@
       $('eventForm').querySelector('[type="submit"]').textContent='新增事件';$('cancelEdit').hidden=true;renderPicker();syncEventFields();syncEditorPanel();
     }
     function editEvent(event){
-      const form=$('eventForm');form.reset();editing=event.id;
+      const form=$('eventForm');form.reset();editing=event.id;vehicleStep=1;
       for(const key of ['name','type','start_period','end_period','amount','monthly_amount','new_salary'])form.elements.namedItem(key).value=event[key]??'';
+      for(const key of ['amount','monthly_amount']){
+        const stored=Number(event[key]);if(event[key]==null||event[key]===''||!Number.isFinite(stored))continue;
+        const split=model.splitAmount(stored);form.elements.namedItem(key).value=split.value;form.elements.namedItem(`${key}_direction`).value=split.direction;
+      }
       form.elements.vehicle_catalog_id.value='';
       form.elements.vehicle_catalog_id.dataset.pending=event.details?.vehicle_catalog_id||'';
       for(const[key,value]of Object.entries(event.details||{})){
         const input=form.elements.namedItem(key);if(input)input.value=['annual_interest_rate','annual_depreciation_rate'].includes(key)?Number(value)*100:value??'';
       }
+      $('vehicleOptionalCosts').open=[...$('vehicleOptionalCosts').querySelectorAll('input')].some(input=>input.value!=='');
       fees.reset(event.details);syncVehicleSpec();
       parking.reset(event.details);
       salaryReference.reset(event.details||{});
@@ -180,7 +243,7 @@
     }
     function renderEvents(){
       const list=$('eventList');list.replaceChildren();
-      if(!events.length)list.append(S.element('li','尚無事件，從下方新增第一筆。'));
+      if(!events.length)list.append(S.element('li','還沒有事件，請從下方選一個。'));
       for(const event of M.sortEvents(events)){
         const li=S.element('li'),head=S.element('div',null,'event-head'),copy=S.element('div',null,'event-copy');
         const template=T.templateForEvent(event);
@@ -222,14 +285,29 @@
           emergencyTargetMonths:ctx.profile.emergency_target_months,eventSummary:M.eventSummary})
       : {start_period:$('startPeriod').value}});
     resetEditor();await loadEvents();if(!ctx.alive)return;
-    function onSubmit(id,action){$(id).addEventListener('submit',event=>{event.preventDefault();if($(id).reportValidity())ctx.perform(action);});}
+    function onSubmit(id,action,options){$(id).addEventListener('submit',event=>{event.preventDefault();if($(id).reportValidity())ctx.perform(action,options);});}
     $('eventForm').elements.payment_method.addEventListener('change',syncEventFields);
     $('eventForm').elements.vehicle_catalog_id.addEventListener('change',()=>{
       delete $('eventForm').elements.vehicle_catalog_id.dataset.pending;
       const car=vehicleCatalog.find(item=>item.id===$('eventForm').elements.vehicle_catalog_id.value);if(car)$('eventForm').elements.purchase_price.value=car.price_twd;
       syncVehicleSpec();
     });
+    $('vehicleSteps').addEventListener('click',event=>{
+      const button=event.target.closest('[data-step-button]');if(!button||ctx.busy)return;
+      const target=Number(button.dataset.stepButton);if(target<=vehicleStep)showVehicleStep(target);else advanceVehicleStep(target);
+    });
+    $('vehicleNext').addEventListener('click',()=>{if(!ctx.busy)advanceVehicleStep(vehicleStep+1);});
+    $('vehiclePrev').addEventListener('click',()=>{if(!ctx.busy&&vehicleStep>1)showVehicleStep(vehicleStep-1);});
+    // Enter on an early step moves on; only the last step saves, and only when every step is valid.
+    $('eventForm').addEventListener('submit',event=>{
+      if(!$('eventForm').noValidate)return;
+      if(vehicleStep<3){event.preventDefault();event.stopImmediatePropagation();advanceVehicleStep(vehicleStep+1);return;}
+      const invalid=firstInvalidStep(1,3);
+      if(invalid){event.preventDefault();event.stopImmediatePropagation();showVehicleStep(invalid.step,{focus:false});invalid.control.reportValidity();}
+    },true);
     $('cancelEdit').addEventListener('click',resetEditor);
+    // A rejected value inside the collapsed optional costs must not fail silently.
+    $('vehicleOptionalCosts').addEventListener('invalid',()=>{$('vehicleOptionalCosts').open=true;},true);
     $('changeTemplate').addEventListener('click',()=>{if(!ctx.busy)resetEditor();});
     onSubmit('planNameForm',async()=>{
       const name=$('planNameForm').elements.name.value.trim();if(!name)throw new Error('請填寫計畫名稱');
@@ -243,14 +321,15 @@
     onSubmit('eventForm',async()=>{
       const form=$('eventForm'),name=form.elements.name.value.trim();if(!name)throw new Error('請填寫事件名稱');
       const numeric=key=>{const raw=form.elements.namedItem(key).value.trim();if(!raw||!Number.isFinite(Number(raw)))throw new Error('請填寫有效數字');return Number(raw);};
+      const signed=key=>model.signedAmount(form.elements.namedItem(key).value,form.elements.namedItem(`${key}_direction`).value);
       const values={name,type:form.elements.type.value,start_period:form.elements.start_period.value,
         amount:null,monthly_amount:null,new_salary:null,end_period:null,details:{}};
       if(!T.templateForEvent(values))throw new Error('請先選擇可用的事件');
       if(editing&&events.find(event=>event.id===editing)?.type!==values.type)throw new Error('修改事件時不可變更事件類型');
-      if(values.type==='one_time')values.amount=numeric('amount');
+      if(values.type==='one_time')values.amount=signed('amount');
       else if(values.type==='salary_change'){values.new_salary=numeric('new_salary');values.details=salaryReference.details();}
       else if(values.type==='range'){
-        values.monthly_amount=numeric('monthly_amount');values.end_period=form.elements.end_period.value||null;
+        values.monthly_amount=signed('monthly_amount');values.end_period=form.elements.end_period.value||null;
         if(values.end_period&&values.end_period<values.start_period)throw new Error('結束月份不可早於開始月份');
       }else{
         const raw={};for(const key of ['vehicle_catalog_id','purchase_price','payment_method','down_payment','loan_term_months','annual_interest_rate','annual_depreciation_rate',...model.ownershipFields])raw[key]=form.elements.namedItem(key).value;
@@ -262,28 +341,37 @@
     });
     $('simulationForm').addEventListener('input',invalidate);
     onSubmit('simulationForm',async()=>{
-      invalidate();S.status('正在計算…');
+      invalidate();runStatus('simulationStatus','正在計算，請稍候…',true);
+      try{
       const startPeriod=$('startPeriod').value,months=Number($('simulationMonths').value);
       const built=await S.prepareSimulation(ctx,events,months,startPeriod);if(!ctx.alive)return;
       for(const warning of built.warnings)$('simulationWarnings').append(S.element('li',warning));
-      const [simulation,mc]=await ctx.calculation(post=>Promise.all([post('/simulate',{...built.request,seed:42}),post('/monte-carlo',{...built.request,simulations:300,seed:42})]));
+      // The same plan without its events, so the answer can say what the event changed; a failure here only drops the comparison.
+      const hasEvents=built.request.events.length>0||!!built.converted;
+      const baseRequest=hasEvents?(await S.prepareSimulation(ctx,[],months,startPeriod)).request:null;
+      const [simulation,mc,baseline]=await ctx.calculation(post=>Promise.all([post('/simulate',{...built.request,seed:42}),post('/monte-carlo',{...built.request,simulations:300,seed:42}),
+        baseRequest?post('/simulate',{...baseRequest,seed:42}).catch(()=>null):null]));
       if(!ctx.alive)return;
-      renderResults(simulation,mc,built.converted,startPeriod);lastRun={built,months,events};
+      renderResults(simulation,mc,built.converted,startPeriod,months,baseline);lastRun={built,months,events};
       $('assumptionList').replaceChildren(...root.ResultsModel.assumptionRows({simulation:simulation.result,mc,request:built.request,
         startPeriod,months,simulations:300,seed:42,converted:built.converted}).flatMap(row=>[S.element('dt',row.label),S.element('dd',row.value)]));
       root.WalletCharts.draw($('planChart'),$('planChartSummary'),simulation.result.simulation_curve,startPeriod,events,ctx.profile,{debts:ctx.debts});
       if(mc.monthly_bands)root.WalletCharts.drawBands($('bandChart'),$('bandChartSummary'),mc.monthly_bands,startPeriod,events,ctx.profile,{debts:ctx.debts});
-      S.status('模擬完成。');
-    });
+      runStatus('simulationStatus','模擬完成，結果在下方。');
+      return $('conclusionHeading');
+      }catch(error){runStatus('simulationStatus','');throw error;}
+    },{scope:'simulationPanel',errorId:'simulationError'});
     $('explainResults').addEventListener('click',()=>ctx.perform(async()=>{
       const run=lastRun;if(!run)throw new Error('請先執行模擬');
-      clearExplanation();S.status('正在產生說明…');
-      const request=E.buildExplanationRequest({prepared:run.built,events:run.events,months:run.months,
-        emergencyTargetMonths:ctx.profile.emergency_target_months,eventSummary:M.eventSummary});
-      const data=await ctx.calculation(post=>post('/ai/plan-explanation',request));
-      if(!ctx.alive||lastRun!==run)return;
-      renderExplanation(data);S.status('說明已產生。');
-    }));
+      clearExplanation();runStatus('explanationStatus','正在產生說明…',true);
+      try{
+        const request=E.buildExplanationRequest({prepared:run.built,events:run.events,months:run.months,
+          emergencyTargetMonths:ctx.profile.emergency_target_months,eventSummary:M.eventSummary});
+        const data=await ctx.calculation(post=>post('/ai/plan-explanation',request));
+        if(!ctx.alive||lastRun!==run){runStatus('explanationStatus','');return;}
+        renderExplanation(data);runStatus('explanationStatus','說明已產生。');
+      }catch(error){runStatus('explanationStatus','');throw error;}
+    },{scope:'explanationSection',errorId:'explanationError'}));
     const add=T.resolveAddParameter(root.location.search);
     if(new URLSearchParams(root.location.search).has('add'))root.history.replaceState(root.history.state,'',`${root.location.pathname}${add.search}${root.location.hash}`);
     if(add.template){

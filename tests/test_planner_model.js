@@ -149,3 +149,17 @@ test('vehicle analysis respects the existing next-month and 58-month limits',()=
   for(const purchase of ['2026-10','2026-11','2031-10','invalid']) assert.ok(M.vehicleAnalysisReason('2026-11',purchase));
   for(const purchase of ['2026-12','2031-09']) assert.equal(M.vehicleAnalysisReason('2026-11',purchase),'');
 });
+
+test('amounts are typed positive and the income or expense choice sets the stored sign', () => {
+  assert.equal(M.signedAmount('50000', 'expense'), -50000);
+  assert.equal(M.signedAmount('50000', 'income'), 50000);
+  assert.equal(Object.is(M.signedAmount('0', 'expense'), 0), true);
+  assert.throws(() => M.signedAmount('-1', 'income'), /0 以上/);
+  assert.throws(() => M.signedAmount('', 'expense'), /有效數字/);
+  assert.deepEqual(M.splitAmount('-5000.00'), {value: 5000, direction: 'expense'});
+  assert.deepEqual(M.splitAmount(2000), {value: 2000, direction: 'income'});
+  for (const stored of [-5000, 2000, 123.45]) {
+    const {value, direction} = M.splitAmount(stored);
+    assert.equal(M.signedAmount(value, direction), stored);
+  }
+});

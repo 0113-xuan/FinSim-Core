@@ -11,31 +11,41 @@
 <button id="drawerScrim" class="drawer-scrim" type="button" aria-label="關閉選單" tabindex="-1" hidden></button>
 <aside id="shellSidebar" class="shell-sidebar" aria-label="主要導覽"><button id="closeMenu" class="close-menu" type="button">關閉選單</button>
 <a class="shell-brand" href="/dashboard.html">FutureWallet</a><nav id="sideNav" aria-label="頁面與計畫"></nav><button type="button" data-sign-out>登出</button></aside>
-<main class="shell-main"><div class="page-width"><header class="page-header"><h1 id="pageTitle">計畫</h1><p class="lede">安排事件，再比較未來的現金與淨資產走勢。</p></header><p id="pageStatus" role="status" aria-live="polite">正在載入…</p><p id="pageError" class="error" role="alert" hidden></p><div id="pageContent" hidden><section id="notFound" class="panel" hidden><h2>找不到這個計畫</h2><a href="/dashboard.html">回儀表板</a></section>
-<div id="planWorkspace" hidden><section class="panel"><form id="planNameForm"><fieldset><label>計畫名稱<input name="name" maxlength="80" required></label><div class="actions"><button type="submit">儲存名稱</button><button id="deletePlan" type="button" class="danger">刪除計畫</button></div></fieldset></form></section>
-<section class="panel" aria-labelledby="eventsHeading"><h2 id="eventsHeading">事件時間軸</h2><ul id="eventList" class="saved-list"></ul></section>
-<section id="eventEditorPanel" class="panel" aria-labelledby="eventEditorHeading"><h2 id="eventEditorHeading">新增事件</h2><button id="changeTemplate" type="button" hidden>改選其他事件</button><div id="eventTemplatePicker" aria-label="選擇事件範本"></div><form id="eventForm" hidden><fieldset id="eventFields" disabled><div class="grid two">
+<main class="shell-main"><div class="page-width"><header class="page-header"><h1 id="pageTitle">計畫</h1><p class="lede">安排一個事件，看看它對未來現金與淨資產的影響。</p></header><p id="pageStatus" role="status" aria-live="polite">正在載入…</p><p id="pageError" class="error" role="alert" hidden></p><div id="pageContent" hidden><section id="notFound" class="panel" hidden><h2>找不到這個計畫</h2><a href="/dashboard.html">回儀表板</a></section>
+<div id="planWorkspace" hidden>
+<section class="panel" aria-labelledby="eventsHeading"><h2 id="eventsHeading" tabindex="-1">計畫事件</h2><ul id="eventList" class="saved-list"></ul>
+<p id="eventLimitNote" class="lede" hidden>一個計畫放一個事件；想比較其他情況，請<a href="/dashboard.html">回儀表板另外建立計畫</a>。</p></section>
+<section id="eventEditorPanel" class="panel" aria-labelledby="eventEditorHeading"><h2 id="eventEditorHeading">新增事件</h2><button id="changeTemplate" type="button" hidden>改選其他事件</button><div id="eventTemplatePicker" aria-label="選擇事件範本"></div><form id="eventForm" hidden><fieldset id="eventFields" disabled>
+      <ol id="vehicleSteps" class="vehicle-steps" aria-label="購車步驟" hidden>
+        <li><button type="button" data-step-button="1">1 車與價格</button></li>
+        <li><button type="button" data-step-button="2">2 付款</button></li>
+        <li><button type="button" data-step-button="3">3 持有成本</button></li>
+      </ol><div class="grid two">
         <label data-event-name hidden>事件名稱<input name="name" maxlength="80" required></label>
         <input type="hidden" name="type" value="">
-        <label>開始月份<input name="start_period" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
-        <label data-event-field="end_period" hidden>結束月份（留空至模擬結束）<input name="end_period" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" disabled></label>
-        <label data-event-field="amount">一次性金額（支出為負）<input name="amount" type="number" min="-20000000" max="20000000" step="0.01" required></label>
-        <label data-event-field="monthly_amount" hidden>每月金額（支出為負）<input name="monthly_amount" type="number" min="-10000000" max="10000000" step="0.01" required disabled></label>
+        <label data-vehicle-step="1">開始月份<input name="start_period" type="month" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
+        <label data-event-field="end_period" hidden>結束月份（留空至模擬結束）<input name="end_period" type="month" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" disabled></label>
+        <div class="direction-field" data-event-field="amount"><label>收入或支出<select name="amount_direction"><option value="expense">支出（錢花出去）</option><option value="income">收入（錢進來）</option></select></label>
+          <label>一次性金額（元）<input name="amount" type="number" min="0" max="20000000" step="0.01" required></label></div>
+        <div class="direction-field" data-event-field="monthly_amount" hidden><label>收入或支出<select name="monthly_amount_direction" disabled><option value="expense">支出（錢花出去）</option><option value="income">收入（錢進來）</option></select></label>
+          <label>每月金額（元）<input name="monthly_amount" type="number" min="0" max="10000000" step="0.01" required disabled></label></div>
         <label data-event-field="new_salary" hidden>新實領月薪<input name="new_salary" type="number" min="0" max="50000000" step="0.01" required disabled></label>
-        <label data-vehicle-field hidden>車款<select name="vehicle_catalog_id" disabled><option value="">自訂車款</option></select></label>
-        <label data-vehicle-field hidden>車價<input name="purchase_price" type="number" min="0.01" max="20000000" step="0.01" required disabled></label>
-        <label data-vehicle-field hidden>排氣量（cc）<input name="displacement_cc" type="number" min="0" max="100000" step="1" disabled></label>
-        <label data-vehicle-field hidden>燃料種類<select name="fuel_type" disabled><option value="gasoline">汽油</option><option value="hybrid">油電混合</option><option value="diesel">柴油</option><option value="ev">純電</option></select></label>
-        <p id="vehicleSpecSource" data-vehicle-field hidden></p>
-        <label data-vehicle-field hidden>付款方式<select name="payment_method" disabled><option value="cash">現金</option><option value="financed">貸款</option></select></label>
-        <label data-vehicle-field="financed" hidden>頭期款<input name="down_payment" type="number" min="0" max="20000000" step="0.01" required disabled></label>
-        <label data-vehicle-field="financed" hidden>貸款期數（月）<input name="loan_term_months" type="number" min="1" max="600" step="1" required disabled></label>
-        <label data-vehicle-field="financed" hidden>年利率（%）<input name="annual_interest_rate" type="number" min="0" max="100" step="any" required disabled></label>
-        <p id="publicSectorLoanNote" hidden></p>
-        <label data-vehicle-field hidden>保養（年，選填）<input name="annual_maintenance_budget" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
-        <label data-vehicle-field hidden>油電（月，選填）<input name="monthly_fuel_or_energy" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用後端預設" disabled></label>
-        <label data-vehicle-field hidden>折舊率（%／年，選填）<input name="annual_depreciation_rate" type="number" min="0" max="100" step="any" placeholder="留空使用預設 15%" disabled></label>
-        <p id="vehicleMetadataStatus" data-vehicle-field hidden role="status"></p>
+        <label data-vehicle-field data-vehicle-step="1" hidden>車款<select name="vehicle_catalog_id" disabled><option value="">自訂車款</option></select></label>
+        <label data-vehicle-field data-vehicle-step="1" hidden>車價<input name="purchase_price" type="number" min="0.01" max="20000000" step="0.01" required disabled></label>
+        <label data-vehicle-field data-vehicle-step="1" hidden>排氣量（cc）<input name="displacement_cc" type="number" min="0" max="100000" step="1" disabled></label>
+        <label data-vehicle-field data-vehicle-step="1" hidden>燃料種類<select name="fuel_type" disabled><option value="gasoline">汽油</option><option value="hybrid">油電混合</option><option value="diesel">柴油</option><option value="ev">純電</option></select></label>
+        <p id="vehicleSpecSource" data-vehicle-field data-vehicle-step="1" hidden></p>
+        <label data-vehicle-field data-vehicle-step="2" hidden>付款方式<select name="payment_method" disabled><option value="cash">現金</option><option value="financed">貸款</option></select></label>
+        <label data-vehicle-field="financed" data-vehicle-step="2" hidden>頭期款<input name="down_payment" type="number" min="0" max="20000000" step="0.01" required disabled></label>
+        <label data-vehicle-field="financed" data-vehicle-step="2" hidden>貸款期數（月）<input name="loan_term_months" type="number" min="1" max="600" step="1" required disabled></label>
+        <label data-vehicle-field="financed" data-vehicle-step="2" hidden>年利率（%）<input name="annual_interest_rate" type="number" min="0" max="100" step="any" required disabled></label>
+        <p id="publicSectorLoanNote" data-vehicle-step="2" hidden></p>
+        <details id="vehicleOptionalCosts" class="advanced-fields" data-vehicle-field data-vehicle-step="3" hidden><summary>保養、油電、折舊（選填，不填就用系統預設值）</summary><div class="grid two">
+          <label data-vehicle-field hidden>保養（年，選填）<input name="annual_maintenance_budget" type="number" min="0" max="20000000" step="0.01" placeholder="留空使用系統預設值" disabled></label>
+          <label data-vehicle-field hidden>油電（月，選填）<input name="monthly_fuel_or_energy" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用系統預設值" disabled></label>
+          <label data-vehicle-field hidden>折舊率（%／年，選填）<input name="annual_depreciation_rate" type="number" min="0" max="100" step="any" placeholder="留空使用預設 15%" disabled></label>
+        </div></details>
+        <p id="vehicleMetadataStatus" data-vehicle-field data-vehicle-step="1" hidden role="status"></p>
       </div>
       <section id="salaryReferenceSection" class="fee-section" hidden aria-labelledby="salaryReferenceHeading">
         <h3 id="salaryReferenceHeading">新工作的行業與薪資參考</h3>
@@ -45,12 +55,12 @@
         <p>官方統計為稅前金額，實領會低於稅前，請依薪資單上的實領金額調整。</p>
         <div class="actions"><button id="applySalaryReference" type="button" disabled>帶入參考值</button><button id="retrySalaryReference" type="button">重新載入薪資參考</button></div>
       </section>
-      <section id="vehicleParkingSection" class="fee-section" hidden><fieldset id="parkingFields" disabled>
+      <section id="vehicleParkingSection" class="fee-section" data-vehicle-step="3" hidden><fieldset id="parkingFields" disabled>
         <legend>停車費</legend><label>你有自己的停車位嗎？<select name="has_parking_space"><option value="false">沒有</option><option value="true">有</option></select><small>例如住家自有車位、公司提供車位；有車位時預設 0 元，仍可修改。</small></label>
-        <label>停車費（月，選填）<input name="monthly_parking" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用後端預設"></label>
+        <label>停車費（月，選填）<input name="monthly_parking" type="number" min="0" max="10000000" step="0.01" placeholder="留空使用系統預設值"></label>
         <div id="parkingReference"><h3>所在地行政區的停車場參考</h3><p id="parkingStatus" role="status" aria-live="polite"></p><div id="parkingLots" class="parking-options"></div><p id="parkingSource"></p><button id="retryParking" type="button">重新載入停車場</button></div>
       </fieldset></section>
-      <section id="vehicleFeesSection" class="vehicle-fees" hidden><fieldset id="vehicleFeesFields" disabled>
+      <section id="vehicleFeesSection" class="vehicle-fees" data-vehicle-step="3" hidden><fieldset id="vehicleFeesFields" disabled>
         <p id="feesStatus" role="status" aria-live="polite">請先填寫車價與排氣量。</p><button id="retryVehicleFees" type="button">重新載入稅費與保險</button>
         <section class="fee-section" aria-labelledby="taxHeading"><h3 id="taxHeading">稅費（年）</h3><div id="officialTax"></div>
           <label>年度稅費合計（元，可自訂）<input name="annual_tax" type="number" min="0" max="20000000" step="0.01" placeholder="請確認官方金額或手動填寫"></label>
@@ -64,37 +74,57 @@
           <button id="openInsuranceDialog" type="button" aria-haspopup="dialog" disabled>選擇保險項目</button>
         </section>
       </fieldset></section>
-      <div class="button-row"><button type="submit">新增事件</button><button id="cancelEdit" type="button" hidden>取消修改</button></div></fieldset></form></section>
-<section class="panel" aria-labelledby="simulationHeading"><h2 id="simulationHeading">模擬結果</h2>
-<p>每月投資金額從現金轉入投資帳戶，投資市值依台股報酬指數變動，現金不足時也不會自動賣出。淨資產＝現金＋投資市值＋車輛估值－車貸剩餘本金－既有貸款剩餘應還。車輛估值依固定折舊率計算，不是成交價。</p>
-<form id="simulationForm"><fieldset><div class="field-grid"><label>模擬起始月份<input id="startPeriod" type="text" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
+      <div class="button-row"><button id="vehiclePrev" type="button" hidden>上一步</button><button id="vehicleNext" class="primary" type="button" hidden>下一步</button><button type="submit" class="primary">新增事件</button><button id="cancelEdit" type="button" hidden>取消修改</button></div></fieldset></form></section>
+<section id="simulationPanel" class="panel" aria-labelledby="simulationHeading"><h2 id="simulationHeading">模擬結果</h2>
+<p>每月投資的錢會從現金轉進投資帳戶；現金不夠時，系統不會自動賣出投資來補。</p>
+<form id="simulationForm"><fieldset><div class="field-grid"><label>模擬起始月份<input id="startPeriod" type="month" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
 <label>模擬期間<select id="simulationMonths"><option value="60">60 個月</option><option value="120">120 個月</option><option value="240">240 個月</option></select></label></div>
-<div class="actions"><button class="primary" type="submit">執行模擬</button></div></fieldset></form>
+<div class="actions"><button class="primary" type="submit">執行模擬</button><p id="simulationStatus" class="run-status" role="status" aria-live="polite"></p></div></fieldset></form>
+<p id="simulationError" class="error" role="alert" hidden></p>
 <ul id="simulationWarnings" aria-label="模擬注意事項"></ul>      <div id="simulationResults" hidden>
+        <section id="conclusion" class="conclusion" aria-labelledby="conclusionHeading">
+          <h3 id="conclusionHeading" tabindex="-1">這次模擬的結論</h3>
+          <p id="conclusionHeadline" class="conclusion-headline"></p>
+          <dl id="conclusionFacts" class="conclusion-facts"></dl>
+          <p id="conclusionCompare" class="conclusion-compare" hidden><strong></strong> <span></span></p>
+          <p id="conclusionAction" class="conclusion-action" hidden><a href="#eventsHeading">回到事件，調整後再模擬</a></p>
+          <p id="conclusionCaveat" class="conclusion-caveat"></p>
+        </section>
+        <nav class="result-nav" aria-label="結果導覽"><span>往下看：</span><a href="#splitHeading">現金圖</a><a href="#bandHeading">淨資產範圍</a><a href="#assumptionsPanel">假設與資料來源</a><a href="#qaSection">問問題</a></nav>
+        <section id="explanationSection" class="analysis-group" aria-labelledby="explanationHeading">
+          <h3 id="explanationHeading">AI 白話解釋<small id="explanationSource" hidden>（系統範本）</small></h3>
+          <div class="actions"><button id="explainResults" type="button">用白話解釋結果</button><p id="explanationStatus" class="run-status" role="status" aria-live="polite"></p></div>
+          <p id="explanationError" class="error" role="alert" hidden></p>
+          <p><small>按下後，會把這次模擬的數字和事件名稱傳給 Google Gemini 產生說明。</small></p>
+          <p id="explanationNotice" hidden></p>
+          <div id="explanationResult" aria-live="polite"></div>
+        </section>
+        <section class="result-block" aria-labelledby="splitHeading">
+          <h3 id="splitHeading">現金、投資與淨資產（固定值模擬）</h3>
+          <p class="result-lede">通膨和投資報酬各用一個固定數字，看現金與投資怎麼變化，沒有隨機變動。淨資產＝現金＋投資市值＋車輛估值－尚未還完的貸款；車輛估值依固定折舊率估算，不是成交價。</p>
+          <div class="chart-frame"><canvas id="planChart" role="img" aria-label="現金、投資與淨資產走勢"></canvas></div><div id="planChartSummary" class="chart-summary"></div>
+        </section>
         <section class="result-block" aria-labelledby="bandHeading">
-          <h3 id="bandHeading">淨資產可能範圍</h3>
-          <p class="result-lede">用台灣過去的通膨與台股報酬模擬 300 種可能的未來。淺色區域涵蓋其中 9 成的結果，深色涵蓋最常見的 5 成，實線是正中間的一般情況。</p>
+          <h3 id="bandHeading">淨資產可能範圍（隨機模擬）</h3>
+          <p class="result-lede">從台灣過去的通膨與台股報酬隨機抽取，模擬 300 種可能的未來，看不同情況下的結果範圍；相同輸入每次得到相同結果。淺色區域涵蓋其中 9 成的結果，深色涵蓋最常見的 5 成，實線是正中間的一般情況。</p>
           <div class="chart-frame"><canvas id="bandChart" role="img" aria-label="淨資產可能範圍走勢"></canvas></div><div id="bandChartSummary" class="chart-summary"></div>
           <div class="band-legend" aria-hidden="true"><span class="swatch outer"></span>9 成情況落在這裡<span class="swatch inner"></span>最常見的 5 成<span class="swatch line"></span>一般情況</div>
         </section>
-        <section class="result-block" aria-labelledby="splitHeading">
-          <h3 id="splitHeading">現金、投資與淨資產</h3>
-          <p class="result-lede">確定性模擬：通膨和報酬都用固定值，看資金在現金與投資之間怎麼移動。淨資產＝現金＋投資市值＋車輛估值－剩餘貸款。</p>
-          <div class="chart-frame"><canvas id="planChart" role="img" aria-label="現金、投資與淨資產走勢"></canvas></div><div id="planChartSummary" class="chart-summary"></div>
-        </section>
+        <details id="allMetrics" class="all-metrics"><summary>看全部數字</summary>
+        <p class="result-lede">標「固定值模擬」的是單一路線的數字；「較差、一般、順利情況」來自 300 次隨機模擬。</p>
         <section class="metric-group" aria-labelledby="cashMetricsHeading"><h4 id="cashMetricsHeading">現金</h4><div class="metric-grid">
-          <article><span>最低現金</span><strong id="minimumCash">—</strong></article>
-          <article><span>最低現金發生月份</span><strong id="minimumCashPeriod">—</strong></article>
-          <article><span>第一次現金小於 0 的月份</span><strong id="firstNegativePeriod">—</strong></article>
-          <article><span>最低緊急預備金月數</span><strong id="minimumEmergency">—</strong></article>
-          <article><span>期末現金</span><strong id="endingCash">—</strong></article>
-          <article><span>現金不足機率</span><strong id="cashShortfall">—</strong></article>
+          <article><span>最低現金（固定值模擬）</span><strong id="minimumCash">—</strong></article>
+          <article><span>最低現金發生月份（固定值模擬）</span><strong id="minimumCashPeriod">—</strong></article>
+          <article><span>第一次現金小於 0 的月份（固定值模擬）</span><strong id="firstNegativePeriod">—</strong></article>
+          <article><span>最低緊急預備金月數（固定值模擬）</span><strong id="minimumEmergency">—</strong></article>
+          <article><span>期末現金（固定值模擬）</span><strong id="endingCash">—</strong></article>
+          <article><span>現金不足機率（隨機模擬）</span><strong id="cashShortfall">—</strong></article>
           <article><span>期末現金：較差情況（20 次裡有 1 次比這低）</span><strong id="cashP5">—</strong></article>
           <article><span>期末現金：一般情況（一半比這好、一半比這差）</span><strong id="cashP50">—</strong></article>
           <article><span>期末現金：順利情況（20 次裡有 1 次比這高）</span><strong id="cashP95">—</strong></article>
         </div></section>
         <section class="metric-group" aria-labelledby="investmentMetricsHeading"><h4 id="investmentMetricsHeading">投資</h4><div class="metric-grid">
-          <article><span>期末投資市值（歷史平均報酬）</span><strong id="endingInvestment">—</strong></article>
+          <article><span>期末投資市值（固定值模擬）</span><strong id="endingInvestment">—</strong></article>
           <article><span>期末投資市值：較差情況（20 次裡有 1 次比這低）</span><strong id="investmentP5">—</strong></article>
           <article><span>期末投資市值：一般情況（一半比這好、一半比這差）</span><strong id="investmentP50">—</strong></article>
         </div></section>
@@ -104,24 +134,21 @@
           <article><span>期末淨資產：順利情況（20 次裡有 1 次比這高）</span><strong id="netWorthP95">—</strong></article>
           <article><span>以今日購買力計算的期末淨資產：一般情況</span><strong id="realNetWorthP50">—</strong></article>
         </div></section>
+        </details>
         <details id="assumptionsPanel" class="assumptions" open>
           <summary>這次模擬用了哪些假設</summary>
           <dl id="assumptionList"></dl>
-          <p id="shortfallDefinition"></p><p id="samplingNote"></p>
           <ul id="dataSources" aria-label="資料來源"></ul>
+          <details class="method-details"><summary>計算方法的原文說明</summary>
+            <p id="shortfallDefinition"></p><p id="samplingNote"></p>
+          </details>
         </details>
         <section id="vehicleResults" hidden aria-labelledby="vehicleResultsHeading">
           <h3 id="vehicleResultsHeading">購車</h3><div id="vehicleSummaries"></div><p>一次支出、車貸與持有成本是現金負擔；經濟成本是價值減少與費用，不是另一筆現金支出。</p><p id="vehicleCostNote"></p>
         </section>
-        <section id="explanationSection" class="analysis-group" aria-labelledby="explanationHeading">
-          <h3 id="explanationHeading">AI 白話解釋<small id="explanationSource" hidden>（系統範本）</small></h3>
-          <div class="actions"><button id="explainResults" type="button">用白話解釋結果</button></div>
-          <p><small>按下後，會把這次模擬的數字和事件名稱傳給 Google Gemini 產生說明。</small></p>
-          <p id="explanationNotice" hidden></p>
-          <div id="explanationResult" aria-live="polite"></div>
-        </section>
       </div>
-</section></div></div></div></main>
+</section>
+<details id="planSettings" class="panel plan-settings"><summary>計畫設定（改名、刪除）</summary><form id="planNameForm"><fieldset><label>計畫名稱<input name="name" maxlength="80" required></label><div class="actions"><button type="submit">儲存名稱</button><button id="deletePlan" type="button" class="danger">刪除計畫</button></div></fieldset></form></details></div></div></div></main>
 <dialog id="insuranceDialog" class="plan-dialog" aria-labelledby="insuranceDialogTitle">
   <h2 id="insuranceDialogTitle">選擇保險項目</h2>
   <p>強制險依法必保；其他項目可自行勾選，金額可依實際報價修改。</p>

@@ -72,24 +72,55 @@
     const history = method.history_start ? `${method.history_start} 至 ${method.history_end}` : '台灣歷史資料';
     const rows = [['模擬期間', `${startPeriod} 起共 ${months} 個月（至 ${planner.monthToPeriod(startPeriod, months)}）`]];
     if (a.annual_inflation_rate != null)
-      rows.push(['確定性模擬的通膨率', `每年 ${percent(a.annual_inflation_rate)}（${a.inflation_source === 'user' ? '你設定的固定值' : `${history} 台灣 CPI 年化平均`}）`]);
-    rows.push(['Monte Carlo 的通膨', (mc.sampled_parameters || []).includes('inflation_rate')
-      ? `從 ${history} 的台灣 CPI 月資料抽樣，每次連續 ${method.block_months || 12} 個月一組，與同月台股報酬成對`
-      : `固定為每年 ${percent(Number(profile.inflation_rate))}，不抽樣`]);
+      rows.push(['固定值模擬的通膨率', `每年 ${percent(a.annual_inflation_rate)}（${a.inflation_source === 'user' ? '你設定的固定值' : `${history} 台灣 CPI 年化平均`}）`]);
+    rows.push(['隨機模擬的通膨', (mc.sampled_parameters || []).includes('inflation_rate')
+      ? `從 ${history} 的台灣 CPI 月資料隨機抽取，每次抽連續 ${method.block_months || 12} 個月，並和同月的台股報酬配成一組`
+      : `固定為每年 ${percent(Number(profile.inflation_rate))}，不隨機抽取`]);
     rows.push(['調薪率', a.raise_source === 'user' ? `每年固定 ${percent(a.raise_rate)}` : '跟著通膨，每年調整一次']);
     if (a.annual_return_rate != null) {
-      rows.push(['確定性模擬的投資報酬率', `每年 ${percent(a.annual_return_rate)}（${a.return_source === 'user' ? '你設定的固定值' : `${history} 台股報酬指數（含股利再投入）年化平均`}）`]);
-      rows.push(['Monte Carlo 的投資報酬', `從 ${history} 的台股報酬指數月資料抽樣，每次連續 ${method.block_months || 12} 個月一組`]);
+      rows.push(['固定值模擬的投資報酬率', `每年 ${percent(a.annual_return_rate)}（${a.return_source === 'user' ? '你設定的固定值' : `${history} 台股報酬指數（含股利再投入）年化平均`}）`]);
+      rows.push(['隨機模擬的投資報酬', `從 ${history} 的台股報酬指數月資料隨機抽取，每次抽連續 ${method.block_months || 12} 個月`]);
     } else {
       rows.push(['投資', '沒有設定投資市值或每月投資，報酬不影響結果']);
     }
     rows.push(['每月投資金額', `${shell.money(Number(profile.monthly_investment || 0))}，從現金轉入投資；現金不足時不會自動賣出`]);
     rows.push(['預備金目標', `${Number(profile.target_emergency_months ?? 6)} 個月的必要支出`]);
-    rows.push(['Monte Carlo 試驗', `${simulations} 次，亂數種子 ${seed}；同樣的輸入會得到同樣的結果`]);
+    rows.push(['隨機模擬次數', `${simulations} 次；同樣的輸入每次都會得到同樣的結果`]);
     if (converted?.note) rows.push(['購車成本', converted.note]);
     return rows.map(([label, value]) => ({label, value}));
   }
 
-  const api = {bandData, bandSummaryText, splitData, assumptionRows, previousPeriod};
+  // The answer first: one plain sentence about cash, three facts, and the limit of what the model means.
+  // `tone` only reinforces the sentence visually; the sentence itself carries the meaning.
+  // `baseline` is the fixed-value summary of the same plan without its events; it is optional.
+  function conclusion({summary, mc, startPeriod, months, simulations, baseline = null}) {
+    // The headline numbers are model output, not ledger entries: whole dollars avoid false precision.
+    const wholeDollars = new Intl.NumberFormat('zh-TW', {style:'currency', currency:'TWD', maximumFractionDigits:0});
+    const money = value => wholeDollars.format(value), probability = Number(mc.probability_cash_shortfall);
+    const lowest = planner.monthToPeriod(startPeriod, summary.minimum_cash_month);
+    const endPeriod = planner.monthToPeriod(startPeriod, months);
+    const negative = summary.first_negative_cash_month == null ? null : planner.monthToPeriod(startPeriod, summary.first_negative_cash_month);
+    let tone = 'calm', headline = `${simulations} 次隨機模擬中，現金都沒有低於 0。`;
+    if (negative) {
+      tone = 'alert';
+      headline = `固定值模擬顯示，現金會在 ${negative} 第一次低於 0。`;
+    } else if (probability > 0) {
+      tone = 'caution';
+      headline = '固定值模擬顯示現金不會低於 0，但在較差的隨機情況下可能會。';
+    }
+    const net = mc.net_worth_percentiles;
+    const gap = value => Math.abs(value) < 0.5 ? '沒有差別' : value < 0 ? `少了 ${money(-value)}` : `多了 ${money(value)}`;
+    const comparison = baseline ? {
+      lead: '和沒有這個計畫事件相比（固定值模擬）',
+      text: `${endPeriod} 的現金${gap(summary.final_balance - baseline.final_balance)}，最低現金${gap(summary.minimum_cash_balance - baseline.minimum_cash_balance)}。`,
+    } : null;
+    return {tone, headline, comparison, facts:[
+      {label:'現金最低會到（固定值模擬）', value:money(summary.minimum_cash_balance), note:`發生在 ${lowest}`},
+      {label:'現金不足機率（隨機模擬）', value:percent(probability), note:`${simulations} 次模擬中，現金曾低於 0 的比例`},
+      {label:`${endPeriod} 的淨資產（隨機模擬，一般情況）`, value:money(net.p50), note:`9 成的模擬落在 ${money(net.p5)} 到 ${money(net.p95)}`},
+    ], caveat:`固定值模擬是通膨與投資報酬各用一個固定數字；隨機模擬是從歷史資料隨機抽取 ${simulations} 次。這是依台灣歷史資料做的模擬，不是預測，也不保證未來會發生。`};
+  }
+
+  const api = {bandData, bandSummaryText, splitData, assumptionRows, previousPeriod, conclusion};
   if (node) module.exports = api; else root.ResultsModel = api;
 })(globalThis);

@@ -32,7 +32,7 @@
     const headline=document.createElement('p'),bold=document.createElement('strong');
     bold.append(...segmentNodes(document,data.headline));headline.append(bold);nodes.push(headline);
     for(const paragraph of data.paragraphs)nodes.push(block('p',paragraph));
-    for(const [title,items] of [['要注意',data.watch_points],['可以考慮',data.suggestions]]){
+    for(const [title,items] of [['要注意',data.watch_points],['可以在計畫裡試試',data.suggestions]]){
       if(!items?.length)continue;
       const heading=document.createElement('h4');heading.textContent=title;
       const list=document.createElement('ul');for(const item of items)list.append(block('li',item));

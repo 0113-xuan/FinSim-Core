@@ -23,23 +23,24 @@
     const el=(tag,text,className)=>{const node=root.document.createElement(tag);if(text)node.textContent=text;if(className)node.className=className;return node;};
     container.replaceChildren();
     for(const[group,title]of [['life','人生事件'],['custom','自訂收支']]) {
-      const entries=T.templates.filter(t=>t.group===group&&(!locked||t.id===selected));if(!entries.length)continue;
+      const entries=T.availableTemplates().filter(t=>t.group===group&&(!locked||t.id===selected));if(!entries.length)continue;
       const section=el('section',null,'template-group');section.setAttribute('aria-label',title);section.append(el('h3',title));
       const grid=el('div',null,'template-grid');
       for(const template of entries) {
         const button=el('button',null,'template-card');button.type='button';button.dataset.templateId=template.id;
         button.setAttribute('aria-pressed',String(template.id===selected));
-        const unavailable=template.status!=='available';
-        if(unavailable||locked)button.setAttribute('aria-disabled','true');
-        button.disabled=disabled; // Coming-soon cards deliberately remain in the Tab order.
+        if(locked)button.setAttribute('aria-disabled','true');
+        button.disabled=disabled;
         const heading=el('span',null,'template-title');heading.append(icon(template.icon),el('strong',template.name));
-        if(unavailable)heading.append(el('span','即將推出','template-badge'));
         button.append(heading,el('span',template.description,'template-description'));
-        button.addEventListener('click',()=>{if(!unavailable&&!locked&&!button.disabled)onSelect(template);});
+        button.addEventListener('click',()=>{if(!locked&&!button.disabled)onSelect(template);});
         grid.append(button);
       }
       section.append(grid);container.append(section);
     }
+    // Planned templates are one quiet line, not cards that look clickable but do nothing.
+    const upcoming=T.templates.filter(t=>t.status!=='available').map(t=>t.name);
+    if(!locked&&upcoming.length)container.append(el('p',`之後會加入：${upcoming.join('、')}。`,'template-upcoming'));
   }
   function select(container,id) {
     for(const button of container.querySelectorAll('[data-template-id]'))button.setAttribute('aria-pressed',String(button.dataset.templateId===id));
