@@ -303,8 +303,8 @@ test('the plan page leads with the event and the result; renaming and deleting s
   assert.match(html,/<details id="planSettings" class="panel plan-settings"><summary>計畫設定（改名、刪除）<\/summary><form id="planNameForm">/);
   assert.ok(at('planSettings')<html.indexOf('</main>')&&at('planSettings')>at('simulationResults'));
   assert.ok(at('deletePlan')>at('planSettings'));
-  assert.match(html,/id="eventLimitNote" class="lede" hidden>一個計畫放一個事件[^<]*<a href="\/dashboard\.html">/);
-  assert.match(page,/\$\('eventLimitNote'\)\.hidden=events\.length===0\|\|!!editing/);
+  assert.doesNotMatch(html,/eventLimitNote|一個計畫放一個事件/);
+  assert.doesNotMatch(page,/eventLimitNote/);
   const nav=html.slice(html.indexOf('class="result-nav"'),html.indexOf('</nav>',html.indexOf('class="result-nav"')));
   for(const target of ['splitHeading','bandHeading','assumptionsPanel','qaSection'])assert.ok(nav.includes(`href="#${target}"`),target);
   assert.ok(at('conclusion')<html.indexOf('class="result-nav"')&&html.indexOf('class="result-nav"')<at('explanationSection'));

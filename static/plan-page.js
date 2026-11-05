@@ -201,8 +201,6 @@
     // A plan holds one event: once it exists the picker is gone and the event can only be edited or deleted.
     function syncEditorPanel(){
       $('eventEditorPanel').hidden=events.length>0&&!editing;
-      // Say why the add button is gone instead of leaving the user to wonder.
-      $('eventLimitNote').hidden=events.length===0||!!editing;
     }
     function selectTemplate(template){
       if(ctx.busy||editing||events.length||template?.status!=='available')return;

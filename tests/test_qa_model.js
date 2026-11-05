@@ -47,17 +47,16 @@ test('each fallback explains why AI was not used',()=>{
   for(const reason of ['disabled','provider_error','invalid_output'])assert.match(Q.fallbackNotice(reason),/目前未使用 AI/);
 });
 
-test('Q&A disclosure, timeout and safe DOM path are present',()=>{
+test('Q&A timeout and safe DOM path are present',()=>{
   const source=fs.readFileSync(path.join(__dirname,'../static/qa-form.js'),'utf8');
   assert.doesNotMatch(source,/innerHTML|insertAdjacentHTML|outerHTML/);
   assert.match(source,/AbortController/);assert.match(source,/20000/);assert.match(source,/ctx\.perform/);
-  assert.match(source,/沒有啟用 AI 時不會傳出任何資料/);
 });
 
-test('the privacy notice precedes everything that can send, and example questions only fill the box',()=>{
+test('the Q&A section is just heading, examples, form and result, and example questions only fill the box',()=>{
   const source=fs.readFileSync(path.join(__dirname,'../static/qa-form.js'),'utf8');
-  assert.match(source,/section\.append\(heading,hint,privacy,examples,form,result\)/);
-  assert.match(source,/點範例問題只會填入文字，按「送出」才會送出/);
+  assert.match(source,/section\.append\(heading,examples,form,result\)/);
+  assert.doesNotMatch(source,/qaPrivacy|Google Gemini/);
   const handler=source.slice(source.indexOf("button.addEventListener('click'"),source.indexOf('parent.append(button)'));
   assert.match(handler,/input\.value=question;sync\(\);input\.focus\(\);/);
   assert.doesNotMatch(handler,/send\(\)/);
