@@ -33,7 +33,17 @@
     {"question": "貸款利率怎麼算？", "expected": ["loan-payment"]},
     {"question": "車貸每月要還多少是怎麼算的？", "expected": ["loan-payment"]},
     {"question": "總利息是什麼？", "expected": ["loan-payment"]},
-    {"question": "抽樣是什麼？", "expected": ["simulation-count"]}
+    {"question": "抽樣是什麼？", "expected": ["simulation-count"]},
+    {"question": "蒙地卡羅是什麼？", "expected": ["monte-carlo-term"]},
+    {"question": "區塊抽樣是什麼？", "expected": ["block-bootstrap"]},
+    {"question": "通膨是什麼？", "expected": ["inflation-term"]},
+    {"question": "年化報酬率是什麼？", "expected": ["annualized-return"]},
+    {"question": "複利是什麼？", "expected": ["compound-term"]},
+    {"question": "現金流是什麼？", "expected": ["cash-flow-term"]},
+    {"question": "頭期款是什麼？", "expected": ["down-payment-term"]},
+    {"question": "折舊是什麼？", "expected": ["depreciation-term"]},
+    {"question": "既有債務怎麼算？", "expected": ["existing-debt-term"]},
+    {"question": "報酬指數是什麼？", "expected": ["total-return-index"]}
   ],
   "unanswerable": [
     "明天會下雨嗎？", "午餐要吃什麼？", "東京地鐵如何搭乘？", "恐龍為什麼滅絕？", "香蕉蛋糕怎麼烘焙？", "火星上有外星人嗎？", "今天的棒球比賽誰獲勝？", "房貸怎麼算？", "台積電股價多少？", "今天天氣如何？"

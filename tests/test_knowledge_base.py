@@ -23,7 +23,7 @@ def test_knowledge_has_complete_unique_bounded_sections():
     entries = load_knowledge()
     assert len(entries) >= 25
     assert len({entry['id'] for entry in entries}) == len(entries)
-    assert len({entry['file'] for entry in entries}) == 6
+    assert len({entry['file'] for entry in entries}) == 7
     assert all(entry['source'] and entry['tags'] and entry['title'] and 80 <= len(entry['text']) <= 400 for entry in entries)
     assert load_knowledge() is entries
     root = Path(__file__).resolve().parents[1]

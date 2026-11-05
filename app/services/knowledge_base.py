@@ -9,9 +9,9 @@ from functools import lru_cache
 from pathlib import Path
 
 KNOWLEDGE_DIR = Path(__file__).resolve().parents[2] / 'data' / 'knowledge'
-# Golden set: weakest full-length question > 7.8; incidental single-word overlaps ("今天", "現金") < 3.5.
+# Golden set: weakest full-length question > 7.8; incidental single-word overlaps ("今天", "現金", "汽車") < 4.0.
 RELEVANCE_THRESHOLD = 7.0
-SHORT_QUERY_FLOOR = 3.5
+SHORT_QUERY_FLOOR = 4.0
 BM25_K1 = 1.5
 BM25_B = 0.75
 TITLE_WEIGHT = 4
