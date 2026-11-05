@@ -100,6 +100,22 @@ def should_decline(question: str) -> bool:
     return not educational and bool(re.search(r'(保證|承諾).{0,15}(報酬|獲利|收益|賺錢)|一定賺|穩賺|必賺|保證我|保證能賺', compact))
 
 
+NEGATIONS = ('不代表', '不表示', '不等於', '不是', '不能', '無法', '不會', '不一定', '並非', '未必', '沒有', '不保證', '不可', '不應')
+CLAUSE_BREAK = re.compile(r'[，。；：！？,;:!?\n]')
+
+
+def has_forbidden(text: str) -> bool:
+    """A promise word is fine only when the same clause just negates it ("不代表一定賺")."""
+    for clause in CLAUSE_BREAK.split(normalize(text)):
+        for word in FORBIDDEN_PHRASES:
+            start = clause.find(word)
+            while start != -1:
+                if not any(negation in clause[max(0, start - 10):start + len(word)] for negation in NEGATIONS):
+                    return True
+                start = clause.find(word, start + 1)
+    return False
+
+
 def validate_answer(answer: AIPlanQA, facts: list[dict], references: list[dict]) -> dict:
     if not answer.answerable:
         return {'answerable': False}
@@ -112,7 +128,7 @@ def validate_answer(answer: AIPlanQA, facts: list[dict], references: list[dict])
         if any(source not in retrieved for source in paragraph.sources):
             raise QARejected('引用未檢索到的資料')
         text = paragraph.text
-        if not text.strip() or any(word in normalize(text) for word in FORBIDDEN_PHRASES):
+        if not text.strip() or has_forbidden(text):
             raise QARejected('文字為空或包含禁用字眼')
         ids = PLACEHOLDER.findall(text)
         if any(fact_id not in by_id for fact_id in ids):
@@ -131,7 +147,7 @@ def validate_answer(answer: AIPlanQA, facts: list[dict], references: list[dict])
             raise QARejected('中文數字未原樣出現在引用段落')
         segments = split_segments(text, by_id)
         rendered = ''.join(segment.get('text', segment.get('value', '')) for segment in segments)
-        if any(word in normalize(rendered) for word in FORBIDDEN_PHRASES):
+        if has_forbidden(rendered):
             raise QARejected('代入事實後包含禁用字眼')
         if sum(len(segment.get('text', segment.get('value', ''))) for segment in segments) > PARAGRAPH_LIMIT:
             raise QARejected('代入後超過段落字數')
@@ -141,7 +157,7 @@ def validate_answer(answer: AIPlanQA, facts: list[dict], references: list[dict])
     for question in answer.follow_ups:
         if (not question.strip() or len(question) > 40 or DIGIT.search(question)
                 or '{' in question or '}' in question
-                or any(word in normalize(question) for word in FORBIDDEN_PHRASES) or should_decline(question)):
+                or has_forbidden(question) or should_decline(question)):
             raise QARejected('追問格式或內容不符合要求')
     return dict(answerable=True, answer=paragraphs, paragraph_sources=paragraph_sources,
                 citations=[{key: retrieved[source][key] for key in ('id', 'title', 'source')} for source in dict.fromkeys(used)],

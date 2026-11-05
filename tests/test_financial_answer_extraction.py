@@ -475,3 +475,13 @@ def test_openai_provider_sends_strict_json_schema(monkeypatch):
     assert response_format["type"] == "json_schema"
     assert response_format["json_schema"]["strict"] is True
     assert response_format["json_schema"]["schema"]["additionalProperties"] is False
+
+
+def test_openai_strict_mode_only_for_closed_fully_required_schemas():
+    from app.services.ai_provider import openai_strict_compatible
+    from app.services.plan_qa import AIPlanQA
+    from app.services.plan_explanation import AIPlanExplanation
+    assert openai_strict_compatible(FinancialExtractionResult.model_json_schema())
+    assert not openai_strict_compatible(AIPlanQA.model_json_schema())
+    assert not openai_strict_compatible(AIPlanExplanation.model_json_schema())
+    assert not openai_strict_compatible({"type": "object", "properties": {"a": {}}, "required": ["a"]})

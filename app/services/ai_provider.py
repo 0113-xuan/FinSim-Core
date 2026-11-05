@@ -47,6 +47,19 @@ class AIProvider(Protocol):
         ...
 
 
+def openai_strict_compatible(schema: Any) -> bool:
+    """OpenAI strict mode needs every object closed and fully required; otherwise it answers 400.
+    Schemas that do not qualify run non-strict and are validated by parse_structured_content."""
+    if isinstance(schema, list):
+        return all(openai_strict_compatible(item) for item in schema)
+    if not isinstance(schema, dict):
+        return True
+    if "properties" in schema and (schema.get("additionalProperties") is not False
+                                   or set(schema.get("required", [])) != set(schema["properties"])):
+        return False
+    return all(openai_strict_compatible(value) for value in schema.values())
+
+
 class OpenAIProvider:
     endpoint = "https://api.openai.com/v1/chat/completions"
 
@@ -65,6 +78,7 @@ class OpenAIProvider:
         user_prompt: str,
         response_schema: type[StructuredResponse],
     ) -> StructuredResponse:
+        schema = response_schema.model_json_schema()
         payload = {
             "model": settings.ai_model,
             "messages": [
@@ -75,8 +89,8 @@ class OpenAIProvider:
                 "type": "json_schema",
                 "json_schema": {
                     "name": response_schema.__name__,
-                    "strict": True,
-                    "schema": response_schema.model_json_schema(),
+                    "strict": openai_strict_compatible(schema),
+                    "schema": schema,
                 },
             },
             "temperature": 0.1,

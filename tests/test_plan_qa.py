@@ -328,3 +328,12 @@ def test_chinese_amount_from_model_never_reaches_the_user():
     assert len(provider.calls) == 2
     assert response['source'] == 'extractive' and response['fallback_reason'] == 'invalid_output'
     assert '三十萬' not in str(response)
+
+
+def test_hedging_words_are_not_forbidden_but_promises_still_are():
+    ok = dict(answerable=True, paragraphs=[dict(text='買車後淨資產不一定會減少。', sources=['net-worth'])], follow_ups=[])
+    assert validate(ok, question='淨資產是怎麼算的？')['answerable']
+    for text in ('買車後淨資產一定會增加。', '不一定，但一定賺。'):
+        ok['paragraphs'][0]['text'] = text
+        with pytest.raises(QARejected):
+            validate(ok, question='淨資產是怎麼算的？')
