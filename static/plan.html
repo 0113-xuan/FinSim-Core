@@ -112,28 +112,23 @@
         </section>
         <details id="allMetrics" class="all-metrics"><summary>看全部數字</summary>
         <p class="result-lede">「固定值模擬」是單一路線。其餘來自 300 次隨機模擬：較差情況＝20 次裡有 1 次比這低，順利情況＝20 次裡有 1 次比這高，一般情況＝一半比這好。</p>
-        <section class="metric-group" aria-labelledby="cashMetricsHeading"><h4 id="cashMetricsHeading">現金</h4><div class="metric-grid">
-          <article><span>最低現金（固定值模擬）</span><strong id="minimumCash">—</strong></article>
-          <article><span>最低現金發生月份（固定值模擬）</span><strong id="minimumCashPeriod">—</strong></article>
-          <article><span>第一次現金小於 0 的月份（固定值模擬）</span><strong id="firstNegativePeriod">—</strong></article>
-          <article><span>最低緊急預備金月數（固定值模擬）</span><strong id="minimumEmergency">—</strong></article>
-          <article><span>期末現金（固定值模擬）</span><strong id="endingCash">—</strong></article>
-          <article><span>現金不足機率（隨機模擬）</span><strong id="cashShortfall">—</strong></article>
-          <article><span>期末現金：較差情況</span><strong id="cashP5">—</strong></article>
-          <article><span>期末現金：一般情況</span><strong id="cashP50">—</strong></article>
-          <article><span>期末現金：順利情況</span><strong id="cashP95">—</strong></article>
-        </div></section>
-        <section class="metric-group" aria-labelledby="investmentMetricsHeading"><h4 id="investmentMetricsHeading">投資</h4><div class="metric-grid">
-          <article><span>期末投資市值（固定值模擬）</span><strong id="endingInvestment">—</strong></article>
-          <article><span>期末投資市值：較差情況</span><strong id="investmentP5">—</strong></article>
-          <article><span>期末投資市值：一般情況</span><strong id="investmentP50">—</strong></article>
-        </div></section>
-        <section class="metric-group" aria-labelledby="netWorthMetricsHeading"><h4 id="netWorthMetricsHeading">淨資產</h4><div class="metric-grid">
-          <article><span>期末淨資產：較差情況</span><strong id="netWorthP5">—</strong></article>
-          <article><span>期末淨資產：一般情況</span><strong id="netWorthP50">—</strong></article>
-          <article><span>期末淨資產：順利情況</span><strong id="netWorthP95">—</strong></article>
-          <article><span>以今日購買力計算的期末淨資產：一般情況</span><strong id="realNetWorthP50">—</strong></article>
-        </div></section>
+        <table class="metric-table"><caption>期末數字</caption>
+          <thead><tr><th scope="col">項目</th><th scope="col">固定值模擬</th><th scope="col">較差情況</th><th scope="col">一般情況</th><th scope="col">順利情況</th></tr></thead>
+          <tbody>
+          <tr><th scope="row">期末現金</th><td data-label="固定值模擬"><strong id="endingCash">—</strong></td><td data-label="較差情況"><strong id="cashP5">—</strong></td><td data-label="一般情況"><strong id="cashP50">—</strong></td><td data-label="順利情況"><strong id="cashP95">—</strong></td></tr>
+          <tr><th scope="row">期末投資市值</th><td data-label="固定值模擬"><strong id="endingInvestment">—</strong></td><td data-label="較差情況"><strong id="investmentP5">—</strong></td><td data-label="一般情況"><strong id="investmentP50">—</strong></td><td data-label="順利情況"><strong id="investmentP95">—</strong></td></tr>
+          <tr><th scope="row">期末淨資產</th><td data-label="固定值模擬"><strong id="endingNetWorth">—</strong></td><td data-label="較差情況"><strong id="netWorthP5">—</strong></td><td data-label="一般情況"><strong id="netWorthP50">—</strong></td><td data-label="順利情況"><strong id="netWorthP95">—</strong></td></tr>
+          <tr><th scope="row">期末淨資產（以今日購買力計算）</th><td data-label="固定值模擬" class="na">—</td><td data-label="較差情況"><strong id="realNetWorthP5">—</strong></td><td data-label="一般情況"><strong id="realNetWorthP50">—</strong></td><td data-label="順利情況"><strong id="realNetWorthP95">—</strong></td></tr>
+          </tbody></table>
+        <table class="metric-table metric-table-risk"><caption>現金低點與風險</caption>
+          <thead><tr><th scope="col">項目</th><th scope="col">數字</th><th scope="col">來自</th></tr></thead>
+          <tbody>
+          <tr><th scope="row">最低現金</th><td data-label="數字"><strong id="minimumCash">—</strong></td><td data-label="來自">固定值模擬</td></tr>
+          <tr><th scope="row">最低現金發生月份</th><td data-label="數字"><strong id="minimumCashPeriod">—</strong></td><td data-label="來自">固定值模擬</td></tr>
+          <tr><th scope="row">第一次現金小於 0 的月份</th><td data-label="數字"><strong id="firstNegativePeriod">—</strong></td><td data-label="來自">固定值模擬</td></tr>
+          <tr><th scope="row">最低緊急預備金月數</th><td data-label="數字"><strong id="minimumEmergency">—</strong></td><td data-label="來自">固定值模擬</td></tr>
+          <tr><th scope="row">現金不足機率</th><td data-label="數字"><strong id="cashShortfall">—</strong></td><td data-label="來自">隨機模擬</td></tr>
+          </tbody></table>
         </details>
         <details id="assumptionsPanel" class="assumptions" open>
           <summary>這次模擬用了哪些假設</summary>

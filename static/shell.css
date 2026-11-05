@@ -47,9 +47,6 @@ body.fw { color:var(--text);--muted:#526173;--field-border:#78879c;font-size:18p
 .fw .chart-frame { position:relative;height:280px;min-width:0; }
 .fw .chart-frame.mini { height:170px; }
 .fw .chart-summary { font-size:16px;color:var(--text);margin:14px 0; }
-.fw .metric-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:14px; }
-.fw .metric-grid article { box-shadow:none; }
-.fw .metric-grid strong { overflow-wrap:anywhere;font-variant-numeric:tabular-nums; }
 .fw .saved-list { list-style:none;padding:0; }
 .fw .saved-list > li { border-bottom:1px solid var(--line);padding:18px 0;overflow-wrap:anywhere; }
 .fw .event-head { display:flex;flex-wrap:wrap;gap:12px;align-items:center; }
@@ -142,16 +139,13 @@ body.fw.plan-dialog-open { overflow:hidden; }
 /* Plan results: percentile bands, cash/investment split, assumptions panel. */
 :root { --investment:#b45309; }
 .fw .result-block { margin:8px 0 26px; }
-.fw .result-block h3, .fw .metric-group h4 { margin:0 0 6px; }
+.fw .result-block h3 { margin:0 0 6px; }
 .fw .result-lede { margin:0 0 14px;color:var(--muted);font-size:16px;max-width:70ch; }
 .fw .band-legend { display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:16px;color:var(--muted); }
 .fw .band-legend .swatch { display:inline-block;width:18px;height:10px;border-radius:3px;margin-right:-8px;vertical-align:middle; }
 .fw .band-legend .swatch.outer { background:rgba(4,120,87,.14); }
 .fw .band-legend .swatch.inner { background:rgba(4,120,87,.36); }
 .fw .band-legend .swatch.line { height:3px;background:var(--accent); }
-.fw .metric-group { margin:0 0 22px; }
-.fw .metric-group h4 { font-size:17px;color:var(--muted); }
-.fw .metric-grid span { font-size:16px;font-weight:600;line-height:1.5; }
 .fw .assumptions { margin:8px 0 24px;padding:16px 20px;border:1px solid var(--line);border-radius:var(--r-surface);background:var(--card); }
 .fw .assumptions summary { cursor:pointer;font-weight:800;color:var(--text); }
 .fw .assumptions dl { display:grid;grid-template-columns:minmax(140px,1fr) minmax(0,3fr);gap:10px 16px;margin:16px 0 8px; }
@@ -178,6 +172,26 @@ body.fw.plan-dialog-open { overflow:hidden; }
 .fw .result-nav a { display:inline-flex;align-items:center;min-height:44px;font-size:16px; }
 .fw .conclusion-caveat { margin:0;font-size:16px;color:var(--muted); }
 .fw .all-metrics { margin:8px 0 24px; }
+.fw .metric-table { width:100%;min-width:0;border-collapse:collapse;margin:0 0 28px;font-size:16px;font-variant-numeric:tabular-nums; }
+.fw .metric-table caption { text-align:left;font-size:17px;font-weight:800;color:var(--muted);padding:0 0 8px; }
+.fw .metric-table th,.fw .metric-table td { padding:12px 14px 12px 0;text-align:left;vertical-align:baseline;border-bottom:1px solid var(--line); }
+.fw .metric-table th { font-size:16px; }
+.fw .metric-table thead th { font-weight:700;color:var(--muted);white-space:nowrap; }
+.fw .metric-table tbody th { font-weight:600;max-width:15em; }
+.fw .metric-table strong { font-size:18px;font-weight:800;color:var(--navy);white-space:nowrap; }
+.fw .metric-table .na { color:var(--muted); }
+.fw .metric-table-risk td:last-child { color:var(--muted); }
+@media (max-width:1180px) {
+  .fw .metric-table thead { position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0); }
+  .fw .metric-table,.fw .metric-table tbody,.fw .metric-table tr,.fw .metric-table th,.fw .metric-table td { display:block; }
+  .fw .metric-table caption { display:block; }
+  .fw .metric-table tr { padding:12px 0;border-bottom:1px solid var(--line); }
+  .fw .metric-table th,.fw .metric-table td { border:0;padding:3px 0; }
+  .fw .metric-table tbody th { max-width:none;font-size:17px;font-weight:800;padding-bottom:6px; }
+  .fw .metric-table td { display:flex;justify-content:space-between;gap:16px; }
+  .fw .metric-table td::before { content:attr(data-label);color:var(--muted);font-weight:600; }
+  .fw .metric-table td.na { display:none; }
+}
 .fw #simulationWarnings:empty { display:none; }
 .fw .panel > p,.fw #explanationResult p { max-width:70ch; }
 .fw .all-metrics summary { min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:800; }

@@ -215,7 +215,10 @@ test('shell.css braces are balanced and wide numbers wrap by width instead of sp
   const css=fs.readFileSync(path.join(__dirname,'../static/shell.css'),'utf8');
   assert.equal(css.split('{').length,css.split('}').length);
   assert.match(css,/\.fw \.conclusion-facts \{[^}]*repeat\(auto-fit,minmax\(min\(100%,270px\)/);
-  assert.match(css,/\.fw \.metric-grid \{[^}]*repeat\(auto-fit,minmax\(min\(100%,200px\)/);
+  assert.match(css,/\.fw \.metric-table strong \{[^}]*white-space:nowrap/);
+  // style.css gives every table min-width:720px and 13px text; the result tables must undo both.
+  assert.match(css,/\.fw \.metric-table \{[^}]*min-width:0;[^}]*font-size:16px/);
+  assert.match(css,/\.fw \.metric-table th \{ font-size:16px; \}/);
 });
 
 test('plan page controls reach 44px and small text reaches 16px',()=>{
@@ -226,7 +229,8 @@ test('plan page controls reach 44px and small text reaches 16px',()=>{
   assert.match(css,/body\.fw \{[^}]*font-size:18px/);
   assert.match(css,/\.fw \.assumptions summary,\.fw \.method-details summary,\.fw \.advanced-fields summary,\.fw \.plan-settings summary \{ min-height:44px/);
   assert.match(css,/\.fw \.shell-sidebar nav a \{ min-height:44px/);
-  assert.match(css,/\.fw \.metric-grid article \{ box-shadow:none; \}/);
+  assert.match(css,/@media \(max-width:1180px\) \{\s*\.fw \.metric-table thead \{ position:absolute/);
+  assert.match(css,/\.fw \.metric-table td::before \{ content:attr\(data-label\)/);
 });
 
 test('the answer shows what the event changed and offers a way back to the event',()=>{
@@ -314,9 +318,17 @@ test('every number under "see all numbers" names its simulation, the dashboard u
   const charts=fs.readFileSync(path.join(__dirname,'../static/charts.js'),'utf8');
   const all=html.slice(html.indexOf('id="allMetrics"'),html.indexOf('id="assumptionsPanel"'));
   assert.match(all,/「固定值模擬」是單一路線。其餘來自 300 次隨機模擬：較差情況＝20 次裡有 1 次比這低/);
-  const labels=[...all.matchAll(/<span>([^<]+)<\/span><strong/g)].map(match=>match[1]);
-  assert.ok(labels.length>=15);
-  for(const label of labels)assert.match(label,/固定值模擬|隨機模擬|較差情況|一般情況|順利情況/,label);
+  // Same kind of figure sits in one row; the columns say which simulation each number comes from.
+  const [endTable,riskTable]=all.split('<table').slice(1);
+  assert.match(endTable,/<thead><tr><th scope="col">項目<\/th><th scope="col">固定值模擬<\/th><th scope="col">較差情況<\/th><th scope="col">一般情況<\/th><th scope="col">順利情況<\/th>/);
+  const rows=[...endTable.matchAll(/<tr><th scope="row">([^<]+)<\/th>((?:<td[^>]*>.*?<\/td>){4})<\/tr>/g)];
+  assert.deepEqual(rows.map(row=>row[1]),['期末現金','期末投資市值','期末淨資產','期末淨資產（以今日購買力計算）']);
+  for(const row of rows)assert.equal((row[2].match(/data-label="(固定值模擬|較差情況|一般情況|順利情況)"/g)||[]).length,4);
+  assert.match(riskTable,/<th scope="col">來自<\/th>/);
+  const risks=[...riskTable.matchAll(/<th scope="row">([^<]+)<\/th><td data-label="數字"><strong id="(\w+)">—<\/strong><\/td><td data-label="來自">(固定值模擬|隨機模擬)<\/td>/g)];
+  assert.deepEqual(risks.map(row=>[row[2],row[3]]),[['minimumCash','固定值模擬'],['minimumCashPeriod','固定值模擬'],['firstNegativePeriod','固定值模擬'],['minimumEmergency','固定值模擬'],['cashShortfall','隨機模擬']]);
+  const page=fs.readFileSync(path.join(__dirname,'../static/plan-page.js'),'utf8');
+  for(const id of [...all.matchAll(/<strong id="(\w+)"/g)].map(match=>match[1]))assert.ok(page.includes(`'${id}'`)||page.includes(`$('${id}')`),`${id} must be filled by plan-page.js`);
   assert.doesNotMatch(dashboard,/確定性/);
   assert.match(dashboard,/固定報酬率算出的單一路線/);
   assert.match(charts,/size:14/);

@@ -115,9 +115,10 @@
         $('shortfallDefinition').textContent = `現金不足機率的定義：${mc.cash_shortfall_definition}。`;
         $('endingInvestment').textContent = money(summary.final_investment_value);
         const investmentBand = mc.monthly_bands?.investment;
-        for (const [id, key] of [['investmentP5','p5'],['investmentP50','p50']]) $(id).textContent = investmentBand ? money(investmentBand[key].at(-1)) : '—';
+        for (const [id, key] of [['investmentP5','p5'],['investmentP50','p50'],['investmentP95','p95']]) $(id).textContent = investmentBand?.[key] ? money(investmentBand[key].at(-1)) : '—';
+        $('endingNetWorth').textContent = summary.final_net_worth == null ? '—' : money(summary.final_net_worth);
         for (const [id, key] of [['netWorthP5','p5'],['netWorthP50','p50'],['netWorthP95','p95']]) $(id).textContent = money(mc.net_worth_percentiles[key]);
-        $('realNetWorthP50').textContent = money(mc.real_net_worth_percentiles.p50);
+        for (const [id, key] of [['realNetWorthP5','p5'],['realNetWorthP50','p50'],['realNetWorthP95','p95']]) $(id).textContent = mc.real_net_worth_percentiles[key] == null ? '—' : money(mc.real_net_worth_percentiles[key]);
         $('samplingNote').textContent = mc.sampling_note;
         $('dataSources').replaceChildren(...mc.data_sources.map(source => {
           const li = root.document.createElement('li');
