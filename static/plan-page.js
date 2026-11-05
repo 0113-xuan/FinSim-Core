@@ -86,19 +86,23 @@
       } catch (_) { if(ctx.alive)$('vehicleMetadataStatus').textContent = '車款或預設值載入未完成；可使用自訂車款，留空的成本會用系統預設值。重新整理可重試。'; }
     }
 
+    // Keep a YYYY-MM period on one line instead of breaking at its hyphen.
+    function setText(node,text) { node.replaceChildren(...text.split(/(\d{4}-\d{2})/).map((part,i) => i % 2 ? S.element('span',part,'nowrap') : root.document.createTextNode(part))); }
     function renderConclusion(summary,mc,startPeriod,months,baseline) {
         const view = root.ResultsModel.conclusion({summary, mc, startPeriod, months, simulations:300, baseline});
         $('conclusion').dataset.tone = view.tone;
-        $('conclusionHeadline').textContent = view.headline;
+        setText($('conclusionHeadline'), view.headline);
         $('conclusionFacts').replaceChildren(...view.facts.map(fact => {
           const value = S.element('dd'), item = S.element('div');
-          value.append(S.element('strong', fact.value), S.element('small', fact.note));
-          item.append(S.element('dt', fact.label), value);
+          const note = S.element('small'), label = S.element('dt');
+          setText(note, fact.note); setText(label, fact.label);
+          value.append(S.element('strong', fact.value), note);
+          item.append(label, value);
           return item;
         }));
         const compare = $('conclusionCompare');
         compare.hidden = !view.comparison;
-        if (view.comparison) { compare.querySelector('strong').textContent = `${view.comparison.lead}：`; compare.querySelector('span').textContent = view.comparison.text; }
+        if (view.comparison) { compare.querySelector('strong').textContent = `${view.comparison.lead}：`; setText(compare.querySelector('span'), view.comparison.text); }
         $('conclusionAction').hidden = view.tone === 'calm';
         $('conclusionCaveat').textContent = view.caveat;
     }
@@ -315,6 +319,7 @@
       const saved=await ctx.store.updatePlan(ctx.planId,{name});if(!ctx.alive)return;
       $('pageTitle').textContent=saved.name;ctx.plans=ctx.plans.map(p=>p.id===saved.id?saved:p);S.renderNavigation(ctx);S.status('計畫名稱已儲存。');
     });
+    $('renamePlan').addEventListener('click',()=>{const settings=$('planSettings');settings.open=true;settings.scrollIntoView({block:'center'});$('planNameForm').elements.name.focus();});
     $('deletePlan').addEventListener('click',()=>ctx.perform(async()=>{
       if(!root.confirm('確定刪除這個計畫及其所有事件？'))return;
       await ctx.store.removePlan(ctx.planId);if(ctx.alive)root.location.assign('/dashboard.html');

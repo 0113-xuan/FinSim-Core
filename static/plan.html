@@ -13,6 +13,7 @@
 <a class="shell-brand" href="/dashboard.html">FutureWallet</a><nav id="sideNav" aria-label="頁面與計畫"></nav><button type="button" data-sign-out>登出</button></aside>
 <main class="shell-main"><div class="page-width"><header class="page-header"><h1 id="pageTitle">計畫</h1><p class="lede">安排一個事件，看看它對未來現金與淨資產的影響。</p></header><p id="pageStatus" role="status" aria-live="polite">正在載入…</p><p id="pageError" class="error" role="alert" hidden></p><div id="pageContent" hidden><section id="notFound" class="panel" hidden><h2>找不到這個計畫</h2><a href="/dashboard.html">回儀表板</a></section>
 <div id="planWorkspace" hidden>
+<p class="plan-tools"><button id="renamePlan" type="button">改名或刪除計畫</button></p>
 <section class="panel" aria-labelledby="eventsHeading"><h2 id="eventsHeading" tabindex="-1">計畫事件</h2><ul id="eventList" class="saved-list"></ul>
 <p id="eventLimitNote" class="lede" hidden>一個計畫放一個事件；想比較，請<a href="/dashboard.html">另外建立計畫</a>。</p></section>
 <section id="eventEditorPanel" class="panel" aria-labelledby="eventEditorHeading"><h2 id="eventEditorHeading">新增事件</h2><button id="changeTemplate" type="button" hidden>改選其他事件</button><div id="eventTemplatePicker" aria-label="選擇事件範本"></div><form id="eventForm" hidden><fieldset id="eventFields" disabled>
@@ -101,17 +102,17 @@
         </section>
         <section class="result-block" aria-labelledby="splitHeading">
           <h3 id="splitHeading">現金、投資與淨資產（固定值模擬）</h3>
-          <p class="result-lede">通膨和報酬各用一個固定數字，沒有隨機變動。淨資產＝現金＋投資市值＋車輛估值－貸款餘額；車輛估值是估算，不是成交價。</p>
-          <div class="chart-frame"><canvas id="planChart" role="img" aria-label="現金、投資與淨資產走勢"></canvas></div><div id="planChartSummary" class="chart-summary"></div>
+          <p class="result-lede">通膨和報酬各用一個固定數字，沒有隨機變動。</p>
+          <div class="chart-frame"><canvas id="planChart" role="img" aria-label="現金、投資與淨資產走勢"></canvas></div><details class="chart-text"><summary>用文字看這張圖</summary><div id="planChartSummary" class="chart-summary"></div></details>
         </section>
         <section class="result-block" aria-labelledby="bandHeading">
           <h3 id="bandHeading">淨資產可能範圍（隨機模擬）</h3>
-          <p class="result-lede">從台灣過去的通膨與台股報酬隨機抽取 300 次；相同輸入每次得到相同結果。</p>
-          <div class="chart-frame"><canvas id="bandChart" role="img" aria-label="淨資產可能範圍走勢"></canvas></div><div id="bandChartSummary" class="chart-summary"></div>
+          <p class="result-lede">從台灣歷史資料隨機抽 300 次；相同輸入每次得到相同結果。</p>
+          <div class="chart-frame"><canvas id="bandChart" role="img" aria-label="淨資產可能範圍走勢"></canvas></div><details class="chart-text"><summary>用文字看這張圖</summary><div id="bandChartSummary" class="chart-summary"></div></details>
           <div class="band-legend" aria-hidden="true"><span class="swatch outer"></span>9 成情況落在這裡<span class="swatch inner"></span>最常見的 5 成<span class="swatch line"></span>一般情況</div>
         </section>
         <details id="allMetrics" class="all-metrics"><summary>看全部數字</summary>
-        <p class="result-lede">「固定值模擬」是單一路線。其餘來自 300 次隨機模擬：較差情況＝20 次裡有 1 次比這低，順利情況＝20 次裡有 1 次比這高，一般情況＝一半比這好。</p>
+        <p class="result-lede">「固定值模擬」是單一路線，其餘來自 300 次隨機模擬。較差：20 次有 1 次更低；順利：20 次有 1 次更高；一般：中間值。</p>
         <table class="metric-table"><caption>期末數字</caption>
           <thead><tr><th scope="col">項目</th><th scope="col">固定值模擬</th><th scope="col">較差情況</th><th scope="col">一般情況</th><th scope="col">順利情況</th></tr></thead>
           <tbody>
@@ -133,6 +134,7 @@
         <details id="assumptionsPanel" class="assumptions" open>
           <summary>這次模擬用了哪些假設</summary>
           <dl id="assumptionList"></dl>
+          <p class="assumption-note">淨資產＝現金＋投資市值＋車輛估值－貸款餘額；車輛估值是估算，不是成交價。</p>
           <ul id="dataSources" aria-label="資料來源"></ul>
           <details class="method-details"><summary>計算方法的原文說明</summary>
             <p id="shortfallDefinition"></p><p id="samplingNote"></p>

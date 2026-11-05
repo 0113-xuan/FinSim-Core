@@ -1,5 +1,5 @@
 /* Scoped to FutureWallet's new pages; shared and legacy styles stay untouched. */
-body.fw { color:var(--text);--muted:#526173;--field-border:#78879c;font-size:18px;--r-control:8px;--r-surface:12px;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; }
+body.fw { color:var(--text);--muted:#526173;--caution:#8a5a00;--field-border:#78879c;font-size:18px;--r-control:8px;--r-surface:12px;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif; }
 .fw ::selection { background:var(--accent);color:var(--card); }
 .fw :focus-visible { outline:2px solid var(--accent);outline-offset:4px; }
 .fw a { color:var(--navy);text-underline-offset:3px; }
@@ -46,7 +46,14 @@ body.fw { color:var(--text);--muted:#526173;--field-border:#78879c;font-size:18p
 .fw .plan-card h3 a { overflow-wrap:anywhere; }
 .fw .chart-frame { position:relative;height:280px;min-width:0; }
 .fw .chart-frame.mini { height:170px; }
-.fw .chart-summary { font-size:16px;color:var(--text);margin:14px 0; }
+.fw .chart-summary { font-size:16px;color:var(--text);margin:8px 0 14px; }
+.fw .chart-text { margin:6px 0 14px; }
+.fw .chart-text summary { min-height:44px;display:flex;align-items:center;cursor:pointer;color:var(--muted);font-weight:600; }
+.fw .chart-text summary::after { content:"＋";margin-left:10px;font-weight:400; }
+.fw .chart-text[open] summary::after { content:"－"; }
+.fw .plan-tools { margin:0 0 16px; }
+.fw .assumption-note { margin:12px 0 0;font-size:16px;color:var(--muted); }
+.fw table { min-width:0; }
 .fw .saved-list { list-style:none;padding:0; }
 .fw .saved-list > li { border-bottom:1px solid var(--line);padding:18px 0;overflow-wrap:anywhere; }
 .fw .event-head { display:flex;flex-wrap:wrap;gap:12px;align-items:center; }
@@ -159,6 +166,8 @@ body.fw.plan-dialog-open { overflow:hidden; }
 .fw .conclusion-headline { margin:0 0 28px;max-width:30ch;font-size:clamp(24px,3.4vw,36px);font-weight:800;line-height:1.35;letter-spacing:-.01em;text-wrap:balance; }
 .fw .conclusion[data-tone="calm"] .conclusion-headline { color:var(--accent); }
 .fw .conclusion[data-tone="alert"] .conclusion-headline { color:var(--danger); }
+.fw .conclusion[data-tone="caution"] .conclusion-headline { color:var(--caution); }
+.fw .nowrap { white-space:nowrap; }
 .fw .conclusion-facts { display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:24px 32px;margin:0 0 22px;padding-top:22px;border-top:1px solid var(--line); }
 .fw .conclusion-facts > div { min-width:0; }
 .fw .conclusion-facts dt { font-size:16px;font-weight:600;color:var(--muted); }

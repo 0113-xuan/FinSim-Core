@@ -133,7 +133,7 @@ test('plan results lead with a conclusion, then the explanation, and fold the fu
   const at=id=>results.indexOf(`id="${id}"`);
   assert.ok(at('conclusion')>=0&&at('conclusion')<at('explanationSection'));
   assert.ok(at('explanationSection')<at('bandHeading'));
-  const details=results.slice(results.indexOf('<details id="allMetrics"'),results.indexOf('</details>'));
+  const details=results.slice(results.indexOf('<details id="allMetrics"'),results.indexOf('id="assumptionsPanel"'));
   for(const id of ['minimumCash','cashShortfall','netWorthP50','realNetWorthP50'])assert.match(details,new RegExp(`id="${id}"`));
   assert.match(results,/不是預測|conclusionCaveat/);
 });
@@ -194,7 +194,7 @@ test('stale errors are cleared when the inputs change or a new run starts, and b
   const inv=page.slice(page.indexOf('function invalidate'),page.indexOf('function renderExplanation'));
   assert.match(inv,/\$\('simulationError'\)\.hidden=true/);
   assert.match(inv,/clearExplanation\(\)/);
-  assert.match(html,/從台灣過去的通膨與台股報酬隨機抽取[^<]*相同輸入每次得到相同結果/);
+  assert.match(html,/從台灣歷史資料隨機抽 300 次；相同輸入每次得到相同結果/);
   assert.match(html,/通膨和報酬各用一個固定數字/);
 });
 
@@ -317,7 +317,7 @@ test('every number under "see all numbers" names its simulation, the dashboard u
   const dashboard=fs.readFileSync(path.join(__dirname,'../static/dashboard.html'),'utf8');
   const charts=fs.readFileSync(path.join(__dirname,'../static/charts.js'),'utf8');
   const all=html.slice(html.indexOf('id="allMetrics"'),html.indexOf('id="assumptionsPanel"'));
-  assert.match(all,/「固定值模擬」是單一路線。其餘來自 300 次隨機模擬：較差情況＝20 次裡有 1 次比這低/);
+  assert.match(all,/「固定值模擬」是單一路線，其餘來自 300 次隨機模擬。較差：20 次有 1 次更低/);
   // Same kind of figure sits in one row; the columns say which simulation each number comes from.
   const [endTable,riskTable]=all.split('<table').slice(1);
   assert.match(endTable,/<thead><tr><th scope="col">項目<\/th><th scope="col">固定值模擬<\/th><th scope="col">較差情況<\/th><th scope="col">一般情況<\/th><th scope="col">順利情況<\/th>/);
@@ -333,4 +333,23 @@ test('every number under "see all numbers" names its simulation, the dashboard u
   assert.match(dashboard,/固定報酬率算出的單一路線/);
   assert.match(charts,/size:14/);
   assert.equal((charts.match(/\{font,|ticks:\{font|Font:font/g)||[]).length,5);
+});
+
+test('the result area keeps chart text folded, periods unbroken, a caution colour, and a rename shortcut',()=>{
+  const html=fs.readFileSync(path.join(__dirname,'../static/plan.html'),'utf8');
+  const page=fs.readFileSync(path.join(__dirname,'../static/plan-page.js'),'utf8');
+  const css=fs.readFileSync(path.join(__dirname,'../static/shell.css'),'utf8');
+  for(const id of ['planChartSummary','bandChartSummary'])assert.match(html,new RegExp(`<details class="chart-text"><summary>用文字看這張圖</summary><div id="${id}" class="chart-summary"></div></details>`));
+  assert.match(html,/<p class="assumption-note">淨資產＝現金＋投資市值＋車輛估值－貸款餘額；車輛估值是估算，不是成交價。<\/p>/);
+  assert.equal(html.match(/淨資產＝/g).length,1);
+  assert.match(page,/function setText\(node,text\)[^\n]*\(\\d\{4\}-\\d\{2\}\)[^\n]*'nowrap'/);
+  for(const call of ["setText($('conclusionHeadline'), view.headline)","setText(note, fact.note)","setText(label, fact.label)","setText(compare.querySelector('span'), view.comparison.text)"])assert.ok(page.includes(call),call);
+  assert.match(css,/\.fw \.nowrap \{ white-space:nowrap; \}/);
+  assert.match(css,/\.fw \.conclusion\[data-tone="caution"\] \.conclusion-headline \{ color:var\(--caution\); \}/);
+  const luminance=hex=>{const c=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2];};
+  const caution=css.match(/--caution:(#[0-9a-f]{6})/i)[1];
+  assert.ok((luminance('#ffffff')+.05)/(luminance(caution)+.05)>=4.5,`caution ${caution} must reach 4.5:1 on white`);
+  assert.match(css,/\.fw table \{ min-width:0; \}/);
+  assert.match(html,/id="renamePlan"/);
+  assert.ok(page.includes("$('renamePlan').addEventListener('click'")&&page.includes("settings.open=true"));
 });

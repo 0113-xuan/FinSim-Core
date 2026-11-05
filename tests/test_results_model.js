@@ -127,7 +127,7 @@ test('conclusion compares the plan with the same plan without its events', () =>
   const base = {summary, mc, startPeriod: '2027-01', months: 60, simulations: 300};
   assert.equal(results.conclusion(base).comparison, null);
   const worse = results.conclusion({...base, baseline: {final_balance: 1000000, minimum_cash_balance: 250000.4}}).comparison;
-  assert.equal(worse.lead, '和沒有這個計畫事件相比（固定值模擬）');
+  assert.equal(worse.lead, '和沒有這個事件相比');
   assert.equal(worse.text, '2031-12 的現金少了 $600,000，最低現金少了 $240,000。');
   const better = results.conclusion({...base, baseline: {final_balance: 100000, minimum_cash_balance: 10000}}).comparison;
   assert.equal(better.text, '2031-12 的現金多了 $300,000，最低現金沒有差別。');
