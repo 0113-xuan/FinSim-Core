@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FinSim 專案地圖</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --ink:#1b2430; --muted:#5b6675; --line:#dde2e9;
+  --brand:#1f5fbf; --brand-soft:#e6efff;
+  --ok:#14804a; --ok-soft:#e1f5ea;
+  --warn:#9a5b00; --warn-soft:#fff1d6;
+  --todo:#475569; --todo-soft:#e8ecf1;
+  --ai:#6a3fb5; --ai-soft:#efe8fb;
+  --calc:#0b6b73; --calc-soft:#dff3f4;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f141b; --card:#171e28; --ink:#e6ebf2; --muted:#9aa6b6; --line:#2a3442;
+    --brand:#7fb0ff; --brand-soft:#17284a;
+    --ok:#5fd596; --ok-soft:#10301f;
+    --warn:#f2b552; --warn-soft:#3a2a0a;
+    --todo:#aab6c6; --todo-soft:#222c39;
+    --ai:#bb9bff; --ai-soft:#2a1d47;
+    --calc:#6ad3dc; --calc-soft:#0d2e32;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16.5px/1.7 "Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif}
+body[data-level="simple"] .adv{display:none}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px 64px}
+header{padding:28px 0 4px}
+h1{font-size:30px;margin:0 0 6px;line-height:1.25}
+h2{font-size:23px;margin:44px 0 6px;scroll-margin-top:60px}
+h3{font-size:17px;margin:0 0 4px}
+h4{font-size:15px;margin:0 0 4px}
+p{margin:6px 0}
+.sub{color:var(--muted);margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--muted);margin-top:10px}
+.meta b{color:var(--ink)}
+code{font-family:ui-monospace,Consolas,monospace;font-size:.87em;background:var(--todo-soft);
+  padding:1px 6px;border-radius:4px;word-break:break-all}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:760px){.g2,.g3{grid-template-columns:1fr}}
+.pill{display:inline-block;font-size:12.5px;font-weight:700;padding:1px 10px;border-radius:999px;
+  border:1px solid currentColor;white-space:nowrap;vertical-align:middle}
+.pill.ok{color:var(--ok);background:var(--ok-soft)}
+.pill.warn{color:var(--warn);background:var(--warn-soft)}
+.pill.todo{color:var(--todo);background:var(--todo-soft)}
+.pill.ai{color:var(--ai);background:var(--ai-soft)}
+.note{font-size:14px;color:var(--muted)}
+.lead{color:var(--muted);margin:0 0 12px}
+
+/* sticky bar */
+.bar-top{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line);
+  display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 0;margin-top:14px}
+.toc{display:flex;gap:6px;overflow-x:auto}
+.toc a{white-space:nowrap;font-size:14px;color:var(--ink);text-decoration:none;padding:5px 12px;
+  border-radius:999px;border:1px solid var(--line);background:var(--card)}
+.toc a:hover{border-color:var(--brand);color:var(--brand)}
+.toggle{display:flex;flex:none;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--card)}
+.toggle button{font:inherit;font-size:14px;border:0;background:transparent;color:var(--ink);padding:5px 14px;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--brand);color:#fff;font-weight:700}
+body[data-level="simple"] .toc .adv-link{display:none}
+
+.hero{border-left:6px solid var(--brand);background:var(--brand-soft)}
+.hero .big{font-size:20px;font-weight:700;margin:0 0 6px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-size:21px;line-height:1.25}
+.stat span{font-size:13px;color:var(--muted)}
+
+/* four-step picture */
+.pic{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:8px;align-items:stretch;margin-top:12px}
+.pic .arr{align-self:center;font-size:22px;color:var(--muted)}
+.node{border:2px solid var(--line);border-radius:12px;padding:12px;background:var(--card);text-align:center}
+.node b{display:block;font-size:16px}
+.node span{font-size:14px;color:var(--muted)}
+.node.calc{border-color:var(--calc);background:var(--calc-soft)}
+.node.you{border-color:var(--brand)}
+@media(max-width:760px){.pic{grid-template-columns:1fr}.pic .arr{transform:rotate(90deg);justify-self:center}}
+.helper{margin-top:12px;border:2px dashed var(--ai);background:var(--ai-soft);border-radius:12px;padding:12px 16px}
+
+/* layered architecture */
+.layer{display:grid;grid-template-columns:118px 1fr;gap:12px;align-items:stretch}
+@media(max-width:760px){.layer{grid-template-columns:1fr}}
+.layer-label{font-weight:700;font-size:14px;color:var(--muted);display:flex;align-items:center}
+.boxes{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.box{border:2px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card)}
+.box p{margin:2px 0;font-size:13.5px;color:var(--muted)}
+.box.fe{border-color:var(--brand)}
+.box.api{border-color:var(--ink)}
+.box.svc{border-color:var(--warn)}
+.box.eng{border-color:var(--calc);background:var(--calc-soft)}
+.box.ai{border-color:var(--ai);background:var(--ai-soft)}
+.box.legacy{border-style:dashed}
+.arrow{text-align:center;color:var(--muted);font-size:13px;margin:6px 0}
+.rule{margin-top:14px;border:2px solid var(--ai);background:var(--ai-soft);border-radius:10px;padding:12px 14px}
+
+/* flows */
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.step{flex:1 1 150px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card)}
+.step small{display:block;color:var(--muted);font-size:13px}
+.step .n{display:inline-block;background:var(--brand);color:#fff;border-radius:50%;width:22px;height:22px;
+  text-align:center;font-size:13px;line-height:22px;margin-right:6px}
+.step.aiopt{border-color:var(--ai);background:var(--ai-soft)}
+
+/* progress */
+.stages{display:grid;gap:10px;margin-top:10px}
+.stage{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
+.dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;background:var(--ok)}
+.dot.warn{background:var(--warn)}
+.dot.todo{background:var(--todo)}
+.bar{display:flex;height:14px;border-radius:999px;overflow:hidden;border:1px solid var(--line);margin:10px 0 4px}
+.bar i{display:block;height:100%}
+.bar .a{background:var(--ok);flex:5}
+.bar .b{background:var(--warn);flex:2}
+.bar .c{background:var(--todo);flex:3}
+.legend{font-size:14px;color:var(--muted)}
+.when{font-size:13px;color:var(--muted)}
+
+/* dates */
+.dates{display:grid;gap:8px;margin-top:10px}
+.date-row{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:10px 14px;border:1px solid var(--line);
+  border-radius:12px;background:var(--card)}
+.date-row b.d{color:var(--brand)}
+.date-row.hot{border-color:var(--warn);background:var(--warn-soft)}
+@media(max-width:560px){.date-row{grid-template-columns:1fr}}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:560px}
+th,td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--todo-soft);font-size:13px;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td.k{white-space:nowrap}
+
+ul.plain{margin:6px 0;padding-left:22px}
+ul.plain li{margin:6px 0}
+ul.tight{margin:4px 0;padding-left:20px}
+ul.tight li{margin:3px 0}
+.src{font-size:12.5px;color:var(--muted)}
+dl{margin:0}
+dt{font-weight:700;margin-top:10px}
+dd{margin:2px 0 0;color:var(--muted)}
+pre{white-space:pre-wrap;margin:0;background:var(--todo-soft);padding:10px;border-radius:8px;
+  font:13.5px/1.5 ui-monospace,Consolas,monospace}
+footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+@media print{.bar-top{display:none}body{background:#fff}}
+</style>
+</head>
+<body data-level="adv">
+<div class="wrap">
+
+<header>
+  <h1>FinSim 專案地圖</h1>
+  <p class="sub">這個專案是什麼、系統怎麼接起來、做到哪裡、接下來做什麼。右上角可切換「簡單版」與「進階版」。</p>
+  <div class="meta">
+    <span>更新：<b>2026-10-29</b></span>
+    <span>分支：<b><code>codex/project-progress</code></b></span>
+    <span>HEAD：<b><code>3d5f76a</code></b></span>
+    <span>口試：<b>2026-11-19</b></span>
+  </div>
+</header>
+
+<div class="bar-top">
+  <nav class="toc" aria-label="章節">
+    <a href="#what">專案簡介</a>
+    <a href="#use">功能</a>
+    <a href="#arch" class="adv-link">架構</a>
+    <a href="#progress">進度</a>
+    <a href="#next">接下來</a>
+    <a href="#risk">注意事項</a>
+    <a href="#ref" class="adv-link">對照表</a>
+  </nav>
+  <div class="toggle" role="group" aria-label="內容深度">
+    <button type="button" id="b-simple" aria-pressed="false">簡單版</button>
+    <button type="button" id="b-adv" aria-pressed="true">進階版</button>
+  </div>
+</div>
+
+<!-- ========== WHAT ========== -->
+<h2 id="what">1. 這個專案在做什麼？</h2>
+<div class="card hero">
+  <p class="big">幫人在「花大錢之前」先試算：買了會怎樣？</p>
+  <p>使用者填入收入、存款、每月開銷，再選一台想買的車。系統算出<b>未來 5 年（60 個月）每個月的存款變化</b>，並做壓力測試。目前以<b>買車</b>當示範案例。</p>
+  <p class="adv">研究問題：如何把重大財務決策轉成「可追溯的現金流情境」，用基準比較、壓力測試與限制搜尋，幫助使用者理解決策的財務影響？</p>
+  <div class="stats">
+    <div class="stat"><b>60 個月</b><span>每次試算的期間</span></div>
+    <div class="stat"><b>7 版本 / 4 車系</b><span>推薦用車款（附官方來源）</span></div>
+    <div class="stat adv"><b>500 + 154</b><span>自動測試通過（Python + Node）</span></div>
+    <div class="stat adv"><b>34 / 56</b><span>真實 Gemini 呼叫有回應</span></div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:12px">
+  <h3>運作方式（四步）</h3>
+  <div class="pic">
+    <div class="node you"><b>① 你</b><span>填資料、說出需求</span></div>
+    <div class="arr">→</div>
+    <div class="node"><b>② 網頁</b><span>收集並顯示結果</span></div>
+    <div class="arr">→</div>
+    <div class="node calc"><b>③ 計算機</b><span>真正算錢的地方</span></div>
+    <div class="arr">→</div>
+    <div class="node you"><b>④ 結果</b><span>每月存款、風險、比較</span></div>
+  </div>
+  <div class="helper">
+    <b>🤖 AI 小助手（可有可無）</b>
+    <p>只負責「聽懂」你打的字，例如「我不喜歡休旅車，但常載長輩」，整理成選項讓你確認。<b>它不算錢、不替你決定</b>；每一項都要你點頭才算數。AI 壞掉時其他功能照常使用。</p>
+  </div>
+  <p style="margin-top:12px"><b>為什麼這樣設計？</b>AI 有時會講錯，錢不能讓它亂算。所以「算錢」交給固定規則的計算機：同樣輸入一定得到同樣答案，也能逐項檢查。</p>
+</div>
+
+<!-- ========== USE ========== -->
+<h2 id="use">2. 使用者現在可以做什麼？</h2>
+<div class="grid g2">
+  <div class="card">
+    <h3>🚗 功能一：幫我選車</h3>
+    <ul class="plain">
+      <li>三頁問卷（預算、用途、偏好），可返回修改</li>
+      <li>可用一句話補充需求（AI 協助，選用）</li>
+      <li>列出適合的車，並說明為什麼不適合其他車</li>
+      <li>資料不足的車寫「資料不足」，不亂猜</li>
+      <li>挑一台，看 5 年財務影響</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🧮 功能二：直接購車試算</h3>
+    <ul class="plain">
+      <li>已知要買哪台，直接試算買車前後 5 年存款</li>
+      <li>壓力測試：收入 −10%、失業 3 個月、突發支出 10 萬、利率 +2 個百分點</li>
+      <li>「如果油價漲了？」一次改一個條件</li>
+      <li>方案 A / B 並排比較；找出「最高買得起的車價」</li>
+    </ul>
+  </div>
+</div>
+
+<div class="adv">
+  <h3 style="margin-top:18px">使用流程（進階）</h3>
+  <p class="note">兩條路線互通：頁首可切換「幫我選車／直接購車試算」，推薦結果可帶入單車／雙車分析。</p>
+  <h4 style="margin-top:10px">路線 A：幫我選車</h4>
+  <div class="flow">
+    <div class="step"><span class="n">1</span><b>三步問卷</b><small>基本條件／用車與財務／自由補充。財務選填。</small></div>
+    <div class="step aiopt"><span class="n">2</span><b>AI 分析（選用）</b><small>自由文字 → 候選需求，逐項接受／拒絕；失敗可略過。</small></div>
+    <div class="step"><span class="n">3</span><b>確認需求</b><small>改任何答案，確認與 AI 候選都會失效，需重新確認。</small></div>
+    <div class="step"><span class="n">4</span><b>規則推薦</b><small>符合／不符合／資料不足三態；最多列出前幾名。</small></div>
+    <div class="step"><span class="n">5</span><b>五年財務分析</b><small>每月支出、最低現金、預備金、限制是否通過。</small></div>
+  </div>
+  <h4 style="margin-top:10px">路線 B：直接購車試算</h4>
+  <div class="flow">
+    <div class="step"><span class="n">1</span><b>填財務＋車款</b><small>收入、存款、支出、既有月付；車價、頭期、利率、期數。</small></div>
+    <div class="step"><span class="n">2</span><b>確認假設</b><small>每個假設標示來源、單位、是否被覆寫。</small></div>
+    <div class="step"><span class="n">3</span><b>60 個月比較</b><small>買車前 vs 後、最低現金、預備金、價格上限。</small></div>
+    <div class="step"><span class="n">4</span><b>壓力測試</b><small>四種壞情境，各自顯示通過與否。</small></div>
+    <div class="step"><span class="n">5</span><b>What-if / A·B</b><small>一次改一個因素；存方案 A 再算 B。</small></div>
+  </div>
+</div>
+
+<!-- ========== ARCH (advanced only) ========== -->
+<div class="adv">
+<h2 id="arch">3. 系統架構（由上往下呼叫）</h2>
+<p class="lead">技術棧：FastAPI + Pydantic 2（後端）、原生 HTML/CSS/JavaScript + Chart.js（前端，無編譯步驟）。尚未使用資料庫，狀態存在記憶體。</p>
+
+  <div class="layer">
+    <div class="layer-label">① 前端頁面<br><code>static/</code></div>
+    <div class="boxes">
+      <div class="box fe"><h4>幫我選車 <span class="pill ok">完成</span></h4><p><code>car-needs.html</code></p><p>三步問卷 → 確認 → 推薦</p></div>
+      <div class="box fe"><h4>直接購車試算 <span class="pill ok">完成</span></h4><p><code>vehicle.html</code>（網站首頁導向這裡）</p><p>單車成本、60 個月比較、壓測、A/B</p></div>
+      <div class="box fe legacy"><h4>舊版工作區 <span class="pill todo">保留</span></h4><p><code>index.html</code> + <code>app.js</code></p><p>FinSim 1.0 的 Monte Carlo 儀表板</p></div>
+    </div>
+  </div>
+  <div class="arrow">▼ HTTP / JSON</div>
+  <div class="layer">
+    <div class="layer-label">② API 層<br><code>main.py</code></div>
+    <div class="boxes"><div class="box api"><h4>FastAPI 路由</h4><p>驗證請求（拒絕多餘欄位／NaN）；AI 端點每 IP 每分鐘 20 次限流（記憶體、每 worker 各算）；提供靜態頁面。</p></div></div>
+  </div>
+  <div class="arrow">▼ 呼叫服務</div>
+  <div class="layer">
+    <div class="layer-label">③ 服務層<br><code>app/services/</code></div>
+    <div class="boxes">
+      <div class="box svc"><h4>需求 → 推薦 <span class="pill ok">P2</span></h4><p><code>car_recommendations.py</code></p><p>硬性篩選＋可解釋排序</p></div>
+      <div class="box svc"><h4>購車決策 <span class="pill ok">Sprint 1–2, P0</span></h4><p><code>vehicle_decision.py</code>、<code>vehicle_cost_comparison.py</code>、<code>vehicle_costs.py</code></p><p>敏感度、What-if、雙車比較、價格上限</p></div>
+      <div class="box ai"><h4>AI 需求提取 <span class="pill ai">P3 · 選用</span></h4><p><code>car_needs_extraction.py</code></p><p>文字 → 白名單欄位候選＋原文證據；簽章 receipt 防竄改</p></div>
+      <div class="box svc legacy"><h4>舊場景／onboarding</h4><p><code>scenario_*.py</code>、<code>profile_onboarding.py</code></p><p>FinSim 1.0 的自然語言場景（也用 AI）</p></div>
+    </div>
+  </div>
+  <div class="arrow">▼ 只有這一層會算錢</div>
+  <div class="layer">
+    <div class="layer-label">④ 確定性引擎<br><code>app/core/</code></div>
+    <div class="boxes">
+      <div class="box eng"><h4>財務引擎 <span class="pill ok">完成</span></h4><p><code>simulation.py</code>、<code>events.py</code>、<code>expenses.py</code>、<code>financial_rules.py</code></p><p>60 個月現金流、貸款月付、通膨、事件、預備金月數</p></div>
+      <div class="box eng legacy"><h4>舊風險模組</h4><p><code>fsi.py</code>、<code>monte_carlo.py</code>、<code>shocks.py</code>、<code>advisor.py</code></p><p>FinSim 2.0 購車流程<b>不呼叫</b></p></div>
+    </div>
+  </div>
+  <div class="arrow">外部依賴（只被特定服務使用）</div>
+  <div class="layer">
+    <div class="layer-label">⑤ 資料與模型</div>
+    <div class="boxes">
+      <div class="box"><h4>車款目錄</h4><p><code>recommendation_catalog.py</code>：7 版本、官方網址、查詢日 2026-10-26</p><p><code>vehicle_catalog.py</code>：舊 5 版本（購車頁選單）</p></div>
+      <div class="box"><h4>假設集中管理</h4><p><code>decision_assumptions.py</code>：薪資成長、通膨、保險／稅／維護預算。<b>是規劃預算，不是市場報價。</b></p></div>
+      <div class="box ai"><h4>AI Provider</h4><p><code>gemini_provider.py</code>（固定 <code>gemini-3.5-flash-lite</code>）、<code>mock_ai_provider.py</code>；OpenAI 路徑<b>未經真實驗證</b></p></div>
+    </div>
+  </div>
+  <div class="rule">
+    <b>責任分離（口試的技術重點）：</b>AI 只產生「候選」→ 後端檢查格式／原文證據／衝突 → 使用者確認 → 規則引擎推薦與計算。AI 的輸出不會直接進入任何金額、排序或推薦；AI 掛掉整條流程仍可用。
+  </div>
+</div>
+
+<!-- ========== PROGRESS ========== -->
+<h2 id="progress">4. 現在做到哪裡了？</h2>
+<div class="card">
+  <p><b>核心功能都做出來了，目前進入「測試與修小問題」階段。</b></p>
+  <div class="bar" role="img" aria-label="進度條示意：綠色已完成、橘色有保留、灰色未做"><i class="a"></i><i class="b"></i><i class="c"></i></div>
+  <div class="legend">綠＝完成　橘＝完成但有保留　灰＝還沒做（長度為示意，非精確百分比）</div>
+  <div class="stages">
+    <div class="stage"><div class="dot">✓</div><div><h3>P0 把買車試算做穩 <span class="pill ok">完成</span></h3><p>算得更快（約 3.6 秒 → 0.5 秒），結果逐字不變。<span class="adv"> 壓測判定以後端為準；9 組完整 API 快照回歸。</span></p><div class="when">2026-10-22～23</div></div></div>
+    <div class="stage"><div class="dot">✓</div><div><h3>P1 三頁問卷 <span class="pill ok">完成</span></h3><p>可回上一頁修改；財務選填，沒填就不宣稱「已通過負擔評估」。<span class="adv"> 輸出版本化需求 JSON（schema 1.0）。</span></p><div class="when">2026-10-23～25</div></div></div>
+    <div class="stage"><div class="dot">✓</div><div><h3>P2 依需求推薦車款 <span class="pill ok">完成</span></h3><p>4 車系 7 版本（汽油、油電、純電），資料附官方來源；資料不足的車不排名。</p><div class="when">2026-10-26～27</div></div></div>
+    <div class="stage"><div class="dot warn">!</div><div><h3>P3 AI 聽懂你的話 <span class="pill warn">完成但有保留</span></h3><p>做好了，但 AI 偶爾回得太慢，只能當加分功能，不能當必經步驟。<span class="adv"> 六個白名單欄位；原文證據驗證；逐項接受／拒絕；來源標記 <code>user_confirmed_ai</code>。</span></p><div class="when">2026-10-27</div></div></div>
+    <div class="stage"><div class="dot warn">!</div><div><h3>P4 整合並給組員測試 <span class="pill warn">完成但有保留</span></h3><p>可給組員試用，但<b>不能說 AI 已經穩定</b>。獨立審查結論：CONDITIONAL GO，沒有嚴重問題。</p><div class="when">2026-10-27～28 · 測試分支 <code>test/p4-integration</code></div></div></div>
+    <div class="stage"><div class="dot todo">…</div><div><h3>P5 AI 解釋結果、用說的調整條件 <span class="pill todo">還沒開始</span></h3><p>例如直接問「油價漲 2 成會怎樣？」</p></div></div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:12px">
+  <h3>AI 實測結果（白話）</h3>
+  <p>真的呼叫 AI 測了 56 次：<b>34 次有回應、22 次等太久放棄</b>。有回應的品質不錯，已收到回應的部分花費很少（約 NT$0.4 元；放棄的那些是否計費還不確定）。問題在「速度不穩」，原因還沒查出來，所以 AI 設為選用。</p>
+  <div class="adv">
+    <div class="tw" style="margin-top:8px"><table>
+      <thead><tr><th>指標</th><th>舊輪（浮動 alias）</th><th>固定模型 第 1 輪</th><th>固定模型 第 2 輪</th></tr></thead>
+      <tbody>
+        <tr><td>可用回應</td><td>11/28（39%）</td><td>17/28（61%）</td><td>17/28（61%）</td></tr>
+        <tr><td>逾時（20 秒上限）</td><td>17</td><td>11</td><td>11</td></tr>
+        <tr><td>有回應者：格式／證據／衝突檢查失敗</td><td>0／0／0</td><td>0／0／0</td><td>0／0／0</td></tr>
+        <tr><td>估算費用（僅可觀測 token）</td><td>US$0.0036</td><td>US$0.0055</td><td>US$0.0058</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">後端保護有效（有回應的都通過驗證），但逾時原因（網路／服務端排隊／模型）<b>尚未確認</b>；小樣本、同一晚，不能下因果結論。「有回應」不等於「語意正確」，例如「也許三年後換車」曾被抽成明確持有三年，靠人工確認擋下。</p>
+  </div>
+</div>
+
+<!-- ========== NEXT ========== -->
+<h2 id="next">5. 接下來要做什麼？</h2>
+<div class="dates">
+  <div class="date-row hot"><b class="d">11/01 前</b><div><b>功能凍結。</b>修 3 個小問題、決定 AI 太慢怎麼辦、請組員試用。</div></div>
+  <div class="date-row"><b class="d">11/02–11/08</b><div><b>找 5–10 人測試。</b>看有沒有看懂結果、哪裡卡住，只修重要問題。</div></div>
+  <div class="date-row"><b class="d">11/09–11/18</b><div><b>準備展示。</b>簡報、資料來源附錄、備用錄影、口試演練。</div></div>
+  <div class="date-row hot"><b class="d">11/19</b><div><b>口試。</b>先展示可重現的計算，再展示 AI 與「AI 壞掉也能用」。</div></div>
+</div>
+
+<div class="grid g2" style="margin-top:14px">
+  <div class="card">
+    <h3>近期要處理</h3>
+    <ul class="plain">
+      <li>設定寫錯時，AI 不要整個壞掉，要退回安全值
+        <span class="adv src"><br>① <code>GEMINI_MODEL</code> 設成空字串要回退固定模型　② <code>AI_MAX_RETRIES</code> 超出 0–5 要夾範圍或警告（文件明載，P4 審查）</span></li>
+      <li>放上網路前加「誰可以用」的管控，避免費用被刷爆
+        <span class="adv src"><br>目前 AI 端點不需登入，限流只在各 worker 記憶體內（文件明載）</span></li>
+      <li>查出 AI 為什麼偶爾很慢（測前先估價、取得同意）
+        <span class="adv src"><br>查 3.5 Flash-Lite 思考設定；針對 p3-20、p3-26、p3-27 做小樣本對照（文件明載）</span></li>
+      <li>組員桌面測試，記錄各人 AI 降級比例；專家複審通過後才合併到正式版本（<code>main</code>）</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>可能做、但不保證</h3>
+    <ul class="plain">
+      <li>AI 解釋結果、用說的改條件（P5）</li>
+      <li>補齊電動車耗電資料（Model 3 目前「資料不足」）<span class="adv src"> · 建議</span></li>
+      <li>殘值／完整持有成本<span class="adv src"> · 另估 12–20 小時</span></li>
+      <li>保養實價資料<span class="adv src"> · 另估 8–16 小時</span></li>
+      <li>更多車款</li>
+    </ul>
+    <p class="note">時間不夠就捨棄，優先保證核心功能穩定。</p>
+  </div>
+</div>
+
+<div class="card" style="margin-top:12px">
+  <h3>這次口試版明確「不做」</h3>
+  <p><span class="pill todo">不做</span> 即時爬網路價格 · 手機版專用畫面（目前只驗收桌面）· 會員登入與雲端同步 · 投資建議 · 買車以外的人生大事（搬家、結婚…）<span class="adv"> · 多代理 · 全品牌維修報價 · 自創舒適度評分 · 真實殘值預測 · 新的 Monte Carlo</span></p>
+  <p class="adv note">OpenAI Structured Outputs 尚未真實驗證，不列為正式 Provider。若日後需要持久化，需 Supabase Auth + RLS（<code>docs/supabase_schema.sql</code>）。</p>
+</div>
+
+<!-- ========== RISK ========== -->
+<h2 id="risk">6. 目前要注意的事</h2>
+<div class="grid g3">
+  <div class="card"><h3>① AI 還不穩</h3><p>不要對外說「AI 很穩」。可以說「AI 是輔助，壞了也不影響主要功能」。</p></div>
+  <div class="card"><h3>② 資料不算多</h3><p>目前只有 7 個車款版本；價格是官方標價，不是成交價。簡報要講清楚。</p></div>
+  <div class="card"><h3>③ 有些數字是「假設」</h3><p>保險、稅金、保養、油價是規劃值，不是市場報價；畫面上都有標示。</p></div>
+</div>
+<div class="adv">
+  <div class="tw" style="margin-top:12px"><table>
+    <thead><tr><th>項目</th><th>狀況</th><th>做法</th></tr></thead>
+    <tbody>
+      <tr><td class="k"><span class="pill warn">無存取控制</span></td><td>AI 端點不需登入；限流為各 worker 記憶體內 IP 計數</td><td>公開網址＋真實 Key 會被消耗額度；部署需網路層限制</td></tr>
+      <tr><td class="k"><span class="pill warn">語意誤判</span></td><td>模型可能把含糊句抽成明確條件</td><td>人工逐項確認是安全防線，不代表模型已修好</td></tr>
+      <tr><td class="k"><span class="pill todo">簽章金鑰</span></td><td>未設固定 <code>CAR_NEEDS_SIGNING_KEY</code> 時，重啟／換 worker 會讓 AI 候選失效</td><td>多 worker 部署須設共同的 ≥32 bytes 金鑰（不與 JWT 共用）</td></tr>
+      <tr><td class="k"><span class="pill todo">暫存狀態</span></td><td>使用者、草稿存在記憶體；重啟即清空</td><td>demo 不需要；之後持久化再上資料庫</td></tr>
+      <tr><td class="k"><span class="pill todo">文件未追蹤</span></td><td>多份審查與工作報告目前是 Git 未追蹤檔</td><td>合併或交接前決定哪些要提交</td></tr>
+      <tr><td class="k"><span class="pill todo">README 偏舊</span></td><td>AI 段落仍以 OpenAI 風格描述，未涵蓋 P1–P4</td><td>以本頁與 <code>P4_TEAM_TEST_GUIDE.md</code> 為準</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ========== REF (advanced only) ========== -->
+<div class="adv">
+<h2 id="ref">7. 對照表（想改某功能，去哪裡找）</h2>
+<div class="tw"><table>
+  <thead><tr><th>想做什麼</th><th>看這些檔案</th><th>備註</th></tr></thead>
+  <tbody>
+    <tr><td class="k">啟動／路由／限流</td><td><code>main.py</code>、<code>app/routes.py</code>、<code>app/config.py</code></td><td><code>/</code> 導向 <code>/vehicle.html</code></td></tr>
+    <tr><td class="k">API 資料格式</td><td><code>app/decision_schemas.py</code>、<code>recommendation_schemas.py</code>、<code>car_needs_ai_schemas.py</code>、<code>extraction_schemas.py</code></td><td>嚴格驗證，拒絕未知欄位</td></tr>
+    <tr><td class="k">財務計算</td><td><code>app/core/simulation.py</code>、<code>events.py</code>、<code>expenses.py</code></td><td>改動前先跑 P0 快照回歸</td></tr>
+    <tr><td class="k">購車評估／壓測</td><td><code>app/services/vehicle_decision.py</code></td><td>假設在 <code>app/decision_assumptions.py</code></td></tr>
+    <tr><td class="k">單車／雙車成本</td><td><code>vehicle_costs.py</code>、<code>vehicle_cost_comparison.py</code></td><td></td></tr>
+    <tr><td class="k">車款推薦與資料</td><td><code>car_recommendations.py</code>、<code>app/recommendation_catalog.py</code></td><td>新增車款＝補官方來源網址與查詢日</td></tr>
+    <tr><td class="k">AI 需求提取</td><td><code>car_needs_extraction.py</code>、<code>app/prompts/car_needs_extraction.md</code>、<code>gemini_provider.py</code></td><td>Prompt 與程式分開存放</td></tr>
+    <tr><td class="k">問卷前端</td><td><code>static/car-needs.html/.css/.js</code>、<code>car-needs-state.js</code></td><td>狀態與畫面分離</td></tr>
+    <tr><td class="k">購車前端</td><td><code>static/vehicle.html/.css/.js</code>、<code>vehicle-costs.js</code>、<code>vehicle-analysis.js</code></td><td>無財務公式，只呈現後端結果</td></tr>
+    <tr><td class="k">自動測試</td><td><code>tests/*.py</code>（30 檔）、<code>tests/*.js</code></td><td>預設不需 API Key</td></tr>
+    <tr><td class="k">真實 AI 評估</td><td><code>scripts/evaluate_car_needs_live.py</code>、<code>tests/fixtures/car_needs_p3_cases.json</code>（28 案例）</td><td>加 <code>--live</code> 才呼叫模型，<b>會花錢</b></td></tr>
+  </tbody>
+</table></div>
+
+<h3 style="margin-top:22px">API 清單</h3>
+<div class="grid g2">
+  <div class="card">
+    <h4>購車決策（確定性，不用 AI）</h4>
+    <ul class="tight">
+      <li><code>POST /decisions/vehicle</code> 60 個月評估＋壓測＋價格上限</li>
+      <li><code>…/sensitivity</code>、<code>…/what-if</code>、<code>…/compare</code></li>
+      <li><code>…/costs</code>、<code>…/cost-comparison</code> 單車／雙車成本</li>
+      <li><code>…/recommendations</code> 需求 → 推薦</li>
+      <li><code>GET …/catalog</code>、<code>GET …/assumptions</code></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>AI（選用，有限流）與舊版</h4>
+    <ul class="tight">
+      <li><code>POST /ai/car-needs/extract</code> <span class="pill ai">P3</span> 失敗回 503，提示可略過</li>
+      <li>舊版保留：<code>/simulate</code>、<code>/monte-carlo</code>、<code>/compare</code>、<code>/optimize</code>、<code>/scenarios/…</code>、<code>/ai/financial-onboarding/…</code></li>
+      <li>互動文件：啟動後開 <code>/docs</code></li>
+    </ul>
+  </div>
+</div>
+
+<h3 style="margin-top:22px">文件索引（<code>docs/</code>）</h3>
+<div class="grid g2">
+  <div class="card">
+    <h4>先讀這幾份</h4>
+    <ul class="tight">
+      <li><code>AI_PERSONALIZED_CAR_RECOMMENDATION_PLAN_2026-10-20.md</code> — 整體設計與時程</li>
+      <li><code>P4_TEST_RELEASE_REPORT_2026-10-28.md</code> — 最新狀態與 56 筆評估</li>
+      <li><code>CLAUDE_REVIEW_FINSIM2_P4_RELEASE_2026-10-28.md</code> — 最新獨立審查</li>
+      <li><code>P4_TEAM_TEST_GUIDE.md</code> — 組員啟動與驗收清單</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>依主題查</h4>
+    <ul class="tight">
+      <li>決策模型：<code>SPRINT2_IMPLEMENTATION.md</code>、<code>DIRECT_VEHICLE_COMPARISON.md</code></li>
+      <li>問卷／推薦／車款：<code>P1_QUESTIONNAIRE.md</code>、<code>P2_RECOMMENDATIONS.md</code>、<code>VEHICLE_CATALOG.md</code></li>
+      <li>AI：<code>FINSIM_2_P3_WORK_REPORT_2026-10-27.md</code>、<code>P4_STABILITY_INVESTIGATION_2026-10-28.md</code></li>
+      <li>研究方向：<code>PROFESSOR_MEETING_2026-10-09.md</code>、<code>…-10-12.md</code></li>
+    </ul>
+    <p class="note">命名：<code>FINSIM_2_Px_WORK_REPORT</code> 是實作報告；<code>CLAUDE_REVIEW_…</code> 是獨立審查。</p>
+  </div>
+</div>
+
+<h3 style="margin-top:22px">啟動與測試</h3>
+<div class="grid g2">
+  <div class="card">
+    <h4>本機啟動（不需 API Key）</h4>
+<pre>python -m venv venv
+.\venv\Scripts\python.exe -m pip install -r requirements.txt
+Copy-Item .env.example .env
+$env:AI_ENABLED = 'false'
+.\venv\Scripts\python.exe -m uvicorn main:app --port 8000</pre>
+    <p class="note">開 <code>http://127.0.0.1:8000/</code>；問卷在 <code>/car-needs.html</code>。不要用 <code>file://</code> 開。</p>
+  </div>
+  <div class="card">
+    <h4>跑測試</h4>
+<pre>python -m pytest -q -p no:cacheprovider
+node --test tests/*.js</pre>
+    <p class="note">最近一次：Python 500 passed、Node 154 passed，預設不呼叫真實模型。要開 AI：設 <code>AI_PROVIDER=gemini</code>、<code>GEMINI_API_KEY</code>、<code>AI_ENABLED=true</code>（一般點擊也會花額度）。</p>
+  </div>
+</div>
+
+<h3 style="margin-top:22px">給 AI 助手的規則</h3>
+<div class="card">
+  <ul class="tight">
+    <li>金額只在後端算；前端不放財務公式；AI 不算錢、不推薦車款。</li>
+    <li>AI 是選用的：失敗（逾時／格式錯／停用）時仍須能走完「問卷 → 推薦 → 財務分析」。</li>
+    <li>缺資料不可用 0 代替（例：Model 3 無可核對電耗 → 顯示「資料不足」）。</li>
+    <li>改計算前先跑 <code>tests/fixtures/p0/vehicle_api_snapshots.json</code> 快照回歸。</li>
+    <li>不提交 <code>.env</code> 或任何 Key；不把「有回應」寫成「語意正確」，也不把 Mock 通過率寫成模型準確率。</li>
+  </ul>
+</div>
+</div>
+
+<!-- ========== GLOSSARY ========== -->
+<h2>名詞小字典</h2>
+<div class="card">
+<dl>
+  <dt>後端／計算機</dt><dd>在使用者看不到的地方，負責真正算錢的程式。</dd>
+  <dt>確定性</dt><dd>同樣的輸入，一定得到同樣的答案（AI 不是這樣，所以不讓它算錢）。</dd>
+  <dt>壓力測試</dt><dd>假設壞事發生（失業、突發支出），看存款會不會見底。</dd>
+  <dt>現金流</dt><dd>每個月「進來多少、出去多少、剩多少」。</dd>
+  <dt>Gemini／逾時</dt><dd>Gemini 是我們用的 Google AI；逾時是等太久、系統放棄等待。</dd>
+  <dt>Mock</dt><dd>假的 AI，用來不花錢地測試。</dd>
+  <dt>合併到 main</dt><dd>把測試中的成果放進「正式版本」。目前還沒做。</dd>
+  <dt class="adv">快照回歸</dt><dd class="adv">事先存下完整的輸入與輸出，之後每次改程式都逐字比對，確保算出來的結果沒有悄悄改變。</dd>
+  <dt class="adv">白名單</dt><dd class="adv">只允許事先列好的欄位；AI 想填別的欄位會被拒絕。</dd>
+</dl>
+</div>
+
+<footer>整理自專案程式與 docs/ 內各階段報告（2026-10-29 快照）。標「建議」的是推論，不是既定決策。專案有進展時，請更新第 4、5 節與下方 JSON。</footer>
+
+<script type="application/json" id="finsim-status">
+{
+  "snapshot_date": "2026-10-29",
+  "branch": "codex/project-progress",
+  "head": "3d5f76a",
+  "test_branch_on_remote": "test/p4-integration",
+  "main_merged": false,
+  "deployed": false,
+  "oral_defense": "2026-11-19",
+  "feature_freeze": "2026-11-01",
+  "stack": ["FastAPI", "Pydantic 2", "vanilla JS", "Chart.js"],
+  "principle": "deterministic backend computes all money; AI only proposes reviewable candidates; AI is optional",
+  "phases": {
+    "P0": "done - vehicle reliability and performance",
+    "P1": "done - three-step questionnaire",
+    "P2": "done - deterministic recommendations (7 versions, 4 series)",
+    "P3": "done with conditions - AI needs extraction (Gemini, optional)",
+    "P4": "done with conditions - desktop integration and team test release",
+    "P5": "not started - AI explanation and natural-language adjustment"
+  },
+  "verdict": "CONDITIONAL GO: usable as optional-AI controlled test build; do not claim AI is stable",
+  "tests": {"python_passed": 500, "node_passed": 154},
+  "gemini_timeouts": "22 of 56 calls timed out across two fixed-model rounds (20s deadline)",
+  "next": [
+    "fix GEMINI_MODEL empty-string fallback",
+    "clamp or warn on AI_MAX_RETRIES outside 0-5",
+    "add access control before public deployment",
+    "decide Gemini timeout strategy (get cost approval before paid evals)",
+    "team desktop testing, then Claude re-review, then consider merging main",
+    "11/02-11/08 user testing; 11/09-11/18 demo prep; 11/19 defense"
+  ],
+  "not_started": ["AI explanation and natural-language adjustment", "BEV efficiency data", "residual value / full TCO"],
+  "out_of_scope": ["live price scraping", "mobile-specific UI", "account platform", "second life scenario"]
+}
+</script>
+</div>
+
+<script>
+(function(){
+  var body=document.body, s=document.getElementById('b-simple'), a=document.getElementById('b-adv');
+  function set(level){
+    body.setAttribute('data-level',level);
+    s.setAttribute('aria-pressed',level==='simple');
+    a.setAttribute('aria-pressed',level==='adv');
+    try{localStorage.setItem('finsim-map-level',level)}catch(e){}
+  }
+  var saved=null; try{saved=localStorage.getItem('finsim-map-level')}catch(e){}
+  if(saved==='simple'||saved==='adv') set(saved);
+  s.addEventListener('click',function(){set('simple')});
+  a.addEventListener('click',function(){set('adv')});
+})();
+</script>
+</body>
+</html>

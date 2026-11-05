@@ -1,0 +1,394 @@
+<title>FutureWallet 系統架構</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: one reading column; a numbered vertical rail for the user flow, then a left-to-right layer diagram for the system */
+  :root {
+    --bg: #f4f6f4;
+    --surface: #ffffff;
+    --ink: #15221e;
+    --muted: #586964;
+    --line: #d3dcd8;
+    --accent: #0e6b5f;
+    --accent-soft: #e2f1ee;
+    --new: #a35d00;
+    --new-soft: #fff0d9;
+    --ai: #2c55c7;
+    --ai-soft: #e5ebfb;
+    --font-display: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+    --font-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1513; --surface: #17211f; --ink: #e4ece9; --muted: #98aaa4; --line: #2b3936;
+      --accent: #53c3b1; --accent-soft: #15302b; --new: #f0a93e; --new-soft: #382811;
+      --ai: #93abff; --ai-soft: #1c2546; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1513; --surface: #17211f; --ink: #e4ece9; --muted: #98aaa4; --line: #2b3936;
+    --accent: #53c3b1; --accent-soft: #15302b; --new: #f0a93e; --new-soft: #382811;
+    --ai: #93abff; --ai-soft: #1c2546; color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: var(--font-body); font-size: 15px; line-height: 1.7;
+  }
+  .wrap {
+    max-width: 960px; margin: 0 auto;
+    padding-block: 40px 64px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: grid; gap: 56px;
+  }
+
+  header { display: grid; gap: 14px; }
+  .eyebrow { font-size: 13px; letter-spacing: .08em; color: var(--accent); font-weight: 500; }
+  h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(30px, 6vw, 44px); line-height: 1.2; margin: 0; text-wrap: balance; }
+  .lead { margin: 0; color: var(--muted); max-width: 62ch; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  h2 { font-family: var(--font-display); font-size: 24px; margin: 0; }
+  .section-head { display: grid; gap: 4px; margin-bottom: 24px; }
+  .section-head p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  .tag {
+    display: inline-block; font-size: 12px; font-weight: 500; line-height: 1;
+    padding: 5px 8px; border-radius: 4px; white-space: nowrap;
+  }
+  .tag.base { background: var(--accent-soft); color: var(--accent); }
+  .tag.new { background: var(--new-soft); color: var(--new); }
+  .tag.ai { background: var(--ai-soft); color: var(--ai); }
+
+  /* User flow rail */
+  ol.flow { list-style: none; margin: 0; padding: 0; }
+  .step { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 18px; position: relative; padding-bottom: 32px; }
+  .step::before {
+    content: ""; position: absolute; left: 19px; top: 44px; bottom: 4px; width: 2px; background: var(--line);
+  }
+  .step:last-child { padding-bottom: 0; }
+  .step:last-child::before { display: none; }
+  .num {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--surface); border: 2px solid var(--accent); color: var(--accent);
+    font-family: var(--font-mono); font-weight: 500; font-size: 15px;
+  }
+  .step-body { display: grid; gap: 10px; min-width: 0; padding-top: 4px; }
+  .step-title { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .step-title h3 { margin: 0; font-size: 18px; font-weight: 700; }
+  .step-body > p { margin: 0; color: var(--muted); }
+
+  .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+  .opt {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px 14px; display: grid; gap: 6px; align-content: start; min-width: 0;
+  }
+  .opt.new { border-color: color-mix(in srgb, var(--new) 45%, var(--line)); }
+  .opt.ai { border-color: color-mix(in srgb, var(--ai) 45%, var(--line)); }
+  .opt-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px; }
+  .opt strong { font-size: 15px; }
+  .opt p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+  .example { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink); }
+
+  .fields { display: flex; flex-wrap: wrap; gap: 6px; }
+  .field {
+    font-size: 13px; padding: 4px 10px; border-radius: 999px;
+    border: 1px dashed var(--line); background: var(--surface);
+  }
+
+  .loop {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    font-size: 13.5px; color: var(--accent); font-weight: 500;
+    border: 1.5px dashed var(--accent); border-radius: 8px; padding: 10px 14px;
+    background: var(--accent-soft);
+  }
+
+  /* Architecture */
+  .arch-scroll { overflow-x: auto; }
+  .arch {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0; align-items: stretch;
+  }
+  .layer {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px; display: grid; gap: 10px; align-content: start; min-width: 0;
+    position: relative;
+  }
+  .layer + .layer { margin-left: 28px; }
+  .layer + .layer::before {
+    content: "⇄"; position: absolute; left: -24px; top: 50%; transform: translateY(-50%);
+    color: var(--muted); font-size: 18px; width: 20px; text-align: center;
+  }
+  .layer h3 { margin: 0; font-size: 15px; }
+  .layer .sub { font-size: 12.5px; color: var(--muted); margin-top: -8px; }
+  .layer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .layer li {
+    font-size: 13px; line-height: 1.45; padding: 7px 9px; border-radius: 6px;
+    background: var(--bg); display: grid; gap: 4px;
+  }
+  .layer li code { font-family: var(--font-mono); font-size: 12.5px; }
+  .layer li .tag { justify-self: start; font-size: 11px; padding: 4px 6px; }
+
+  .external { margin-top: 28px; display: grid; gap: 10px; }
+  .external-title { font-size: 13px; color: var(--muted); letter-spacing: .06em; }
+  .ext-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+  .ext {
+    border: 1px dashed var(--line); border-radius: 8px; padding: 10px 12px;
+    display: grid; gap: 4px; font-size: 13.5px;
+  }
+  .ext span { color: var(--muted); font-size: 12.5px; }
+
+  footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+
+  @media (max-width: 760px) {
+    .arch { grid-template-columns: minmax(0, 1fr); }
+    .layer + .layer { margin-left: 0; margin-top: 30px; }
+    .layer + .layer::before { left: 50%; top: -26px; transform: translateX(-50%); }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">靜宜資工 畢業專題 · AI 個人財務模擬與決策平台</div>
+    <h1>FutureWallet 系統流程與架構</h1>
+    <p class="lead">上半部是使用者從進入系統到拿到建議的 8 個步驟，下半部是背後的技術架構。標上顏色的項目是參考 ProjectionLab 或新增 AI 功能後的調整。</p>
+    <div class="legend">
+      <span><span class="tag base">原有</span> 計畫書原本就有</span>
+      <span><span class="tag new">參考 ProjectionLab</span> 借鏡其功能概念</span>
+      <span><span class="tag ai">AI / RAG</span> 新增的 AI 功能</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="section-head">
+      <h2>使用流程</h2>
+      <p>使用者看到的操作順序</p>
+    </div>
+    <ol class="flow">
+      <li class="step">
+        <div class="num">1</div>
+        <div class="step-body">
+          <div class="step-title"><h3>進入系統</h3></div>
+          <p>兩種開始方式，不想填資料也能馬上玩。</p>
+          <div class="options">
+            <div class="opt new">
+              <div class="opt-head"><strong>範例角色（沙盒模式）</strong><span class="tag new">參考 ProjectionLab</span></div>
+              <p>直接套用預設角色開始探索，之後可換成自己的資料。</p>
+              <p class="example">例：社會新鮮人｜月薪 3.5 萬｜台北租屋</p>
+            </div>
+            <div class="opt new">
+              <div class="opt-head"><strong>引導輸入</strong><span class="tag new">參考 ProjectionLab</span></div>
+              <p>第一頁先列出要準備的資料，接著分步驟填寫，並顯示進度條。</p>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="num">2</div>
+        <div class="step-body">
+          <div class="step-title"><h3>個人現況</h3><span class="tag new">只填一次</span></div>
+          <p>目前的財務狀態，所有方案共用。</p>
+          <div class="fields">
+            <span class="field">實領月薪</span>
+            <span class="field">每月支出</span>
+            <span class="field">目前存款</span>
+            <span class="field">現有貸款</span>
+          </div>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="num">3</div>
+        <div class="step-body">
+          <div class="step-title"><h3>建立方案</h3><span class="tag new">參考 ProjectionLab</span></div>
+          <p>同一份現況可以建立多個方案。複製一個方案、只改一項，就能看出差異。</p>
+          <div class="options">
+            <div class="opt"><strong>方案 A：兩年後買車</strong></div>
+            <div class="opt"><strong>方案 B：不買車</strong></div>
+            <div class="opt"><strong>方案 C：先租屋再買房</strong></div>
+          </div>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="num">4</div>
+        <div class="step-body">
+          <div class="step-title"><h3>加入人生事件</h3></div>
+          <p>決定事件什麼時候發生，以及要承受哪些意外。</p>
+          <div class="options">
+            <div class="opt">
+              <div class="opt-head"><strong>依日期</strong><span class="tag base">原有</span></div>
+              <p class="example">第 24 個月買車</p>
+            </div>
+            <div class="opt new">
+              <div class="opt-head"><strong>依條件觸發</strong><span class="tag new">參考 ProjectionLab</span></div>
+              <p class="example">存款滿 30 萬 且 工作滿 2 年 → 買車</p>
+            </div>
+            <div class="opt new">
+              <div class="opt-head"><strong>事件卡壓力測試</strong><span class="tag new">參考 ProjectionLab</span></div>
+              <p>失業半年、通膨升到 5%、家人生病</p>
+            </div>
+            <div class="opt ai">
+              <div class="opt-head"><strong>用說的輸入</strong><span class="tag ai">AI / RAG</span></div>
+              <p>「我想兩年後買 80 萬的車」由 AI 轉成事件參數</p>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="num">5</div>
+        <div class="step-body">
+          <div class="step-title"><h3>模擬計算</h3></div>
+          <p>三種算法各自回答不同問題。參數取自「假設參數面板」，每項都標示來源，使用者也可以修改。</p>
+          <div class="options">
+            <div class="opt">
+              <div class="opt-head"><strong>月度現金流</strong><span class="tag base">原有</span></div>
+              <p>算出一條預期的存款曲線（計畫線）。</p>
+            </div>
+            <div class="opt">
+              <div class="opt-head"><strong>Monte Carlo 模擬</strong><span class="tag base">原有</span></div>
+              <p>跑 1,000 次以上，參數改從台灣歷史資料隨機抽樣。</p>
+            </div>
+            <div class="opt new">
+              <div class="opt-head"><strong>歷史回測</strong><span class="tag new">參考 ProjectionLab</span></div>
+              <p>「如果從 2008 年開始執行這個計畫，結果會如何？」</p>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="num">6</div>
+        <div class="step-body">
+          <div class="step-title"><h3>分析結果</h3></div>
+          <div class="options">
+            <div class="opt new">
+              <div class="opt-head"><strong>成功機率</strong><span class="tag new">參考 ProjectionLab</span></div>
+              <p>成功 = 全期不赤字，且達成目標存款。</p>
+            </div>
+            <div class="opt">
+              <div class="opt-head"><strong>財務比率</strong><span class="tag base">取代 FSI</span></div>
+              <p>儲蓄率、負債收入比、緊急預備金月數。</p>
+            </div>
+            <div class="opt new">
+              <div class="opt-head"><strong>失敗原因</strong><span class="tag new">參考 ProjectionLab</span></div>
+              <p>點開失敗的情境，看是哪一年、哪件事造成的。</p>
+            </div>
+            <div class="opt new">
+              <div class="opt-head"><strong>今日幣值</strong><span class="tag new">參考 ProjectionLab</span></div>
+              <p>未來金額換算成現在的購買力。</p>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="num">7</div>
+        <div class="step-body">
+          <div class="step-title"><h3>建議與呈現</h3></div>
+          <div class="options">
+            <div class="opt">
+              <div class="opt-head"><strong>規則式建議</strong><span class="tag base">原有</span></div>
+              <p>依財務比率的門檻判斷，每條建議都說得出理由。</p>
+            </div>
+            <div class="opt ai">
+              <div class="opt-head"><strong>AI 白話解說</strong><span class="tag ai">AI / RAG</span></div>
+              <p>把結果講成白話。數字一律由模擬引擎計算。</p>
+            </div>
+            <div class="opt ai">
+              <div class="opt-head"><strong>政策問答</strong><span class="tag ai">AI / RAG</span></div>
+              <p>租金補貼、青年首購等問題，回答附上來源。</p>
+            </div>
+            <div class="opt">
+              <div class="opt-head"><strong>圖表</strong><span class="tag base">原有</span></div>
+              <p>資產曲線、方案並排比較。</p>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="num">8</div>
+        <div class="step-body">
+          <div class="step-title"><h3>進度追蹤</h3><span class="tag new">參考 ProjectionLab</span></div>
+          <p>每月記錄實際收支，和當初的預測比較。這些資料也能拿來計算模型的預測誤差，放進專題報告。</p>
+          <div class="loop">↺ 實際數字回頭更新步驟 2 的個人現況，再重新模擬</div>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>系統架構</h2>
+      <p>由左到右：畫面 → API → 計算 → 資料</p>
+    </div>
+    <div class="arch-scroll">
+      <div class="arch">
+        <div class="layer">
+          <h3>前端</h3>
+          <div class="sub">遊戲化網頁</div>
+          <ul>
+            <li>HTML / CSS / JavaScript</li>
+            <li>Chart.js 圖表</li>
+            <li>範例角色與引導輸入<span class="tag new">參考 ProjectionLab</span></li>
+            <li>事件卡介面<span class="tag new">參考 ProjectionLab</span></li>
+          </ul>
+        </div>
+        <div class="layer">
+          <h3>後端 API</h3>
+          <div class="sub">FastAPI · JSON</div>
+          <ul>
+            <li><code>/profile</code> 個人現況</li>
+            <li><code>/plans</code> 方案</li>
+            <li><code>/simulate</code> 模擬</li>
+            <li><code>/advice</code> 建議</li>
+            <li><code>/chat</code> 問答<span class="tag ai">AI / RAG</span></li>
+          </ul>
+        </div>
+        <div class="layer">
+          <h3>計算模組</h3>
+          <div class="sub">Python · NumPy</div>
+          <ul>
+            <li><code>simulation.py</code> 現金流</li>
+            <li><code>monte_carlo.py</code> 多重情境</li>
+            <li><code>backtest.py</code> 歷史回測<span class="tag new">參考 ProjectionLab</span></li>
+            <li><code>ratios.py</code> 財務比率</li>
+            <li><code>advisor.py</code> 規則式建議</li>
+            <li><code>rag.py</code> 檢索與解說<span class="tag ai">AI / RAG</span></li>
+          </ul>
+        </div>
+        <div class="layer">
+          <h3>資料層</h3>
+          <div class="sub">Supabase · PostgreSQL</div>
+          <ul>
+            <li><code>profiles</code> 個人現況</li>
+            <li><code>plans</code> 方案</li>
+            <li><code>milestones</code> 事件</li>
+            <li><code>progress</code> 實際紀錄<span class="tag new">參考 ProjectionLab</span></li>
+            <li>pgvector 政策文件向量<span class="tag ai">AI / RAG</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="external">
+      <div class="external-title">外部資料來源</div>
+      <div class="ext-row">
+        <div class="ext"><strong>主計總處 CPI、薪資統計</strong><span>提供歷史回測、Monte Carlo 抽樣與預設參數</span></div>
+        <div class="ext"><strong>政府政策文件</strong><span>例如租金補貼、青年首購，建成向量索引供 RAG 檢索</span></div>
+        <div class="ext"><strong>LLM API</strong><span>負責理解口語輸入與白話解說，不負責計算數字</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>標示「參考 ProjectionLab」的項目只借鏡功能概念，介面與用語由組員自行設計。本系統僅供教育與模擬參考，不構成理財建議。</footer>
+</div>
