@@ -29,9 +29,13 @@
     {"question": "通膨與台股報酬資料從哪裡來？", "expected": ["market-sources"]},
     {"question": "為什麼不能保證報酬？", "expected": ["no-guaranteed-return"]},
     {"question": "工具有提供所得稅規劃嗎？", "expected": ["no-tax-planning"]},
-    {"question": "我的職業會調整車貸利率嗎？", "expected": ["occupation-and-rate"]}
+    {"question": "我的職業會調整車貸利率嗎？", "expected": ["occupation-and-rate"]},
+    {"question": "貸款利率怎麼算？", "expected": ["loan-payment"]},
+    {"question": "車貸每月要還多少是怎麼算的？", "expected": ["loan-payment"]},
+    {"question": "總利息是什麼？", "expected": ["loan-payment"]},
+    {"question": "抽樣是什麼？", "expected": ["simulation-count"]}
   ],
   "unanswerable": [
-    "明天會下雨嗎？", "午餐要吃什麼？", "東京地鐵如何搭乘？", "恐龍為什麼滅絕？", "香蕉蛋糕怎麼烘焙？", "火星上有外星人嗎？", "今天的棒球比賽誰獲勝？"
+    "明天會下雨嗎？", "午餐要吃什麼？", "東京地鐵如何搭乘？", "恐龍為什麼滅絕？", "香蕉蛋糕怎麼烘焙？", "火星上有外星人嗎？", "今天的棒球比賽誰獲勝？", "房貸怎麼算？", "台積電股價多少？", "今天天氣如何？"
   ]
 }

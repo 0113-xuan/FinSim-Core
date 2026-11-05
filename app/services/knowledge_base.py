@@ -9,14 +9,15 @@ from functools import lru_cache
 from pathlib import Path
 
 KNOWLEDGE_DIR = Path(__file__).resolve().parents[2] / 'data' / 'knowledge'
-# Golden set: weakest supported question > 7.8; incidental "今天" overlap < 4.8.
+# Golden set: weakest full-length question > 7.8; incidental single-word overlaps ("今天", "現金") < 3.5.
 RELEVANCE_THRESHOLD = 7.0
+SHORT_QUERY_FLOOR = 3.5
 BM25_K1 = 1.5
 BM25_B = 0.75
 TITLE_WEIGHT = 4
 TAG_WEIGHT = 3
 STOP_WORDS = ('請問', '請告訴我', '為什麼', '什麼意思', '是什麼', '怎麼', '如何',
-              '這個', '這裡', '一下', '可以', '是否', '什麼', '的', '了', '嗎', '呢', '我', '是')
+              '這個', '這裡', '今天', '一下', '可以', '是否', '什麼', '的', '了', '嗎', '呢', '我', '是')
 
 
 def normalize(text: str) -> str:
@@ -99,9 +100,16 @@ def retrieve(question: str, k: int = 4) -> list[dict]:
             inverse = math.log(1 + (count - frequency[term] + 0.5) / (frequency[term] + 0.5))
             tf = document[term]
             score += inverse * tf * (BM25_K1 + 1) / (tf + BM25_K1 * (1 - BM25_B + BM25_B * length / average)) * (0.15 if len(term) == 1 else 1)
-        results.append({key: item[key] for key in ('id', 'title', 'source', 'text')} | {'score': round(score, 6)})
+        coverage = len(meaningful.intersection(document)) / len(meaningful)
+        results.append({key: item[key] for key in ('id', 'title', 'source', 'text')}
+                       | {'score': round(score, 6), 'coverage': round(coverage, 3)})
     return sorted(results, key=lambda item: (-item['score'], item['id']))[:k]
 
 
 def is_relevant(results: list[dict]) -> bool:
-    return bool(results and results[0]['score'] >= RELEVANCE_THRESHOLD)
+    if not results:
+        return False
+    top = results[0]
+    # A short term question ("抽樣是什麼") scores low on BM25 alone, so a note that contains every
+    # meaningful term still counts, provided it clears a floor above incidental single-word hits.
+    return top['score'] >= RELEVANCE_THRESHOLD or (top['coverage'] == 1 and top['score'] >= SHORT_QUERY_FLOOR)

@@ -48,3 +48,10 @@ source: app/decision_assumptions.py：ASSUMPTIONS.monthly_parking；static/parki
 tags: 停車費,停車預算,月租,停車場
 
 停車費可以自己填，也可以查看附近停車場月租參考，再決定是否帶入。未自行指定時，系統有每月 2000 元的規劃預算，這不是所在地的平均行情。月租方案可能有限制、額滿或不是適合汽車的方案；應先看收費說明，再向停車場確認能否實際申租與目前價格。
+
+## 貸款利率與每月還款怎麼算
+id: loan-payment
+source: app/core/events.py：calculate_loan_payment；app/core/balance_sheet.py：loan_balance、loan_interest_through
+tags: 貸款利率,貸款利率怎麼算,車貸利率怎麼算,利率計算,車貸,月付,利息,本息,期數,總利息
+
+車貸採每月固定金額還款：把貸款金額、年利率與期數代入，年利率先除以 12 換成月利率，算出每月相同的還款金額；利率為 0 時，就是貸款金額平均分到每一期。每期還款裡一部分是利息、一部分是本金，所以剩餘本金逐月下降，總利息等於全部還款加總，再扣掉原本借的金額。利率由使用者輸入，不會因職業或信用條件自動調整；顯示的月付與總利息是試算，不是銀行核准的條件。

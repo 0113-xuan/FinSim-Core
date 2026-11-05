@@ -100,3 +100,18 @@ def test_normalization_is_deterministic_and_has_no_network():
     assert normalize(' Ｍｏｎｔｅ ＣＡＲＬＯ ') == 'monte carlo'
     assert retrieve('Ｍｏｎｔｅ Ｃａｒｌｏ') == retrieve('monte carlo')
     assert retrieve('淨資產', k=0) == []
+
+
+def test_loan_rate_question_leads_with_the_calculation_note_not_the_occupation_note():
+    for question in ('貸款利率怎麼算？', '車貸利率怎麼算？'):
+        assert retrieve(question)[0]['id'] == 'loan-payment'
+    assert retrieve('我的職業會調整貸款利率嗎？')[0]['id'] == 'occupation-and-rate'
+
+
+def test_short_term_question_needs_every_term_in_one_note_and_clears_the_floor():
+    assert is_relevant(retrieve('抽樣是什麼？'))
+    for question in ('現金', '今天', '汽車'):
+        assert not is_relevant(retrieve(question)), question
+    # Partial overlap alone never counts, however many unrelated words come along.
+    result = retrieve('台積電股價多少')
+    assert result and result[0]['coverage'] < 1 and not is_relevant(result)
