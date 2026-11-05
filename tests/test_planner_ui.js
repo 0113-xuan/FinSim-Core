@@ -195,7 +195,7 @@ test('stale errors are cleared when the inputs change or a new run starts, and b
   assert.match(inv,/\$\('simulationError'\)\.hidden=true/);
   assert.match(inv,/clearExplanation\(\)/);
   assert.match(html,/從台灣過去的通膨與台股報酬隨機抽取[^<]*相同輸入每次得到相同結果/);
-  assert.match(html,/通膨和投資報酬各用一個固定數字/);
+  assert.match(html,/通膨和報酬各用一個固定數字/);
 });
 
 test('one plan holds one event: the copy says so and the optional vehicle costs sit behind one disclosure',()=>{
@@ -218,11 +218,12 @@ test('shell.css braces are balanced and wide numbers wrap by width instead of sp
   assert.match(css,/\.fw \.metric-grid \{[^}]*repeat\(auto-fit,minmax\(min\(100%,200px\)/);
 });
 
-test('plan page controls reach 44px and small text reaches 14px',()=>{
+test('plan page controls reach 44px and small text reaches 16px',()=>{
   const css=fs.readFileSync(path.join(__dirname,'../static/shell.css'),'utf8');
   assert.match(css,/\.fw input,\.fw select \{[^}]*min-height:44px/);
   assert.match(css,/\.fw select \{ min-height:44px/);
-  assert.match(css,/\.fw small \{ font-size:14px; \}/);
+  assert.match(css,/\.fw small \{ font-size:16px; \}/);
+  assert.match(css,/body\.fw \{[^}]*font-size:18px/);
   assert.match(css,/\.fw \.assumptions summary,\.fw \.method-details summary,\.fw \.advanced-fields summary,\.fw \.plan-settings summary \{ min-height:44px/);
   assert.match(css,/\.fw \.shell-sidebar nav a \{ min-height:44px/);
   assert.match(css,/\.fw \.metric-grid article \{ box-shadow:none; \}/);
@@ -312,7 +313,7 @@ test('every number under "see all numbers" names its simulation, the dashboard u
   const dashboard=fs.readFileSync(path.join(__dirname,'../static/dashboard.html'),'utf8');
   const charts=fs.readFileSync(path.join(__dirname,'../static/charts.js'),'utf8');
   const all=html.slice(html.indexOf('id="allMetrics"'),html.indexOf('id="assumptionsPanel"'));
-  assert.match(all,/標「固定值模擬」的是單一路線的數字；「較差、一般、順利情況」來自 300 次隨機模擬/);
+  assert.match(all,/「固定值模擬」是單一路線。其餘來自 300 次隨機模擬：較差情況＝20 次裡有 1 次比這低/);
   const labels=[...all.matchAll(/<span>([^<]+)<\/span><strong/g)].map(match=>match[1]);
   assert.ok(labels.length>=15);
   for(const label of labels)assert.match(label,/固定值模擬|隨機模擬|較差情況|一般情況|順利情況/,label);

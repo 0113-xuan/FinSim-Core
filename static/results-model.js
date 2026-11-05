@@ -118,7 +118,7 @@
       {label:'現金最低會到（固定值模擬）', value:money(summary.minimum_cash_balance), note:`發生在 ${lowest}`},
       {label:'現金不足機率（隨機模擬）', value:percent(probability), note:`${simulations} 次模擬中，現金曾低於 0 的比例`},
       {label:`${endPeriod} 的淨資產（隨機模擬，一般情況）`, value:money(net.p50), note:`9 成的模擬落在 ${money(net.p5)} 到 ${money(net.p95)}`},
-    ], caveat:`固定值模擬是通膨與投資報酬各用一個固定數字；隨機模擬是從歷史資料隨機抽取 ${simulations} 次。這是依台灣歷史資料做的模擬，不是預測，也不保證未來會發生。`};
+    ], caveat:`固定值模擬用一組固定數字；隨機模擬從台灣歷史資料抽取 ${simulations} 次。兩者都不是預測，也不保證會發生。`};
   }
 
   const api = {bandData, bandSummaryText, splitData, assumptionRows, previousPeriod, conclusion};

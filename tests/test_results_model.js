@@ -114,7 +114,7 @@ test('conclusion states the cash answer first and keeps the limits of the model 
   const alert = results.conclusion({...base, summary: {...base.summary, first_negative_cash_month: 7}});
   assert.equal(alert.tone, 'alert');
   assert.match(alert.headline, /固定值模擬顯示，現金會在 2027-07 第一次低於 0/);
-  assert.match(alert.caveat, /固定值模擬是.*隨機模擬是.*300 次.*不是預測，也不保證/);
+  assert.match(alert.caveat, /固定值模擬.*隨機模擬.*300 次.*不是預測，也不保證/);
 
   const calm = results.conclusion({...base, mc: {...mc, probability_cash_shortfall: 0}});
   assert.equal(calm.tone, 'calm');
