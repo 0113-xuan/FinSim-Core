@@ -110,6 +110,18 @@
           <div class="chart-frame"><canvas id="bandChart" role="img" aria-label="淨資產可能範圍走勢"></canvas></div><details class="chart-text"><summary>用文字看這張圖</summary><div id="bandChartSummary" class="chart-summary"></div></details>
           <div class="band-legend" aria-hidden="true"><span class="swatch outer"></span>9 成情況落在這裡<span class="swatch inner"></span>最常見的 5 成<span class="swatch line"></span>一般情況</div>
         </section>
+        <section class="result-block" aria-labelledby="cashflowHeading">
+          <h3 id="cashflowHeading">每月收入與支出</h3>
+          <p class="result-lede">依照本次模擬逐月計算的收入與支出，方便觀察現金流變化。</p>
+          <div class="chart-frame"><canvas id="cashflowChart" role="img" aria-label="每月收入與支出比較"></canvas></div>
+          <div id="cashflowChartSummary" class="chart-summary"></div>
+        </section>
+        <section class="result-block" aria-labelledby="compositionHeading">
+          <h3 id="compositionHeading">期末資產配置</h3>
+          <p class="result-lede">依照固定值模擬最後一個月的現金、投資與資產估值呈現，不代表可立即變現金額。</p>
+          <div class="chart-frame chart-frame-donut"><canvas id="compositionChart" role="img" aria-label="期末資產配置比例"></canvas></div>
+          <div id="compositionChartSummary" class="chart-summary"></div>
+        </section>
         <details id="allMetrics" class="all-metrics"><summary>看全部數字</summary>
         <p class="result-lede">「固定值模擬」是單一路線，其餘來自 300 次隨機模擬。較差：20 次有 1 次更低；順利：20 次有 1 次更高；一般：中間值。</p>
         <table class="metric-table"><caption>期末數字</caption>

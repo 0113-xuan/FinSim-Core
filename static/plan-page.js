@@ -361,6 +361,8 @@
         startPeriod,months,simulations:300,seed:42,converted:built.converted}).flatMap(row=>[S.element('dt',row.label),S.element('dd',row.value)]));
       root.WalletCharts.draw($('planChart'),$('planChartSummary'),simulation.result.simulation_curve,startPeriod,events,ctx.profile,{debts:ctx.debts});
       if(mc.monthly_bands)root.WalletCharts.drawBands($('bandChart'),$('bandChartSummary'),mc.monthly_bands,startPeriod,events,ctx.profile,{debts:ctx.debts});
+      root.WalletCharts.drawCashflow($('cashflowChart'),$('cashflowChartSummary'),simulation.result.simulation_curve,startPeriod);
+      root.WalletCharts.drawComposition($('compositionChart'),$('compositionChartSummary'),simulation.result.simulation_curve);
       runStatus('simulationStatus','模擬完成，結果在下方。');
       return $('conclusionHeading');
       }catch(error){runStatus('simulationStatus','');throw error;}

@@ -98,6 +98,7 @@
     const summary=M.financialSummary(ctx.profile,ctx.debts);
     $('currentNetWorth').textContent=M.money(summary.netWorth);$('currentAssets').textContent=M.money(summary.assets);$('currentDebt').textContent=M.money(summary.debtTotal);
     $('assetBreakdown').textContent=`現金 ${M.money(summary.cash)}；投資市值 ${M.money(summary.investment)}。`;
+    if(root.WalletCharts && $('currentAllocationChart'))root.WalletCharts.drawCurrentAllocation($('currentAllocationChart'),$('currentAllocationSummary'),ctx.profile);
     if(!ctx.debts.length)$('currentDebtList').append(S.element('p','目前沒有貸款'));
     for(const debt of ctx.debts)$('currentDebtList').append(S.element('p',`${debt.name}：每月 ${M.money(debt.monthly_payment)}，剩餘 ${debt.remaining_months} 期，剩餘應還 ${M.money(Number(debt.monthly_payment)*Number(debt.remaining_months))}。`));
     const cards=$('planCards'),entries=[];
