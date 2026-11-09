@@ -112,7 +112,27 @@
     finish(canvas,target,new root.Chart(canvas,{type:'doughnut',data:{labels:rows.map(row=>row[0]),datasets:[{data:rows.map(row=>row[1]),backgroundColor:rows.map((_,i)=>palette[i]),borderWidth:0,hoverOffset:5}]},options}));
   }
 
+  // Several scenarios on one chart: each line differs in colour AND dash so it can be told apart without colour.
+  // `chart` is {labels, series:[{name,kind,values}]} from CompareModel.chartSeries.
+  function drawCompare(canvas,summaryTarget,chart,summaryLines,{zeroLine=false}={}) {
+    const m=root.ShellModel,target=summaryTarget;
+    target.replaceChildren(...summaryLines.map(text=>root.FutureWalletShell.element('p',text)));
+    if(!prepare(canvas,target))return;
+    const colors=root.getComputedStyle(root.document.body);
+    const palette=[['--accent',[]],['--navy',[8,4]],['--investment',[2,3]],['--series-four',[10,3,2,3]]];
+    let next=0;
+    const datasets=chart.series.map(line=>{
+      // The do-nothing baseline is always the grey reference line.
+      const [token,dash]=line.kind==='baseline'?['--muted',[4,4]]:palette[next++%palette.length];
+      const color=colors.getPropertyValue(token).trim()||'#4b5b57';
+      return {label:line.name,data:line.values,borderColor:color,backgroundColor:color,borderWidth:line.kind==='baseline'?1.5:2.5,borderDash:dash,pointRadius:0,pointHoverRadius:5,tension:0};
+    });
+    if(zeroLine)datasets.push({label:'_零',data:chart.labels.map(()=>0),borderColor:colors.getPropertyValue('--danger').trim()||'#dc2626',borderWidth:1,borderDash:[1,3],pointRadius:0,pointHoverRadius:0,tension:0});
+    // baseOptions already sets the page font and hides datasets whose label starts with "_".
+    finish(canvas,target,new root.Chart(canvas,{type:'line',data:{labels:chart.labels,datasets},options:baseOptions(m,{markers:[]},{legend:true})}));
+  }
+
   function destroyAll(){for(const chart of instances.values())chart.destroy();instances.clear();}
   root.addEventListener('pagehide',destroyAll);
-  root.WalletCharts={draw,drawBands,drawCashflow,drawComposition,drawCurrentAllocation,destroyAll};
+  root.WalletCharts={draw,drawBands,drawCashflow,drawComposition,drawCurrentAllocation,drawCompare,destroyAll};
 })(globalThis);

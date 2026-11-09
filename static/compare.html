@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>比較情境｜FutureWallet</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/shell.css">
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/results-model.js"></script><script defer src="/compare-model.js"></script><script defer src="/event-templates.js"></script><script defer src="/event-picker.js"></script><script defer src="/location-model.js"></script><script defer src="/shell.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script><script defer src="/charts.js"></script><script defer src="/compare-page.js"></script><script defer src="/pages.js"></script>
+</head><body class="fw" data-page="compare">
+<a class="skip-link" href="#pageContent">跳到主要內容</a>
+<button id="menuToggle" class="menu-toggle" type="button" aria-label="開啟選單" aria-controls="shellSidebar" aria-expanded="false">選單</button>
+<button id="drawerScrim" class="drawer-scrim" type="button" aria-label="關閉選單" tabindex="-1" hidden></button>
+<aside id="shellSidebar" class="shell-sidebar" aria-label="主要導覽"><button id="closeMenu" class="close-menu" type="button">關閉選單</button>
+<a class="shell-brand" href="/dashboard.html">FutureWallet</a><nav id="sideNav" aria-label="頁面與計畫"></nav><button type="button" data-sign-out>登出</button></aside>
+<main class="shell-main"><div class="page-width"><header class="page-header"><h1 id="pageTitle">比較情境</h1><p class="lede">把計畫裡的事件組成不同情境，例如「換一台車」或「換車又換工作」，在相同條件下並排看結果。</p></header><p id="pageStatus" role="status" aria-live="polite">正在載入…</p><p id="pageError" class="error" role="alert" hidden></p><div id="pageContent" hidden>
+<section id="compareEmpty" class="panel" hidden><h2>還沒有可以比較的事件</h2><p>先到計畫頁新增事件（例如購車、換工作），再回來組合比較。</p><p><a href="/dashboard.html">回儀表板</a></p></section>
+<div id="compareWorkspace" hidden>
+<section id="comparePanel" class="panel" aria-labelledby="scenarioHeading"><h2 id="scenarioHeading">情境設定</h2>
+<p>每個情境從你已存的計畫事件中勾選；同一情境勾選多個事件，就是這些事件都會發生。最多 4 個情境。</p>
+<div id="scenarioList" class="scenario-list"></div>
+<div class="actions"><button id="addScenario" type="button">新增情境</button><p id="scenarioLimit" class="run-status" role="status"></p></div>
+<form id="compareForm"><fieldset><div class="field-grid"><label>模擬起始月份<input id="compareStart" type="month" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
+<label>模擬期間<select id="compareMonths"><option value="60">60 個月</option><option value="120">120 個月</option><option value="240">240 個月</option></select></label></div>
+<label class="check-row"><input id="includeBaseline" type="checkbox" checked><span>加入「不做任何事」當基準<small>用同樣的財務資料、不加任何事件，方便看每個情境比什麼都不做好或差多少。</small></span></label>
+<div class="actions"><button class="primary" type="submit">執行比較</button><p id="compareStatus" class="run-status" role="status" aria-live="polite"></p></div></fieldset></form>
+<p id="compareError" class="error" role="alert" hidden></p>
+<ul id="compareWarnings" aria-label="比較注意事項"></ul>
+<div id="compareResults" hidden>
+<section id="compareConclusion" class="conclusion" aria-labelledby="compareConclusionHeading">
+<h3 id="compareConclusionHeading" tabindex="-1">這次比較的結論</h3>
+<p id="compareHeadline" class="conclusion-headline"></p>
+<div id="compareLines" class="conclusion-lines"></div>
+<p id="compareCaveat" class="conclusion-caveat"></p>
+</section>
+<section class="result-block" aria-labelledby="compareTableHeading"><h3 id="compareTableHeading">數字對照</h3>
+<p class="result-lede">「一般情況」「較差情況」「順利情況」來自 300 次隨機模擬：較差是 20 次有 1 次更低，順利是 20 次有 1 次更高。「固定值」是單一路線。</p>
+<div id="compareTable"></div></section>
+<section class="result-block" aria-labelledby="compareNetHeading"><h3 id="compareNetHeading">淨資產走勢（一般情況）</h3>
+<p class="result-lede">每個情境一條線，是 300 次隨機模擬每個月的中間值。</p>
+<div class="chart-frame"><canvas id="compareNetChart" role="img" aria-label="各情境淨資產走勢比較"></canvas></div><details class="chart-text"><summary>用文字看這張圖</summary><div id="compareNetSummary" class="chart-summary"></div></details></section>
+<section class="result-block" aria-labelledby="compareCashHeading"><h3 id="compareCashHeading">現金走勢（較差情況）</h3>
+<p class="result-lede">現金是 300 次隨機模擬中較差的那一端（20 次有 1 次更低），用來看哪個情境比較容易缺現金。</p>
+<div class="chart-frame"><canvas id="compareCashChart" role="img" aria-label="各情境較差情況現金走勢比較"></canvas></div><details class="chart-text"><summary>用文字看這張圖</summary><div id="compareCashSummary" class="chart-summary"></div></details></section>
+<section id="compareVehicles" class="result-block" aria-labelledby="compareVehicleHeading" hidden><h3 id="compareVehicleHeading">購車成本對照</h3>
+<div id="compareVehicleTable"></div><p>一次支出、車貸與持有成本是現金負擔；經濟成本是價值減少與費用，不是另一筆現金支出。</p><p id="compareVehicleNote"></p></section>
+<details id="compareAssumptions" class="assumptions" open><summary>這次比較用了哪些假設</summary><dl id="compareAssumptionList"></dl><ul id="compareDataSources" aria-label="資料來源"></ul></details>
+</div>
+</section></div></div></div></main>
+</body></html>

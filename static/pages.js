@@ -133,6 +133,7 @@
       else if(page==='onboarding'||page==='profile')await finances(ctx);
       else if(page==='dashboard')await dashboard(ctx);
       else if(page==='plan')await root.PlanPage.start(ctx);
+      else if(page==='compare')await root.ComparePage.start(ctx);
     }catch(error){if(ctx.alive)S.showError(error);}
   }
   root.addEventListener('pageshow',event=>{if(event.persisted)root.location.reload();});

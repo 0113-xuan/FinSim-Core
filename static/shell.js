@@ -70,6 +70,7 @@
     };
     add('儀表板','/dashboard.html',ctx.page==='dashboard');
     add('目前財務狀況','/profile.html',ctx.page==='profile');
+    add('比較情境','/compare.html',ctx.page==='compare');
     nav.append(element('h2','計畫'));
     for(const plan of ctx.plans)add(plan.name,`/plan.html?id=${encodeURIComponent(plan.id)}`,ctx.page==='plan'&&ctx.planId===plan.id);
     const create=element('button','新增計畫');create.type='button';create.dataset.newPlan='';

@@ -282,3 +282,27 @@ body.fw {
 @media(prefers-reduced-motion:reduce) {
   .fw *, .fw *::before, .fw *::after { scroll-behavior:auto!important;transition:none!important;animation:none!important; }
 }
+
+/* Scenario comparison page. */
+body.fw { --series-four:#7a4b94; }
+.fw .scenario-list { display:grid;gap:16px;margin:0 0 8px; }
+.fw .scenario-card { display:grid;gap:14px;padding:20px;border:1px solid var(--line);border-radius:var(--r-surface);background:var(--card); }
+.fw .scenario-card legend { float:left;width:100%;margin:0; }
+.fw .scenario-card legend + * { clear:both; }
+.fw .scenario-events { display:grid;gap:8px; }
+.fw .scenario-event { display:flex;align-items:flex-start;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-control);cursor:pointer; }
+.fw .scenario-event input { width:22px;min-width:22px;height:22px;min-height:22px;margin-top:2px;flex:none; }
+.fw .scenario-event span { min-width:0;overflow-wrap:anywhere; }
+.fw .scenario-event strong { display:block; }
+.fw .scenario-card > button { justify-self:start; }
+.fw .check-row { display:flex;align-items:flex-start;gap:12px;margin-top:20px; }
+.fw .check-row input { width:22px;min-width:22px;height:22px;min-height:22px;margin-top:2px;flex:none; }
+.fw .check-row small { display:block; }
+.fw .conclusion-lines p { margin:0 0 10px;max-width:70ch; }
+.fw .compare-table thead th { white-space:normal;vertical-align:bottom; }
+.fw .compare-table td small { display:block;margin-top:2px;color:var(--muted);font-weight:400; }
+.fw .compare-table td small.best-mark { color:var(--accent);font-weight:700; }
+.fw .compare-table td strong { white-space:normal;overflow-wrap:anywhere; }
+@media (max-width:1180px) { .fw .compare-table td { flex-wrap:wrap;align-items:baseline; } }
+.fw .compare-link { margin:20px 0 0; }
+.fw #compareWarnings:empty { display:none; }
