@@ -29,6 +29,7 @@ from app.car_needs_ai_schemas import NeedsExtractionRequest, AIExtractionMetadat
 from app.services.car_needs_extraction import extract_car_needs
 from app.core.advisor import compare_options, generate_advice
 from app.core.monte_carlo import run_monte_carlo
+from app.core.life_shocks import LIFE_SHOCKS, DISCLAIMER
 from app.core.simulation import simulate_finance
 from app.core.transparency import build_simulation_transparency
 from app.schemas import (
@@ -403,6 +404,22 @@ def monte_carlo_api(req: MonteCarloRequest) -> Dict[str, Any]:
         include_details=data.get("include_details", False),
         assets=data.get("assets", []),
     )
+
+
+@app.post("/monte-carlo/life-shocks")
+def life_shocks_api(req: MonteCarloRequest) -> Dict[str, Any]:
+    if req.random_shocks:
+        raise HTTPException(status_code=422, detail="此端點會自行帶入意外情境，請不要傳 random_shocks")
+    data = req.model_dump()
+    shocks = [{**item, "name": item["label"], "distribution": "uniform"} for item in LIFE_SHOCKS]
+    result = run_monte_carlo(profile=data["profile"], base_events=data["events"], loans=data["loans"],
+                             assets=data["assets"], random_shocks=shocks, months=data["months"],
+                             simulations=data["simulations"], seed=data["seed"],
+                             sample_paths=data["sample_paths"], include_details=data["include_details"])
+    keys = ("iterations", "seed", "probability_cash_shortfall", "net_worth_percentiles", "real_net_worth_percentiles")
+    return {**{key: result[key] for key in keys},
+            "assumptions": [{**item, "chance_in_horizon": round(1 - (1 - item["monthly_probability"]) ** data["months"], 4)}
+                            for item in LIFE_SHOCKS], "disclaimer": DISCLAIMER}
 
 
 @app.post("/compare")

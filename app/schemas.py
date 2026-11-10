@@ -134,6 +134,7 @@ class RandomShockInput(BaseModel):
     min_amount: float = Field(..., ge=0, le=50_000_000)
     max_amount: float = Field(..., ge=0, le=50_000_000)
     duration_months: int = Field(default=1, ge=1, le=24)
+    income_multiplier: Optional[float] = Field(default=None, ge=0, le=1)
     distribution: DistributionType = DistributionType.uniform
     enabled: bool = True
 
