@@ -79,6 +79,7 @@
 <p>現金不夠時，系統不會自動賣出投資來補。</p>
 <form id="simulationForm"><fieldset><div class="field-grid"><label>模擬起始月份<input id="startPeriod" type="month" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
 <label>模擬期間<select id="simulationMonths"><option value="60">60 個月</option><option value="120">120 個月</option><option value="240">240 個月</option></select></label></div>
+<label class="life-shocks-toggle"><input id="lifeShocksToggle" type="checkbox">加入意外風險</label>
 <div class="actions"><button class="primary" type="submit">執行模擬</button><p id="simulationStatus" class="run-status" role="status" aria-live="polite"></p></div></fieldset></form>
 <p id="simulationError" class="error" role="alert" hidden></p>
 <ul id="simulationWarnings" aria-label="模擬注意事項"></ul>      <div id="simulationResults" hidden>
@@ -90,6 +91,7 @@
           <p id="conclusionAction" class="conclusion-action" hidden><a href="#eventsHeading">回到事件，調整後再模擬</a></p>
           <p id="conclusionCaveat" class="conclusion-caveat"></p>
         </section>
+        <section id="lifeShocksCard" class="result-block" aria-labelledby="lifeShocksHeading" hidden><h3 id="lifeShocksHeading">意外風險</h3><div id="lifeShocksContent" aria-live="polite"></div></section>
         <nav class="result-nav" aria-label="結果導覽"><span>往下看：</span><a href="#splitHeading">現金圖</a><a href="#bandHeading">淨資產範圍</a><a href="#assumptionsPanel">假設與資料來源</a><a href="#qaSection">問問題</a></nav>
         <section id="explanationSection" class="analysis-group" aria-labelledby="explanationHeading">
           <h3 id="explanationHeading">AI 白話解釋<small id="explanationSource" hidden>（系統範本）</small></h3>

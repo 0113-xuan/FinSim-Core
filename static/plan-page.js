@@ -147,7 +147,30 @@
 
       $('simulationResults').hidden=false;
     }
-    let events=[],editing=null,lastRun=null,qa=null;
+    let events=[],editing=null,lastRun=null,qa=null,revision=0;
+    async function loadLifeShocks(run) {
+      const card=$('lifeShocksCard'), content=$('lifeShocksContent');
+      card.hidden=false; content.replaceChildren(S.element('p','正在計算，請稍候…'));
+      try {
+        const data=await ctx.calculation(post=>post('/monte-carlo/life-shocks',run.request));
+        if(!ctx.alive || lastRun!==run)return;
+        const view=root.ResultsModel.lifeShocks(run.mc,data), columns=S.element('div',null,'life-shocks-columns');
+        for(const column of view.columns) {
+          const section=S.element('section'), list=S.element('dl');
+          section.append(S.element('h4',column.label));
+          for(const [label,value] of column.rows)list.append(S.element('dt',label),S.element('dd',value));
+          section.append(list);columns.append(section);
+        }
+        const list=S.element('ul');
+        for(const item of view.assumptions)list.append(S.element('li',`${item.label}：${item.value}`));
+        content.replaceChildren(columns,list,S.element('p',view.disclaimer));
+      } catch(error) {
+        if(!ctx.alive || lastRun!==run)return;
+        const retry=S.element('button','重試');retry.type='button';
+        retry.addEventListener('click',()=>loadLifeShocks(run));
+        content.replaceChildren(S.element('p','意外風險計算失敗，請重試。','error'),retry);
+      }
+    }
     // Progress and failures of a long action show next to its button, where the user is looking.
     function runStatus(id,text,working=false){
       const node=$(id);node.textContent=text;
@@ -158,6 +181,7 @@
       $('explanationError').hidden=true;$('explanationError').textContent='';
     }
     function invalidate(){
+      revision++;$('lifeShocksCard').hidden=true;$('lifeShocksContent').replaceChildren();
       const hadResults=!$('simulationResults').hidden;
       $('simulationResults').hidden=true;$('simulationWarnings').replaceChildren();lastRun=null;clearExplanation();runStatus('simulationStatus',hadResults?'計畫或輸入已變更，上一次的結果已清除，請重新執行模擬。':'');
       $('simulationError').hidden=true;$('simulationError').textContent='';
@@ -346,18 +370,19 @@
     });
     $('simulationForm').addEventListener('input',invalidate);
     onSubmit('simulationForm',async()=>{
-      invalidate();runStatus('simulationStatus','正在計算，請稍候…',true);
+      invalidate();const currentRevision=revision, includeLifeShocks=$('lifeShocksToggle').checked;runStatus('simulationStatus','正在計算，請稍候…',true);
       try{
       const startPeriod=$('startPeriod').value,months=Number($('simulationMonths').value);
-      const built=await S.prepareSimulation(ctx,events,months,startPeriod);if(!ctx.alive)return;
+      const built=await S.prepareSimulation(ctx,events,months,startPeriod);if(!ctx.alive || revision!==currentRevision)return;
       for(const warning of built.warnings)$('simulationWarnings').append(S.element('li',warning));
       // The same plan without its events, so the answer can say what the event changed; a failure here only drops the comparison.
       const hasEvents=built.request.events.length>0||!!built.converted;
       const baseRequest=hasEvents?(await S.prepareSimulation(ctx,[],months,startPeriod)).request:null;
-      const [simulation,mc,baseline]=await ctx.calculation(post=>Promise.all([post('/simulate',{...built.request,seed:42}),post('/monte-carlo',{...built.request,simulations:300,seed:42}),
+      const request={...built.request,simulations:300,seed:42};
+      const [simulation,mc,baseline]=await ctx.calculation(post=>Promise.all([post('/simulate',{...built.request,seed:42}),post('/monte-carlo',request),
         baseRequest?post('/simulate',{...baseRequest,seed:42}).catch(()=>null):null]));
-      if(!ctx.alive)return;
-      renderResults(simulation,mc,built.converted,startPeriod,months,baseline);lastRun={built,months,events};
+      if(!ctx.alive || revision!==currentRevision)return;
+      renderResults(simulation,mc,built.converted,startPeriod,months,baseline);lastRun={built,months,events,request,mc};
       $('assumptionList').replaceChildren(...root.ResultsModel.assumptionRows({simulation:simulation.result,mc,request:built.request,
         startPeriod,months,simulations:300,seed:42,converted:built.converted}).flatMap(row=>[S.element('dt',row.label),S.element('dd',row.value)]));
       root.WalletCharts.draw($('planChart'),$('planChartSummary'),simulation.result.simulation_curve,startPeriod,events,ctx.profile,{debts:ctx.debts});
@@ -365,6 +390,7 @@
       root.WalletCharts.drawCashflow($('cashflowChart'),$('cashflowChartSummary'),simulation.result.simulation_curve,startPeriod);
       root.WalletCharts.drawComposition($('compositionChart'),$('compositionChartSummary'),simulation.result.simulation_curve);
       runStatus('simulationStatus','模擬完成，結果在下方。');
+      if(includeLifeShocks)loadLifeShocks(lastRun);
       return $('conclusionHeading');
       }catch(error){runStatus('simulationStatus','');throw error;}
     },{scope:'simulationPanel',errorId:'simulationError'});
