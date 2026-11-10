@@ -368,7 +368,7 @@
       if(editing)await ctx.store.updateEvent(ctx.planId,editing,values);else await ctx.store.addEvent(ctx.planId,values);
       if(!ctx.alive)return;resetEditor();await loadEvents();S.status('事件已儲存。');
     });
-    for(const id of ['simulationForm','eventForm','planNameForm'])$(id).addEventListener('input',invalidate);
+    $('simulationForm').addEventListener('input',invalidate);
     onSubmit('simulationForm',async()=>{
       invalidate();const currentRevision=revision, includeLifeShocks=$('lifeShocksToggle').checked;runStatus('simulationStatus','正在計算，請稍候…',true);
       try{
