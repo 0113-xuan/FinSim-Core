@@ -120,6 +120,20 @@
     ], caveat:`固定值模擬用一組固定數字；隨機模擬從台灣歷史資料抽取 ${simulations} 次。兩者都不是預測，也不保證會發生。`};
   }
 
-  const api = {bandData, bandSummaryText, splitData, assumptionRows, previousPeriod, conclusion};
+  function lifeShocks(baseline, shocks) {
+    const column = (label, result) => ({label, rows:[
+      ['現金不足機率', percent(result.probability_cash_shortfall)],
+      ['期末淨資產範圍', `${shell.money(result.net_worth_percentiles.p5)} 到 ${shell.money(result.net_worth_percentiles.p95)}`],
+      ['中位數', shell.money(result.net_worth_percentiles.p50)],
+    ]});
+    return {columns:[column('沒有意外', baseline), column('有意外', shocks)],
+      assumptions:shocks.assumptions.map(item => ({label:item.label,
+        value:`這段期間遇到的機會 ${percent(item.chance_in_horizon)}；${item.kind === 'income_gap'
+          ? `收入中斷 ${item.duration_months} 個月`
+          : `${shell.money(item.min_amount)} 到 ${shell.money(item.max_amount)}`}`})),
+      disclaimer:shocks.disclaimer};
+  }
+
+  const api = {lifeShocks, bandData, bandSummaryText, splitData, assumptionRows, previousPeriod, conclusion};
   if (node) module.exports = api; else root.ResultsModel = api;
 })(globalThis);
