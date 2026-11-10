@@ -18,7 +18,9 @@
 目前引擎有兩個缺口，不補就無法做出可信的比較：
 
 1. **收入中斷表示不了。** `random_shocks` 只能加支出。需要讓一個意外在觸發後的 `duration_months` 個月內，把收入乘上 `income_multiplier`（0 = 完全沒收入）。
-2. **意外與變動支出共用同一條亂數序列。** `simulate_finance` 裡意外每月多抽亂數，會讓之後每個月的變動支出跟著改變，「沒有意外」與「有意外」就不是只差意外本身。意外必須用自己的 `random.Random`，由 `seed` 衍生，不動原本的序列。
+   - 倍數只乘在進入現金流的 `income`（`net_cashflow` 與 `simulation_curve` 的 `income` 欄位）。傳給 `calculate_variable_expenses` 的仍是**未乘倍數**的收入，否則 `income_elasticity` 為負時收入 0 會 `ZeroDivisionError`，為正時變動支出會跟著變。
+   - 不碰 `recurring_event_amount` 與 `one_time_asset_impact`（事件現金）。
+2. **意外與變動支出共用同一條亂數序列。** `simulate_finance` 裡意外每月多抽亂數，會讓之後每個月的變動支出跟著改變，「沒有意外」與「有意外」就不是只差意外本身。意外必須用自己的 `random.Random`，由 `seed` 衍生，不動原本的序列。衍生方式：`seed` 為 `None` 時用不帶種子的 `random.Random()`；否則用整數運算，例如 `random.Random(seed ^ 0x5EED)`。不可用 `hash()`（字串雜湊每次啟動不同，無法重現），也不可用 `seed + 1` 之類遇到 `None` 會出錯的寫法。`/simulate`、`/compare`、advisor 都會傳 `seed=None`，這些呼叫不可因此出錯。
 
 `RandomShockInput` 新增一個欄位：
 
@@ -65,7 +67,7 @@
       "max_amount": 300000,
       "duration_months": 1,
       "income_multiplier": null,
-      "chance_in_horizon": 0.2594
+      "chance_in_horizon": 0.2597
     }
   ],
   "disclaimer": "機率與金額是示範假設，不是統計或預測；只用來看這份計畫撐不撐得住意外。"
@@ -92,12 +94,13 @@
 ## 6. 測試
 
 **後端（pytest）**
-1. 收入中斷型意外觸發後，在 `duration_months` 內收入等於原收入乘 `income_multiplier`，期滿後恢復；重疊時不延長。
+1. 收入中斷型意外觸發後，在 `duration_months` 內收入等於原收入乘 `income_multiplier`，期滿後恢復；重疊時不延長。另加一例：`salary` 為正、一個支出分類 `income_elasticity=-1`、`income_multiplier=0`，不崩潰，且該月 `variable_expense` 與沒有意外時相同。
 2. 意外使用獨立亂數：同一個 `seed`，沒有意外與有意外的 `variable_expense` 逐月相同。
 3. 同一個請求（同種子），新端點的 `probability_cash_shortfall` 不低於 `/monte-carlo` 的值。
 4. 同一個請求呼叫兩次，回應完全相同（可重現）。
 5. 傳非空 `random_shocks` 回 422。
-6. `chance_in_horizon` 與公式一致；`assumptions` 固定三筆、順序正確。
+6. `chance_in_horizon` 與公式一致（用公式算期望值，不寫死範例；`monthly_probability=0.005`、`months=60` 時為 0.2597）；`assumptions` 固定三筆、順序正確。
+   另加：`seed=None` 時有意外的 `simulate_finance` 不丟例外；同一個整數 `seed` 跑兩次逐月結果相同。
 7. 既有測試全過（數量不得減少）。
 8. 知識庫：新增一段說明（意外的機率與金額是假設，不是預測；說明三個情境、收入中斷怎麼算），寫進 `data/knowledge/assumptions.md` 或新檔，並在 `tests/test_plan_qa.py` 補黃金測試（問「意外風險的機率是怎麼來的」要引用該段；不可出現診斷或存活字眼）。
 

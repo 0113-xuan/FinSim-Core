@@ -19,8 +19,8 @@
 ## 要做的事
 
 1. `app/schemas.py`：`RandomShockInput` 加 `income_multiplier`（`Optional[float]`，0 到 1，預設 None）。完成的樣子：既有請求不受影響，超出範圍回 422。
-2. `app/core/shocks.py` 與 `app/core/simulation.py`：支援收入中斷型。觸發後 `duration_months` 個月內收入乘 `income_multiplier`，重疊取較小倍數、不延長。完成的樣子：契約測試 1 通過；`shock_details` 仍能列出這類意外。
-3. 意外改用自己的 `random.Random`（由 `seed` 衍生），不再消耗變動支出的亂數。完成的樣子：契約測試 2 通過。
+2. `app/core/shocks.py` 與 `app/core/simulation.py`：支援收入中斷型。觸發後 `duration_months` 個月內收入乘 `income_multiplier`，重疊取較小倍數、不延長。倍數只乘進入現金流的 `income`，傳給 `calculate_variable_expenses` 的仍是未乘倍數的收入（見契約第 2 節）。完成的樣子：契約測試 1（含負彈性、倍數 0 不崩潰的那一例）通過；`shock_details` 仍能列出這類意外。
+3. 意外改用自己的 `random.Random`（由 `seed` 衍生，`None` 與整數的做法見契約第 2 節，不可用 `hash()`），不再消耗變動支出的亂數。完成的樣子：契約測試 2 通過；`seed=None` 不丟例外。
 4. 新增預設情境常數（建議放 `app/core/life_shocks.py`）與 `POST /monte-carlo/life-shocks`，請求、回應、錯誤照契約第 4 節。`chance_in_horizon` 在後端算。完成的樣子：契約測試 3 到 6 通過。
 5. 知識庫補一段，並在 `tests/test_plan_qa.py` 補黃金測試。完成的樣子：契約測試 8 通過，`tests/test_knowledge_base.py` 仍通過；文字用繁中白話，不寫診斷或存活字眼、不寫任何機率來源或統計數字。
 
