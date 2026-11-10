@@ -189,13 +189,14 @@
       paragraph(target,'這個分析只看這台車和現有貸款，不包含計畫中的其他事件與投資。');
       const link=S.element('a','完整購車分析');link.href='/vehicle.html';target.append(link);
     }
-    // Once a template is chosen the picker collapses; the heading names the event and life events take the template name.
+    // Pick the event first, then name it: once a template is chosen the picker collapses and the name field comes first.
+    // Life events start with the template name filled in; custom ones start empty.
     function showTemplate(template,mode){
-      const form=$('eventForm'),named=T.asksForName(template);
+      const form=$('eventForm');
       $('eventTemplatePicker').hidden=true;$('changeTemplate').hidden=mode!=='新增事件';
       $('eventEditorHeading').textContent=`${mode}：${template.name}`;
-      form.querySelector('[data-event-name]').hidden=!named;
-      if(!named&&!form.elements.name.value.trim())form.elements.name.value=template.name;
+      form.querySelector('[data-event-name]').hidden=false;
+      if(!form.elements.name.value.trim()&&!T.asksForName(template))form.elements.name.value=template.name;
       form.hidden=false;
     }
     // A plan holds one event: once it exists the picker is gone and the event can only be edited or deleted.

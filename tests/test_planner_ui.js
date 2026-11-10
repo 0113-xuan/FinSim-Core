@@ -89,7 +89,7 @@ test('the independent page pins supabase-js and exposes only supported event ent
   const eventForm=html.slice(html.indexOf('id="eventForm"'),html.indexOf('</form>',html.indexOf('id="eventForm"')));
   assert.match(html,/id="eventTemplatePicker"/);
   assert.match(html,/id="changeTemplate" type="button" hidden/);
-  assert.match(eventForm,/<label data-event-name hidden>事件名稱/);
+  assert.match(eventForm,/<label data-event-name data-vehicle-step="1" hidden>事件名稱/);
   assert.match(html,/src="\/event-templates.js"/);
   assert.match(eventForm,/<input type="hidden" name="type"/);
   assert.doesNotMatch(eventForm,/<select name="type"/);
@@ -352,4 +352,14 @@ test('the result area keeps chart text folded, periods unbroken, a caution colou
   assert.match(css,/\.fw table \{ min-width:0; \}/);
   assert.match(html,/id="renamePlan"/);
   assert.ok(page.includes("$('renamePlan').addEventListener('click'")&&page.includes("settings.open=true"));
+});
+
+test('adding an event picks the type first, then asks for its name for every template',()=>{
+  const page=fs.readFileSync(path.join(__dirname,'../static/plan-page.js'),'utf8');
+  const show=page.slice(page.indexOf('function showTemplate'),page.indexOf('function syncEditorPanel'));
+  assert.match(show,/querySelector\('\[data-event-name\]'\)\.hidden=false/);
+  assert.doesNotMatch(show,/hidden=!named/);
+  // Life events arrive with their template name filled in; custom ones start empty.
+  assert.match(show,/!T\.asksForName\(template\)\)form\.elements\.name\.value=template\.name/);
+  assert.match(page,/elements\.name\.value=T\.asksForName\(template\)\?'':template\.name/);
 });

@@ -21,7 +21,7 @@
         <li><button type="button" data-step-button="2">2 付款</button></li>
         <li><button type="button" data-step-button="3">3 持有成本</button></li>
       </ol><div class="grid two">
-        <label data-event-name hidden>事件名稱<input name="name" maxlength="80" required></label>
+        <label data-event-name data-vehicle-step="1" hidden>事件名稱<input name="name" maxlength="80" required></label>
         <input type="hidden" name="type" value="">
         <label data-vehicle-step="1">開始月份<input name="start_period" type="month" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" required></label>
         <label data-event-field="end_period" hidden>結束月份（留空至模擬結束）<input name="end_period" type="month" placeholder="YYYY-MM" pattern="[0-9]{4}-(0[1-9]|1[0-2])" maxlength="7" disabled></label>
