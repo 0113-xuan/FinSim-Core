@@ -311,6 +311,7 @@ body.fw { --series-four:#7a4b94; }
 .fw .life-shocks-toggle input { width:auto; }
 .fw .life-shocks-columns { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px; }
 .fw .life-shocks-columns section { min-width:0;padding:12px;border:1px solid var(--line);border-radius:8px;overflow-wrap:anywhere; }
+@media (max-width:480px) { .fw .life-shocks-columns { grid-template-columns:1fr; } }
 .fw .life-shocks-columns h4 { margin:0 0 12px; }
 .fw .life-shocks-columns dl { margin:0; }
 .fw .life-shocks-columns dt { margin-top:10px; }
