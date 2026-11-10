@@ -337,3 +337,14 @@ def test_hedging_words_are_not_forbidden_but_promises_still_are():
         ok['paragraphs'][0]['text'] = text
         with pytest.raises(QARejected):
             validate(ok, question='淨資產是怎麼算的？')
+
+
+def test_life_shocks_question_cites_assumptions():
+    question = '意外風險的機率是怎麼來的'
+    text = '意外風險的機率與金額是示範假設，不是統計或預測。'
+    provider = mock(dict(answerable=True, paragraphs=[dict(text=text, sources=['life-shocks'])], follow_ups=[]))
+    result = ask(provider, question=question)
+    assert result['source'] == 'ai'
+    assert result['paragraph_sources'] == [['life-shocks']]
+    assert 'life-shocks' in [citation['id'] for citation in result['citations']]
+    assert all(word not in str(result) for word in ('診斷', '存活'))

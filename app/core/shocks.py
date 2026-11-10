@@ -13,10 +13,19 @@ def generate_shocks_for_month(
 ) -> Dict[str, Any]:
     total = 0.0
     details = []
+    income_shocks = []
     for shock in random_shocks:
         if not shock.get("enabled", True):
             continue
         if rng.random() > float(shock["monthly_probability"]):
+            continue
+        multiplier = shock.get("income_multiplier")
+        if multiplier is not None:
+            income_shocks.append((float(multiplier), int(shock.get("duration_months", 1))))
+            if include_details:
+                details.append({"month": month, "name": shock["name"], "target_category": shock.get("target_category"),
+                                "amount": 0.0, "duration_months": int(shock.get("duration_months", 1)),
+                                "income_multiplier": float(multiplier)})
             continue
         if shock.get("distribution") == "normal":
             mean = (float(shock["min_amount"]) + float(shock["max_amount"])) / 2
@@ -36,4 +45,4 @@ def generate_shocks_for_month(
                     "duration_months": int(shock.get("duration_months", 1)),
                 }
             )
-    return {"total": round(total, 2), "details": details}
+    return {"total": round(total, 2), "details": details, "income_shocks": income_shocks}

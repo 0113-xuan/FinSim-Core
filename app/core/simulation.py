@@ -127,6 +127,7 @@ def simulate_finance(
     assets = assets or []
     random_shocks = random_shocks or []
     rng = random.Random(seed)
+    shock_rng = random.Random() if seed is None else random.Random(seed ^ 0x5EED)
 
     base_salary = float(profile["salary"])
     base_fixed_expense = float(profile["fixed_expense"])
@@ -158,6 +159,7 @@ def simulate_finance(
     profile = {**profile, "inflation_rate": inflation_rate}
     curve: List[Dict[str, Any]] = []
     shock_details: List[Dict[str, Any]] = []
+    active_income_shocks = []
     first_negative_cash_month = None
 
     for month in range(1, months + 1):
@@ -189,16 +191,20 @@ def simulate_finance(
         shock_result = generate_shocks_for_month(
             month=month,
             random_shocks=random_shocks,
-            rng=rng,
+            rng=shock_rng,
             include_details=include_details,
         )
+        active_income_shocks = [(end, multiplier) for end, multiplier in active_income_shocks if end >= month]
+        active_income_shocks.extend((month + duration - 1, multiplier)
+                                    for multiplier, duration in shock_result["income_shocks"])
+        cashflow_income = income * min((multiplier for _, multiplier in active_income_shocks), default=1.0)
         shock_expense = shock_result["total"]
         shock_details.extend(shock_result["details"])
 
         total_expense = fixed_expense + variable_result["total"] + debt_payment + shock_expense
         # Contributions continue even when cash is negative; v1 never sells investments.
         investment = investment * (1 + monthly_returns[month - 1]) + monthly_investment
-        net_cashflow = income - total_expense + recurring_event_amount + one_time_asset_impact - monthly_investment
+        net_cashflow = cashflow_income - total_expense + recurring_event_amount + one_time_asset_impact - monthly_investment
         balance += net_cashflow
         if balance < 0 and first_negative_cash_month is None:
             first_negative_cash_month = month
@@ -209,7 +215,7 @@ def simulate_finance(
 
         row = {
             "month": month,
-            "income": round(income, 2),
+            "income": round(cashflow_income, 2),
             "fixed_expense": round(fixed_expense, 2),
             "variable_expense": variable_result["total"],
             "expense": round(fixed_expense + variable_result["total"] + shock_expense, 2),
@@ -229,7 +235,7 @@ def simulate_finance(
         }
         if not round_output:
             # Constraint searches must evaluate calculated values before display rounding.
-            row.update(income=income, fixed_expense=fixed_expense, debt_payment=debt_payment,
+            row.update(income=cashflow_income, fixed_expense=fixed_expense, debt_payment=debt_payment,
                        living_expense=living_expense, net_cashflow=net_cashflow, balance=balance,
                        investment_value=investment, asset_value=owned_assets, loan_balance=owed_loans,
                        existing_debt_balance=owed_debts, net_worth=net_worth)
