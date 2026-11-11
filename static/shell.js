@@ -82,32 +82,34 @@
     const form=element('form'),nameStep=element('div'),label=element('label','計畫名稱'),input=element('input');
     input.name='name';input.id='createPlanName';input.required=true;input.maxLength=80;input.autocomplete='off';input.setAttribute('aria-describedby','createPlanNameHint');
     const hint=element('small','請填寫計畫名稱，最多 80 字。');hint.id='createPlanNameHint';label.append(input,hint);nameStep.append(label);
-    const eventStep=element('div'),description=element('p','一個計畫放一個事件；想比較其他情況，可以另外建立計畫。','lede'),picker=element('div');eventStep.append(description,picker);eventStep.hidden=true;
+    const eventStep=element('div'),description=element('p','一個計畫放一個事件；想比較其他情況，可以另外建立計畫。','lede'),picker=element('div');eventStep.append(description,picker);nameStep.hidden=true;
     const error=element('p',null,'error');error.id='createPlanError';error.setAttribute('role','alert');error.hidden=true;
-    const actions=element('div',null,'actions'),cancel=element('button','取消'),next=element('button','下一步','primary'),back=element('button','上一步'),skip=element('button','先不加事件，直接建立'),create=element('button','建立計畫','primary');
+    const actions=element('div',null,'actions'),cancel=element('button','取消'),next=element('button','下一步','primary'),back=element('button','上一步'),skip=element('button','先不選事件'),create=element('button','建立計畫','primary');
     for(const button of [cancel,next,back,skip,create]){button.type='button';actions.append(button);}
-    form.append(nameStep,eventStep,error,actions);dialog.append(title,form);root.document.body.append(dialog);
-    let step=1,selected=null,creating=false,opener=null,fromDrawer=false;
+    form.append(eventStep,nameStep,error,actions);dialog.append(title,form);root.document.body.append(dialog);
+    let step=1,selected=null,selectedTemplate=null,autoName='',creating=false,opener=null,fromDrawer=false;
     const validName=()=>input.value.trim().length>0&&input.value.length<=80;
     function sync() {
-      nameStep.hidden=step!==1;eventStep.hidden=step!==2;
-      title.textContent=step===1?'建立計畫':'這個計畫要安排什麼事件？';
-      next.hidden=step!==1;back.hidden=skip.hidden=create.hidden=step!==2;
+      eventStep.hidden=step!==1;nameStep.hidden=step!==2;
+      title.textContent=step===1?'這個計畫要安排什麼事件？':'計畫名稱';
+      next.hidden=skip.hidden=step!==1;back.hidden=create.hidden=step!==2;
       for(const button of dialog.querySelectorAll('button'))button.disabled=creating;
-      next.disabled=creating||!validName();create.disabled=creating||!selected;input.disabled=creating;
+      next.disabled=creating||!selected;create.disabled=creating||!validName();input.disabled=creating;
       hint.textContent=validName()?'最多 80 字。':'請填寫計畫名稱，最多 80 字。';
       dialog.setAttribute('aria-busy',String(creating));
     }
+    // Event first, then the name; the name starts as the event's name so it can be accepted as is.
     function goNext() {
-      if(!validName()||creating)return;
-      step=2;sync();picker.querySelector('button')?.focus();dialog.scrollTop=0;
+      if(creating)return;
+      if(selectedTemplate&&(!input.value.trim()||input.value===autoName))input.value=autoName=selectedTemplate.name;
+      step=2;sync();input.focus();input.select();dialog.scrollTop=0;
     }
     ctx.openPlanDialog=button=>{
       if(!ctx.alive||ctx.busy||dialog.open)return;
       opener=button;fromDrawer=!!button.closest('#shellSidebar')&&root.matchMedia('(max-width:760px)').matches;
-      closeDrawer(false);step=1;selected=null;input.value='';error.hidden=true;
-      root.EventPicker.render(picker,{onSelect:template=>{selected=template.id;root.EventPicker.select(picker,selected);sync();}});
-      sync();dialog.showModal();root.document.body.classList.add('plan-dialog-open');input.focus();
+      closeDrawer(false);step=1;selected=null;selectedTemplate=null;autoName='';input.value='';error.hidden=true;
+      root.EventPicker.render(picker,{onSelect:template=>{selected=template.id;selectedTemplate=template;root.EventPicker.select(picker,selected);sync();}});
+      sync();dialog.showModal();root.document.body.classList.add('plan-dialog-open');picker.querySelector('button')?.focus();
     };
     const close=()=>{if(!creating)dialog.close();};
     cancel.addEventListener('click',close);
@@ -117,10 +119,10 @@
       if(ctx.alive&&opener?.isConnected){if(fromDrawer)openDrawer();opener.focus();}
     });
     input.addEventListener('input',sync);next.addEventListener('click',goNext);
-    form.addEventListener('submit',event=>{event.preventDefault();if(step===1)goNext();});
-    back.addEventListener('click',()=>{step=1;sync();input.focus();dialog.scrollTop=0;});
+    form.addEventListener('submit',event=>{event.preventDefault();if(step===2)save(!!selected);});
+    back.addEventListener('click',()=>{step=1;sync();picker.querySelector('button')?.focus();dialog.scrollTop=0;});
     async function save(withEvent) {
-      if(creating||!ctx.alive||!validName()||(withEvent&&!selected))return;
+      if(creating||!ctx.alive||!validName())return;
       creating=true;ctx.busy=true;error.hidden=true;sync();
       try {
         const plan=await ctx.store.addPlan({name:input.value.trim(),kind:'general'});
@@ -128,7 +130,8 @@
       }catch(cause){if(ctx.alive){error.textContent=`建立未完成：${textModel.errorText(cause)}。請重試。`;error.hidden=false;}}
       finally{if(ctx.alive){creating=false;ctx.busy=false;sync();}}
     }
-    skip.addEventListener('click',()=>save(false));create.addEventListener('click',()=>save(true));
+    skip.addEventListener('click',()=>{selected=selectedTemplate=null;root.EventPicker.select(picker,null);goNext();});
+    create.addEventListener('click',()=>save(!!selected));
     ctx.destroyPlanDialog=()=>{dialog.remove();root.document.body.classList.remove('plan-dialog-open');};
   }
   async function init(page) {
