@@ -595,7 +595,15 @@ def workspace_entrypoint():
     return RedirectResponse(url="/login.html", status_code=302, headers={"Cache-Control":"no-store"})
 
 
-app.mount("/", StaticFiles(directory=BASE_DIR / "static", html=True), name="static")
+class RevalidatedStaticFiles(StaticFiles):
+    # Static files have no version in their URL; without this a browser keeps an old shell.js after a deploy.
+    def file_response(self, *args, **kwargs):
+        response = super().file_response(*args, **kwargs)
+        response.headers["Cache-Control"] = "no-cache"
+        return response
+
+
+app.mount("/", RevalidatedStaticFiles(directory=BASE_DIR / "static", html=True), name="static")
 
 
 if __name__ == "__main__":
