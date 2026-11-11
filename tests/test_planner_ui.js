@@ -367,7 +367,7 @@ test('adding an event picks the type first, then asks for its name for every tem
 test('the create-plan dialog picks the event first and asks for the name second',()=>{
   const shell=fs.readFileSync(path.join(__dirname,'../static/shell.js'),'utf8');
   assert.match(shell,/form\.append\(eventStep,nameStep,error,actions\)/);
-  assert.match(shell,/title\.textContent=step===1\?'這個計畫要安排什麼事件？':'計畫名稱'/);
+  assert.match(shell,/title\.textContent=step===1\?'這個計畫要安排什麼事件？':'建立計畫'/);
   assert.match(shell,/next\.disabled=creating\|\|!selected;create\.disabled=creating\|\|!validName\(\)/);
   assert.match(shell,/input\.value=autoName=selectedTemplate\.name/);
   assert.match(shell,/先不選事件/);

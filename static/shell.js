@@ -91,7 +91,7 @@
     const validName=()=>input.value.trim().length>0&&input.value.length<=80;
     function sync() {
       eventStep.hidden=step!==1;nameStep.hidden=step!==2;
-      title.textContent=step===1?'這個計畫要安排什麼事件？':'計畫名稱';
+      title.textContent=step===1?'這個計畫要安排什麼事件？':'建立計畫';
       next.hidden=skip.hidden=step!==1;back.hidden=create.hidden=step!==2;
       for(const button of dialog.querySelectorAll('button'))button.disabled=creating;
       next.disabled=creating||!selected;create.disabled=creating||!validName();input.disabled=creating;
@@ -130,7 +130,10 @@
       }catch(cause){if(ctx.alive){error.textContent=`建立未完成：${textModel.errorText(cause)}。請重試。`;error.hidden=false;}}
       finally{if(ctx.alive){creating=false;ctx.busy=false;sync();}}
     }
-    skip.addEventListener('click',()=>{selected=selectedTemplate=null;root.EventPicker.select(picker,null);goNext();});
+    skip.addEventListener('click',()=>{
+      selected=selectedTemplate=null;root.EventPicker.select(picker,null);
+      if(input.value===autoName)input.value='';autoName='';goNext();
+    });
     create.addEventListener('click',()=>save(!!selected));
     ctx.destroyPlanDialog=()=>{dialog.remove();root.document.body.classList.remove('plan-dialog-open');};
   }
@@ -245,6 +248,6 @@
     }
     return {...built,converted,startPeriod};
   }
-  const api={createStore,taipeiPeriod,element,showError,status,renderNavigation,init,prepareSimulation,checked};
+  const api={createStore,taipeiPeriod,setupPlanDialog,element,showError,status,renderNavigation,init,prepareSimulation,checked};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.FutureWalletShell=api;
 })(globalThis);
