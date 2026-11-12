@@ -57,11 +57,11 @@ test('template notices explain each fallback reason',()=>{
   assert.match(E.fallbackNotice('invalid_output'),/未通過/);
 });
 
-test('plan page renders AI text without innerHTML and discloses what is sent',()=>{
+test('plan page renders AI text without innerHTML',()=>{
   const read=file=>fs.readFileSync(path.join(__dirname,'../static',file),'utf8');
   for(const file of ['explanation-model.js','plan-page.js'])assert.doesNotMatch(read(file),/innerHTML|insertAdjacentHTML|outerHTML/);
   const html=read('plan.html');
   assert.match(html,/用白話解釋結果/);assert.match(html,/（系統範本）/);
-  assert.match(html,/傳給 Google Gemini 產生說明/);
+  assert.doesNotMatch(html,/傳給 Google Gemini 產生說明/);
   assert.ok(html.indexOf('/explanation-model.js')<html.indexOf('/plan-page.js'));
 });
