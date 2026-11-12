@@ -83,13 +83,13 @@ def test_forbidden_phrases_are_rejected(phrase):
 
 def test_literal_number_must_match_referenced_text_exactly():
     assert validate(VALID)['answerable']
-    payload = dict(answerable=True, paragraphs=[dict(text='計畫頁會抽樣 300 種可能。', sources=['simulation-count'])], follow_ups=[])
+    payload = dict(answerable=True, paragraphs=[dict(text='計畫頁會抽樣 2000 種可能。', sources=['simulation-count'])], follow_ups=[])
     assert validate(payload, question='計畫頁抽樣幾次？')['answerable']
     for bad in ('３０0', '30', '300%', '3000'):
         payload['paragraphs'][0]['text'] = f'抽樣 {bad} 種。'
         with pytest.raises(QARejected):
             validate(payload, question='計畫頁抽樣幾次？')
-    payload['paragraphs'][0] = dict(text='抽樣 300 種。', sources=['cash-shortfall'])
+    payload['paragraphs'][0] = dict(text='抽樣 2000 種。', sources=['cash-shortfall'])
     with pytest.raises(QARejected):
         validate(payload)
 

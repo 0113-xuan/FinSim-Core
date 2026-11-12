@@ -89,7 +89,7 @@
     // Keep a YYYY-MM period on one line instead of breaking at its hyphen.
     function setText(node,text) { node.replaceChildren(...text.split(/(\d{4}-\d{2})/).map((part,i) => i % 2 ? S.element('span',part,'nowrap') : root.document.createTextNode(part))); }
     function renderConclusion(summary,mc,startPeriod,months,baseline) {
-        const view = root.ResultsModel.conclusion({summary, mc, startPeriod, months, simulations:300, baseline});
+        const view = root.ResultsModel.conclusion({summary, mc, startPeriod, months, simulations:2000, baseline});
         $('conclusion').dataset.tone = view.tone;
         setText($('conclusionHeadline'), view.headline);
         $('conclusionFacts').replaceChildren(...view.facts.map(fact => {
@@ -378,13 +378,13 @@
       // The same plan without its events, so the answer can say what the event changed; a failure here only drops the comparison.
       const hasEvents=built.request.events.length>0||!!built.converted;
       const baseRequest=hasEvents?(await S.prepareSimulation(ctx,[],months,startPeriod)).request:null;
-      const request={...built.request,simulations:300,seed:42};
+      const request={...built.request,simulations:2000,seed:42};
       const [simulation,mc,baseline]=await ctx.calculation(post=>Promise.all([post('/simulate',{...built.request,seed:42}),post('/monte-carlo',request),
         baseRequest?post('/simulate',{...baseRequest,seed:42}).catch(()=>null):null]));
       if(!ctx.alive || revision!==currentRevision)return;
       renderResults(simulation,mc,built.converted,startPeriod,months,baseline);lastRun={built,months,events,request,mc};
       $('assumptionList').replaceChildren(...root.ResultsModel.assumptionRows({simulation:simulation.result,mc,request:built.request,
-        startPeriod,months,simulations:300,seed:42,converted:built.converted}).flatMap(row=>[S.element('dt',row.label),S.element('dd',row.value)]));
+        startPeriod,months,simulations:2000,seed:42,converted:built.converted}).flatMap(row=>[S.element('dt',row.label),S.element('dd',row.value)]));
       root.WalletCharts.draw($('planChart'),$('planChartSummary'),simulation.result.simulation_curve,startPeriod,events,ctx.profile,{debts:ctx.debts});
       if(mc.monthly_bands)root.WalletCharts.drawBands($('bandChart'),$('bandChartSummary'),mc.monthly_bands,startPeriod,events,ctx.profile,{debts:ctx.debts});
       root.WalletCharts.drawCashflow($('cashflowChart'),$('cashflowChartSummary'),simulation.result.simulation_curve,startPeriod);

@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 # Same settings as the plan page so explained numbers match the metrics on screen.
 SIMULATE_SEED = 42
-MONTE_CARLO_SIMULATIONS = 300
+MONTE_CARLO_SIMULATIONS = 2000
 MONTE_CARLO_SEED = 42
 # The plan page aborts a calculation after 30 s; both AI attempts must finish first.
 AI_BUDGET_SECONDS = 20

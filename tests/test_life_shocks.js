@@ -16,7 +16,7 @@ test('switch starts off and gates the new endpoint and card',()=>{
   assert.match(page,/revision\+\+;\$\('lifeShocksCard'\)\.hidden=true/);
 });
 test('both endpoints receive the same request with fixed simulation count and seed',()=>{
-  assert.match(page,/const request=\{\.\.\.built\.request,simulations:300,seed:42\}/);
+  assert.match(page,/const request=\{\.\.\.built\.request,simulations:2000,seed:42\}/);
   assert.match(page,/post\('\/monte-carlo',request\)/);
   assert.match(page,/post\('\/monte-carlo\/life-shocks',run\.request\)/);
   assert.match(page,/lastRun=\{built,months,events,request,mc\}/);

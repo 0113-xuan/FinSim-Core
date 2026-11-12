@@ -80,7 +80,7 @@ def explain(body, provider):
 def test_facts_match_simulate_and_monte_carlo_endpoints_exactly():
     facts = by_id(facts_for(BODY))
     simulated = CLIENT.post('/simulate', json={**SIMULATION, 'seed': 42}).json()['result']['summary']
-    mc = CLIENT.post('/monte-carlo', json={**SIMULATION, 'simulations': 300, 'seed': 42}).json()
+    mc = CLIENT.post('/monte-carlo', json={**SIMULATION, 'simulations': 2000, 'seed': 42}).json()
     assert facts['minimum_cash']['raw'] == simulated['minimum_cash_balance']
     assert facts['shortfall_probability']['raw'] == mc['probability_cash_shortfall']
     assert facts['net_worth_p50']['raw'] == mc['net_worth_percentiles']['p50']

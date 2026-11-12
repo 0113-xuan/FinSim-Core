@@ -50,7 +50,7 @@ test('each fallback explains why AI was not used',()=>{
 test('Q&A timeout and safe DOM path are present',()=>{
   const source=fs.readFileSync(path.join(__dirname,'../static/qa-form.js'),'utf8');
   assert.doesNotMatch(source,/innerHTML|insertAdjacentHTML|outerHTML/);
-  assert.match(source,/AbortController/);assert.match(source,/20000/);assert.match(source,/ctx\.perform/);
+  assert.match(source,/AbortController/);assert.match(source,/90000/);assert.match(source,/ctx\.perform/);
 });
 
 test('the Q&A section is just heading, examples, form and result, and example questions only fill the box',()=>{

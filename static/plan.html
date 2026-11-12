@@ -97,7 +97,6 @@
           <h3 id="explanationHeading">AI 白話解釋<small id="explanationSource" hidden>（系統範本）</small></h3>
           <div class="actions"><button id="explainResults" type="button">用白話解釋結果</button><p id="explanationStatus" class="run-status" role="status" aria-live="polite"></p></div>
           <p id="explanationError" class="error" role="alert" hidden></p>
-          <p><small>按下後，會把這次模擬的數字和事件名稱傳給 Google Gemini 產生說明。</small></p>
           <p id="explanationNotice" hidden></p>
           <div id="explanationResult" aria-live="polite"></div>
         </section>
@@ -108,7 +107,7 @@
         </section>
         <section class="result-block" aria-labelledby="bandHeading">
           <h3 id="bandHeading">淨資產可能範圍（隨機模擬）</h3>
-          <p class="result-lede">從台灣歷史資料隨機抽 300 次；相同輸入每次得到相同結果。</p>
+          <p class="result-lede">從台灣歷史資料隨機抽 2000 次；相同輸入每次得到相同結果。</p>
           <div class="chart-frame"><canvas id="bandChart" role="img" aria-label="淨資產可能範圍走勢"></canvas></div><details class="chart-text"><summary>用文字看這張圖</summary><div id="bandChartSummary" class="chart-summary"></div></details>
           <div class="band-legend" aria-hidden="true"><span class="swatch outer"></span>9 成情況落在這裡<span class="swatch inner"></span>最常見的 5 成<span class="swatch line"></span>一般情況</div>
         </section>
@@ -125,7 +124,7 @@
           <div id="compositionChartSummary" class="chart-summary"></div>
         </section>
         <details id="allMetrics" class="all-metrics"><summary>看全部數字</summary>
-        <p class="result-lede">「固定值模擬」是單一路線，其餘來自 300 次隨機模擬。較差：20 次有 1 次更低；順利：20 次有 1 次更高；一般：中間值。</p>
+        <p class="result-lede">「固定值模擬」是單一路線，其餘來自 2000 次隨機模擬。較差：20 次有 1 次更低；順利：20 次有 1 次更高；一般：中間值。</p>
         <table class="metric-table"><caption>期末數字</caption>
           <thead><tr><th scope="col">項目</th><th scope="col">固定值模擬</th><th scope="col">較差情況</th><th scope="col">一般情況</th><th scope="col">順利情況</th></tr></thead>
           <tbody>

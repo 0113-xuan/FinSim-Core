@@ -160,7 +160,7 @@
     };
     ctx.calculation=async action=>{
       const controller=new AbortController();ctx.controllers.add(controller);
-      const timeout=root.setTimeout(()=>controller.abort(),30000);
+      const timeout=root.setTimeout(()=>controller.abort(),90000);
       const post=async(url,payload)=>{
         const response=await root.fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:controller.signal});
         let data;try{data=await response.json();}catch(_){/* Gateway errors need not contain JSON. */}

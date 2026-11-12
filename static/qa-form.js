@@ -47,7 +47,7 @@
         clear();const requestVersion=version;const payload={...getRequest(),question};
         sending=true;sync();result.textContent='正在查找依據…';result.setAttribute('aria-busy','true');
         const controller=new AbortController();active=controller;ctx.controllers.add(controller);
-        const timeout=root.setTimeout(()=>controller.abort(),20000);
+        const timeout=root.setTimeout(()=>controller.abort(),90000);
         try{
           const response=await root.fetch('/ai/plan-qa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:controller.signal});
           let data;try{data=await response.json();}catch(_){throw new Error('問答回應無法讀取，請重新送出');}
