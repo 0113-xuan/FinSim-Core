@@ -80,8 +80,8 @@
     const dialog=element('dialog',null,'plan-dialog');dialog.id='createPlanDialog';dialog.setAttribute('aria-labelledby','createPlanTitle');
     const title=element('h2','建立計畫');title.id='createPlanTitle';
     const form=element('form'),nameStep=element('div'),label=element('label','計畫名稱'),input=element('input');
-    input.name='name';input.id='createPlanName';input.required=true;input.maxLength=80;input.autocomplete='off';input.setAttribute('aria-describedby','createPlanNameHint');
-    const hint=element('small','請填寫計畫名稱，最多 80 字。');hint.id='createPlanNameHint';label.append(input,hint);nameStep.append(label);
+    input.name='name';input.id='createPlanName';input.required=true;input.maxLength=80;input.autocomplete='off';input.placeholder='例如：買車計畫';input.setAttribute('aria-describedby','createPlanNameHint');
+    const hint=element('small','請填寫計畫名稱（最多 80 字）。');hint.id='createPlanNameHint';label.append(input,hint);nameStep.append(label);
     const eventStep=element('div'),description=element('p','一個計畫放一個事件；想比較其他情況，可以另外建立計畫。','lede'),picker=element('div');eventStep.append(description,picker);nameStep.hidden=true;
     const error=element('p',null,'error');error.id='createPlanError';error.setAttribute('role','alert');error.hidden=true;
     const actions=element('div',null,'actions'),cancel=element('button','取消'),next=element('button','下一步','primary'),back=element('button','上一步'),skip=element('button','先不選事件'),create=element('button','建立計畫','primary');
@@ -95,7 +95,7 @@
       next.hidden=skip.hidden=step!==1;back.hidden=create.hidden=step!==2;
       for(const button of dialog.querySelectorAll('button'))button.disabled=creating;
       next.disabled=creating||!selected;create.disabled=creating||!validName();input.disabled=creating;
-      hint.textContent=validName()?'最多 80 字。':'請填寫計畫名稱，最多 80 字。';
+      hint.hidden=validName();create.textContent=creating?'建立中…':'建立計畫';
       dialog.setAttribute('aria-busy',String(creating));
     }
     // Event first, then the name; the name starts as the event's name so it can be accepted as is.
@@ -120,7 +120,7 @@
     });
     input.addEventListener('input',sync);next.addEventListener('click',goNext);
     form.addEventListener('submit',event=>{event.preventDefault();if(step===2)save(!!selected);});
-    back.addEventListener('click',()=>{step=1;sync();picker.querySelector('button')?.focus();dialog.scrollTop=0;});
+    back.addEventListener('click',()=>{step=1;sync();(picker.querySelector('[aria-pressed="true"]')||picker.querySelector('button'))?.focus();dialog.scrollTop=0;});
     async function save(withEvent) {
       if(creating||!ctx.alive||!validName())return;
       creating=true;ctx.busy=true;error.hidden=true;sync();
@@ -128,7 +128,7 @@
         const plan=await ctx.store.addPlan({name:input.value.trim(),kind:'general'});
         if(ctx.alive)root.location.assign(`/plan.html?id=${encodeURIComponent(plan.id)}${withEvent?`&add=${encodeURIComponent(selected)}`:''}`);
       }catch(cause){if(ctx.alive){error.textContent=`建立未完成：${textModel.errorText(cause)}。請重試。`;error.hidden=false;}}
-      finally{if(ctx.alive){creating=false;ctx.busy=false;sync();}}
+      finally{if(ctx.alive){creating=false;ctx.busy=false;sync();if(!error.hidden)input.focus();}}
     }
     skip.addEventListener('click',()=>{
       selected=selectedTemplate=null;root.EventPicker.select(picker,null);

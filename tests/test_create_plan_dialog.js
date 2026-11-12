@@ -16,19 +16,22 @@ class Node {
   showModal() { this.open = true; }
   close() { this.open = false; this.fire('close'); }
   all(out = []) { for (const child of this.children) { out.push(child); child.all(out); } return out; }
-  querySelectorAll(selector) { return this.all().filter(n => selector === '[data-template-id]' ? n.dataset.templateId !== undefined : n.tag === selector); }
+  querySelectorAll(selector) {
+    const match = {'[data-template-id]': n => n.dataset.templateId !== undefined, '[aria-pressed="true"]': n => n.attrs['aria-pressed'] === 'true'}[selector];
+    return this.all().filter(n => match ? match(n) : n.tag === selector);
+  }
   querySelector(selector) { return this.querySelectorAll(selector)[0] ?? null; }
 }
 
 globalThis.EventTemplates = require('../static/event-templates.js');
 require('../static/event-picker.js');  // sets globalThis.EventPicker
 
-function open() {
+function open({fail = false} = {}) {
   const body = new Node('body');
   globalThis.document = {createElement: tag => new Node(tag), createElementNS: (ns, tag) => new Node(tag), body};
   const created = [], urls = [];
   globalThis.location = {assign: url => urls.push(url)};
-  const ctx = {alive:true, busy:false, store:{addPlan: async plan => { created.push(plan); return {id:'p1'}; }}};
+  const ctx = {alive:true, busy:false, store:{addPlan: async plan => { if (fail) throw new Error('離線'); created.push(plan); return {id:'p1'}; }}};
   require('../static/shell.js').setupPlanDialog(ctx, {closeDrawer() {}, openDrawer() {}});
   ctx.openPlanDialog(new Node('button'));
   const dialog = body.children[0], form = dialog.children[1];
@@ -36,7 +39,7 @@ function open() {
   const button = text => dialog.querySelectorAll('button').find(b => b.textContent === text);
   const pick = id => dialog.querySelectorAll('button').find(b => b.dataset.templateId === id).fire('click');
   const state = () => ({title:title.textContent, name:input.value, next:button('下一步').disabled, create:button('建立計畫').disabled});
-  return {dialog, form, input, button, pick, state, created, urls};
+  return {dialog, form, input, button, pick, state, created, urls, error: dialog.all().find(n => n.id === 'createPlanError')};
 }
 
 test.afterEach(() => { for (const key of ['document', 'location']) delete globalThis[key]; });
@@ -93,4 +96,22 @@ test('Enter does nothing on the event step and creates the plan on the name step
   d.form.fire('submit');
   await new Promise(resolve => setImmediate(resolve));
   assert.deepEqual(d.urls, ['/plan.html?id=p1&add=one_time']);
+});
+
+test('while creating the button says so, and a failure puts focus back on the name with the error shown', async () => {
+  const d = open({fail: true});
+  d.pick('vehicle'); d.button('下一步').fire('click');
+  d.button('建立計畫').fire('click');
+  assert.ok(d.button('建立中…').disabled);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(d.error.hidden, false);
+  assert.match(d.error.textContent, /離線/);
+  assert.equal(d.button('建立計畫').disabled, false);
+  assert.equal(focused, d.input);
+});
+
+test('going back puts focus on the selected event, not the first card', () => {
+  const d = open();
+  d.pick('job_change'); d.button('下一步').fire('click'); d.button('上一步').fire('click');
+  assert.equal(focused.dataset.templateId, 'job_change');
 });

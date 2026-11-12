@@ -85,7 +85,7 @@ body.fw { color:var(--text);--muted:#526173;--caution:#8a5a00;--field-border:#78
 body.fw.plan-dialog-open { overflow:hidden; }
 .fw .plan-dialog { width:min(880px,calc(100% - 48px));max-width:none;max-height:calc(100dvh - 48px);padding:32px;border:1px solid var(--line);border-radius:var(--r-surface);background:var(--card);color:var(--text);box-shadow:0 18px 60px #0f172a33;overscroll-behavior:contain; }
 .fw .plan-dialog::backdrop { background:#0f172a80; }
-.fw .plan-dialog h2 { font-size:24px; }
+.fw .plan-dialog h2 { font-size:24px;text-wrap:balance; }
 .fw .plan-dialog .actions { justify-content:flex-end; }
 .fw .plan-dialog small { display:block;margin-top:8px;color:var(--muted); }
 .fw .template-group { margin:26px 0; }
@@ -240,7 +240,7 @@ body.fw {
 .fw .page-header { padding:28px 32px;margin-bottom:28px;border:1px solid rgba(220,232,226,.9);border-radius:22px;background:linear-gradient(120deg,rgba(255,255,255,.98),rgba(237,248,242,.94));box-shadow:0 12px 34px rgba(24,65,49,.045); }
 .fw h1 { color:#173d32;font-size:clamp(28px,3vw,38px);letter-spacing:-.035em; }
 .fw h2 { color:#21483c;letter-spacing:-.025em; }
-.fw .lede { color:#71827b; }
+.fw .lede { color:#5b6b64; }
 .fw .panel,.fw .account-summary article,.fw .plan-card { border:1px solid #e1ebe5;border-radius:18px;background:rgba(255,255,255,.96);box-shadow:0 10px 28px rgba(29,73,54,.045); }
 .fw .panel { padding:28px; }
 .fw .account-summary { gap:16px;margin-bottom:28px; }
@@ -253,7 +253,7 @@ body.fw {
 .fw .plan-card h3 a { color:#176b50;text-decoration:none; }
 .fw .plan-card h3 a:hover { text-decoration:underline; }
 .fw button,.fw input,.fw select,.fw textarea { border-radius:12px; }
-.fw button { transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease; }
+.fw button { touch-action:manipulation;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease; }
 .fw button:hover:not(:disabled) { transform:translateY(-1px);border-color:#9dcbb2; }
 .fw .primary { background:linear-gradient(135deg,#19a875,#08734f);box-shadow:0 8px 18px rgba(21,150,107,.18); }
 .fw .primary:hover:not(:disabled) { box-shadow:0 11px 22px rgba(21,150,107,.25); }
