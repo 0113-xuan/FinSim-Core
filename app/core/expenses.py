@@ -95,6 +95,7 @@ def calculate_variable_expenses(
     month_index = (month - 1) % 12
     total = 0.0
     details = []
+    income_ratio = income / base_income if base_income > 0 else 1.0
 
     for category in categories:
         baseline = float(category.get("baseline", 0) or 0)
@@ -103,8 +104,8 @@ def calculate_variable_expenses(
             inflation_growth = price_multiplier
         else:
             inflation_growth = inflation_factor(month, float(category.get("annual_inflation_rate", profile.get("inflation_rate", 0.02))))
-        income_ratio = income / base_income if base_income > 0 else 1.0
-        elasticity_factor = income_ratio ** float(category.get("income_elasticity", 0.0) or 0.0)
+        elasticity = float(category.get("income_elasticity", 0.0) or 0.0)
+        elasticity_factor = income_ratio ** elasticity if elasticity else 1.0
         event_multiplier = _event_multiplier_for_category(month, category["category"], events)
         event_amount = _event_monthly_amount_for_category(month, category["category"], events)
         amount_before_event = baseline * seasonal_factor * inflation_growth * elasticity_factor
