@@ -95,12 +95,47 @@
     renderDebts();
   }
   async function dashboard(ctx){
-    const summary=M.financialSummary(ctx.profile,ctx.debts);
-    $('currentNetWorth').textContent=M.money(summary.netWorth);$('currentAssets').textContent=M.money(summary.assets);$('currentDebt').textContent=M.money(summary.debtTotal);
-    $('assetBreakdown').textContent=`現金 ${M.money(summary.cash)}；投資市值 ${M.money(summary.investment)}。`;
-    if(root.WalletCharts && $('currentAllocationChart'))root.WalletCharts.drawCurrentAllocation($('currentAllocationChart'),$('currentAllocationSummary'),ctx.profile);
-    if(!ctx.debts.length)$('currentDebtList').append(S.element('p','目前沒有貸款'));
-    for(const debt of ctx.debts)$('currentDebtList').append(S.element('p',`${debt.name}：每月 ${M.money(debt.monthly_payment)}，剩餘 ${debt.remaining_months} 期，剩餘應還 ${M.money(Number(debt.monthly_payment)*Number(debt.remaining_months))}。`));
+    const P=root.PlannerModel,current=M.financialSummary(ctx.profile,ctx.debts),curves=new Map();
+    const viewPlan=$('viewPlan'),viewMonth=$('viewMonth'),viewField=$('viewMonthField'),viewText=$('viewMonthText'),viewStatus=$('viewStatus');
+    const noteDefaults={net:$('netWorthNote').textContent,debt:$('debtNote').textContent,heading:$('allocationHeading').textContent};
+    const change=value=>value===0?'和現在相同':`${value>0?'比現在多':'比現在少'} ${M.money(Math.abs(value))}`;
+    function draw(shown){
+      if(root.WalletCharts && $('currentAllocationChart'))root.WalletCharts.drawCurrentAllocation($('currentAllocationChart'),$('currentAllocationSummary'),shown);
+    }
+    function renderCurrent(){
+      $('currentNetWorth').textContent=M.money(current.netWorth);$('currentAssets').textContent=M.money(current.assets);$('currentDebt').textContent=M.money(current.debtTotal);
+      $('assetBreakdown').textContent=`現金 ${M.money(current.cash)}；投資市值 ${M.money(current.investment)}。`;
+      $('netWorthNote').textContent=noteDefaults.net;$('debtNote').textContent=noteDefaults.debt;$('allocationHeading').textContent=noteDefaults.heading;
+      draw(ctx.profile);
+      const list=$('currentDebtList');list.replaceChildren();
+      if(!ctx.debts.length)list.append(S.element('p','目前沒有貸款'));
+      for(const debt of ctx.debts)list.append(S.element('p',`${debt.name}：每月 ${M.money(debt.monthly_payment)}，剩餘 ${debt.remaining_months} 期，剩餘應還 ${M.money(Number(debt.monthly_payment)*Number(debt.remaining_months))}。`));
+    }
+    function renderSnapshot(snap,period){
+      $('currentNetWorth').textContent=M.money(snap.netWorth);$('currentAssets').textContent=M.money(snap.assets);$('currentDebt').textContent=M.money(snap.debtTotal);
+      $('assetBreakdown').textContent=`現金 ${M.money(snap.cash)}；投資市值 ${M.money(snap.investment)}。${change(snap.assetsChange)}。`;
+      $('netWorthNote').textContent=`${snap.vehicle?`含車輛估值 ${M.money(snap.vehicle)}；`:''}${change(snap.netWorthChange)}。`;$('debtNote').textContent=`${change(snap.debtChange)}。`;
+      $('allocationHeading').textContent=`${period} 資產配置`;
+      draw({cash_balance:snap.cash,investment_value:snap.investment});
+      const list=$('currentDebtList');list.replaceChildren();
+      if(snap.newLoan)list.append(S.element('p',`新貸款剩餘本金：${M.money(snap.newLoan)}`));
+      if(snap.existingDebt)list.append(S.element('p',`既有債務剩餘應還：${M.money(snap.existingDebt)}`));
+      if(!snap.debtTotal)list.append(S.element('p','沒有貸款'));
+    }
+    function showView(){
+      const planId=viewPlan.value;viewField.hidden=!planId;
+      if(!planId){viewStatus.textContent='';renderCurrent();return;}
+      const entry=curves.get(planId);
+      if(!entry){viewStatus.textContent='走勢還在計算，完成後會自動顯示。';return;}
+      viewStatus.textContent='';
+      const month=Number(viewMonth.value),period=P.monthToPeriod(entry.startPeriod,month);
+      viewText.textContent=`${period}（第 ${month} 個月）`;
+      renderSnapshot(M.snapshotAt(entry.curve.find(row=>row.month===month),current),period);
+    }
+    function pickDefaultMonth(){const entry=curves.get(viewPlan.value);if(entry){viewMonth.max=entry.curve.length;viewMonth.value=entry.defaultMonth;}}
+    for(const plan of ctx.plans)viewPlan.append(new root.Option(plan.name,plan.id));
+    viewPlan.addEventListener('change',()=>{pickDefaultMonth();showView();});viewMonth.addEventListener('input',showView);
+    renderCurrent();
     const cards=$('planCards'),entries=[];
     for(const plan of ctx.plans){
       const card=S.element('article',null,'plan-card'),heading=S.element('h3'),link=S.element('a',plan.name);link.href=`/plan.html?id=${encodeURIComponent(plan.id)}`;heading.append(link);card.append(heading);
@@ -119,6 +154,9 @@
         const result=response.result,frame=S.element('div',null,'chart-frame mini'),canvas=S.element('canvas');canvas.setAttribute('role','img');canvas.setAttribute('aria-label',`${plan.name}淨資產走勢`);frame.append(canvas);card.append(frame);
         const text=S.element('div',null,'chart-summary');text.id=`chart-${plan.id}`;card.append(text);
         root.WalletCharts.draw(canvas,text,result.simulation_curve,built.startPeriod,events,ctx.profile,{mini:true,debts:ctx.debts});
+        const eventMonths=events.map(event=>{try{return P.periodToMonth(built.startPeriod,event.start_period);}catch(_){return 0;}}).filter(month=>month>=1&&month<=result.simulation_curve.length);
+        curves.set(plan.id,{curve:result.simulation_curve,startPeriod:built.startPeriod,defaultMonth:eventMonths.length?Math.min(...eventMonths):1});
+        if(viewPlan.value===plan.id){pickDefaultMonth();showView();}
         card.append(S.element('p',`期末淨資產：${M.money(result.summary.final_net_worth)}`));
         card.append(S.element('p',`第一次現金小於 0：${result.summary.first_negative_cash_month==null?'未出現':root.PlannerModel.monthToPeriod(built.startPeriod,result.summary.first_negative_cash_month)}`));
         for(const warning of built.warnings)card.append(S.element('p',warning));

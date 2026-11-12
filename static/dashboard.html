@@ -10,9 +10,10 @@
 <button id="drawerScrim" class="drawer-scrim" type="button" aria-label="關閉選單" tabindex="-1" hidden></button>
 <aside id="shellSidebar" class="shell-sidebar" aria-label="主要導覽"><button id="closeMenu" class="close-menu" type="button">關閉選單</button>
 <a class="shell-brand" href="/dashboard.html">FutureWallet</a><nav id="sideNav" aria-label="頁面與計畫"></nav><button type="button" data-sign-out>登出</button></aside>
-<main class="shell-main"><div class="page-width"><header class="page-header"><h1 id="pageTitle">儀表板</h1><p class="lede">看看現在的資產與負債，再選一個計畫查看未來走勢。</p></header><p id="pageStatus" role="status" aria-live="polite">正在載入…</p><p id="pageError" class="error" role="alert" hidden></p><div id="pageContent" hidden><section class="account-summary" aria-label="目前財務摘要">
-<article><h2>淨值</h2><strong id="currentNetWorth"></strong><p>資產合計減去貸款剩餘應還總額。</p></article>
+<main class="shell-main"><div class="page-width"><header class="page-header"><h1 id="pageTitle">儀表板</h1><p class="lede">看看現在的資產與負債，再選一個計畫查看未來走勢。</p></header><p id="pageStatus" role="status" aria-live="polite">正在載入…</p><p id="pageError" class="error" role="alert" hidden></p><div id="pageContent" hidden><section class="dashboard-view" aria-label="查看時間點"><label>查看<select id="viewPlan"><option value="">現在</option></select></label><label id="viewMonthField" hidden>月份<input id="viewMonth" type="range" min="1" max="240" value="1"><output id="viewMonthText" for="viewMonth"></output></label><p id="viewStatus" role="status"></p></section>
+<section class="account-summary" aria-label="目前財務摘要">
+<article><h2>淨值</h2><strong id="currentNetWorth"></strong><p id="netWorthNote">資產合計減去貸款剩餘應還總額。</p></article>
 <article><h2>資產</h2><strong id="currentAssets"></strong><p id="assetBreakdown"></p></article>
-<article><h2>負債</h2><strong id="currentDebt"></strong><div id="currentDebtList"></div><p>剩餘應還總額＝每月還款 × 剩餘期數，未扣除利息折現。</p></article></section>
+<article><h2>負債</h2><strong id="currentDebt"></strong><div id="currentDebtList"></div><p id="debtNote">剩餘應還總額＝每月還款 × 剩餘期數，未扣除利息折現。</p></article></section>
 <section class="dashboard-allocation panel" aria-labelledby="allocationHeading"><div><h2 id="allocationHeading">目前資產配置</h2><p class="lede">依照已儲存的現金與投資市值整理，資料更新後會同步反映。</p><div id="currentAllocationSummary" class="chart-summary"></div></div><div class="chart-frame chart-frame-donut"><canvas id="currentAllocationChart" role="img" aria-label="目前現金與投資配置"></canvas></div></section>
 <section aria-labelledby="plansHeading"><h2 id="plansHeading">我的計畫</h2><p class="lede">各計畫獨立模擬未來 240 個月；走勢是以固定報酬率算出的單一路線，不是報酬保證。淨資產＝現金＋投資＋車輛估值－貸款剩餘金額。圓點表示事件開始月份。</p><div id="planCards" class="plan-grid"></div><p class="compare-link"><a href="/compare.html">比較不同事件或事件組合</a>：例如換一台車，或換車又換工作。</p></section></div></div></main></body></html>

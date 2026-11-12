@@ -19,6 +19,15 @@
     const debtTotal=debts.reduce((total,debt)=>total+Number(debt.monthly_payment)*Number(debt.remaining_months),0);
     return {cash,investment,assets:cash+investment,debtTotal,netWorth:cash+investment-debtTotal};
   }
+  // One month of a simulated plan. Assets stay cash plus investment, as in `financialSummary`, so a down payment shows as less assets;
+  // the car's value only enters net worth.
+  function snapshotAt(row, current) {
+    const cash=Number(row.balance), investment=Number(row.investment_value), vehicle=Number(row.asset_value||0);
+    const newLoan=Number(row.loan_balance||0), existingDebt=Number(row.existing_debt_balance||0);
+    const assets=cash+investment, debtTotal=newLoan+existingDebt, netWorth=assets+vehicle-debtTotal;
+    return {cash,investment,vehicle,newLoan,existingDebt,assets,debtTotal,netWorth,
+      assetsChange:assets-current.assets,debtChange:debtTotal-current.debtTotal,netWorthChange:netWorth-current.netWorth};
+  }
   function routeFor(page, session, profile) {
     if (!session?.user) return page === 'login' ? null : '/login.html';
     if (!profile) return page === 'onboarding' ? null : '/onboarding.html';
@@ -60,6 +69,6 @@
     };
     return {labels,cash,netWorth,markers,summary:{cash:summarize(cash),netWorth:summarize(netWorth)}};
   }
-  const api={money,wholePercent,errorText,financialSummary,routeFor,sortEvents,eventNames,eventSummary,chartData};
+  const api={money,wholePercent,errorText,financialSummary,snapshotAt,routeFor,sortEvents,eventNames,eventSummary,chartData};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ShellModel=api;
 })(globalThis);

@@ -68,3 +68,13 @@ test('initial chart net worth matches the dashboard and subtracts remaining debt
   assert.equal(data.netWorth[0],M.financialSummary(profile,debts).netWorth);
   assert.equal(data.netWorth[0],1280000);
 });
+
+test('a plan month moves the down payment out of assets, adds the loan, and counts the car only in net worth',()=>{
+  const current=M.financialSummary({cash_balance:900000,investment_value:100000},[]);
+  const row={balance:600000,investment_value:100000,asset_value:800000,loan_balance:500000,existing_debt_balance:0};
+  const snap=M.snapshotAt(row,current);
+  assert.deepEqual([snap.assets,snap.debtTotal,snap.netWorth],[700000,500000,1000000]);
+  assert.deepEqual([snap.assetsChange,snap.debtChange,snap.netWorthChange],[-300000,500000,0]);
+  const spent=M.snapshotAt({balance:850000,investment_value:100000},current);
+  assert.deepEqual([spent.vehicle,spent.assets,spent.assetsChange,spent.netWorth],[0,950000,-50000,950000]);
+});
