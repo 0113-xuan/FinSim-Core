@@ -86,6 +86,7 @@ def calculate_variable_expenses(
     rng: Optional[random.Random] = None,
     price_multiplier: Optional[float] = None,
     categories: Optional[List[Dict[str, Any]]] = None,
+    include_details: bool = True,
 ) -> Dict[str, Any]:
     events = events or []
     rng = rng or random.Random(0)
@@ -122,17 +123,18 @@ def calculate_variable_expenses(
 
         amount = round(max(0.0, amount), 2)
         total += amount
-        details.append(
-            {
-                "category": category["category"],
-                "amount": amount,
-                "seasonal_factor": seasonal_factor,
-                "inflation_factor": round(inflation_growth, 6),
-                "income_elasticity_factor": round(elasticity_factor, 6),
-                "event_multiplier": round(event_multiplier, 6),
-                "event_amount": round(event_amount, 2),
-                "amount_before_event": round(max(0.0, amount_before_event), 2),
-            }
-        )
+        if include_details:
+            details.append(
+                {
+                    "category": category["category"],
+                    "amount": amount,
+                    "seasonal_factor": seasonal_factor,
+                    "inflation_factor": round(inflation_growth, 6),
+                    "income_elasticity_factor": round(elasticity_factor, 6),
+                    "event_multiplier": round(event_multiplier, 6),
+                    "event_amount": round(event_amount, 2),
+                    "amount_before_event": round(max(0.0, amount_before_event), 2),
+                }
+            )
 
     return {"total": round(total, 2), "categories": details}

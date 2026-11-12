@@ -179,6 +179,7 @@ def simulate_finance(
             rng=rng,
             price_multiplier=price_multiplier,
             categories=expense_categories,
+            include_details=include_details,
         )
         existing_debts = profile.get("existing_debts")
         existing_payment = (sum(float(debt['monthly_payment']) for debt in existing_debts
