@@ -85,10 +85,12 @@ def calculate_variable_expenses(
     events: Optional[List[Dict[str, Any]]] = None,
     rng: Optional[random.Random] = None,
     price_multiplier: Optional[float] = None,
+    categories: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
     events = events or []
     rng = rng or random.Random(0)
-    categories = get_expense_categories(profile)
+    if categories is None:
+        categories = get_expense_categories(profile)
     month_index = (month - 1) % 12
     total = 0.0
     details = []

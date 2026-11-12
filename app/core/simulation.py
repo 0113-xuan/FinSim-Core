@@ -12,7 +12,7 @@ from app.core.events import (
     get_recurring_event_amount,
 )
 from app.core.balance_sheet import asset_value, existing_debt_balance, loan_balance
-from app.core.expenses import calculate_variable_expenses
+from app.core.expenses import calculate_variable_expenses, get_expense_categories
 from app.core.market_data import load_market_history
 from app.core.shocks import generate_shocks_for_month
 from app.core.financial_rules import emergency_fund_months
@@ -156,6 +156,7 @@ def simulate_finance(
         monthly_returns = [0.0] * months
 
     profile = {**profile, "inflation_rate": inflation_rate}
+    expense_categories = get_expense_categories(profile)
     curve: List[Dict[str, Any]] = []
     shock_details: List[Dict[str, Any]] = []
     first_negative_cash_month = None
@@ -177,6 +178,7 @@ def simulate_finance(
             events=expense_events,
             rng=rng,
             price_multiplier=price_multiplier,
+            categories=expense_categories,
         )
         existing_debts = profile.get("existing_debts")
         existing_payment = (sum(float(debt['monthly_payment']) for debt in existing_debts
