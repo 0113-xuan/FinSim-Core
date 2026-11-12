@@ -29,9 +29,9 @@ logger = logging.getLogger(__name__)
 
 # Same settings as the plan page so explained numbers match the metrics on screen.
 SIMULATE_SEED = 42
-MONTE_CARLO_SIMULATIONS = 2000
+MONTE_CARLO_SIMULATIONS = 500
 MONTE_CARLO_SEED = 42
-# The plan page aborts a calculation after 30 s; both AI attempts must finish first.
+# The plan page aborts a calculation after 90 s; the AI attempt must finish first.
 AI_BUDGET_SECONDS = 20
 CACHE_SIZE = 200
 HEADLINE_LIMIT = 60
@@ -115,6 +115,23 @@ def _period(start: YearMonth, month: int) -> str:
 
 # ---------------------------------------------------------------- facts
 
+# The plan page has just run this Monte Carlo (about 45 s on the host); reuse it instead of repeating it.
+# shortcut: in-process only, a restart or more than one worker just recomputes; upgrade if the host scales out.
+_mc_cache: 'OrderedDict[str, Dict[str, Any]]' = OrderedDict()
+MC_CACHE_SIZE = 20
+
+
+def _mc_key(data: Dict[str, Any], simulations: int, seed: Optional[int]) -> str:
+    plan = {k: data.get(k) for k in ('profile', 'months', 'events', 'loans', 'random_shocks', 'assets')}
+    return json.dumps([plan, simulations, seed], sort_keys=True, default=str)
+
+
+def remember_monte_carlo(data: Dict[str, Any], result: Dict[str, Any]) -> None:
+    _mc_cache[_mc_key(data, data['simulations'], data.get('seed'))] = result
+    while len(_mc_cache) > MC_CACHE_SIZE:
+        _mc_cache.popitem(last=False)
+
+
 def run_plan_calculations(simulation: SimulationRequest) -> tuple[Dict[str, Any], Dict[str, Any]]:
     """Run the same calculations as the plan page's /simulate and /monte-carlo calls."""
     data = simulation.model_dump()
@@ -123,7 +140,7 @@ def run_plan_calculations(simulation: SimulationRequest) -> tuple[Dict[str, Any]
         loans=data.get('loans', []), random_shocks=data.get('random_shocks', []),
         seed=SIMULATE_SEED, include_details=True, assets=data.get('assets', []),
     )
-    mc = run_monte_carlo(
+    mc = _mc_cache.get(_mc_key(data, MONTE_CARLO_SIMULATIONS, MONTE_CARLO_SEED)) or run_monte_carlo(
         profile=data['profile'], base_events=data.get('events', []), loans=data.get('loans', []),
         random_shocks=data.get('random_shocks', []), months=data['months'],
         simulations=MONTE_CARLO_SIMULATIONS, seed=MONTE_CARLO_SEED, assets=data.get('assets', []),

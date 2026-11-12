@@ -9,9 +9,9 @@
 
   const MAX_SCENARIOS = 4;
   const BASELINE_NAME = '不做任何事';
-  // Every scenario is simulated with the same seed, so all of them see the same 2000 historical draws.
+  // Every scenario is simulated with the same seed, so all of them see the same 500 historical draws.
   const SEED = 42;
-  const SIMULATIONS = 2000;
+  const SIMULATIONS = 500;
   // Amounts are shown to the nearest 100, so a smaller gap is not a real difference.
   const TIE_AMOUNT = 50;
 
@@ -121,7 +121,7 @@
       lines.push(`第二高的是「${second.row.name}」，約少 ${shell.money(topWorth - second.row.netWorth.p50)}；最低的是「${rest.reduce((a, b) => b.row.netWorth.p50 < a.row.netWorth.p50 ? b : a).row.name}」。`);
     }
     const highestRisk = Math.max(...rows.map(row => row.shortfall));
-    if (highestRisk === 0) lines.push('2000 次隨機模擬中，所有情境的現金都沒有低於 0。');
+    if (highestRisk === 0) lines.push('500 次隨機模擬中，所有情境的現金都沒有低於 0。');
     else {
       const lowest = rows[[...lead.shortfall][0]].shortfall;
       const risky = rows.filter(row => row.shortfall === highestRisk).map(row => row.name);

@@ -80,7 +80,7 @@ def explain(body, provider):
 def test_facts_match_simulate_and_monte_carlo_endpoints_exactly():
     facts = by_id(facts_for(BODY))
     simulated = CLIENT.post('/simulate', json={**SIMULATION, 'seed': 42}).json()['result']['summary']
-    mc = CLIENT.post('/monte-carlo', json={**SIMULATION, 'simulations': 2000, 'seed': 42}).json()
+    mc = CLIENT.post('/monte-carlo', json={**SIMULATION, 'simulations': service.MONTE_CARLO_SIMULATIONS, 'seed': 42}).json()
     assert facts['minimum_cash']['raw'] == simulated['minimum_cash_balance']
     assert facts['shortfall_probability']['raw'] == mc['probability_cash_shortfall']
     assert facts['net_worth_p50']['raw'] == mc['net_worth_percentiles']['p50']
@@ -337,3 +337,16 @@ def test_amounts_percents_and_months_are_rounded_without_decimals():
     assert format_percent(0.002) == '不到 1%'
     assert format_percent(0) == '0%'
     assert format_months(6.4) == '6 個月'
+
+
+def test_explanation_reuses_the_monte_carlo_the_plan_page_just_ran(monkeypatch):
+    monkeypatch.setattr(service, 'MONTE_CARLO_SIMULATIONS', 20)
+    service._mc_cache.clear()
+    response = CLIENT.post('/monte-carlo', json={**SIMULATION, 'simulations': 20, 'seed': service.MONTE_CARLO_SEED})
+    assert response.status_code == 200
+
+    def forbidden(**_):
+        raise AssertionError('Monte Carlo was repeated')
+    monkeypatch.setattr(service, 'run_monte_carlo', forbidden)
+    _, mc = _run_plan_calculations(PlanExplanationRequest.model_validate(BODY).simulation)
+    assert mc['iterations'] == 20

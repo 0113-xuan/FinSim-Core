@@ -55,7 +55,7 @@ from app.services.financial_answer_extraction import (
     merge_deterministic_debt_candidates,
 )
 from app.services.optimizer import optimize
-from app.services.plan_explanation import PlanExplanationRequest, explain_plan
+from app.services.plan_explanation import PlanExplanationRequest, explain_plan, remember_monte_carlo
 from app.services.plan_qa import PlanQARequest, answer_plan_question
 from app.services.rate_limit import rate_limit_ai
 from app.services.report_generator import generate_report
@@ -392,7 +392,7 @@ def simulate_api(req: SimulationRequest) -> Dict[str, Any]:
 @app.post("/monte-carlo")
 def monte_carlo_api(req: MonteCarloRequest) -> Dict[str, Any]:
     data = req.model_dump()
-    return run_monte_carlo(
+    result = run_monte_carlo(
         profile=data["profile"],
         base_events=data.get("events", []),
         loans=data.get("loans", []),
@@ -404,6 +404,8 @@ def monte_carlo_api(req: MonteCarloRequest) -> Dict[str, Any]:
         include_details=data.get("include_details", False),
         assets=data.get("assets", []),
     )
+    remember_monte_carlo(data, result)
+    return result
 
 
 @app.post("/monte-carlo/life-shocks")

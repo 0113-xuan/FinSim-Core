@@ -12,7 +12,7 @@ id: simulation-count
 source: static/plan-page.js：/monte-carlo 請求；app/services/plan_explanation.py：MONTE_CARLO_SIMULATIONS
 tags: 抽樣,幾次,次數,三百,Monte Carlo
 
-計畫頁會抽樣 2000 種可能的未來，逐次計算現金流，再整理現金不足比例與淨資產範圍。這個次數是目前計畫頁與白話解釋使用的設定，不是所有後端呼叫的通用預設值。抽樣更多也不會讓模擬變成預測；結果仍受資料期間、輸入與模型假設限制。
+計畫頁會抽樣 500 種可能的未來，逐次計算現金流，再整理現金不足比例與淨資產範圍。這個次數是目前計畫頁與白話解釋使用的設定，不是所有後端呼叫的通用預設值。抽樣更多也不會讓模擬變成預測；結果仍受資料期間、輸入與模型假設限制。
 
 ## 台灣歷史資料怎麼抽樣
 id: historical-sampling

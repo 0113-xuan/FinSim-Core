@@ -194,7 +194,7 @@ test('stale errors are cleared when the inputs change or a new run starts, and b
   const inv=page.slice(page.indexOf('function invalidate'),page.indexOf('function renderExplanation'));
   assert.match(inv,/\$\('simulationError'\)\.hidden=true/);
   assert.match(inv,/clearExplanation\(\)/);
-  assert.match(html,/從台灣歷史資料隨機抽 2000 次；相同輸入每次得到相同結果/);
+  assert.match(html,/從台灣歷史資料隨機抽 500 次；相同輸入每次得到相同結果/);
   assert.match(html,/通膨和報酬各用一個固定數字/);
 });
 
@@ -317,7 +317,7 @@ test('every number under "see all numbers" names its simulation, the dashboard u
   const dashboard=fs.readFileSync(path.join(__dirname,'../static/dashboard.html'),'utf8');
   const charts=fs.readFileSync(path.join(__dirname,'../static/charts.js'),'utf8');
   const all=html.slice(html.indexOf('id="allMetrics"'),html.indexOf('id="assumptionsPanel"'));
-  assert.match(all,/「固定值模擬」是單一路線，其餘來自 2000 次隨機模擬。較差：20 次有 1 次更低/);
+  assert.match(all,/「固定值模擬」是單一路線，其餘來自 500 次隨機模擬。較差：20 次有 1 次更低/);
   // Same kind of figure sits in one row; the columns say which simulation each number comes from.
   const [endTable,riskTable]=all.split('<table').slice(1);
   assert.match(endTable,/<thead><tr><th scope="col">項目<\/th><th scope="col">固定值模擬<\/th><th scope="col">較差情況<\/th><th scope="col">一般情況<\/th><th scope="col">順利情況<\/th>/);
