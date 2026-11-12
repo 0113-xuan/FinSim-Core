@@ -39,9 +39,9 @@ $env:CAR_NEEDS_SIGNING_KEY = & .\venv\Scripts\python.exe -c "import secrets; pri
 
 ## 測試 AI（選用，需自己的 API 額度）
 
-1. 在本機編輯被 Git 忽略的 `.env`：`AI_PROVIDER=gemini`、`GEMINI_MODEL=gemini-3.5-flash-lite`、`GEMINI_API_KEY`。
+1. 在本機編輯被 Git 忽略的 `.env`：`AI_PROVIDER=openai`、`AI_MODEL=gpt-4.1-mini`、`AI_API_KEY`。
 2. 啟動前在 shell 設 `$env:AI_ENABLED = 'true'`，再重啟 uvicorn。環境變數優先於 `.env`。
-3. `gemini-flash-lite-latest` 舊設定在此分支會解析為固定的 3.5 版本；不改寫 `.env`。
+3. 確認部署環境也設定 OpenAI 的 provider 與金鑰。
 4. 不把 Key 放前端、截圖、聊天、Bug 單或 Git。不要在 `.env.example` 填真實值。
 5. `AI_ENABLED=false` 可隨時停用，不影響手動推薦與財務引擎。
 6. 一般 UI 點擊也會使用 AI 額度。28 筆批次評估必須另獲費用同意，勿全組各自反覆執行。
@@ -86,14 +86,14 @@ $env:CAR_NEEDS_SIGNING_KEY = & .\venv\Scripts\python.exe -c "import secrets; pri
 
 ### C. 真實 AI（另有 API 額度時）
 
-- [ ] 啟用 Gemini，輸入「不喜歡休旅車但是常載長輩，後座舒服不重要」。
+- [ ] 啟用 OpenAI，輸入「不喜歡休旅車但是常載長輩，後座舒服不重要」。
 - [ ] 看見原文證據及候選；不應把否定舒適解析成新增舒適偏好。
 - [ ] 有未處理候選時不能最終確認；逐項接受或拒絕後才進推薦。
 - [ ] 第二步先偏好 SUV，再輸入排除 SUV，需明確接受取代衝突答案。
 - [ ] 修改問卷後舊候選失效；重新確認仍能手動推薦。
 - [ ] 「五年後出國」不能直接成為持有五年；注入價格修改指令不能改車價。
 - [ ] 「偏好轎車」不是硬性排除其他車型；只有明確排除條件才影響硬篩選。
-- [ ] 收合的「本機規則示範」標示非 AI，不可把它當 Gemini 測試成功。
+- [ ] 收合的「本機規則示範」標示非 AI，不可把它當 OpenAI 測試成功。
 
 ### D. AI 失敗降級
 

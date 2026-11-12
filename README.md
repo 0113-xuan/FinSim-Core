@@ -92,19 +92,18 @@ Important variables:
 - `CORS_ORIGINS`
 - `AI_PROVIDER`
 - `AI_ENABLED`
-- `GEMINI_API_KEY`
-- `GEMINI_MODEL`
 - `AI_API_KEY`
 - `AI_MODEL`
 - `AI_TIMEOUT_SECONDS`
 - `AI_MAX_RETRIES`
 
-使用 Gemini 結構化擷取時：
+使用 OpenAI 時：
 
 ```text
-AI_PROVIDER=gemini
-GEMINI_API_KEY=your-secret
-GEMINI_MODEL=gemini-3.5-flash-lite
+AI_PROVIDER=openai
+AI_ENABLED=true
+AI_API_KEY=your-secret
+AI_MODEL=gpt-4.1-mini
 ```
 
 AI provider 的金鑰僅能放在後端環境變數或未追蹤的 `.env`，不可寫入
@@ -112,8 +111,6 @@ AI provider 的金鑰僅能放在後端環境變數或未追蹤的 `.env`，不�
 `AI_ENABLED` 為可選的停用開關；未設定時會依選定 provider 的 key
 自動啟用，明確設為 `false` 時停用。
 
-測試分支的舊 `gemini-flash-lite-latest` 設定會相容解析為固定的
-`gemini-3.5-flash-lite`，避免模型版本漂移；不改寫你的 `.env`。
 組員啟動與桌面驗收請參閱 [P4 測試版說明](docs/P4_TEAM_TEST_GUIDE.md)。
 
 Do not commit `.env` or real secrets.
