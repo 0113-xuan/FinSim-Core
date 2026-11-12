@@ -44,6 +44,8 @@ def test_mc_exact_regression(name):
     assert actual == expected
     def check_types(a, b):
         assert type(a) is type(b)
+        if isinstance(a, float):
+            assert a.hex() == b.hex()
         if isinstance(a, dict):
             for key in a: check_types(a[key], b[key])
         elif isinstance(a, list):
