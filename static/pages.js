@@ -170,39 +170,75 @@
   // plans with a life event (a car, a new job) go on the other chart. Both are drawn against the same finances with no event.
   const isSudden=item=>item.events.every(event=>event.type==='one_time'||event.type==='range');
   async function plansChart(ctx,loaded) {
+    if(!ctx.alive||!root.WalletCharts)return;
     const withEvents=loaded.filter(item=>item.events.length);
-    if(!ctx.alive||!withEvents.length||!root.WalletCharts)return;
-    let baseline=null;
+    let built=null,baseline=null;
     try{
-      const built=await S.prepareSimulation(ctx,[],240),response=await ctx.calculation(post=>post('/simulate',{...built.request,seed:42}));
+      built=await S.prepareSimulation(ctx,[],240);
+      const response=await ctx.calculation(post=>post('/simulate',{...built.request,seed:42}));
       baseline=response.result.simulation_curve;
     }catch(_){/* without the do-nothing line the plans are still worth drawing */}
     if(!ctx.alive)return;
-    const groups=[['plans',withEvents.filter(item=>!isSudden(item))],['sudden',withEvents.filter(isSudden)]];
-    for(const [prefix,items] of groups)if(items.length)drawGroup(ctx,prefix,items,baseline);
+    const startPeriod=built?.startPeriod||S.taipeiPeriod(),life=withEvents.filter(item=>!isSudden(item));
+    if(life.length)drawGroup(ctx,'plans',life,baseline,startPeriod);
+    const sudden=drawGroup(ctx,'sudden',withEvents.filter(isSudden),baseline,startPeriod);
+    if(built)shockButton(ctx,built,sudden,startPeriod);
   }
   // One chart for one group of plans: the do-nothing line plus a coloured line per plan, with its own switches.
-  function drawGroup(ctx,prefix,items,baseline) {
-    const C=root.CompareModel,R=root.ResultsModel,id=name=>$(`${prefix}Chart${name}`);
-    const palette=['#b45309','#6d28d9','#be123c','#15803d','#1d4ed8','#a16207'],startPeriod=items[0].startPeriod;
+  // `setExtra` adds one more line later (the simulated sudden events); a group with no lines keeps its chart hidden.
+  function drawGroup(ctx,prefix,items,baseline,startPeriod) {
+    const C=root.CompareModel,R=root.ResultsModel,id=name=>$(`${prefix}Chart${name}`),body=$(`${prefix}ChartBody`);
+    const palette=['#b45309','#6d28d9','#be123c','#15803d','#1d4ed8','#a16207'];
     const shape=(curve,events)=>R.splitData(curve,startPeriod,events,ctx.profile,ctx.debts);
-    const data=[...(baseline?[{name:'一般情況',kind:'baseline',color:'#0e7490',dash:[6,4],data:shape(baseline,[])}]:[]),
-      ...items.map((item,index)=>({name:item.plan.name,color:palette[index%palette.length],data:shape(item.curve,item.events)}))];
-    const focus=C.focusRange(items.flatMap(item=>item.eventMonths),240);
-    let measure='cash',mode='focus';
+    let extra=null,measure='cash',mode='focus';
+    const lines=()=>[...items,...(extra?[extra]:[])];
     function render(){
+      const shown=lines();
+      if(body)body.hidden=!shown.length;
+      if(!shown.length)return;
+      const data=[...(baseline?[{name:'一般情況',kind:'baseline',color:'#0e7490',dash:[6,4],data:shape(baseline,[])}]:[]),
+        ...shown.map((item,index)=>({name:item.plan.name,color:palette[index%palette.length],data:shape(item.curve,item.events)}))];
       for(const button of id('Measure').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.measure===measure));
       for(const button of id('Range').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.window===String(mode)));
-      const view=mode==='focus'?focus:{from:0,months:Number(mode)};
+      const focus=C.focusRange(shown.flatMap(item=>item.eventMonths),240),view=mode==='focus'?focus:{from:0,months:Number(mode)};
       // Each event is marked with the size of the step it makes in the chosen measure.
-      const marksFor=(line,item)=>(item?.eventMonths||[]).map(index=>{const step=line.data[measure][index]-line.data[measure][index-1];return {index,text:`${line.name} ${step<0?'−':'+'}${M.money(Math.abs(step))}`};});
+      const marksFor=(line,item)=>(item?.eventMonths||[]).map(index=>{const step=line.data[measure][index]-line.data[measure][index-1];return {index,text:`${item.markNames?.[index]||line.name} ${step<0?'−':'+'}${M.money(Math.abs(step))}`};});
       const chart=C.windowChart({labels:data[0].data.labels,series:data.map((line,position)=>({name:line.name,kind:line.kind,color:line.color,dash:line.dash,values:line.data[measure],
-        marks:marksFor(line,items[position-(baseline?1:0)])}))},view.months,view.from);
+        marks:marksFor(line,shown[position-(baseline?1:0)])}))},view.months,view.from);
       root.WalletCharts.drawCompare($(prefix+'Chart'),id('Summary'),chart,C.chartSummary(chart,measure==='cash'?'現金':'淨資產'),{zeroLine:measure==='cash'});
     }
     id('Measure').addEventListener('click',event=>{const button=event.target.closest('button');if(button){measure=button.dataset.measure;render();}});
     id('Range').addEventListener('click',event=>{const button=event.target.closest('button');if(button){mode=button.dataset.window;render();}});
     $(`${prefix}ChartSection`).hidden=false;render();
+    return {setExtra(item){extra=item;mode='focus';render();}};
+  }
+  // One random sample of the sudden events (a big medical bill, a crash, a gap in income) on the finances as they are.
+  // Every press is a fresh draw. A draw with no major event in the first ten years is thrown away, so the chart always shows one.
+  function shockButton(ctx,built,group,startPeriod) {
+    const button=$('suddenSimulate'),status=$('suddenStatus');let shocks=null;
+    button.addEventListener('click',async()=>{
+      button.disabled=true;status.textContent='正在模擬，請稍候…';status.dataset.state='working';
+      try{
+        // The assumptions live on the server; one tiny run is the cheapest way to read them.
+        if(!shocks){
+          const data=await ctx.calculation(post=>post('/monte-carlo/life-shocks',{...built.request,months:12,simulations:1,seed:1}));
+          shocks={disclaimer:data.disclaimer,list:data.assumptions.map(item=>({name:item.label,monthly_probability:item.monthly_probability,min_amount:item.min_amount,
+            max_amount:item.max_amount,duration_months:item.duration_months,income_multiplier:item.income_multiplier,distribution:'uniform'}))};
+        }
+        let pick=null;
+        for(let attempt=0;attempt<20&&!pick&&ctx.alive;attempt++){
+          const response=await ctx.calculation(post=>post('/simulate',{...built.request,seed:Math.floor(Math.random()*1e9),random_shocks:shocks.list,include_details:true}));
+          const hits=response.result.shock_details.filter(detail=>detail.month<=120);
+          if(hits.length)pick={curve:response.result.simulation_curve,hits};
+        }
+        if(!ctx.alive)return;
+        if(!pick)throw new Error('這次沒有抽到重大事件');
+        group.setExtra({plan:{name:'模擬的突發事件'},events:[],startPeriod,curve:pick.curve,
+          eventMonths:[...new Set(pick.hits.map(detail=>detail.month))],markNames:Object.fromEntries(pick.hits.map(detail=>[detail.month,detail.name]))});
+        button.textContent='重新模擬';status.textContent=shocks.disclaimer;
+      }catch(error){if(ctx.alive)status.textContent=`模擬未完成：${M.errorText(error)}。請再按一次。`;}
+      finally{if(ctx.alive){button.disabled=false;delete status.dataset.state;}}
+    });
   }
   async function boot(){
     const page=root.document.body.dataset.page,ctx=await S.init(page);if(!ctx)return;
