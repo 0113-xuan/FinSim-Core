@@ -147,23 +147,7 @@
 
       $('simulationResults').hidden=false;
     }
-    let events=[],editing=null,lastRun=null,qa=null,revision=0,trajectory=null;
-    // A short window around the event makes a sudden step fill the chart; the longer windows show where it leads.
-    function showTrajectory(run,chosen='focus') {
-      trajectory=run;
-      const first=run.events.length,months=run.months;
-      const index=event=>{const [y1,m1]=run.startPeriod.split('-').map(Number),[y2,m2]=event.start_period.split('-').map(Number);return (y2-y1)*12+m2-m1+1;};
-      const focus=root.CompareModel.focusRange(run.events.map(index),months);
-      const mode=chosen==='focus'&&!first?0:chosen;
-      const view=mode==='focus'?focus:{from:0,months:mode>=months?0:mode};
-      for(const button of $('trajectoryRange').querySelectorAll('button')){
-        const value=button.dataset.window==='focus'?'focus':Number(button.dataset.window);
-        button.hidden=value==='focus'?!first:value!==0&&value>=months;
-        button.setAttribute('aria-pressed',String(value===mode));
-      }
-      root.WalletCharts.drawTrajectories($('trajectoryChart'),$('trajectoryChartSummary'),run.data,run.startPeriod,run.events,ctx.profile,{debts:ctx.debts,window:view.months,from:view.from});
-    }
-    $('trajectoryRange').addEventListener('click',event=>{const button=event.target.closest('button');if(button&&trajectory){const value=button.dataset.window;showTrajectory(trajectory,value==='focus'?'focus':Number(value));}});
+    let events=[],editing=null,lastRun=null,qa=null,revision=0;
     async function loadLifeShocks(run) {
       const card=$('lifeShocksCard'), content=$('lifeShocksContent');
       card.hidden=false; content.replaceChildren(S.element('p','正在計算，請稍候…'));
@@ -420,7 +404,6 @@
         if(!ctx.alive||lastRun!==run){runStatus('explanationStatus','');return;}
         renderExplanation(data);runStatus('explanationStatus','說明已產生。');
       }catch(error){runStatus('explanationStatus','');throw error;}
-      showTrajectory({data:{plan:simulation.result.simulation_curve,baseline:baseline?.result?.simulation_curve||null,bands:mc.monthly_bands},startPeriod,events,months});
     },{scope:'explanationSection',errorId:'explanationError'}));
     const add=T.resolveAddParameter(root.location.search);
     if(new URLSearchParams(root.location.search).has('add'))root.history.replaceState(root.history.state,'',`${root.location.pathname}${add.search}${root.location.hash}`);

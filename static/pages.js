@@ -166,16 +166,24 @@
     }
     await plansChart(ctx,loaded);
   }
-  // Every plan with an event, drawn against the same finances with no event, one colour each, on one chart.
+  // A plan whose events are only plain income or spending (how a sudden expense is entered) is a sudden event;
+  // plans with a life event (a car, a new job) go on the other chart. Both are drawn against the same finances with no event.
+  const isSudden=item=>item.events.every(event=>event.type==='one_time'||event.type==='range');
   async function plansChart(ctx,loaded) {
-    const C=root.CompareModel,R=root.ResultsModel,items=loaded.filter(item=>item.events.length);
-    if(!ctx.alive||!items.length||!root.WalletCharts)return;
+    const withEvents=loaded.filter(item=>item.events.length);
+    if(!ctx.alive||!withEvents.length||!root.WalletCharts)return;
     let baseline=null;
     try{
       const built=await S.prepareSimulation(ctx,[],240),response=await ctx.calculation(post=>post('/simulate',{...built.request,seed:42}));
       baseline=response.result.simulation_curve;
     }catch(_){/* without the do-nothing line the plans are still worth drawing */}
     if(!ctx.alive)return;
+    const groups=[['plans',withEvents.filter(item=>!isSudden(item))],['sudden',withEvents.filter(isSudden)]];
+    for(const [prefix,items] of groups)if(items.length)drawGroup(ctx,prefix,items,baseline);
+  }
+  // One chart for one group of plans: the do-nothing line plus a coloured line per plan, with its own switches.
+  function drawGroup(ctx,prefix,items,baseline) {
+    const C=root.CompareModel,R=root.ResultsModel,id=name=>$(`${prefix}Chart${name}`);
     const palette=['#b45309','#6d28d9','#be123c','#15803d','#1d4ed8','#a16207'],startPeriod=items[0].startPeriod;
     const shape=(curve,events)=>R.splitData(curve,startPeriod,events,ctx.profile,ctx.debts);
     const data=[...(baseline?[{name:'一般情況',kind:'baseline',color:'#0e7490',dash:[6,4],data:shape(baseline,[])}]:[]),
@@ -183,18 +191,18 @@
     const focus=C.focusRange(items.flatMap(item=>item.eventMonths),240);
     let measure='cash',mode='focus';
     function render(){
-      for(const button of $('plansChartMeasure').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.measure===measure));
-      for(const button of $('plansChartRange').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.window===String(mode)));
+      for(const button of id('Measure').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.measure===measure));
+      for(const button of id('Range').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.window===String(mode)));
       const view=mode==='focus'?focus:{from:0,months:Number(mode)};
       // Each event is marked with the size of the step it makes in the chosen measure.
       const marksFor=(line,item)=>(item?.eventMonths||[]).map(index=>{const step=line.data[measure][index]-line.data[measure][index-1];return {index,text:`${line.name} ${step<0?'−':'+'}${M.money(Math.abs(step))}`};});
       const chart=C.windowChart({labels:data[0].data.labels,series:data.map((line,position)=>({name:line.name,kind:line.kind,color:line.color,dash:line.dash,values:line.data[measure],
         marks:marksFor(line,items[position-(baseline?1:0)])}))},view.months,view.from);
-      root.WalletCharts.drawCompare($('plansChart'),$('plansChartSummary'),chart,C.chartSummary(chart,measure==='cash'?'現金':'淨資產'),{zeroLine:measure==='cash'});
+      root.WalletCharts.drawCompare($(prefix+'Chart'),id('Summary'),chart,C.chartSummary(chart,measure==='cash'?'現金':'淨資產'),{zeroLine:measure==='cash'});
     }
-    $('plansChartMeasure').addEventListener('click',event=>{const button=event.target.closest('button');if(button){measure=button.dataset.measure;render();}});
-    $('plansChartRange').addEventListener('click',event=>{const button=event.target.closest('button');if(button){mode=button.dataset.window;render();}});
-    $('plansChartSection').hidden=false;render();
+    id('Measure').addEventListener('click',event=>{const button=event.target.closest('button');if(button){measure=button.dataset.measure;render();}});
+    id('Range').addEventListener('click',event=>{const button=event.target.closest('button');if(button){mode=button.dataset.window;render();}});
+    $(`${prefix}ChartSection`).hidden=false;render();
   }
   async function boot(){
     const page=root.document.body.dataset.page,ctx=await S.init(page);if(!ctx)return;

@@ -21,13 +21,13 @@
 
   // Monte Carlo monthly percentiles; with a profile the starting month-end is prepended, where every
   // percentile equals today's net worth.
-  function bandData(bands, startPeriod, events = [], profile = null, debts = [], key = 'net_worth') {
+  function bandData(bands, startPeriod, events = [], profile = null, debts = []) {
     const labels = bands.months.map(month => planner.monthToPeriod(startPeriod, month));
     const series = {};
-    for (const [point, values] of Object.entries(bands[key])) series[point] = values.map(Number);
+    for (const [point, values] of Object.entries(bands.net_worth)) series[point] = values.map(Number);
     if (profile) {
       labels.unshift(previousPeriod(startPeriod));
-      const start = key === 'cash' ? Number(profile.cash_balance) : shell.financialSummary(profile, debts).netWorth;
+      const start = shell.financialSummary(profile, debts).netWorth;
       for (const values of Object.values(series)) values.unshift(start);
     }
     const last = labels.length - 1;

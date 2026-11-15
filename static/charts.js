@@ -153,43 +153,7 @@
     finish(canvas,target,new root.Chart(canvas,{type:'line',data:{labels:chart.labels,datasets},options:baseOptions(m,{markers:[]},{legend:true}),plugins:[eventMarks(marks,chartFont())]}));
   }
 
-  // One cash chart with every path: the plan with and without its events, the random range, and the zero line.
-  // `window` is how many months to show; a short window keeps an event from being flattened by decades of growth.
-  function drawTrajectories(canvas,summaryTarget,{plan,baseline=null,bands=null},startPeriod,events,profile,{debts=[],window:months=0,from=0}={}) {
-    const m=root.ShellModel,r=root.ResultsModel,target=summaryTarget;
-    const planData=r.splitData(plan,startPeriod,events,profile,debts),baseData=baseline?r.splitData(baseline,startPeriod,events,profile,debts):null;
-    const bandData=bands?.cash?r.bandData(bands,startPeriod,events,profile,debts,'cash'):null;
-    const end=months?from+months+1:undefined,cut=values=>values.slice(from,end);
-    const lines=[['有這個事件',planData.summary.cash]];
-    if(baseData)lines.unshift(['沒有這個事件',baseData.summary.cash]);
-    const text=lines.map(([label,s])=>`${label}：現金最低 ${m.money(s.minimum)}，發生於 ${s.minimumPeriod}；期末 ${m.money(s.final)}。`);
-    if(bandData)text.push(`隨機模擬到 ${bandData.summary.period}，一般情況現金約 ${m.money(bandData.summary.p50)}；9 成的模擬落在 ${m.money(bandData.summary.p5)} 到 ${m.money(bandData.summary.p95)} 之間。`);
-    target.replaceChildren(...text.map(line=>root.FutureWalletShell.element('p',line)));
-    if(!prepare(canvas,target))return;
-    const labels=cut(planData.labels),shift=planData.markers.map(marker=>({...marker,index:marker.index-from})).filter(marker=>marker.index>=0&&marker.index<labels.length);
-    const markers=new Set(shift.map(marker=>marker.index));
-    // The size of the step each event makes in cash, from the month before it to the month it lands.
-    const marks=shift.map(marker=>{const step=planData.cash[marker.index+from]-planData.cash[marker.index+from-1];return {index:marker.index,color:'#b45309',text:`${marker.name} ${step<0?'−':'+'}${m.money(Math.abs(step))}`};});
-    const accent=root.getComputedStyle(root.document.documentElement).getPropertyValue('--accent').trim()||'#047857';
-    const rgb=/^#([0-9a-f]{6})$/i.test(accent)?[1,3,5].map(i=>parseInt(accent.slice(i,i+2),16)).join(','):'4,120,87';
-    const line=(label,values,color,width,extra={})=>({label,data:cut(values),borderColor:color,backgroundColor:color,borderWidth:width,pointRadius:0,pointHoverRadius:4,tension:0,fill:false,...extra});
-    // Chart.js draws the lowest `order` last (on top): the plan sits above everything, the random range underneath.
-    const datasets=[];
-    if(bandData){
-      const edge=(label,values,fill,alpha,order)=>line(label,values,`rgba(${rgb},.3)`,1,{fill,backgroundColor:`rgba(${rgb},${alpha})`,pointHoverRadius:0,order});
-      datasets.push(edge('順利情況（隨機模擬）',bandData.series.p95,'+1',.14,6),edge('較差情況（隨機模擬）',bandData.series.p5,false,0,7),
-        line('一般情況（隨機模擬）',bandData.series.p50,`rgba(${rgb},.9)`,1.5,{borderDash:[6,4],order:5}));
-    }
-    if(baseData)datasets.push(line('沒有這個事件',baseData.cash,'#0e7490',2.5,{order:2}));
-    // Cash under zero is shaded red: that is the stretch where the plan runs out of money.
-    datasets.push(line('有這個事件',planData.cash,'#b45309',3.5,{order:1,pointRadius:labels.map((_,i)=>markers.has(i)?4:0),segment:stepSegment(shift,7),
-      fill:{target:{value:0},above:'rgba(0,0,0,0)',below:'rgba(180,35,24,.28)'}}));
-    datasets.push(line('現金 0',planData.labels.map(()=>0),'#b42318',2,{borderDash:[2,3],pointHoverRadius:0,order:3}));
-    const options=baseOptions(m,{...planData,markers:shift},{legend:true});
-    finish(canvas,target,new root.Chart(canvas,{type:'line',data:{labels,datasets},options,plugins:[eventMarks(marks,chartFont())]}));
-  }
-
   function destroyAll(){for(const chart of instances.values())chart.destroy();instances.clear();}
   root.addEventListener('pagehide',destroyAll);
-  root.WalletCharts={draw,drawBands,drawTrajectories,drawCashflow,drawComposition,drawCurrentAllocation,drawCompare,destroyAll};
+  root.WalletCharts={draw,drawBands,drawCashflow,drawComposition,drawCurrentAllocation,drawCompare,destroyAll};
 })(globalThis);
