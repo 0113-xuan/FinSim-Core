@@ -163,17 +163,20 @@ test('the compare page is wired into the app and every element it uses exists', 
   assert.match(read('charts.js'), /drawCompare/);
 });
 
-test('a chart can be cut to a window, and the default window covers the last event plus three years', () => {
+test('a chart can be cut to a window from any month, marks move with the cut, and the focus window wraps the events', () => {
   const C = require('../static/compare-model.js');
-  const chart = {labels:Array.from({length:241}, (_, i) => i), series:[{name:'a', values:Array.from({length:241}, (_, i) => i * 2)}]};
+  const chart = {labels:Array.from({length:241}, (_, i) => i), series:[{name:'a', values:Array.from({length:241}, (_, i) => i * 2), marks:[{index:12, text:'x'}, {index:100, text:'y'}]}]};
   assert.equal(C.windowChart(chart, 0), chart);
   const cut = C.windowChart(chart, 60);
   assert.equal(cut.labels.length, 61);
   assert.equal(cut.series[0].values.length, 61);
-  assert.equal(cut.series[0].name, 'a');
-  assert.equal(C.defaultWindow([], 240), 60);        // nothing later than the first five years
-  assert.equal(C.defaultWindow([12], 240), 60);
-  assert.equal(C.defaultWindow([30], 240), 120);     // 30 + 36 months does not fit in 60
-  assert.equal(C.defaultWindow([100], 240), 0);      // 100 + 36 months needs the whole run
-  assert.equal(C.defaultWindow([12], 60), 0);        // a 60-month run is already the whole thing
+  assert.deepEqual(cut.series[0].marks.map(mark => mark.index), [12]);     // the later mark is outside the cut
+  const later = C.windowChart(chart, 24, 6);
+  assert.deepEqual([later.labels[0], later.labels.length, later.series[0].values[0]], [6, 25, 12]);
+  assert.deepEqual(later.series[0].marks, [{index:6, text:'x'}]);           // index 12 is now the 6th point
+  assert.deepEqual(C.focusRange([], 240), {from:0, months:0});
+  assert.deepEqual(C.focusRange([12], 240), {from:6, months:36});          // 6 months before to 30 after
+  assert.deepEqual(C.focusRange([3, 20], 240), {from:0, months:50});
+  assert.deepEqual(C.focusRange([12], 24), {from:6, months:18});           // clipped to the run
+  assert.deepEqual(C.focusRange([2], 30), {from:0, months:0});            // the window would be the whole run: show everything
 });

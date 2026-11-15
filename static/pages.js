@@ -180,15 +180,20 @@
     const shape=(curve,events)=>R.splitData(curve,startPeriod,events,ctx.profile,ctx.debts);
     const data=[...(baseline?[{name:'一般情況',kind:'baseline',color:'#0e7490',dash:[6,4],data:shape(baseline,[])}]:[]),
       ...items.map((item,index)=>({name:item.plan.name,color:palette[index%palette.length],data:shape(item.curve,item.events)}))];
-    let measure='cash',months=C.defaultWindow(items.flatMap(item=>item.eventMonths),240);
+    const focus=C.focusRange(items.flatMap(item=>item.eventMonths),240);
+    let measure='cash',mode='focus';
     function render(){
       for(const button of $('plansChartMeasure').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.measure===measure));
-      for(const button of $('plansChartRange').querySelectorAll('button'))button.setAttribute('aria-pressed',String(Number(button.dataset.window)===months));
-      const chart=C.windowChart({labels:data[0].data.labels,series:data.map(line=>({name:line.name,kind:line.kind,color:line.color,dash:line.dash,values:line.data[measure]}))},months);
+      for(const button of $('plansChartRange').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.window===String(mode)));
+      const view=mode==='focus'?focus:{from:0,months:Number(mode)};
+      // Each event is marked with the size of the step it makes in the chosen measure.
+      const marksFor=(line,item)=>(item?.eventMonths||[]).map(index=>{const step=line.data[measure][index]-line.data[measure][index-1];return {index,text:`${line.name} ${step<0?'−':'+'}${M.money(Math.abs(step))}`};});
+      const chart=C.windowChart({labels:data[0].data.labels,series:data.map((line,position)=>({name:line.name,kind:line.kind,color:line.color,dash:line.dash,values:line.data[measure],
+        marks:marksFor(line,items[position-(baseline?1:0)])}))},view.months,view.from);
       root.WalletCharts.drawCompare($('plansChart'),$('plansChartSummary'),chart,C.chartSummary(chart,measure==='cash'?'現金':'淨資產'),{zeroLine:measure==='cash'});
     }
     $('plansChartMeasure').addEventListener('click',event=>{const button=event.target.closest('button');if(button){measure=button.dataset.measure;render();}});
-    $('plansChartRange').addEventListener('click',event=>{const button=event.target.closest('button');if(button){months=Number(button.dataset.window);render();}});
+    $('plansChartRange').addEventListener('click',event=>{const button=event.target.closest('button');if(button){mode=button.dataset.window;render();}});
     $('plansChartSection').hidden=false;render();
   }
   async function boot(){

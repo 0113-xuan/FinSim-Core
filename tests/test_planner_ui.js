@@ -374,15 +374,16 @@ test('the create-plan dialog picks the event first and asks for the name second'
   assert.doesNotMatch(shell,/先不加事件，直接建立/);
 });
 
-test('the first chart puts every cash path together, with a period switch that starts on the smallest useful window',()=>{
+test('the first chart puts every cash path together, with a period switch that starts on the event and its aftermath',()=>{
   const html=fs.readFileSync(path.join(__dirname,'../static/plan.html'),'utf8');
   const page=fs.readFileSync(path.join(__dirname,'../static/plan-page.js'),'utf8');
   const css=fs.readFileSync(path.join(__dirname,'../static/shell.css'),'utf8');
   assert.match(html,/id="trajectoryHeading">現金走勢/);
-  assert.match(html,/id="trajectoryRange" class="range-buttons" role="group" aria-label="顯示期間"><button type="button" data-window="60">前 5 年<\/button><button type="button" data-window="120">前 10 年<\/button><button type="button" data-window="0">全部<\/button>/);
+  assert.match(html,/id="trajectoryRange" class="range-buttons" role="group" aria-label="顯示期間"><button type="button" data-window="focus">事件前後<\/button><button type="button" data-window="60">前 5 年<\/button><button type="button" data-window="120">前 10 年<\/button><button type="button" data-window="0">全部<\/button>/);
   assert.match(html,/<canvas id="trajectoryChart" role="img"[^>]*>[\s\S]*?id="trajectoryChartSummary"/);
   assert.match(page,/showTrajectory\(\{data:\{plan:simulation\.result\.simulation_curve,baseline:baseline\?\.result\?\.simulation_curve\|\|null,bands:mc\.monthly_bands\}/);
-  assert.match(page,/options\.find\(n=>n>=need\)\|\|run\.months/);
+  assert.match(page,/root\.CompareModel\.focusRange\(run\.events\.map\(index\),months\)/);
+  assert.match(html,/<script defer src="\/results-model\.js"><\/script><script defer src="\/compare-model\.js"><\/script>/);
   assert.match(css,/\.fw \.chart-frame\.chart-frame-tall \{ height:440px; \}/);
 });
 

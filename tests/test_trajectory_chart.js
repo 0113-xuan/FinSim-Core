@@ -62,3 +62,20 @@ test('drawCompare keeps a line\'s own colour and dash, and hides the zero line f
   assert.equal(car.borderWidth, 2.5);
   assert.ok(zero.label.startsWith('_'));
 });
+
+test('a major event gets a dashed vertical line, a label with the size of the step, and a thick step segment', () => {
+  const plan = curve(i => i < 5 ? 300000 : -500000), events = [{name:'買車', start_period:'2027-04'}];   // the step lands on month 6
+  globalThis.WalletCharts.drawTrajectories(canvas, target, {plan}, startPeriod, events, profile, {window:12, from:2});
+  assert.equal(config.data.labels.length, 13);
+  assert.equal(config.data.labels[0], '2026-12');                       // starts two months in
+  const mine = config.data.datasets.find(dataset => dataset.label === '有這個事件');
+  const step = {p1DataIndex:4};                                          // month 6 is point 4 once two months are cut
+  assert.equal(mine.segment.borderWidth(step), 7);
+  assert.equal(mine.segment.borderWidth({p1DataIndex:3}), undefined);
+  const drawn = [];
+  const chart = {ctx:{save() {}, restore() {}, beginPath() {}, moveTo() {}, lineTo() {}, stroke() {}, setLineDash() {}, measureText:() => ({width:40}), fillText:(text, x) => drawn.push([text, x])},
+    chartArea:{left:0, right:500, top:0, bottom:300}, scales:{x:{getPixelForValue:index => index * 10}}};
+  config.plugins[0].afterDatasetsDraw(chart);
+  assert.deepEqual(drawn.map(item => item[0]), ['買車 −$800,000']);
+  assert.equal(drawn[0][1], 4 * 10 + 6);                                 // just right of the line
+});

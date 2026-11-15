@@ -112,6 +112,24 @@
     finish(canvas,target,new root.Chart(canvas,{type:'doughnut',data:{labels:rows.map(row=>row[0]),datasets:[{data:rows.map(row=>row[1]),backgroundColor:rows.map((_,i)=>palette[i]),borderWidth:0,hoverOffset:5}]},options}));
   }
 
+  // A dashed vertical line and a short label at each major event, so the sudden step is read at the month it happens.
+  // `marks` is [{index, text, color}]; labels stack downwards instead of overlapping.
+  function eventMarks(marks,font) {
+    return {id:'eventMarks',afterDatasetsDraw(chart) {
+      const {ctx,chartArea:area,scales:{x}}=chart;let row=0;
+      ctx.save();ctx.font=`600 ${font.size}px ${font.family}`;ctx.textBaseline='top';
+      for(const mark of marks){
+        const px=x.getPixelForValue(mark.index);if(px<area.left||px>area.right)continue;
+        ctx.strokeStyle=mark.color;ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(px,area.top);ctx.lineTo(px,area.bottom);ctx.stroke();ctx.setLineDash([]);
+        const right=px+ctx.measureText(mark.text).width+10>area.right;
+        ctx.fillStyle=mark.color;ctx.textAlign=right?'right':'left';ctx.fillText(mark.text,right?px-6:px+6,area.top+4+row++*(font.size+4));
+      }
+      ctx.restore();
+    }};
+  }
+  // The segment that ends on an event month is drawn thick: that month is where the step happens.
+  const stepSegment=(marks,width)=>({borderWidth:context=>marks.some(mark=>mark.index===context.p1DataIndex)?width:undefined});
+
   // Several scenarios on one chart: each line differs in colour AND dash so it can be told apart without colour.
   // `chart` is {labels, series:[{name,kind,values}]} from CompareModel.chartSeries.
   function drawCompare(canvas,summaryTarget,chart,summaryLines,{zeroLine=false}={}) {
@@ -126,27 +144,32 @@
       const [token,dash]=line.kind==='baseline'?['--muted',[4,4]]:palette[next++%palette.length];
       const color=line.color||colors.getPropertyValue(token).trim()||'#4b5b57';
       // A line that brings its own colour is drawn bold; `dash` lets a reference line stay dashed.
-      return {label:line.name,data:line.values,borderColor:color,backgroundColor:color,borderWidth:line.color||line.kind!=='baseline'?2.5:1.5,borderDash:line.color?(line.dash||[]):dash,pointRadius:0,pointHoverRadius:5,tension:0};
+      return {label:line.name,data:line.values,borderColor:color,backgroundColor:color,borderWidth:line.color||line.kind!=='baseline'?2.5:1.5,borderDash:line.color?(line.dash||[]):dash,pointRadius:0,pointHoverRadius:5,tension:0,
+        segment:stepSegment(line.marks||[],6),marks:(line.marks||[]).map(mark=>({...mark,color}))};
     });
+    const marks=datasets.flatMap(dataset=>dataset.marks);
     if(zeroLine)datasets.push({label:'_零',data:chart.labels.map(()=>0),borderColor:colors.getPropertyValue('--danger').trim()||'#dc2626',borderWidth:1,borderDash:[1,3],pointRadius:0,pointHoverRadius:0,tension:0});
     // baseOptions already sets the page font and hides datasets whose label starts with "_".
-    finish(canvas,target,new root.Chart(canvas,{type:'line',data:{labels:chart.labels,datasets},options:baseOptions(m,{markers:[]},{legend:true})}));
+    finish(canvas,target,new root.Chart(canvas,{type:'line',data:{labels:chart.labels,datasets},options:baseOptions(m,{markers:[]},{legend:true}),plugins:[eventMarks(marks,chartFont())]}));
   }
 
   // One cash chart with every path: the plan with and without its events, the random range, and the zero line.
   // `window` is how many months to show; a short window keeps an event from being flattened by decades of growth.
-  function drawTrajectories(canvas,summaryTarget,{plan,baseline=null,bands=null},startPeriod,events,profile,{debts=[],window:months=0}={}) {
+  function drawTrajectories(canvas,summaryTarget,{plan,baseline=null,bands=null},startPeriod,events,profile,{debts=[],window:months=0,from=0}={}) {
     const m=root.ShellModel,r=root.ResultsModel,target=summaryTarget;
     const planData=r.splitData(plan,startPeriod,events,profile,debts),baseData=baseline?r.splitData(baseline,startPeriod,events,profile,debts):null;
     const bandData=bands?.cash?r.bandData(bands,startPeriod,events,profile,debts,'cash'):null;
-    const count=months?months+(profile?1:0):planData.labels.length,cut=values=>values.slice(0,count);
+    const end=months?from+months+1:undefined,cut=values=>values.slice(from,end);
     const lines=[['有這個事件',planData.summary.cash]];
     if(baseData)lines.unshift(['沒有這個事件',baseData.summary.cash]);
     const text=lines.map(([label,s])=>`${label}：現金最低 ${m.money(s.minimum)}，發生於 ${s.minimumPeriod}；期末 ${m.money(s.final)}。`);
     if(bandData)text.push(`隨機模擬到 ${bandData.summary.period}，一般情況現金約 ${m.money(bandData.summary.p50)}；9 成的模擬落在 ${m.money(bandData.summary.p5)} 到 ${m.money(bandData.summary.p95)} 之間。`);
     target.replaceChildren(...text.map(line=>root.FutureWalletShell.element('p',line)));
     if(!prepare(canvas,target))return;
-    const markers=new Set(planData.markers.map(marker=>marker.index)),labels=cut(planData.labels);
+    const labels=cut(planData.labels),shift=planData.markers.map(marker=>({...marker,index:marker.index-from})).filter(marker=>marker.index>=0&&marker.index<labels.length);
+    const markers=new Set(shift.map(marker=>marker.index));
+    // The size of the step each event makes in cash, from the month before it to the month it lands.
+    const marks=shift.map(marker=>{const step=planData.cash[marker.index+from]-planData.cash[marker.index+from-1];return {index:marker.index,color:'#b45309',text:`${marker.name} ${step<0?'−':'+'}${m.money(Math.abs(step))}`};});
     const accent=root.getComputedStyle(root.document.documentElement).getPropertyValue('--accent').trim()||'#047857';
     const rgb=/^#([0-9a-f]{6})$/i.test(accent)?[1,3,5].map(i=>parseInt(accent.slice(i,i+2),16)).join(','):'4,120,87';
     const line=(label,values,color,width,extra={})=>({label,data:cut(values),borderColor:color,backgroundColor:color,borderWidth:width,pointRadius:0,pointHoverRadius:4,tension:0,fill:false,...extra});
@@ -159,11 +182,11 @@
     }
     if(baseData)datasets.push(line('沒有這個事件',baseData.cash,'#0e7490',2.5,{order:2}));
     // Cash under zero is shaded red: that is the stretch where the plan runs out of money.
-    datasets.push(line('有這個事件',planData.cash,'#b45309',3.5,{order:1,pointRadius:cut(planData.labels).map((_,i)=>markers.has(i)?4:0),
+    datasets.push(line('有這個事件',planData.cash,'#b45309',3.5,{order:1,pointRadius:labels.map((_,i)=>markers.has(i)?4:0),segment:stepSegment(shift,7),
       fill:{target:{value:0},above:'rgba(0,0,0,0)',below:'rgba(180,35,24,.28)'}}));
     datasets.push(line('現金 0',planData.labels.map(()=>0),'#b42318',2,{borderDash:[2,3],pointHoverRadius:0,order:3}));
-    const options=baseOptions(m,planData,{legend:true});
-    finish(canvas,target,new root.Chart(canvas,{type:'line',data:{labels,datasets},options}));
+    const options=baseOptions(m,{...planData,markers:shift},{legend:true});
+    finish(canvas,target,new root.Chart(canvas,{type:'line',data:{labels,datasets},options,plugins:[eventMarks(marks,chartFont())]}));
   }
 
   function destroyAll(){for(const chart of instances.values())chart.destroy();instances.clear();}

@@ -152,17 +152,20 @@
     return {labels, series: runs.map(run => ({name: run.name, kind: run.kind, values: [start, ...pick(run.mc.monthly_bands).map(Number)]}))};
   }
 
-  // Show only the first `months` months (plus the starting point); 0 keeps everything.
-  function windowChart(chart, months) {
-    if (!months) return chart;
-    const count = months + 1;
-    return {labels: chart.labels.slice(0, count), series: chart.series.map(line => ({...line, values: line.values.slice(0, count)}))};
+  // Show `months` months from index `from` (index 0 is the starting point); months 0 keeps everything.
+  // Event marks (`{index, text}`) move with the cut and drop out when they fall outside it.
+  function windowChart(chart, months, from = 0) {
+    if (!months && !from) return chart;
+    const end = months ? from + months + 1 : undefined, labels = chart.labels.slice(from, end);
+    return {labels, series: chart.series.map(line => ({...line, values: line.values.slice(from, end),
+      marks: (line.marks || []).map(mark => ({...mark, index: mark.index - from})).filter(mark => mark.index >= 0 && mark.index < labels.length)}))};
   }
 
-  // The smallest standard window that still covers the last event and three more years; 0 means the whole run.
-  function defaultWindow(eventMonths, total, options = [60, 120]) {
-    const need = Math.max(60, ...eventMonths.map(month => month + 36));
-    return options.find(months => months < total && months >= need) || 0;
+  // A few months before the first event to a couple of years after the last one, so a sudden event fills the chart.
+  function focusRange(eventMonths, total, before = 6, after = 30) {
+    if (!eventMonths.length) return {from: 0, months: 0};
+    const from = Math.max(0, Math.min(...eventMonths) - before), end = Math.min(total, Math.max(Math.max(...eventMonths) + after, from + 24));
+    return {from, months: end - from >= total ? 0 : end - from};
   }
 
   // Which line leads at the end and where each one bottoms out, for the text version of a chart.
@@ -180,6 +183,6 @@
   }
 
   const api = {MAX_SCENARIOS, BASELINE_NAME, SEED, SIMULATIONS, eventOptions, defaultScenarios, scenarioName, resolveScenarios,
-    summarize, leaders, conclusion, netWorthGap, chartSeries, windowChart, defaultWindow, chartSummary, vehicleRows};
+    summarize, leaders, conclusion, netWorthGap, chartSeries, windowChart, focusRange, chartSummary, vehicleRows};
   if (node) module.exports = api; else root.CompareModel = api;
 })(globalThis);
