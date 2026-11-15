@@ -248,7 +248,7 @@ test('the answer shows what the event changed and offers a way back to the event
 test('the cash chart comes before the net worth range and each chart names its model',()=>{
   const html=fs.readFileSync(path.join(__dirname,'../static/plan.html'),'utf8');
   const at=id=>html.indexOf(`id="${id}"`);
-  assert.ok(at('conclusion')<at('splitHeading')&&at('splitHeading')<at('bandHeading')&&at('bandHeading')<at('allMetrics'));
+  assert.ok(at('conclusion')<at('trajectoryHeading')&&at('trajectoryHeading')<at('splitHeading')&&at('splitHeading')<at('bandHeading')&&at('bandHeading')<at('allMetrics'));
   assert.match(html,/id="splitHeading">現金、投資與淨資產（固定值模擬）/);
   assert.match(html,/id="bandHeading">淨資產可能範圍（隨機模擬）/);
   assert.doesNotMatch(html.replace(/<script[\s\S]*?<\/script>/g,''),/平均情況|歷史平均報酬/);
@@ -306,7 +306,7 @@ test('the plan page leads with the event and the result; renaming and deleting s
   assert.doesNotMatch(html,/eventLimitNote|一個計畫放一個事件/);
   assert.doesNotMatch(page,/eventLimitNote/);
   const nav=html.slice(html.indexOf('class="result-nav"'),html.indexOf('</nav>',html.indexOf('class="result-nav"')));
-  for(const target of ['splitHeading','bandHeading','assumptionsPanel','qaSection'])assert.ok(nav.includes(`href="#${target}"`),target);
+  for(const target of ['trajectoryHeading','bandHeading','assumptionsPanel','qaSection'])assert.ok(nav.includes(`href="#${target}"`),target);
   assert.ok(at('conclusion')<html.indexOf('class="result-nav"')&&html.indexOf('class="result-nav"')<at('explanationSection'));
   assert.match(page,/const hadResults=!\$\('simulationResults'\)\.hidden/);
   assert.match(page,/hadResults\?'計畫或輸入已變更，上一次的結果已清除，請重新執行模擬。':''/);
@@ -372,4 +372,30 @@ test('the create-plan dialog picks the event first and asks for the name second'
   assert.match(shell,/input\.value=autoName=selectedTemplate\.name/);
   assert.match(shell,/先不選事件/);
   assert.doesNotMatch(shell,/先不加事件，直接建立/);
+});
+
+test('the first chart puts every cash path together, with a period switch that starts on the smallest useful window',()=>{
+  const html=fs.readFileSync(path.join(__dirname,'../static/plan.html'),'utf8');
+  const page=fs.readFileSync(path.join(__dirname,'../static/plan-page.js'),'utf8');
+  const css=fs.readFileSync(path.join(__dirname,'../static/shell.css'),'utf8');
+  assert.match(html,/id="trajectoryHeading">現金走勢/);
+  assert.match(html,/id="trajectoryRange" class="range-buttons" role="group" aria-label="顯示期間"><button type="button" data-window="60">前 5 年<\/button><button type="button" data-window="120">前 10 年<\/button><button type="button" data-window="0">全部<\/button>/);
+  assert.match(html,/<canvas id="trajectoryChart" role="img"[^>]*>[\s\S]*?id="trajectoryChartSummary"/);
+  assert.match(page,/showTrajectory\(\{data:\{plan:simulation\.result\.simulation_curve,baseline:baseline\?\.result\?\.simulation_curve\|\|null,bands:mc\.monthly_bands\}/);
+  assert.match(page,/options\.find\(n=>n>=need\)\|\|run\.months/);
+  assert.match(css,/\.fw \.chart-frame\.chart-frame-tall \{ height:440px; \}/);
+});
+
+test('the dashboard draws every plan with an event against the do-nothing line on one chart',()=>{
+  const html=fs.readFileSync(path.join(__dirname,'../static/dashboard.html'),'utf8');
+  const pages=fs.readFileSync(path.join(__dirname,'../static/pages.js'),'utf8');
+  assert.match(html,/<script defer src="\/results-model\.js"><\/script><script defer src="\/compare-model\.js"><\/script>/);
+  assert.match(html,/<section id="plansChartSection" class="panel" aria-labelledby="plansChartHeading" hidden><h2 id="plansChartHeading">所有計畫放在一起<\/h2>/);
+  assert.match(html,/data-measure="cash">現金<\/button><button type="button" data-measure="netWorth">淨資產<\/button>/);
+  assert.match(html,/<canvas id="plansChart" role="img"[^>]*>[\s\S]*?id="plansChartSummary"/);
+  assert.ok(html.indexOf('id="plansChartSection"')<html.indexOf('id="plansHeading"'));
+  assert.match(pages,/await plansChart\(ctx,loaded\)/);
+  assert.match(pages,/items=loaded\.filter\(item=>item\.events\.length\)/);
+  assert.match(pages,/name:'一般情況',kind:'baseline'/);
+  assert.match(pages,/drawCompare\(\$\('plansChart'\)[^\n]*zeroLine:measure==='cash'/);
 });

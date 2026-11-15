@@ -147,7 +147,20 @@
 
       $('simulationResults').hidden=false;
     }
-    let events=[],editing=null,lastRun=null,qa=null,revision=0;
+    let events=[],editing=null,lastRun=null,qa=null,revision=0,trajectory=null;
+    // Short windows show an event clearly; start with the smallest one that still covers the last event plus three years.
+    function showTrajectory(run,chosen) {
+      trajectory=run;
+      const offset=event=>{const [y1,m1]=run.startPeriod.split('-').map(Number),[y2,m2]=event.start_period.split('-').map(Number);return (y2-y1)*12+m2-m1;};
+      const need=Math.max(60,...run.events.map(offset).map(n=>n+36)),options=[60,120].filter(n=>n<run.months);
+      const windowMonths=chosen==null?(options.find(n=>n>=need)||run.months):(chosen||run.months);
+      for(const button of $('trajectoryRange').querySelectorAll('button')){
+        const value=Number(button.dataset.window);button.hidden=value!==0&&value>=run.months;
+        button.setAttribute('aria-pressed',String((value||run.months)===windowMonths));
+      }
+      root.WalletCharts.drawTrajectories($('trajectoryChart'),$('trajectoryChartSummary'),run.data,run.startPeriod,run.events,ctx.profile,{debts:ctx.debts,window:windowMonths>=run.months?0:windowMonths});
+    }
+    $('trajectoryRange').addEventListener('click',event=>{const button=event.target.closest('button');if(button&&trajectory)showTrajectory(trajectory,Number(button.dataset.window));});
     async function loadLifeShocks(run) {
       const card=$('lifeShocksCard'), content=$('lifeShocksContent');
       card.hidden=false; content.replaceChildren(S.element('p','正在計算，請稍候…'));
@@ -404,6 +417,7 @@
         if(!ctx.alive||lastRun!==run){runStatus('explanationStatus','');return;}
         renderExplanation(data);runStatus('explanationStatus','說明已產生。');
       }catch(error){runStatus('explanationStatus','');throw error;}
+      showTrajectory({data:{plan:simulation.result.simulation_curve,baseline:baseline?.result?.simulation_curve||null,bands:mc.monthly_bands},startPeriod,events,months});
     },{scope:'explanationSection',errorId:'explanationError'}));
     const add=T.resolveAddParameter(root.location.search);
     if(new URLSearchParams(root.location.search).has('add'))root.history.replaceState(root.history.state,'',`${root.location.pathname}${add.search}${root.location.hash}`);

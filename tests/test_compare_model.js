@@ -162,3 +162,18 @@ test('the compare page is wired into the app and every element it uses exists', 
   assert.match(read('dashboard.html'), /href="\/compare\.html"/);
   assert.match(read('charts.js'), /drawCompare/);
 });
+
+test('a chart can be cut to a window, and the default window covers the last event plus three years', () => {
+  const C = require('../static/compare-model.js');
+  const chart = {labels:Array.from({length:241}, (_, i) => i), series:[{name:'a', values:Array.from({length:241}, (_, i) => i * 2)}]};
+  assert.equal(C.windowChart(chart, 0), chart);
+  const cut = C.windowChart(chart, 60);
+  assert.equal(cut.labels.length, 61);
+  assert.equal(cut.series[0].values.length, 61);
+  assert.equal(cut.series[0].name, 'a');
+  assert.equal(C.defaultWindow([], 240), 60);        // nothing later than the first five years
+  assert.equal(C.defaultWindow([12], 240), 60);
+  assert.equal(C.defaultWindow([30], 240), 120);     // 30 + 36 months does not fit in 60
+  assert.equal(C.defaultWindow([100], 240), 0);      // 100 + 36 months needs the whole run
+  assert.equal(C.defaultWindow([12], 60), 0);        // a 60-month run is already the whole thing
+});

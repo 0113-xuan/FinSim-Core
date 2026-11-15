@@ -136,7 +136,7 @@
     for(const plan of ctx.plans)viewPlan.append(new root.Option(plan.name,plan.id));
     viewPlan.addEventListener('change',()=>{pickDefaultMonth();showView();});viewMonth.addEventListener('input',showView);
     renderCurrent();
-    const cards=$('planCards'),entries=[];
+    const cards=$('planCards'),entries=[],loaded=[];
     for(const plan of ctx.plans){
       const card=S.element('article',null,'plan-card'),heading=S.element('h3'),link=S.element('a',plan.name);link.href=`/plan.html?id=${encodeURIComponent(plan.id)}`;heading.append(link);card.append(heading);
       const info=S.element('p','正在讀取事件與計算走勢…');card.append(info);cards.append(card);entries.push({plan,card,info});
@@ -156,6 +156,7 @@
         root.WalletCharts.draw(canvas,text,result.simulation_curve,built.startPeriod,events,ctx.profile,{mini:true,debts:ctx.debts});
         const eventMonths=events.map(event=>{try{return P.periodToMonth(built.startPeriod,event.start_period);}catch(_){return 0;}}).filter(month=>month>=1&&month<=result.simulation_curve.length);
         curves.set(plan.id,{curve:result.simulation_curve,startPeriod:built.startPeriod,defaultMonth:eventMonths.length?Math.min(...eventMonths):1});
+        loaded.push({plan,events,eventMonths,curve:result.simulation_curve,startPeriod:built.startPeriod});
         if(viewPlan.value===plan.id){pickDefaultMonth();showView();}
         card.append(S.element('p',`期末淨資產：${M.money(result.summary.final_net_worth)}`));
         card.append(S.element('p',`第一次現金小於 0：${result.summary.first_negative_cash_month==null?'未出現':root.PlannerModel.monthToPeriod(built.startPeriod,result.summary.first_negative_cash_month)}`));
@@ -163,6 +164,32 @@
         if(built.converted)card.append(S.element('p',built.converted.note));
       }catch(error){if(ctx.alive){info.textContent=`走勢計算未完成：${error.message}。重新整理可重試。`;info.setAttribute('role','alert');}}
     }
+    await plansChart(ctx,loaded);
+  }
+  // Every plan with an event, drawn against the same finances with no event, one colour each, on one chart.
+  async function plansChart(ctx,loaded) {
+    const C=root.CompareModel,R=root.ResultsModel,items=loaded.filter(item=>item.events.length);
+    if(!ctx.alive||!items.length||!root.WalletCharts)return;
+    let baseline=null;
+    try{
+      const built=await S.prepareSimulation(ctx,[],240),response=await ctx.calculation(post=>post('/simulate',{...built.request,seed:42}));
+      baseline=response.result.simulation_curve;
+    }catch(_){/* without the do-nothing line the plans are still worth drawing */}
+    if(!ctx.alive)return;
+    const palette=['#b45309','#6d28d9','#be123c','#15803d','#1d4ed8','#a16207'],startPeriod=items[0].startPeriod;
+    const shape=(curve,events)=>R.splitData(curve,startPeriod,events,ctx.profile,ctx.debts);
+    const data=[...(baseline?[{name:'一般情況',kind:'baseline',color:'#0e7490',dash:[6,4],data:shape(baseline,[])}]:[]),
+      ...items.map((item,index)=>({name:item.plan.name,color:palette[index%palette.length],data:shape(item.curve,item.events)}))];
+    let measure='cash',months=C.defaultWindow(items.flatMap(item=>item.eventMonths),240);
+    function render(){
+      for(const button of $('plansChartMeasure').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.measure===measure));
+      for(const button of $('plansChartRange').querySelectorAll('button'))button.setAttribute('aria-pressed',String(Number(button.dataset.window)===months));
+      const chart=C.windowChart({labels:data[0].data.labels,series:data.map(line=>({name:line.name,kind:line.kind,color:line.color,dash:line.dash,values:line.data[measure]}))},months);
+      root.WalletCharts.drawCompare($('plansChart'),$('plansChartSummary'),chart,C.chartSummary(chart,measure==='cash'?'現金':'淨資產'),{zeroLine:measure==='cash'});
+    }
+    $('plansChartMeasure').addEventListener('click',event=>{const button=event.target.closest('button');if(button){measure=button.dataset.measure;render();}});
+    $('plansChartRange').addEventListener('click',event=>{const button=event.target.closest('button');if(button){months=Number(button.dataset.window);render();}});
+    $('plansChartSection').hidden=false;render();
   }
   async function boot(){
     const page=root.document.body.dataset.page,ctx=await S.init(page);if(!ctx)return;

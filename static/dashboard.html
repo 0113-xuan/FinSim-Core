@@ -2,7 +2,7 @@
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>儀表板｜FutureWallet</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/shell.css">
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/results-model.js"></script><script defer src="/event-templates.js"></script><script defer src="/event-picker.js"></script><script defer src="/location-model.js"></script><script defer src="/shell.js"></script>
+<script defer src="/planner-model.js"></script><script defer src="/shell-model.js"></script><script defer src="/results-model.js"></script><script defer src="/compare-model.js"></script><script defer src="/event-templates.js"></script><script defer src="/event-picker.js"></script><script defer src="/location-model.js"></script><script defer src="/shell.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script><script defer src="/charts.js"></script><script defer src="/plan-page.js"></script><script defer src="/pages.js"></script>
 </head><body class="fw" data-page="dashboard">
 <a class="skip-link" href="#pageContent">跳到主要內容</a>
@@ -16,4 +16,8 @@
 <article><h2>資產</h2><strong id="currentAssets"></strong><p id="assetBreakdown"></p></article>
 <article><h2>負債</h2><strong id="currentDebt"></strong><div id="currentDebtList"></div><p id="debtNote">剩餘應還總額＝每月還款 × 剩餘期數，未扣除利息折現。</p></article></section>
 <section class="dashboard-allocation panel" aria-labelledby="allocationHeading"><div><h2 id="allocationHeading">目前資產配置</h2><p class="lede">依照已儲存的現金與投資市值整理，資料更新後會同步反映。</p><div id="currentAllocationSummary" class="chart-summary"></div></div><div class="chart-frame chart-frame-donut"><canvas id="currentAllocationChart" role="img" aria-label="目前現金與投資配置"></canvas></div></section>
+<section id="plansChartSection" class="panel" aria-labelledby="plansChartHeading" hidden><h2 id="plansChartHeading">所有計畫放在一起</h2>
+<div id="plansChartMeasure" class="range-buttons" role="group" aria-label="顯示內容"><button type="button" data-measure="cash">現金</button><button type="button" data-measure="netWorth">淨資產</button></div>
+<div id="plansChartRange" class="range-buttons" role="group" aria-label="顯示期間"><button type="button" data-window="60">前 5 年</button><button type="button" data-window="120">前 10 年</button><button type="button" data-window="0">全部</button></div>
+<div class="chart-frame chart-frame-tall"><canvas id="plansChart" role="img" aria-label="一般情況與各計畫的走勢比較"></canvas></div><details class="chart-text"><summary>用文字看這張圖</summary><div id="plansChartSummary" class="chart-summary"></div></details></section>
 <section aria-labelledby="plansHeading"><h2 id="plansHeading">我的計畫</h2><p class="lede">各計畫獨立模擬未來 240 個月；走勢是以固定報酬率算出的單一路線，不是報酬保證。淨資產＝現金＋投資＋車輛估值－貸款剩餘金額。圓點表示事件開始月份。</p><div id="planCards" class="plan-grid"></div><p class="compare-link"><a href="/compare.html">比較不同事件或事件組合</a>：例如換一台車，或換車又換工作。</p></section></div></div></main></body></html>

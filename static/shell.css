@@ -320,3 +320,8 @@ body.fw { --series-four:#7a4b94; }
 .fw .life-shocks-columns dl { margin:0; }
 .fw .life-shocks-columns dt { margin-top:10px; }
 .fw .life-shocks-columns dd { margin:0;font-weight:600; }
+
+.fw .range-buttons { display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px; }
+.fw .range-buttons button[aria-pressed="true"] { background:var(--navy);color:#fff;border-color:var(--navy); }
+.fw .chart-frame.chart-frame-tall { height:440px; }
+@media (max-width:760px) { .fw .chart-frame.chart-frame-tall { height:340px; } }

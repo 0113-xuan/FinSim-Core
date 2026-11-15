@@ -92,13 +92,18 @@
           <p id="conclusionCaveat" class="conclusion-caveat"></p>
         </section>
         <section id="lifeShocksCard" class="result-block" aria-labelledby="lifeShocksHeading" hidden><h3 id="lifeShocksHeading">意外風險</h3><div id="lifeShocksContent" aria-live="polite"></div></section>
-        <nav class="result-nav" aria-label="結果導覽"><span>往下看：</span><a href="#splitHeading">現金圖</a><a href="#bandHeading">淨資產範圍</a><a href="#assumptionsPanel">假設與資料來源</a><a href="#qaSection">問問題</a></nav>
+        <nav class="result-nav" aria-label="結果導覽"><span>往下看：</span><a href="#trajectoryHeading">現金圖</a><a href="#bandHeading">淨資產範圍</a><a href="#assumptionsPanel">假設與資料來源</a><a href="#qaSection">問問題</a></nav>
         <section id="explanationSection" class="analysis-group" aria-labelledby="explanationHeading">
           <h3 id="explanationHeading">AI 白話解釋<small id="explanationSource" hidden>（系統範本）</small></h3>
           <div class="actions"><button id="explainResults" type="button">用白話解釋結果</button><p id="explanationStatus" class="run-status" role="status" aria-live="polite"></p></div>
           <p id="explanationError" class="error" role="alert" hidden></p>
           <p id="explanationNotice" hidden></p>
           <div id="explanationResult" aria-live="polite"></div>
+        </section>
+        <section class="result-block" aria-labelledby="trajectoryHeading">
+          <h3 id="trajectoryHeading">現金走勢</h3>
+          <div id="trajectoryRange" class="range-buttons" role="group" aria-label="顯示期間"><button type="button" data-window="60">前 5 年</button><button type="button" data-window="120">前 10 年</button><button type="button" data-window="0">全部</button></div>
+          <div class="chart-frame chart-frame-tall"><canvas id="trajectoryChart" role="img" aria-label="現金走勢：有事件、沒有事件與隨機模擬範圍"></canvas></div><details class="chart-text"><summary>用文字看這張圖</summary><div id="trajectoryChartSummary" class="chart-summary"></div></details>
         </section>
         <section class="result-block" aria-labelledby="splitHeading">
           <h3 id="splitHeading">現金、投資與淨資產（固定值模擬）</h3>

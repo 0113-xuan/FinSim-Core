@@ -124,15 +124,49 @@
     const datasets=chart.series.map(line=>{
       // The do-nothing baseline is always the grey reference line.
       const [token,dash]=line.kind==='baseline'?['--muted',[4,4]]:palette[next++%palette.length];
-      const color=colors.getPropertyValue(token).trim()||'#4b5b57';
-      return {label:line.name,data:line.values,borderColor:color,backgroundColor:color,borderWidth:line.kind==='baseline'?1.5:2.5,borderDash:dash,pointRadius:0,pointHoverRadius:5,tension:0};
+      const color=line.color||colors.getPropertyValue(token).trim()||'#4b5b57';
+      // A line that brings its own colour is drawn bold; `dash` lets a reference line stay dashed.
+      return {label:line.name,data:line.values,borderColor:color,backgroundColor:color,borderWidth:line.color||line.kind!=='baseline'?2.5:1.5,borderDash:line.color?(line.dash||[]):dash,pointRadius:0,pointHoverRadius:5,tension:0};
     });
     if(zeroLine)datasets.push({label:'_零',data:chart.labels.map(()=>0),borderColor:colors.getPropertyValue('--danger').trim()||'#dc2626',borderWidth:1,borderDash:[1,3],pointRadius:0,pointHoverRadius:0,tension:0});
     // baseOptions already sets the page font and hides datasets whose label starts with "_".
     finish(canvas,target,new root.Chart(canvas,{type:'line',data:{labels:chart.labels,datasets},options:baseOptions(m,{markers:[]},{legend:true})}));
   }
 
+  // One cash chart with every path: the plan with and without its events, the random range, and the zero line.
+  // `window` is how many months to show; a short window keeps an event from being flattened by decades of growth.
+  function drawTrajectories(canvas,summaryTarget,{plan,baseline=null,bands=null},startPeriod,events,profile,{debts=[],window:months=0}={}) {
+    const m=root.ShellModel,r=root.ResultsModel,target=summaryTarget;
+    const planData=r.splitData(plan,startPeriod,events,profile,debts),baseData=baseline?r.splitData(baseline,startPeriod,events,profile,debts):null;
+    const bandData=bands?.cash?r.bandData(bands,startPeriod,events,profile,debts,'cash'):null;
+    const count=months?months+(profile?1:0):planData.labels.length,cut=values=>values.slice(0,count);
+    const lines=[['有這個事件',planData.summary.cash]];
+    if(baseData)lines.unshift(['沒有這個事件',baseData.summary.cash]);
+    const text=lines.map(([label,s])=>`${label}：現金最低 ${m.money(s.minimum)}，發生於 ${s.minimumPeriod}；期末 ${m.money(s.final)}。`);
+    if(bandData)text.push(`隨機模擬到 ${bandData.summary.period}，一般情況現金約 ${m.money(bandData.summary.p50)}；9 成的模擬落在 ${m.money(bandData.summary.p5)} 到 ${m.money(bandData.summary.p95)} 之間。`);
+    target.replaceChildren(...text.map(line=>root.FutureWalletShell.element('p',line)));
+    if(!prepare(canvas,target))return;
+    const markers=new Set(planData.markers.map(marker=>marker.index)),labels=cut(planData.labels);
+    const accent=root.getComputedStyle(root.document.documentElement).getPropertyValue('--accent').trim()||'#047857';
+    const rgb=/^#([0-9a-f]{6})$/i.test(accent)?[1,3,5].map(i=>parseInt(accent.slice(i,i+2),16)).join(','):'4,120,87';
+    const line=(label,values,color,width,extra={})=>({label,data:cut(values),borderColor:color,backgroundColor:color,borderWidth:width,pointRadius:0,pointHoverRadius:4,tension:0,fill:false,...extra});
+    // Chart.js draws the lowest `order` last (on top): the plan sits above everything, the random range underneath.
+    const datasets=[];
+    if(bandData){
+      const edge=(label,values,fill,alpha,order)=>line(label,values,`rgba(${rgb},.3)`,1,{fill,backgroundColor:`rgba(${rgb},${alpha})`,pointHoverRadius:0,order});
+      datasets.push(edge('順利情況（隨機模擬）',bandData.series.p95,'+1',.14,6),edge('較差情況（隨機模擬）',bandData.series.p5,false,0,7),
+        line('一般情況（隨機模擬）',bandData.series.p50,`rgba(${rgb},.9)`,1.5,{borderDash:[6,4],order:5}));
+    }
+    if(baseData)datasets.push(line('沒有這個事件',baseData.cash,'#0e7490',2.5,{order:2}));
+    // Cash under zero is shaded red: that is the stretch where the plan runs out of money.
+    datasets.push(line('有這個事件',planData.cash,'#b45309',3.5,{order:1,pointRadius:cut(planData.labels).map((_,i)=>markers.has(i)?4:0),
+      fill:{target:{value:0},above:'rgba(0,0,0,0)',below:'rgba(180,35,24,.28)'}}));
+    datasets.push(line('現金 0',planData.labels.map(()=>0),'#b42318',2,{borderDash:[2,3],pointHoverRadius:0,order:3}));
+    const options=baseOptions(m,planData,{legend:true});
+    finish(canvas,target,new root.Chart(canvas,{type:'line',data:{labels,datasets},options}));
+  }
+
   function destroyAll(){for(const chart of instances.values())chart.destroy();instances.clear();}
   root.addEventListener('pagehide',destroyAll);
-  root.WalletCharts={draw,drawBands,drawCashflow,drawComposition,drawCurrentAllocation,drawCompare,destroyAll};
+  root.WalletCharts={draw,drawBands,drawTrajectories,drawCashflow,drawComposition,drawCurrentAllocation,drawCompare,destroyAll};
 })(globalThis);

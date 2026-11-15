@@ -152,6 +152,19 @@
     return {labels, series: runs.map(run => ({name: run.name, kind: run.kind, values: [start, ...pick(run.mc.monthly_bands).map(Number)]}))};
   }
 
+  // Show only the first `months` months (plus the starting point); 0 keeps everything.
+  function windowChart(chart, months) {
+    if (!months) return chart;
+    const count = months + 1;
+    return {labels: chart.labels.slice(0, count), series: chart.series.map(line => ({...line, values: line.values.slice(0, count)}))};
+  }
+
+  // The smallest standard window that still covers the last event and three more years; 0 means the whole run.
+  function defaultWindow(eventMonths, total, options = [60, 120]) {
+    const need = Math.max(60, ...eventMonths.map(month => month + 36));
+    return options.find(months => months < total && months >= need) || 0;
+  }
+
   // Which line leads at the end and where each one bottoms out, for the text version of a chart.
   function chartSummary(chart, measureLabel) {
     const money = shell.money, last = chart.labels.length - 1;
@@ -167,6 +180,6 @@
   }
 
   const api = {MAX_SCENARIOS, BASELINE_NAME, SEED, SIMULATIONS, eventOptions, defaultScenarios, scenarioName, resolveScenarios,
-    summarize, leaders, conclusion, netWorthGap, chartSeries, chartSummary, vehicleRows};
+    summarize, leaders, conclusion, netWorthGap, chartSeries, windowChart, defaultWindow, chartSummary, vehicleRows};
   if (node) module.exports = api; else root.CompareModel = api;
 })(globalThis);
