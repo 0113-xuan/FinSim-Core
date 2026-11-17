@@ -4,7 +4,7 @@
 id: minimum-cash
 source: app/core/simulation.py：summarize_simulation；app/services/plan_explanation.py：build_facts
 tags: 最低現金,最低存款,發生月份,現金下降
-aliases: 最低存款,哪個月最少錢,現金最少是什麼時候,最吃緊的月份
+aliases: 最低存款,哪個月最少錢,現金最少是什麼時候,最吃緊的月份,撐得住
 
 最低現金是模擬期間各個月底的現金餘額中最低的一筆，發生月份則是這筆餘額對應的月份。它不把投資市值或車輛估值當作現金。事件支出、生活費、還款與每月投資都可能影響現金；要問自己的最低金額與月份，須先執行計畫模擬，讓回答取得這次的事實表。
 
@@ -36,7 +36,7 @@ aliases: 總資產,資產扣負債,身家,淨值怎麼算
 id: percentile-cases
 source: app/core/monte_carlo.py：percentile、net_worth_percentiles；app/services/plan_explanation.py：build_facts
 tags: 一般情況,較差情況,順利情況,中位數,分位數
-aliases: 最差情況,最好情況,最壞會怎樣,較差跟順利,中位數
+aliases: 最差情況,最好情況,最壞會怎樣,較差跟順利,中位數,運氣不好,落到哪裡
 
 一般情況是模擬結果的中位數，一半結果較高、一半較低。較差情況約是 20 次裡有 1 次比這低的位置，順利情況約是 20 次裡有 1 次比這高的位置。這些是把抽樣結果排序後整理的位置，不是最壞或最好情況，也不表示你未來會走到其中某一條固定路徑。
 

@@ -14,7 +14,7 @@ SPEC.loader.exec_module(eval_rag)
 FLOORS = {
     'golden': dict(recall_at_3=1.0, mrr=0.98, answer_rate=1.0),
     'heldout': dict(recall_at_3=1.0, mrr=1.0, answer_rate=0.95),
-    'unseen': dict(recall_at_3=0.85, mrr=0.81, answer_rate=0.74),
+    'unseen': dict(recall_at_3=1.0, mrr=29/30, answer_rate=33/35),
 }
 CEILINGS = {
     'golden': dict(misleading_rate=0.0, false_accept_rate=0.0),

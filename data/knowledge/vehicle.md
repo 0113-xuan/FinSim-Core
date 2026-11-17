@@ -20,7 +20,7 @@ aliases: 花多少錢和損失多少,實際花費,真正成本,重複算
 id: vehicle-value
 source: app/core/balance_sheet.py：asset_value；app/services/planner_vehicle.py：assets
 tags: 車輛估值,車齡,價值減少,中古車
-aliases: 車子值多少錢,車子現在價值,中古車價值
+aliases: 車子值多少錢,車子現在價值,中古車價值,新車開幾年,後來值多少
 
 車輛估值依購買價格、購車後經過時間與設定的年折舊率推算，車輛尚未買入時不算持有資產。估值納入淨資產，但不會變成現金，也不會因為估值降低就自動賣車。這是規劃用的資產模型，沒有根據個別中古車車況、里程或成交資訊提供報價。
 

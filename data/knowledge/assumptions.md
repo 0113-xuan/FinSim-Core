@@ -28,7 +28,7 @@ aliases: 保養費多少,油錢怎麼算,電費預設,養車費用
 id: no-auto-sell
 source: app/core/simulation.py：investment、net_cashflow；static/results-model.js：assumptionRows
 tags: 自動賣出,現金不足,投資變現,負數
-aliases: 錢不夠會賣股票嗎,會不會自動變現,現金為負怎麼辦,會不會自動借錢
+aliases: 錢不夠會賣股票嗎,會不會自動變現,現金為負怎麼辦,會不會自動借錢,戶頭沒錢,股票被賣掉
 
 目前模擬把現金和投資分開計算，現金不足時不會自動賣出投資，也不會自動替你借款。因此現金可能變成負數，而投資帳戶仍保有市值。這是在提醒現金流的缺口，並不表示現實中可以無限制透支；若想觀察不同支出或投入安排，需要修改輸入後重新模擬。
 
@@ -36,7 +36,7 @@ aliases: 錢不夠會賣股票嗎,會不會自動變現,現金為負怎麼辦,�
 id: monthly-investment
 source: app/core/simulation.py：investment、monthly_investment、net_cashflow
 tags: 每月投資,從現金轉入,投資金額,支出
-aliases: 每月存股從哪扣,定期定額怎麼算,投資的錢哪來
+aliases: 每月存股從哪扣,定期定額怎麼算,投資的錢哪來,固定買ETF
 
 每月投資是把設定的金額從現金轉進投資帳戶，現金流會減少同一筆金額，投資市值則加上投入並受報酬變化影響。它不是憑空增加資產，也不等於生活消費。即使收入扣除生活費與還款後不夠，模型仍照設定投入，所以應一起查看最低現金與現金不足情況。
 
