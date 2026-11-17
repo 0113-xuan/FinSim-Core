@@ -68,3 +68,12 @@ def test_endpoint_returns_intervals():
     assert response.status_code == 200
     assert FIELDS <= response.json().keys()
 
+
+
+def test_history_length_matches_knowledge():
+    from pathlib import Path
+    history = load_market_history()
+    assert (history.start_period, history.end_period, len(history.periods)) == ("2003-02", "2026-09", 284)
+    text = (Path(__file__).resolve().parents[1] / "data/knowledge/limits.md").read_text(encoding="utf-8")
+    section = text.split("id: history-length", 1)[1].split("\n## ", 1)[0]
+    assert all(value in section for value in (history.start_period, history.end_period, str(len(history.periods))))
