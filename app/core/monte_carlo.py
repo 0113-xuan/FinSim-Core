@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Optional
 from app.core.expenses import get_expense_categories
 from app.core.market_data import BLOCK_MONTHS, MarketHistory, block_bootstrap_indices, load_market_history
 from app.core.simulation import simulate_finance
+from app.core.mc_uncertainty import quantile_interval, wilson_interval
 
 
 PAST_PERFORMANCE_WARNING = '歷史期間台股表現特別好，過去報酬不代表未來。'
@@ -186,6 +187,7 @@ def run_monte_carlo(
 
     shortfall_probability = cash_shortfall_count / simulations
 
+    low, high = wilson_interval(cash_shortfall_count, simulations)
     response = {
         "iterations": simulations,
         "seed": seed,
@@ -198,6 +200,9 @@ def run_monte_carlo(
         "real_net_worth_percentiles": _percentiles(real_net_worths, (5, 50, 95)),
         "real_net_worth_definition": "期末淨資產（現金加投資）除以該次試驗的累積物價倍數，以今日購買力表示",
         "probability_cash_shortfall": round(shortfall_probability, 4),
+        "probability_cash_shortfall_interval": {"low": round(low, 4), "high": round(high, 4), "confidence": 0.95},
+        "net_worth_percentile_intervals": {f"p{p}": [round(x, 2) for x in quantile_interval(final_net_worths, p / 100)] for p in (5, 50, 95)},
+        "uncertainty_note": "區間只反映抽樣次數造成的誤差：同一組歷史資料與假設下，再跑一次可能落在的範圍。不包含模型假設與歷史資料本身的誤差。",
         "cash_shortfall_definition": "模擬期間任一月底現金小於 0 的試驗比例",
         **_sampling_metadata(profile, random_shocks, history, assets or [], block_months),
         "data_sources": [dict(source) for source in history.data_sources],

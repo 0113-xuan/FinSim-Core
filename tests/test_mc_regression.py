@@ -41,6 +41,10 @@ def calculate(case):
 def test_mc_exact_regression(name):
     expected = json.loads((Path(__file__).parent / 'fixtures' / 'mc_baseline' / f'{name}.json').read_text(encoding='utf-8'))
     actual = calculate(CASES[name])
+    for key in ("monte_carlo", "monte_carlo_details"):
+        if key in actual:
+            for field in ("probability_cash_shortfall_interval", "net_worth_percentile_intervals", "uncertainty_note"):
+                actual[key].pop(field)
     assert actual == expected
     def check_types(a, b):
         assert type(a) is type(b)
