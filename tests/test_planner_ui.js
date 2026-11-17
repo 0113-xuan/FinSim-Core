@@ -373,3 +373,13 @@ test('the create-plan dialog picks the event first and asks for the name second'
   assert.match(shell,/先不選事件/);
   assert.doesNotMatch(shell,/先不加事件，直接建立/);
 });
+
+
+test('result table displays the interval when available and retains legacy text otherwise',()=>{
+  const page=fs.readFileSync(path.join(__dirname,'../static/plan-page.js'),'utf8');
+  const source=page.match(/const range = M\.percentRange\(mc\.probability_cash_shortfall_interval\);\s*\$\('cashShortfall'\)\.textContent = [^;]+;/)[0];
+  const M=require('../static/shell-model.js');
+  const render=mc=>{const cell={}; new Function('M','mc','$',source)(M,mc,()=>cell); return cell.textContent;};
+  assert.equal(render({probability_cash_shortfall:.1,probability_cash_shortfall_interval:{low:.0767,high:.1294}}),'10%（95% 區間 7% 到 13%）');
+  assert.equal(render({probability_cash_shortfall:.1}),'10%');
+});

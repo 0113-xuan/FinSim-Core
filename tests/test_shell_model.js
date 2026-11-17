@@ -78,3 +78,8 @@ test('a plan month moves the down payment out of assets, adds the loan, and coun
   const spent=M.snapshotAt({balance:850000,investment_value:100000},current);
   assert.deepEqual([spent.vehicle,spent.assets,spent.assetsChange,spent.netWorth],[0,950000,-50000,950000]);
 });
+
+
+test('percent ranges round outward and reject invalid intervals',()=>{
+  for (const [interval, expected] of [[{low:0,high:.0076},'0% 到 1%'],[{low:.0767,high:.1294},'7% 到 13%'],[{low:.1,high:.1},'10% 到 10%'],[{low:.99,high:1},'99% 到 100%'],[undefined,''],[{low:.5,high:.4},''],[{low:'0',high:.1},''],[{low:NaN,high:.1},''],[{low:-.1,high:.1},'']]) assert.equal(M.percentRange(interval),expected);
+});
