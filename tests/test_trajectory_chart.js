@@ -23,20 +23,33 @@ test("drawCompare keeps a line's own colour and dash, and hides the zero line fr
   assert.ok(zero.label.startsWith('_'));
 });
 
-test('a major event gets a dashed vertical line, a label, and a thick step segment', () => {
+test('a major event gets a dashed vertical line, a label card, and a thicker step segment', () => {
   const chart = {labels:['a', 'b', 'c', 'd', 'e'], series:[{name:'買車', color:'#b45309', values:[300000, 300000, -500000, -500000, -500000], marks:[{index:2, text:'買車 −$800,000'}]}]};
   globalThis.WalletCharts.drawCompare(canvas, target, chart, ['x'], {});
   const [car] = config.data.datasets;
-  assert.equal(car.segment.borderWidth({p1DataIndex:2}), 6);              // the segment that ends on the event month
+  assert.equal(car.segment.borderWidth({p1DataIndex:2}), 4);              // the segment that ends on the event month
   assert.equal(car.segment.borderWidth({p1DataIndex:3}), undefined);
   const drawn = [];
   const draw = pixel => config.plugins[0].afterDatasetsDraw({
-    ctx:{save() {}, restore() {}, beginPath() {}, moveTo() {}, lineTo() {}, stroke() {}, setLineDash() {}, measureText:() => ({width:40}), fillText:(text, x) => drawn.push([text, x])},
+    ctx:{save() {}, restore() {}, beginPath() {}, moveTo() {}, lineTo() {}, stroke() {}, setLineDash() {}, roundRect() {}, fill() {}, arc() {}, measureText:() => ({width:40}), fillText:(text, x) => drawn.push([text, x])},
     chartArea:{left:0, right:500, top:0, bottom:300}, scales:{x:{getPixelForValue:() => pixel}}});
   draw(100);
-  assert.deepEqual(drawn, [['買車 −$800,000', 106]]);                      // just right of the line
+  assert.deepEqual(drawn, [['買車 −$800,000', 134]]);                      // card just right of the line, text after the dot
   draw(480);
-  assert.equal(drawn[1][1], 474);                                           // too close to the edge: the label goes left of the line
+  assert.equal(drawn[1][1], 422);                                           // too close to the edge: the card goes left of the line
   draw(600);
   assert.equal(drawn.length, 2);                                            // a line outside the chart is not drawn
+});
+
+test('events in the same month share one guide line and one card', () => {
+  const marks = name => [{index:1, text:name}];
+  const chart = {labels:['a', 'b', 'c'], series:[{name:'甲', color:'#b45309', values:[1, 0, 0], marks:marks('甲')}, {name:'乙', color:'#6d28d9', values:[1, 0, 0], marks:marks('乙')}]};
+  globalThis.WalletCharts.drawCompare(canvas, target, chart, ['x'], {});
+  const guides = [], drawn = [];
+  config.plugins[0].afterDatasetsDraw({
+    ctx:{save() {}, restore() {}, beginPath() {}, moveTo:(x, y) => guides.push(x), lineTo() {}, stroke() {}, setLineDash() {}, roundRect() {}, fill() {}, arc() {}, measureText:() => ({width:40}), fillText:(text, x, y) => drawn.push([text, x, y])},
+    chartArea:{left:0, right:500, top:0, bottom:300}, scales:{x:{getPixelForValue:() => 100}}});
+  assert.equal(guides.length, 1);
+  assert.deepEqual(drawn.map(([text, x]) => [text, x]), [['甲', 134], ['乙', 134]]);
+  assert.ok(drawn[1][2] > drawn[0][2]);                                     // second row sits below the first
 });

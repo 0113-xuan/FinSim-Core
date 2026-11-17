@@ -112,22 +112,33 @@
     finish(canvas,target,new root.Chart(canvas,{type:'doughnut',data:{labels:rows.map(row=>row[0]),datasets:[{data:rows.map(row=>row[1]),backgroundColor:rows.map((_,i)=>palette[i]),borderWidth:0,hoverOffset:5}]},options}));
   }
 
-  // A dashed vertical line and a short label at each major event, so the sudden step is read at the month it happens.
-  // `marks` is [{index, text, color}]; labels stack downwards instead of overlapping.
-  function eventMarks(marks,font) {
+  // One dashed guide per event month, with that month's labels in a white card beside it so no line runs through the text.
+  // `marks` is [{index, text, color}]; each row gets a dot in its line's colour. Cards stack downwards instead of overlapping.
+  function eventMarks(marks,font,{guide,border}) {
     return {id:'eventMarks',afterDatasetsDraw(chart) {
-      const {ctx,chartArea:area,scales:{x}}=chart;let row=0;
-      ctx.save();ctx.font=`600 ${font.size}px ${font.family}`;ctx.textBaseline='top';
+      const {ctx,chartArea:area,scales:{x}}=chart,groups=new Map();
       for(const mark of marks){
         const px=x.getPixelForValue(mark.index);if(px<area.left||px>area.right)continue;
-        ctx.strokeStyle=mark.color;ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(px,area.top);ctx.lineTo(px,area.bottom);ctx.stroke();ctx.setLineDash([]);
-        const right=px+ctx.measureText(mark.text).width+10>area.right;
-        ctx.fillStyle=mark.color;ctx.textAlign=right?'right':'left';ctx.fillText(mark.text,right?px-6:px+6,area.top+4+row++*(font.size+4));
+        if(!groups.has(px))groups.set(px,[]);groups.get(px).push(mark);
+      }
+      const row=font.size+8,pad=10,dot=4,gap=8;let top=area.top+8;
+      ctx.save();ctx.font=`600 ${font.size}px ${font.family}`;ctx.textBaseline='middle';
+      for(const [px,group] of groups){
+        ctx.strokeStyle=guide;ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(px,area.top);ctx.lineTo(px,area.bottom);ctx.stroke();ctx.setLineDash([]);
+        const width=pad*2+dot*2+gap+Math.max(...group.map(mark=>ctx.measureText(mark.text).width)),height=pad*2+group.length*row-8;
+        const left=px+8+width>area.right?px-8-width:px+8;
+        ctx.fillStyle='rgba(255,255,255,.94)';ctx.strokeStyle=border;ctx.beginPath();ctx.roundRect(left,top,width,height,8);ctx.fill();ctx.stroke();
+        group.forEach((mark,i)=>{
+          const y=top+pad+i*row+font.size/2;
+          ctx.fillStyle=mark.color;ctx.beginPath();ctx.arc(left+pad+dot,y,dot,0,Math.PI*2);ctx.fill();
+          ctx.textAlign='left';ctx.fillText(mark.text,left+pad+dot*2+gap,y);
+        });
+        top+=height+6;
       }
       ctx.restore();
     }};
   }
-  // The segment that ends on an event month is drawn thick: that month is where the step happens.
+  // The segment that ends on an event month is drawn thicker: that month is where the step happens.
   const stepSegment=(marks,width)=>({borderWidth:context=>marks.some(mark=>mark.index===context.p1DataIndex)?width:undefined});
 
   // Several scenarios on one chart: each line differs in colour AND dash so it can be told apart without colour.
@@ -144,13 +155,22 @@
       const [token,dash]=line.kind==='baseline'?['--muted',[4,4]]:palette[next++%palette.length];
       const color=line.color||colors.getPropertyValue(token).trim()||'#4b5b57';
       // A line that brings its own colour is drawn bold; `dash` lets a reference line stay dashed.
-      return {label:line.name,data:line.values,borderColor:color,backgroundColor:color,borderWidth:line.color||line.kind!=='baseline'?2.5:1.5,borderDash:line.color?(line.dash||[]):dash,pointRadius:0,pointHoverRadius:5,tension:0,
-        segment:stepSegment(line.marks||[],6),marks:(line.marks||[]).map(mark=>({...mark,color}))};
+      return {label:line.name,data:line.values,borderColor:color,backgroundColor:color,borderWidth:line.color||line.kind!=='baseline'?2.5:1.5,borderDash:line.color?(line.dash||[]):dash,
+        borderCapStyle:'round',borderJoinStyle:'round',pointRadius:0,pointHoverRadius:5,pointHoverBorderWidth:2,pointHoverBorderColor:'#fff',tension:0,
+        segment:stepSegment(line.marks||[],4),marks:(line.marks||[]).map(mark=>({...mark,color}))};
     });
     const marks=datasets.flatMap(dataset=>dataset.marks);
-    if(zeroLine)datasets.push({label:'_零',data:chart.labels.map(()=>0),borderColor:colors.getPropertyValue('--danger').trim()||'#dc2626',borderWidth:1,borderDash:[1,3],pointRadius:0,pointHoverRadius:0,tension:0});
+    if(zeroLine)datasets.push({label:'_零',data:chart.labels.map(()=>0),borderColor:colors.getPropertyValue('--danger').trim()||'#dc2626',borderWidth:1,borderDash:[2,4],pointRadius:0,pointHoverRadius:0,tension:0});
     // baseOptions already sets the page font and hides datasets whose label starts with "_".
-    finish(canvas,target,new root.Chart(canvas,{type:'line',data:{labels:chart.labels,datasets},options:baseOptions(m,{markers:[]},{legend:true}),plugins:[eventMarks(marks,chartFont())]}));
+    const font=chartFont(),muted=colors.getPropertyValue('--muted').trim()||'#687b75',line=colors.getPropertyValue('--line').trim()||'#dce8e2';
+    const options=baseOptions(m,{markers:[]},{legend:true}),{x,y}=options.scales,{legend,tooltip}=options.plugins;
+    options.layout={padding:{top:4,right:8}};
+    legend.labels={...legend.labels,color:muted,padding:18};
+    Object.assign(tooltip,{backgroundColor:'rgba(255,255,255,.97)',titleColor:colors.getPropertyValue('--text').trim()||'#172b27',bodyColor:colors.getPropertyValue('--text').trim()||'#172b27',
+      borderColor:line,borderWidth:1,padding:12,cornerRadius:10,boxPadding:6,usePointStyle:true,titleFont:{...font,weight:'700'}});
+    x.ticks.color=muted;x.border={color:line};
+    y.ticks={...y.ticks,color:muted,padding:8,maxTicksLimit:6};y.border={display:false};y.grid={color:line,drawTicks:false};
+    finish(canvas,target,new root.Chart(canvas,{type:'line',data:{labels:chart.labels,datasets},options,plugins:[eventMarks(marks,font,{guide:muted,border:line})]}));
   }
 
   function destroyAll(){for(const chart of instances.values())chart.destroy();instances.clear();}
