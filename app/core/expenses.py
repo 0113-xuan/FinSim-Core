@@ -85,13 +85,17 @@ def calculate_variable_expenses(
     events: Optional[List[Dict[str, Any]]] = None,
     rng: Optional[random.Random] = None,
     price_multiplier: Optional[float] = None,
+    categories: Optional[List[Dict[str, Any]]] = None,
+    include_details: bool = True,
 ) -> Dict[str, Any]:
     events = events or []
     rng = rng or random.Random(0)
-    categories = get_expense_categories(profile)
+    if categories is None:
+        categories = get_expense_categories(profile)
     month_index = (month - 1) % 12
     total = 0.0
     details = []
+    income_ratio = income / base_income if base_income > 0 else 1.0
 
     for category in categories:
         baseline = float(category.get("baseline", 0) or 0)
@@ -100,10 +104,10 @@ def calculate_variable_expenses(
             inflation_growth = price_multiplier
         else:
             inflation_growth = inflation_factor(month, float(category.get("annual_inflation_rate", profile.get("inflation_rate", 0.02))))
-        income_ratio = income / base_income if base_income > 0 else 1.0
-        elasticity_factor = income_ratio ** float(category.get("income_elasticity", 0.0) or 0.0)
-        event_multiplier = _event_multiplier_for_category(month, category["category"], events)
-        event_amount = _event_monthly_amount_for_category(month, category["category"], events)
+        elasticity = float(category.get("income_elasticity", 0.0) or 0.0)
+        elasticity_factor = income_ratio ** elasticity if elasticity else 1.0
+        event_multiplier = _event_multiplier_for_category(month, category["category"], events) if events else 1.0
+        event_amount = _event_monthly_amount_for_category(month, category["category"], events) if events else 0.0
         amount_before_event = baseline * seasonal_factor * inflation_growth * elasticity_factor
         amount = amount_before_event * event_multiplier + event_amount
 
@@ -120,17 +124,18 @@ def calculate_variable_expenses(
 
         amount = round(max(0.0, amount), 2)
         total += amount
-        details.append(
-            {
-                "category": category["category"],
-                "amount": amount,
-                "seasonal_factor": seasonal_factor,
-                "inflation_factor": round(inflation_growth, 6),
-                "income_elasticity_factor": round(elasticity_factor, 6),
-                "event_multiplier": round(event_multiplier, 6),
-                "event_amount": round(event_amount, 2),
-                "amount_before_event": round(max(0.0, amount_before_event), 2),
-            }
-        )
+        if include_details:
+            details.append(
+                {
+                    "category": category["category"],
+                    "amount": amount,
+                    "seasonal_factor": seasonal_factor,
+                    "inflation_factor": round(inflation_growth, 6),
+                    "income_elasticity_factor": round(elasticity_factor, 6),
+                    "event_multiplier": round(event_multiplier, 6),
+                    "event_amount": round(event_amount, 2),
+                    "amount_before_event": round(max(0.0, amount_before_event), 2),
+                }
+            )
 
     return {"total": round(total, 2), "categories": details}

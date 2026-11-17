@@ -7,7 +7,7 @@ import pytest
 from app.decision_assumptions import ASSUMPTIONS, VEHICLE_DEPRECIATION
 from app.core.market_data import BLOCK_MONTHS
 from app.services.knowledge_base import (
-    RELEVANCE_THRESHOLD, is_relevant, load_knowledge, normalize, retrieve,
+    RELEVANCE_THRESHOLD, is_relevant, load_knowledge, normalize, retrieve, tokenize,
 )
 from app.services.plan_explanation import MONTE_CARLO_SEED, MONTE_CARLO_SIMULATIONS, SIMULATE_SEED
 from app.vehicle_fees import annual_vehicle_tax
@@ -115,3 +115,12 @@ def test_short_term_question_needs_every_term_in_one_note_and_clears_the_floor()
     # Partial overlap alone never counts, however many unrelated words come along.
     result = retrieve('台積電股價多少')
     assert result and result[0]['coverage'] < 1 and not is_relevant(result)
+
+
+def test_aliases_exclude_generic_bigrams():
+    forbidden = {'哪裡', '多少', '現在', '今天', '什麼', '怎麼'}
+    for entry in load_knowledge():
+        for alias in entry['aliases']:
+            assert not forbidden.intersection(tokenize(alias)), (entry['id'], alias)
+            assert len(alias) <= 8, (entry['id'], alias)
+    assert not is_relevant(retrieve('今天哪裡有好吃的牛肉麵'))

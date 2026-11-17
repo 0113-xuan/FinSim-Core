@@ -105,6 +105,8 @@ test('conclusion states the cash answer first and keeps the limits of the model 
   assert.equal(caution.facts.length, 3);
   assert.equal(caution.facts[0].note, '發生在 2027-03');
   assert.equal(caution.facts[1].value, '3%');
+  assert.equal(caution.facts[1].note, '2000 次中的比例');
+  assert.equal(results.conclusion({...base, mc:{...mc, probability_cash_shortfall_interval:{low:.0767, high:.1294}}}).facts[1].note, '2000 次中的比例；95% 區間 7% 到 13%');
   assert.equal(caution.facts[0].value, '$12,000');
   assert.equal(results.conclusion({...base, summary: {...base.summary, minimum_cash_balance: 1234.56}}).facts[0].value, '$1,200');
   assert.doesNotMatch(caution.facts[2].note, /\.00/);

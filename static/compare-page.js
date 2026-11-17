@@ -99,7 +99,7 @@
       body.push(
         ['最低現金（固定值）',summaries.map((row,index)=>({text:M.money(row.minimumCash),note:`發生在 ${row.minimumCashPeriod}`,mark:cashMark(index)}))],
         ['第一次現金小於 0（固定值）',summaries.map(row=>row.firstNegativePeriod||'未出現')],
-        ['現金不足機率（隨機模擬）',summaries.map((row,index)=>({text:M.wholePercent(row.shortfall),mark:riskMark(index)}))],
+        ['現金不足機率（隨機模擬）',summaries.map((row,index)=>{const range=M.percentRange(row.shortfallInterval);return {text:M.wholePercent(row.shortfall)+(range?`（${range}）`:''),mark:riskMark(index)};})],
       );
       $('compareTable').replaceChildren(metricTable('各情境期末數字',`${model.monthToPeriod(startPeriod,months)} 的結果`,names,body));
       const profile=ctx.profile,debts=ctx.debts;

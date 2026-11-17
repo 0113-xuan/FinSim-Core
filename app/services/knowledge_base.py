@@ -12,10 +12,14 @@ KNOWLEDGE_DIR = Path(__file__).resolve().parents[2] / 'data' / 'knowledge'
 # Golden set: weakest full-length question > 7.8; incidental single-word overlaps ("今天", "現金", "汽車") < 4.0.
 RELEVANCE_THRESHOLD = 7.0
 SHORT_QUERY_FLOOR = 4.0
+# A note must contain at least this share of the question's meaningful terms; a high score from one
+# incidental word ("電動車充電站" matching only 電動車) is not relevance.
+COVERAGE_FLOOR = 0.3
 BM25_K1 = 1.5
 BM25_B = 0.75
 TITLE_WEIGHT = 4
 TAG_WEIGHT = 3
+ALIAS_WEIGHT = 3
 STOP_WORDS = ('請問', '請告訴我', '為什麼', '什麼意思', '是什麼', '怎麼', '如何',
               '這個', '這裡', '今天', '一下', '可以', '是否', '什麼', '的', '了', '嗎', '呢', '我', '是')
 
@@ -66,6 +70,7 @@ def load_knowledge(directory: Path = KNOWLEDGE_DIR) -> list[dict]:
             ids.add(fields['id'])
             entries.append(dict(id=fields['id'], title=title.strip(), source=fields['source'],
                                 tags=[tag.strip() for tag in fields['tags'].split(',') if tag.strip()],
+                                aliases=[alias.strip() for alias in fields.get('aliases', '').split(',') if alias.strip()],
                                 text=text.strip(), file=path.name))
     if not entries:
         raise ValueError('knowledge base is empty')
@@ -75,8 +80,10 @@ def load_knowledge(directory: Path = KNOWLEDGE_DIR) -> list[dict]:
 @lru_cache(maxsize=1)
 def _index():
     entries = load_knowledge()
+    # Aliases are how people actually ask ("我會不會破產"); stop words are stripped as for a question.
     documents = [Counter(tokenize(item['title']) * TITLE_WEIGHT
                          + tokenize(' '.join(item['tags'])) * TAG_WEIGHT
+                         + tokenize(' '.join(item['aliases']), question=True) * ALIAS_WEIGHT
                          + tokenize(item['text'])) for item in entries]
     frequency = Counter(term for document in documents for term in document)
     lengths = [sum(document.values()) for document in documents]
@@ -110,6 +117,8 @@ def is_relevant(results: list[dict]) -> bool:
     if not results:
         return False
     top = results[0]
+    if top['coverage'] < COVERAGE_FLOOR:
+        return False
     # A short term question ("抽樣是什麼") scores low on BM25 alone, so a note that contains every
     # meaningful term still counts, provided it clears a floor above incidental single-word hits.
     return top['score'] >= RELEVANCE_THRESHOLD or (top['coverage'] == 1 and top['score'] >= SHORT_QUERY_FLOOR)

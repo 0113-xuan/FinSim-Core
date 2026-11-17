@@ -116,7 +116,8 @@
         $('firstNegativePeriod').textContent = summary.first_negative_cash_month == null ? '未出現' : model.monthToPeriod(startPeriod, summary.first_negative_cash_month);
         $('minimumEmergency').textContent = summary.minimum_emergency_fund_months == null ? '不適用（無必要支出）' : `${Math.round(Number(summary.minimum_emergency_fund_months))} 個月`;
         $('endingCash').textContent = money(summary.final_balance);
-        $('cashShortfall').textContent = M.wholePercent(mc.probability_cash_shortfall);
+        const range = M.percentRange(mc.probability_cash_shortfall_interval);
+        $('cashShortfall').textContent = M.wholePercent(mc.probability_cash_shortfall) + (range ? `（95% 區間 ${range}）` : '');
         for (const [id, key] of [['cashP5','p5'],['cashP50','p50'],['cashP95','p95']]) $(id).textContent = money(mc.percentiles[key]);
         $('shortfallDefinition').textContent = `現金不足機率的定義：${mc.cash_shortfall_definition}。`;
         $('endingInvestment').textContent = money(summary.final_investment_value);

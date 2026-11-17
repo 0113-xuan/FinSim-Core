@@ -180,3 +180,19 @@ test('a chart can be cut to a window from any month, marks move with the cut, an
   assert.deepEqual(C.focusRange([12], 24), {from:6, months:18});           // clipped to the run
   assert.deepEqual(C.focusRange([2], 30), {from:0, months:0});            // the window would be the whole run: show everything
 });
+
+
+test('comparison displays optional intervals and retains risk marks and legacy text',()=>{
+  const item=run('A',{p5:1,p50:2,p95:3,shortfall:.1});
+  const interval={low:.0767,high:.1294};
+  const legacy=rowsOf([item])[0];
+  item.mc.probability_cash_shortfall_interval=interval;
+  const current=rowsOf([item])[0];
+  assert.deepEqual(current.shortfallInterval,interval);
+  assert.equal(legacy.shortfallInterval,undefined);
+  const page=fs.readFileSync(path.join(__dirname,'../static/compare-page.js'),'utf8');
+  const line=page.split('\n').find(line=>line.includes("['現金不足機率（隨機模擬）'"));
+  const expression=line.slice(line.indexOf('summaries.map'),line.lastIndexOf('],'));
+  const cells=new Function('summaries','M','riskMark',`return ${expression}`)([current,legacy],M,()=> '最低');
+  assert.deepEqual(cells,[{text:'10%（7% 到 13%）',mark:'最低'},{text:'10%',mark:'最低'}]);
+});

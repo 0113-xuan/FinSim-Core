@@ -84,6 +84,7 @@
       minimumCashPeriod: planner.monthToPeriod(startPeriod, fixed.minimum_cash_month),
       firstNegativePeriod: fixed.first_negative_cash_month == null ? null : planner.monthToPeriod(startPeriod, fixed.first_negative_cash_month),
       shortfall: Number(mc.probability_cash_shortfall),
+      shortfallInterval: mc.probability_cash_shortfall_interval,
       vehicleCount: converted?.vehicles?.length || 0,
     };
   }

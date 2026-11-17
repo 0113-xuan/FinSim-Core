@@ -350,3 +350,25 @@ def test_explanation_reuses_the_monte_carlo_the_plan_page_just_ran(monkeypatch):
     monkeypatch.setattr(service, 'run_monte_carlo', forbidden)
     _, mc = _run_plan_calculations(PlanExplanationRequest.model_validate(BODY).simulation)
     assert mc['iterations'] == 20
+
+
+@pytest.mark.parametrize(('interval', 'expected'), [
+    ({'low': 0, 'high': .0076}, '0% 到 1%'),
+    ({'low': .0767, 'high': .1294}, '7% 到 13%'),
+    ({'low': .1, 'high': .1}, '10% 到 10%'),
+    ({'low': .99, 'high': 1}, '99% 到 100%'),
+    (None, ''), ({'low': .5, 'high': .4}, ''), ({'low': '0', 'high': .1}, ''),
+])
+def test_percent_range_format(interval, expected):
+    assert service.format_percent_range(interval) == expected
+
+
+def test_shortfall_interval_fact_and_legacy_cache():
+    request = PlanExplanationRequest.model_validate(BODY)
+    result, mc = memoized_calculations(request.simulation)
+    mc['probability_cash_shortfall_interval'] = {'low': .0767, 'high': .1294, 'confidence': .95}
+    fact = by_id(build_facts(request.simulation, result, mc, start_period=request.start_period))['shortfall_interval']
+    assert fact['value'] == '7% 到 13%'
+    assert fact['raw'] == mc['probability_cash_shortfall_interval']
+    del mc['probability_cash_shortfall_interval']
+    assert 'shortfall_interval' not in by_id(build_facts(request.simulation, result, mc, start_period=request.start_period))
