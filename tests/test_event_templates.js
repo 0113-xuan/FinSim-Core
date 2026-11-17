@@ -8,7 +8,6 @@ test('event template order and supported types match the product catalogue',()=>
     ['job_change','換工作','life','available','salary_change'],
     ['home','買房','life','available','home_purchase'],
     ['moving','搬家','life','coming_soon',undefined],
-    ['marriage','結婚','life','available','marriage'],
     ['child','生小孩','life','available','child'],
     ['travel','旅遊','life','coming_soon',undefined],
     ['study','進修','life','coming_soon',undefined],
@@ -21,12 +20,13 @@ test('event template order and supported types match the product catalogue',()=>
   }
 });
 test('available templates include only the supported database event types',()=>{
-  assert.deepEqual(T.availableTemplates().map(t=>t.id),['vehicle','job_change','home','marriage','child','one_time','range']);
-  assert.ok(T.availableTemplates().every(t=>t.status==='available'&&['one_time','range','salary_change','vehicle_purchase','home_purchase','marriage','child'].includes(t.eventType)));
+  assert.deepEqual(T.availableTemplates().map(t=>t.id),['vehicle','job_change','home','child','one_time','range']);
+  assert.ok(T.availableTemplates().every(t=>t.status==='available'&&['one_time','range','salary_change','vehicle_purchase','home_purchase','child'].includes(t.eventType)));
 });
 test('event types resolve to the same templates shown by the picker',()=>{
-  for(const[type,id]of Object.entries({one_time:'one_time',range:'range',salary_change:'job_change',vehicle_purchase:'vehicle',home_purchase:'home',marriage:'marriage',child:'child'}))
+  for(const[type,id]of Object.entries({one_time:'one_time',range:'range',salary_change:'job_change',vehicle_purchase:'vehicle',home_purchase:'home',child:'child'}))
     assert.equal(T.templateForEvent({type}),T.templateById(id));
+  assert.equal(T.templateForEvent({type:'marriage'}),undefined);
   assert.equal(T.templateForEvent({type:'home'}),undefined);
   assert.equal(T.templateForEvent(null),undefined);
   assert.equal(T.templateById('missing'),undefined);
@@ -44,7 +44,7 @@ for(const [name,search]of [['coming soon','?id=plan&add=moving'],['unknown','?id
 }
 test('the shared template catalogue cannot be mutated by an individual picker',()=>{
   assert.ok(Object.isFrozen(T.templates));assert.ok(T.templates.every(Object.isFrozen));
-  const available=T.availableTemplates();available.pop();assert.equal(T.availableTemplates().length,7);
+  const available=T.availableTemplates();available.pop();assert.equal(T.availableTemplates().length,6);
   assert.deepEqual(T.resolveAddParameter('?add=travel'),{template:null,search:''});
 });
 test('only custom income and expense templates ask the user for an event name',()=>{
@@ -63,7 +63,7 @@ test('the picker shows only usable templates and mentions planned ones in one li
   const container=node('div');
   globalThis.EventPicker.render(container,{});
   const all=walk(container);
-  assert.deepEqual(all.filter(n=>n.tag==='button').map(n=>n.dataset.templateId),['vehicle','job_change','home','marriage','child','one_time','range']);
+  assert.deepEqual(all.filter(n=>n.tag==='button').map(n=>n.dataset.templateId),['vehicle','job_change','home','child','one_time','range']);
   assert.ok(all.every(n=>n.textContent!=='即將推出'));
   const upcoming=all.filter(n=>n.className==='template-upcoming');
   assert.equal(upcoming.length,1);

@@ -29,6 +29,15 @@
     return Number(value);
   }
 
+  function eventFormValues(event) {
+    if (event.type === 'child') {
+      const stages = event.details?.child_stages;
+      return Object.fromEntries(['child_monthly_0_5','child_monthly_6_11','child_monthly_12_17']
+        .map((key, index) => [key, stages ? stages[index].monthly_amount : Math.abs(Number(event.monthly_amount))]));
+    }
+    return {};
+  }
+
   // Return { request, warnings }; only request is sent to the calculation APIs.
   function buildSimulationRequest({profile, debts = [], events = [], startPeriod, months}) {
     periodIndex(startPeriod);
@@ -83,6 +92,16 @@
             months: number(d.home_loan_term_months, `${name}貸款期數`), start_month: start, note: name}];
           request.assets = [...(request.assets || []), {name, start_month: start, value: price, annual_depreciation_rate: 0}];
           if (d.home_monthly_cost) request.events.push({type: 'range', name: `${name}每月持有成本`, start_month: start, end_month: months, monthly_amount: -number(d.home_monthly_cost, `${name}每月持有成本`)});
+        } else if (event.type === 'child' && Array.isArray(event.details?.child_stages)) {
+          const stages=event.details.child_stages.map(stage=>({from_age:number(stage.from_age, '起始年齡'),to_age:number(stage.to_age, '結束年齡'),monthly_amount:number(stage.monthly_amount, '每月養育費')}));
+          if(stages.some(stage=>!Number.isInteger(stage.from_age)||!Number.isInteger(stage.to_age)||stage.from_age<0||stage.to_age<stage.from_age||stage.monthly_amount<0)) throw new Error('養育費階段無效');
+          const amount=number(event.amount, `${name}一次性金額`);
+          request.events.push({type:'one_time',name,month:start,amount});
+          if(stages.some(stage=>start+12*(stage.to_age+1)-1>months)) warnings.push(`截斷「${name}」：結束月份超過模擬期間，計算至第 ${months} 個月。`);
+          for(const stage of stages){
+            const first=start+12*stage.from_age, last=Math.min(months,start+12*(stage.to_age+1)-1);
+            if(first<=months && stage.monthly_amount) request.events.push({type:'range',name:`${name}（${stage.from_age}–${stage.to_age} 歲）`,start_month:first,end_month:last,monthly_amount:-stage.monthly_amount});
+          }
         } else {
           let end = event.end_period ? periodToMonth(startPeriod, event.end_period) : months;
           if (end < start) throw new Error('結束月份早於開始月份');
@@ -90,7 +109,6 @@
             warnings.push(`截斷「${name}」：結束月份超過模擬期間，計算至第 ${months} 個月。`);
             end = months;
           }
-          // Marriage and child are a one-time cost plus a monthly cost for the same event.
           if (event.type !== 'range') request.events.push({type: 'one_time', name, month: start, amount: number(event.amount, `${name}一次性金額`)});
           request.events.push({type: 'range', name, start_month: start, end_month: end, monthly_amount: number(event.monthly_amount, `${name}每月金額`)});
         }
@@ -173,7 +191,7 @@
     const amount = Number(stored);
     return {value: Math.abs(amount), direction: amount < 0 ? 'expense' : 'income'};
   }
-  const api = {signedAmount, splitAmount, buildSimulationRequest, periodToMonth, monthToPeriod, ownershipFields, vehicleDetails, homeDetails,vehicleAnalysisReason, buildVehicleDecisionRequest, groupVehicleCatalog};
+  const api = {eventFormValues, signedAmount, splitAmount, buildSimulationRequest, periodToMonth, monthToPeriod, ownershipFields, vehicleDetails, homeDetails,vehicleAnalysisReason, buildVehicleDecisionRequest, groupVehicleCatalog};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PlannerModel = api;
 })(globalThis);

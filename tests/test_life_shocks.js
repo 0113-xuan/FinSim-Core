@@ -19,7 +19,7 @@ test('both endpoints receive the same request with fixed simulation count and se
   assert.match(page,/const request=\{\.\.\.built\.request,simulations:500,seed:42\}/);
   assert.match(page,/post\('\/monte-carlo',request\)/);
   assert.match(page,/post\('\/monte-carlo\/life-shocks',run\.request\)/);
-  assert.match(page,/lastRun=\{built,months,events,request,mc\}/);
+  assert.match(page,/lastRun=\{built,months,events,request,mc,startPeriod\}/);
 });
 test('comparison and assumptions use response values and preserve disclaimer',()=>{
   const view=model.lifeShocks(baseline,shocks);

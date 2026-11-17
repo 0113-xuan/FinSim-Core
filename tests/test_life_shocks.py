@@ -62,3 +62,17 @@ def test_endpoint_comparison_reproducibility_and_assumptions():
 def test_multiplier_validation(multiplier):
     response = CLIENT.post('/simulate', json={**BODY, 'random_shocks': [{**GAP, 'income_multiplier': multiplier}]})
     assert response.status_code == 422
+
+
+def test_example_paths_match_baseline_and_include_real_shocks():
+    body = {**BODY, "sample_paths": 8}
+    baseline = CLIENT.post('/monte-carlo', json=body).json()['sample_paths']
+    paths = CLIENT.post('/monte-carlo/life-shocks', json=body).json()['sample_paths']
+    assert len(paths) == len(baseline) == 8
+    assert any(path['shock_details'] for path in paths
+               )
+    for ordinary, shocked in zip(baseline, paths):
+        assert ordinary['seed'] == shocked['seed']
+        assert ordinary['history_periods'] == shocked['history_periods']
+        assert len(ordinary['points']) == len(shocked['points']) == body['months']
+        assert all(a['balance'] >= b['balance'] for a, b in zip(ordinary['points'], shocked['points']))

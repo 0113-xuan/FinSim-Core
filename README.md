@@ -218,6 +218,7 @@ Tests cover:
 - Planner sign-in and session handling use Supabase Auth in the browser.
 - Planner reads and writes are scoped to the signed-in user and protected by database RLS.
 - AI keys are read only by the backend.
+- When `TYPESAFE_API_KEY` is set, only the plan-page question text (not plan numbers) is sent to `api.typesafe.ai` to classify its intent. Without the key, nothing is sent.
 - CORS origins are configured by environment variable.
 - Supabase service-role keys must never be exposed to frontend code.
 - The legacy demo pages and their AI drafts remain separate from planner persistence.

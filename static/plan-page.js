@@ -8,8 +8,7 @@
       const type = $('eventForm').elements.type.value;
       for (const label of root.document.querySelectorAll('[data-event-field]')) {
         const key = label.dataset.eventField;
-        const monthlyAfterOnce = ['amount','monthly_amount','end_period'];
-        const shown = {range:['monthly_amount','end_period'], one_time:['amount'], salary_change:['new_salary'], marriage:monthlyAfterOnce, child:monthlyAfterOnce,
+        const shown = {range:['monthly_amount','end_period'], one_time:['amount'], salary_change:['new_salary'], child:['amount','child_monthly_0_5','child_monthly_6_11','child_monthly_12_17'],
           home_purchase:['home_price','home_down_payment','home_loan_term_months','home_interest_rate','home_monthly_cost']}[type] || [];
         const visible = shown.includes(key);
         label.hidden = !visible; for (const control of label.querySelectorAll('input,select')) control.disabled = !visible;
@@ -167,6 +166,25 @@
         const list=S.element('ul');
         for(const item of view.assumptions)list.append(S.element('li',`${item.label}：${item.value}`));
         content.replaceChildren(columns,list,S.element('p',view.disclaimer));
+        const pairs=(data.sample_paths||[]).map((path,i)=>({path,base:run.mc.sample_paths?.[i]}))
+          .filter(pair=>pair.base && pair.path.seed===pair.base.seed && pair.path.shock_details?.length);
+        if(pairs.length) {
+          // Both runs share market draws and seeds; select the largest cash impact among the example paths.
+          pairs.sort((a,b)=>Math.max(...b.path.points.map((p,i)=>b.base.points[i].balance-p.balance))-
+            Math.max(...a.path.points.map((p,i)=>a.base.points[i].balance-p.balance)));
+          const {path,base}=pairs[0], frame=S.element('div',null,'chart-frame');
+          const canvas=S.element('canvas'), summary=S.element('div',null,'chart-summary');
+          canvas.setAttribute('role','img');canvas.setAttribute('aria-label','同一條模擬路徑有無意外的現金走勢比較');
+          summary.id='lifeShocksChartSummary';frame.append(canvas);
+          const details=path.shock_details.map(shock=>`${model.monthToPeriod(run.startPeriod,shock.month)} ${shock.name}${shock.income_multiplier==null?' '+money(shock.amount):'，收入中斷 '+shock.duration_months+' 個月'}`);
+          content.append(S.element('h4','意外發生時，現金怎麼變？'),
+            S.element('p','這是前 8 條隨機路徑中，意外對現金影響最大的一個例子；不是最壞結果，也不是預測。兩條線使用相同的市場條件。'),frame,summary);
+          root.WalletCharts.drawCompare(canvas,summary,{labels:path.points.map(p=>model.monthToPeriod(run.startPeriod,p.month)),series:[
+            {name:'沒有意外',values:base.points.map(p=>p.balance)},
+            {name:'有意外（示例）',values:path.points.map(p=>p.balance)}]},
+            [`此路徑的意外：${details.join('；')}。紅色虛線為現金零元。`],{zeroLine:true});
+        } else content.append(S.element('p','這些示例路徑沒有發生意外，因此無法顯示意外走勢範例。'));
+
       } catch(error) {
         if(!ctx.alive || lastRun!==run)return;
         const retry=S.element('button','重試');retry.type='button';
@@ -259,6 +277,7 @@
         const stored=Number(event[key]);if(event[key]==null||event[key]===''||!Number.isFinite(stored))continue;
         const split=model.splitAmount(stored);form.elements.namedItem(key).value=split.value;form.elements.namedItem(`${key}_direction`).value=split.direction;
       }
+      for(const [key,value] of Object.entries(model.eventFormValues(event)))form.elements.namedItem(key).value=value;
       form.elements.vehicle_catalog_id.value='';
       form.elements.vehicle_catalog_id.dataset.pending=event.details?.vehicle_catalog_id||'';
       for(const[key,value]of Object.entries(event.details||{})){
@@ -278,13 +297,13 @@
       for(const event of M.sortEvents(events)){
         const li=S.element('li'),head=S.element('div',null,'event-head'),copy=S.element('div',null,'event-copy');
         const template=T.templateForEvent(event);
-        copy.append(S.element('strong',event.name),S.element('span',`${template?.name||'事件'}｜${event.start_period}｜${M.eventSummary(event)}`));head.append(P.icon(template?.icon),copy);
-        const edit=S.element('button','修改'),remove=S.element('button','刪除');edit.type=remove.type='button';edit.setAttribute('aria-label',`修改${event.name}`);remove.setAttribute('aria-label',`刪除${event.name}`);
-        edit.addEventListener('click',()=>{if(!ctx.busy)editEvent(event);});
+        copy.append(S.element('strong',event.name),S.element('span',`${template?.name||M.eventNames[event.type]||'事件'}｜${event.start_period}｜${M.eventSummary(event)}`));head.append(P.icon(template?.icon),copy);
+        const remove=S.element('button','刪除');remove.type='button';remove.setAttribute('aria-label',`刪除${event.name}`);
+        if(template){const edit=S.element('button','修改');edit.type='button';edit.setAttribute('aria-label',`修改${event.name}`);edit.addEventListener('click',()=>{if(!ctx.busy)editEvent(event);});head.append(edit);}
         remove.addEventListener('click',()=>ctx.perform(async()=>{
           if(!root.confirm(`確定刪除「${event.name}」？`))return;
           await ctx.store.removeEvent(ctx.planId,event.id);if(!ctx.alive)return;if(editing===event.id)resetEditor();await loadEvents();S.status('事件已刪除。');
-        }));head.append(edit,remove);li.append(head);
+        }));head.append(remove);li.append(head);
         if(event.type==='vehicle_purchase'){
           const button=S.element('button','購車分析'),reason=model.vehicleAnalysisReason(S.taipeiPeriod(),event.start_period);button.type='button';button.setAttribute('aria-label',`購車分析：${event.name}`);button.disabled=!!reason;head.append(button);
           if(reason)li.append(S.element('small',reason));
@@ -360,8 +379,12 @@
       if(editing&&events.find(event=>event.id===editing)?.type!==values.type)throw new Error('修改事件時不可變更事件類型');
       if(values.type==='one_time')values.amount=signed('amount');
       else if(values.type==='salary_change'){values.new_salary=numeric('new_salary');values.details=salaryReference.details();}
-      else if(['range','marriage','child'].includes(values.type)){
-        if(values.type!=='range')values.amount=signed('amount');
+      else if(values.type==='child'){
+        values.amount=signed('amount');
+        values.details.child_stages=[[0,5],[6,11],[12,17]].map(([from_age,to_age])=>{const monthly_amount=numeric(`child_monthly_${from_age}_${to_age}`);if(monthly_amount<0)throw new Error('金額須為 0 以上');return {from_age,to_age,monthly_amount};});
+        values.monthly_amount=-values.details.child_stages[0].monthly_amount;values.end_period=null;
+      }
+      else if(values.type==='range'){
         values.monthly_amount=signed('monthly_amount');values.end_period=form.elements.end_period.value||null;
         if(values.end_period&&values.end_period<values.start_period)throw new Error('結束月份不可早於開始月份');
       }else if(values.type==='home_purchase'){
@@ -389,7 +412,7 @@
       const [simulation,mc,baseline]=await ctx.calculation(post=>Promise.all([post('/simulate',{...built.request,seed:42}),post('/monte-carlo',request),
         baseRequest?post('/simulate',{...baseRequest,seed:42}).catch(()=>null):null]));
       if(!ctx.alive || revision!==currentRevision)return;
-      renderResults(simulation,mc,built.converted,startPeriod,months,baseline);lastRun={built,months,events,request,mc};
+      renderResults(simulation,mc,built.converted,startPeriod,months,baseline);lastRun={built,months,events,request,mc,startPeriod};
       $('assumptionList').replaceChildren(...root.ResultsModel.assumptionRows({simulation:simulation.result,mc,request:built.request,
         startPeriod,months,simulations:500,seed:42,converted:built.converted}).flatMap(row=>[S.element('dt',row.label),S.element('dd',row.value)]));
       root.WalletCharts.draw($('planChart'),$('planChartSummary'),simulation.result.simulation_curve,startPeriod,events,ctx.profile,{debts:ctx.debts});

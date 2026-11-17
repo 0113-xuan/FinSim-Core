@@ -173,6 +173,7 @@ def run_monte_carlo(
                 {
                     "seed": path_seed,
                     "history_periods": [history.periods[i] for i in months_drawn[::BLOCK_MONTHS]],
+                    **({"shock_details": result["shock_details"]} if include_details else {}),
                     "points": [{"month": row["month"], "balance": row["balance"], "net_worth": row["net_worth"]}
                                for row in curve],
                 }

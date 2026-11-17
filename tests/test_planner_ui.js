@@ -94,7 +94,7 @@ test('the independent page pins supabase-js and exposes only supported event ent
   assert.match(eventForm,/<input type="hidden" name="type"/);
   assert.doesNotMatch(eventForm,/<select name="type"/);
   assert.deepEqual(require('../static/event-templates.js').availableTemplates().map(t=>t.eventType).sort(),
-    ['one_time','range','salary_change','vehicle_purchase','home_purchase','marriage','child'].sort());
+    ['one_time','range','salary_change','vehicle_purchase','home_purchase','child'].sort());
 });
 
 test('updates retain session ownership and filter event identity and plan identity',async()=>{
@@ -393,4 +393,42 @@ test('the plan page has no cash trajectory chart and the dashboard draws life ev
   assert.ok(pages.includes("[['plans',withEvents.filter(item=>!isSudden(item))],['sudden',withEvents.filter(isSudden)]]"));
   assert.ok(pages.includes("name:'一般情況',kind:'baseline'"));
   assert.match(pages,/drawCompare\(\$\(prefix\+'Chart'\)[^\n]*zeroLine:measure==='cash'/);
+});
+
+test('child fields have the requested visibility and required constraints',()=>{
+  const html=fs.readFileSync(path.join(__dirname,'../static/plan.html'),'utf8');
+  const page=fs.readFileSync(path.join(__dirname,'../static/plan-page.js'),'utf8');
+  assert.doesNotMatch(page,/marriage:\[/);
+  assert.match(page,/child:\['amount','child_monthly_0_5','child_monthly_6_11','child_monthly_12_17'\]/);
+  for(const key of ['amount','child_monthly_0_5','child_monthly_6_11','child_monthly_12_17']){
+    const input=html.match(new RegExp(`<input name="${key}"[^>]*>`))[0];
+    assert.match(input,/min="0"/);assert.match(input,/required/);assert.doesNotMatch(input,/value=/);
+  }
+  assert.doesNotMatch(html,/name="(?:wedding_cost|gift_income)"/);
+  assert.match(html,/<select name="amount_direction"/);
+  assert.match(page,/label\.hidden = !visible/);assert.match(page,/control\.disabled = !visible/);
+});
+
+
+test('child saves the first stage as a signed expense',()=>{
+  const page=fs.readFileSync(path.join(__dirname,'../static/plan-page.js'),'utf8');
+  assert.match(page,/values\.monthly_amount=-values\.details\.child_stages\[0\]\.monthly_amount;values\.end_period=null/);
+});
+
+test('legacy marriage renders in the event list with deletion only and can be calculated',()=>{
+  const page=fs.readFileSync(path.join(__dirname,'../static/plan-page.js'),'utf8');
+  const source=page.slice(page.indexOf('    function renderEvents(){'),page.indexOf('    async function loadEvents(){'));
+  const node=(tag,text)=>({tag,text:text||'',children:[],attrs:{},append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},setAttribute(k,v){this.attrs[k]=v;},addEventListener(){}});
+  const list=node('ul'),event={id:'old',type:'marriage',name:'婚禮',start_period:'2027-01',end_period:'2027-12',amount:-200000,monthly_amount:-1000};
+  const shell=require('../static/shell-model.js'),templates=require('../static/event-templates.js'),planner=require('../static/planner-model.js');
+  const render=new Function('events','M','T','P','S','$','ctx','syncEditorPanel',`${source}; return renderEvents;`)([event],shell,templates,{icon:()=>node('svg')},{element:node},()=>list,{},()=>{});
+  assert.doesNotThrow(render);
+  const walk=n=>[n,...n.children.flatMap(walk)],nodes=walk(list);
+  assert.ok(nodes.some(n=>n.text==='婚禮'));
+  assert.ok(nodes.some(n=>n.text.includes('結婚｜2027-01')));
+  assert.ok(nodes.some(n=>n.text==='刪除'));
+  assert.ok(!nodes.some(n=>n.text==='修改'));
+  const built=planner.buildSimulationRequest({profile:{monthly_income:0,cash_balance:0,fixed_expense:0,variable_expense:0,investment_value:0,monthly_investment:0,emergency_target_months:6},events:[event],startPeriod:'2027-01',months:12});
+  assert.deepEqual(built.request.events.map(e=>e.type),['one_time','range']);
+  assert.deepEqual(built.warnings,[]);
 });

@@ -11,7 +11,8 @@
     input.placeholder='例如：為什麼我的最低現金會出現在這個月？';input.setAttribute('aria-describedby','qaCount');label.htmlFor=input.id;
     const controls=element('div'),count=element('small'),submit=element('button','送出');
     controls.className='qa-controls';count.id='qaCount';count.setAttribute('aria-live','polite');submit.type='submit';submit.className='primary';
-    controls.append(count,submit);fieldset.append(label,input,controls);form.append(fieldset);
+    const privacy=element('small','問題文字可能會傳給外部 AI 服務判斷意圖，請不要輸入姓名、帳號或身分證字號。');
+    controls.append(count,submit);fieldset.append(label,input,controls,privacy);form.append(fieldset);
     const result=element('div');result.id='qaResult';result.setAttribute('aria-live','polite');result.setAttribute('aria-atomic','true');
     section.append(heading,examples,form,result);after.after(section);
     let sending=false,version=0,active=null;
@@ -27,6 +28,17 @@
       result.replaceChildren();mode.hidden=data.source!=='extractive';mode.textContent='（直接引用資料）';
       if(data.source==='extractive')result.append(element('p',Q.fallbackNotice(data.fallback_reason)));
       result.append(...Q.answerNodes(document,data));
+      if(data.action==='compare'){
+        const link=element('a','前往比較計畫');link.href='/compare.html';result.append(link);
+      }
+      if(data.action==='stress'){
+        const button=element('button','設定意外風險');button.type='button';
+        button.addEventListener('click',()=>{
+          const toggle=document.getElementById('lifeShocksToggle');
+          if(toggle){toggle.checked=true;toggle.dispatchEvent(new Event('change',{bubbles:true}));toggle.focus();toggle.scrollIntoView({block:'center'});}
+        });
+        result.append(button);
+      }
       const citations=Q.citationRows(data.citations);
       if(citations.length){
         const list=element('ul');list.className='qa-citations';

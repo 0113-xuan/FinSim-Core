@@ -1,0 +1,20 @@
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const source=fs.readFileSync('static/plan-page.js','utf8');
+test('chart compares matched paths and describes the actual shock',async()=>{
+  const start=source.indexOf('    async function loadLifeShocks(run)');
+  const end=source.indexOf('    // Progress and failures',start);
+  const nodes={lifeShocksCard:{hidden:true},lifeShocksContent:{children:[],replaceChildren(...v){this.children=v},append(...v){this.children.push(...v)}}};
+  const element=(tag,text,cls)=>({tag,text,cls,children:[],append(...v){this.children.push(...v)},setAttribute(){}});
+  const path={seed:7,points:[{month:1,balance:100},{month:2,balance:20}],shock_details:[{month:2,name:'重大醫療支出',amount:80}]};
+  const response={sample_paths:[path]};
+  const run={startPeriod:'2026-01',request:{},mc:{sample_paths:[{seed:7,points:[{balance:100},{balance:100}]}]}};
+  let rendered;
+  const root={ResultsModel:{lifeShocks:()=>({columns:[],assumptions:[],disclaimer:'假設'})},WalletCharts:{drawCompare:(...args)=>{rendered=args}}};
+  const load=Function('root','S','$','ctx','lastRun','model','money',`return (${source.slice(start,end).trim()})`)(root,{element},id=>nodes[id],{alive:true,calculation:fn=>fn(async()=>response)},run,{monthToPeriod:(_,m)=>`month ${m}`},v=>`$${v}`);
+  await load(run);
+  assert.deepEqual(rendered[2].series.map(x=>x.values),[[100,100],[100,20]]);
+  assert.match(rendered[3][0],/month 2 重大醫療支出 \$80/);
+  assert.equal(rendered[4].zeroLine,true);
+});

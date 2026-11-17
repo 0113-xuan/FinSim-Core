@@ -417,8 +417,8 @@ def life_shocks_api(req: MonteCarloRequest) -> Dict[str, Any]:
     result = run_monte_carlo(profile=data["profile"], base_events=data["events"], loans=data["loans"],
                              assets=data["assets"], random_shocks=shocks, months=data["months"],
                              simulations=data["simulations"], seed=data["seed"],
-                             sample_paths=data["sample_paths"], include_details=data["include_details"])
-    keys = ("iterations", "seed", "probability_cash_shortfall", "net_worth_percentiles", "real_net_worth_percentiles")
+                             sample_paths=data["sample_paths"], include_details=True)
+    keys = ("iterations", "seed", "probability_cash_shortfall", "net_worth_percentiles", "real_net_worth_percentiles", "sample_paths")
     return {**{key: result[key] for key in keys},
             "assumptions": [{**item, "chance_in_horizon": round(1 - (1 - item["monthly_probability"]) ** data["months"], 4)}
                             for item in LIFE_SHOCKS], "disclaimer": DISCLAIMER}

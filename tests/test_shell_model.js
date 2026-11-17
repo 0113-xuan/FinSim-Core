@@ -78,3 +78,13 @@ test('a plan month moves the down payment out of assets, adds the loan, and coun
   const spent=M.snapshotAt({balance:850000,investment_value:100000},current);
   assert.deepEqual([spent.vehicle,spent.assets,spent.assetsChange,spent.netWorth],[0,950000,-50000,950000]);
 });
+
+
+test('child summary shows positive staged expenses regardless of stored expense sign',()=>{
+  const event={type:'child',amount:-100,monthly_amount:-1000,details:{child_stages:[{from_age:0,to_age:5,monthly_amount:1000},{from_age:6,to_age:11,monthly_amount:2000},{from_age:12,to_age:17,monthly_amount:3000}]}};
+  assert.match(M.eventSummary(event),/0–5 歲.*1,000.*6–11 歲.*2,000.*12–17 歲.*3,000/);
+});
+
+test('legacy marriage summary retains the one-time and monthly amounts',()=>{
+  assert.match(M.eventSummary({type:'marriage',amount:-200000,monthly_amount:-5000,end_period:'2027-12'}),/200,000.*5,000.*2027-12/);
+});

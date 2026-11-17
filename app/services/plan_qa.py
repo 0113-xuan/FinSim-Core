@@ -17,6 +17,7 @@ from pydantic import BaseModel, Field, ValidationError, field_validator, model_v
 from app.schemas import SimulationRequest
 from app.services.ai_provider import AIProviderError
 from app.services.knowledge_base import is_relevant, normalize, retrieve
+from app.services.intent_router import needs_clarification, route_question
 from app.services.plan_explanation import (
     CN_ALLOWED, CN_NUMBER, CN_PERCENT, PERIOD_PATTERN, PLACEHOLDER, PlanExplanationRequest, build_facts,
     run_plan_calculations, split_segments,
@@ -215,12 +216,25 @@ async def answer_plan_question(request: PlanQARequest, provider, *, model: str |
         if should_decline(request.question):
             source = 'declined'
             return _response(source, sections={'answer': [[{'text': DECLINED}]]})
+        decision = await route_question(request.question)
+        # Unsure or missing routing falls through to the normal retrieval path.
+        intent = None if decision is None or needs_clarification(decision) else decision.choice
+        if intent is not None:
+            guidance = {
+                'compare': ('請到比較頁選擇要比較的計畫。若要改變購車時間，先建立或調整另一份計畫，再比較兩者結果。', 'compare'),
+                'stress': ('請勾選「加入意外風險」並執行模擬，查看目前計畫遇到收入中斷或意外支出的結果。', 'stress'),
+            }
+            if intent == 'simulation' and request.simulation is None:
+                return _response('guidance', sections={'answer': [[{'text': '請先完成計畫設定並執行模擬，再詢問這份計畫的金額與月份。'}]]})
+            if intent in guidance:
+                text, action = guidance[intent]
+                return _response('guidance', sections={'answer': [[{'text': text}]], 'action': action})
         references = retrieve(request.question)
         top_score = references[0]['score'] if references else 0.0
         if not is_relevant(references):
             return _response('no_basis', sections={'answer': [[{'text': NO_BASIS}]]})
         facts = []
-        if request.simulation is not None:
+        if request.simulation is not None and intent != 'knowledge':
             result, mc = await asyncio.to_thread(run_plan_calculations, request.simulation)
             facts = build_facts(request.simulation, result, mc, start_period=request.start_period,
                                 events=request.events, vehicles=request.vehicles,

@@ -174,10 +174,35 @@ test('a home purchase sends the down payment as cash and the mortgage and house 
   assert.deepEqual(request.assets,[{name:'買房',start_month:5,value:10000000,annual_depreciation_rate:0}]);
   assert.throws(()=>M.homeDetails({home_price:'1000000',home_down_payment:'1000000',home_loan_term_months:'240',home_interest_rate:'2'}),/頭期款/);
 });
-test('marriage and child events are a one-time cost plus a monthly cost until the end month',()=>{
-  for(const type of ['marriage','child']){
+test('legacy child events are a one-time cost plus a monthly cost until the end month',()=>{
+  for(const type of ['child']){
     const {request}=build({events:[{type,name:'事件',start_period:'2027-01',end_period:'2027-12',amount:-300000,monthly_amount:-20000}]});
     assert.deepEqual(request.events,[{type:'one_time',name:'事件',month:3,amount:-300000},
       {type:'range',name:'事件',start_month:3,end_month:14,monthly_amount:-20000}]);
   }
+});
+
+test('legacy marriage calculates its one-time amount and monthly range',()=>{
+  const event={type:'marriage',name:'結婚',start_period:'2027-01',amount:-200000,monthly_amount:-1000,end_period:'2027-12',details:{wedding_cost:500000,gift_income:300000}};
+  const {request,warnings}=build({events:[event]});
+  assert.deepEqual(request.events,[{type:'one_time',name:'結婚',month:3,amount:-200000},{type:'range',name:'結婚',start_month:3,end_month:14,monthly_amount:-1000}]);
+  assert.deepEqual(warnings,[]);
+});
+
+test('child stages calculate age ranges and truncate once',()=>{
+  const event={type:'child',name:'孩子',start_period:'2027-01',amount:-100,monthly_amount:-10,details:{child_stages:[{from_age:0,to_age:5,monthly_amount:10},{from_age:6,to_age:11,monthly_amount:20},{from_age:12,to_age:17,monthly_amount:30}]}};
+  const full=build({events:[event],months:240});
+  assert.deepEqual(full.request.events.slice(1).map(e=>[e.start_month,e.end_month,e.monthly_amount]),[[3,74,-10],[75,146,-20],[147,218,-30]]);
+  const short=build({events:[event],months:60});
+  assert.deepEqual(short.request.events.slice(1).map(e=>[e.start_month,e.end_month]),[[3,60]]);
+  assert.equal(short.warnings.length,1);
+  event.details.child_stages[1].monthly_amount=0;
+  assert.equal(build({events:[event],months:240}).request.events.length,3);
+});
+
+
+test('edit form values support new and legacy child events',()=>{
+  const fields=['child_monthly_0_5','child_monthly_6_11','child_monthly_12_17'];
+  assert.deepEqual(M.eventFormValues({type:'child',monthly_amount:-10,details:{child_stages:[{monthly_amount:10},{monthly_amount:20},{monthly_amount:30}]}}),Object.fromEntries(fields.map((key,i)=>[key,[10,20,30][i]])));
+  assert.deepEqual(M.eventFormValues({type:'child',monthly_amount:-25}),Object.fromEntries(fields.map(key=>[key,25])));
 });

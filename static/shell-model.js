@@ -52,6 +52,7 @@
       return `房價 ${money(d.home_price)}，頭期款 ${money(d.home_down_payment)}，貸款 ${d.home_loan_term_months} 期`;
     }
     if (event.type==='marriage' || event.type==='child') {
+      if(event.type==='child' && Array.isArray(event.details?.child_stages)) return `生產 ${money(event.amount)}，每月 ${event.details.child_stages.map(stage=>`${stage.from_age}–${stage.to_age} 歲 ${money(stage.monthly_amount)}`).join('、')}`;
       return `一次 ${money(event.amount)}，每月 ${money(event.monthly_amount)}，至 ${event.end_period||'模擬結束'}`;
     }
     return '不支援的事件類型';

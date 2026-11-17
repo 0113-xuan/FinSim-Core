@@ -29,6 +29,9 @@
           <label>一次性金額（元）<input name="amount" type="number" min="0" max="20000000" step="0.01" required></label></div>
         <div class="direction-field" data-event-field="monthly_amount" hidden><label>收入或支出<select name="monthly_amount_direction" disabled><option value="expense">支出（錢花出去）</option><option value="income">收入（錢進來）</option></select></label>
           <label>每月金額（元）<input name="monthly_amount" type="number" min="0" max="10000000" step="0.01" required disabled></label></div>
+        <label data-event-field="child_monthly_0_5" hidden>0–5 歲每月養育費（元）<input name="child_monthly_0_5" type="number" min="0" step="0.01" required disabled></label>
+        <label data-event-field="child_monthly_6_11" hidden>6–11 歲每月養育費（元）<input name="child_monthly_6_11" type="number" min="0" step="0.01" required disabled></label>
+        <label data-event-field="child_monthly_12_17" hidden>12–17 歲每月養育費（元）<input name="child_monthly_12_17" type="number" min="0" step="0.01" required disabled></label>
         <label data-event-field="new_salary" hidden>新實領月薪<input name="new_salary" type="number" min="0" max="50000000" step="0.01" required disabled></label>
         <label data-event-field="home_price" hidden>房價（元）<input name="home_price" type="number" min="0.01" max="500000000" step="0.01" required disabled></label>
         <label data-event-field="home_down_payment" hidden>頭期款（元）<input name="home_down_payment" type="number" min="0" max="20000000" step="0.01" required disabled></label>
