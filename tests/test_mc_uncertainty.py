@@ -77,3 +77,14 @@ def test_history_length_matches_knowledge():
     text = (Path(__file__).resolve().parents[1] / "data/knowledge/limits.md").read_text(encoding="utf-8")
     section = text.split("id: history-length", 1)[1].split("\n## ", 1)[0]
     assert all(value in section for value in (history.start_period, history.end_period, str(len(history.periods))))
+
+
+def test_simple_cash_shortfall_interval_exact():
+    import runpy
+    from pathlib import Path
+    cases = runpy.run_path(str(Path(__file__).with_name("test_mc_regression.py")))["CASES"]
+    result = monte_carlo.run_monte_carlo(**cases["simple"], simulations=300, seed=42)
+    low, high = wilson_interval(0, 300)
+    assert result["probability_cash_shortfall"] == 0
+    assert result["probability_cash_shortfall_interval"] == {
+        "low": round(low, 4), "high": round(high, 4), "confidence": 0.95}
