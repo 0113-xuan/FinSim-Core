@@ -8,7 +8,7 @@
   };
   // Events outside the horizon or of unsupported types were skipped by the simulation request.
   function buildExplanationRequest({prepared, events, months, emergencyTargetMonths, eventSummary}) {
-    const supported=['one_time','range','salary_change','vehicle_purchase'];
+    const supported=['one_time','range','salary_change','vehicle_purchase','home_purchase','marriage','child'];
     const included=events.filter(event=>{
       if(!supported.includes(event.type))return false;
       try{const month=planner.periodToMonth(prepared.startPeriod,event.start_period);return month>=1&&month<=months;}catch(_){return false;}

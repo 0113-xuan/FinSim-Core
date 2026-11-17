@@ -94,7 +94,7 @@ test('the independent page pins supabase-js and exposes only supported event ent
   assert.match(eventForm,/<input type="hidden" name="type"/);
   assert.doesNotMatch(eventForm,/<select name="type"/);
   assert.deepEqual(require('../static/event-templates.js').availableTemplates().map(t=>t.eventType).sort(),
-    ['one_time','range','salary_change','vehicle_purchase'].sort());
+    ['one_time','range','salary_change','vehicle_purchase','home_purchase','marriage','child'].sort());
 });
 
 test('updates retain session ownership and filter event identity and plan identity',async()=>{

@@ -42,7 +42,7 @@ create table public.plan_events (
   id uuid primary key default gen_random_uuid(),
   plan_id uuid not null references public.plans(id) on delete cascade,
   user_id uuid not null references auth.users(id) on delete cascade,
-  type text not null check (type in ('one_time', 'range', 'salary_change', 'vehicle_purchase')),
+  type text not null check (type in ('one_time', 'range', 'salary_change', 'vehicle_purchase', 'home_purchase', 'marriage', 'child')),
   name text not null,
   start_period text not null check (start_period ~ '^\d{4}-(0[1-9]|1[0-2])$'),
   end_period text check (end_period ~ '^\d{4}-(0[1-9]|1[0-2])$'),

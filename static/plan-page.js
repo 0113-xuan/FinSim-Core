@@ -8,7 +8,10 @@
       const type = $('eventForm').elements.type.value;
       for (const label of root.document.querySelectorAll('[data-event-field]')) {
         const key = label.dataset.eventField;
-        const visible = type === 'range' ? ['monthly_amount','end_period'].includes(key) : type === 'one_time' ? key === 'amount' : type === 'salary_change' && key === 'new_salary';
+        const monthlyAfterOnce = ['amount','monthly_amount','end_period'];
+        const shown = {range:['monthly_amount','end_period'], one_time:['amount'], salary_change:['new_salary'], marriage:monthlyAfterOnce, child:monthlyAfterOnce,
+          home_purchase:['home_price','home_down_payment','home_loan_term_months','home_interest_rate','home_monthly_cost']}[type] || [];
+        const visible = shown.includes(key);
         label.hidden = !visible; for (const control of label.querySelectorAll('input,select')) control.disabled = !visible;
       }
       for (const label of root.document.querySelectorAll('[data-vehicle-field]')) {
@@ -357,9 +360,13 @@
       if(editing&&events.find(event=>event.id===editing)?.type!==values.type)throw new Error('修改事件時不可變更事件類型');
       if(values.type==='one_time')values.amount=signed('amount');
       else if(values.type==='salary_change'){values.new_salary=numeric('new_salary');values.details=salaryReference.details();}
-      else if(values.type==='range'){
+      else if(['range','marriage','child'].includes(values.type)){
+        if(values.type!=='range')values.amount=signed('amount');
         values.monthly_amount=signed('monthly_amount');values.end_period=form.elements.end_period.value||null;
         if(values.end_period&&values.end_period<values.start_period)throw new Error('結束月份不可早於開始月份');
+      }else if(values.type==='home_purchase'){
+        const raw={};for(const key of ['home_price','home_down_payment','home_loan_term_months','home_interest_rate','home_monthly_cost'])raw[key]=form.elements.namedItem(key).value;
+        values.details=model.homeDetails(raw);
       }else{
         const raw={};for(const key of ['vehicle_catalog_id','purchase_price','payment_method','down_payment','loan_term_months','annual_interest_rate','annual_depreciation_rate',...model.ownershipFields])raw[key]=form.elements.namedItem(key).value;
         raw.vehicle_catalog_id=form.elements.vehicle_catalog_id.dataset.pending??raw.vehicle_catalog_id;

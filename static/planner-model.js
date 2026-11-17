@@ -59,7 +59,7 @@
     if (existingDebts.length) request.profile.existing_debts = existingDebts;
     for (const [index, event] of events.entries()) {
       const name = event.name || `事件 ${index + 1}`;
-      if (!['one_time', 'range', 'salary_change', 'vehicle_purchase'].includes(event.type)) {
+      if (!['one_time', 'range', 'salary_change', 'vehicle_purchase', 'home_purchase', 'marriage', 'child'].includes(event.type)) {
         warnings.push(`略過「${name}」：不支援的事件類型。`);
         continue;
       }
@@ -75,6 +75,14 @@
           request.events.push({type: 'one_time', name, month: start, amount: number(event.amount, `${name}金額`)});
         } else if (event.type === 'salary_change') {
           request.events.push({type: 'salary_change', name, start_month: start, new_salary: number(event.new_salary, `${name}新月薪`)});
+        } else if (event.type === 'home_purchase') {
+          // The mortgage is a liability and the house an asset that keeps its price (no appreciation); only the down payment leaves cash at once.
+          const d = event.details || {}, price = number(d.home_price, `${name}房價`), down = number(d.home_down_payment, `${name}頭期款`);
+          request.events.push({type: 'one_time', name: `${name}頭期款`, month: start, amount: -down});
+          request.loans = [...(request.loans || []), {principal: price - down, apr: number(d.home_interest_rate, `${name}年利率`) / 100,
+            months: number(d.home_loan_term_months, `${name}貸款期數`), start_month: start, note: name}];
+          request.assets = [...(request.assets || []), {name, start_month: start, value: price, annual_depreciation_rate: 0}];
+          if (d.home_monthly_cost) request.events.push({type: 'range', name: `${name}每月持有成本`, start_month: start, end_month: months, monthly_amount: -number(d.home_monthly_cost, `${name}每月持有成本`)});
         } else {
           let end = event.end_period ? periodToMonth(startPeriod, event.end_period) : months;
           if (end < start) throw new Error('結束月份早於開始月份');
@@ -82,6 +90,8 @@
             warnings.push(`截斷「${name}」：結束月份超過模擬期間，計算至第 ${months} 個月。`);
             end = months;
           }
+          // Marriage and child are a one-time cost plus a monthly cost for the same event.
+          if (event.type !== 'range') request.events.push({type: 'one_time', name, month: start, amount: number(event.amount, `${name}一次性金額`)});
           request.events.push({type: 'range', name, start_month: start, end_month: end, monthly_amount: number(event.monthly_amount, `${name}每月金額`)});
         }
       } catch (error) {
@@ -110,6 +120,15 @@
       details.annual_depreciation_rate = number(values.annual_depreciation_rate, '折舊率') / 100;
       if (details.annual_depreciation_rate < 0 || details.annual_depreciation_rate > 1) throw new Error('折舊率須介於 0% 到 100%');
     }
+    return details;
+  }
+  function homeDetails(values) {
+    const details = {home_price:number(values.home_price, '房價'), home_down_payment:number(values.home_down_payment, '頭期款'),
+      home_loan_term_months:number(values.home_loan_term_months, '貸款期數'), home_interest_rate:number(values.home_interest_rate, '年利率')};
+    if (details.home_price <= 0) throw new Error('房價須大於零');
+    if (details.home_down_payment < 0 || details.home_down_payment >= details.home_price) throw new Error('頭期款須為非負數且小於房價');
+    if (!Number.isInteger(details.home_loan_term_months) || details.home_loan_term_months < 1) throw new Error('貸款期數須為正整數');
+    if (values.home_monthly_cost != null && String(values.home_monthly_cost).trim() !== '') details.home_monthly_cost = number(values.home_monthly_cost, '每月持有成本');
     return details;
   }
   function vehicleAnalysisReason(startPeriod, purchasePeriod) {
@@ -154,7 +173,7 @@
     const amount = Number(stored);
     return {value: Math.abs(amount), direction: amount < 0 ? 'expense' : 'income'};
   }
-  const api = {signedAmount, splitAmount, buildSimulationRequest, periodToMonth, monthToPeriod, ownershipFields, vehicleDetails, vehicleAnalysisReason, buildVehicleDecisionRequest, groupVehicleCatalog};
+  const api = {signedAmount, splitAmount, buildSimulationRequest, periodToMonth, monthToPeriod, ownershipFields, vehicleDetails, homeDetails,vehicleAnalysisReason, buildVehicleDecisionRequest, groupVehicleCatalog};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PlannerModel = api;
 })(globalThis);

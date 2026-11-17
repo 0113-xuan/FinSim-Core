@@ -36,7 +36,7 @@
   function sortEvents(events) {
     return [...events].sort((a,b)=>String(a.start_period).localeCompare(String(b.start_period)) || String(a.created_at||'').localeCompare(String(b.created_at||'')) || String(a.id||'').localeCompare(String(b.id||'')));
   }
-  const eventNames={one_time:'一次性收支',range:'期間每月收支',salary_change:'換工作',vehicle_purchase:'購車'};
+  const eventNames={one_time:'一次性收支',range:'期間每月收支',salary_change:'換工作',vehicle_purchase:'購車',home_purchase:'買房',marriage:'結婚',child:'生小孩'};
   function eventSummary(event) {
     if (event.type==='one_time') return money(event.amount);
     if (event.type==='range') return `每月 ${money(event.monthly_amount)}，至 ${event.end_period||'模擬結束'}`;
@@ -46,6 +46,13 @@
       const fees=[['annual_insurance','保險'],['annual_tax','稅費']].filter(([key])=>d[key]!=null)
         .map(([key,label])=>`${label} NT$${Number(d[key]).toLocaleString('zh-TW')}／年`);
       return `車價 ${money(d.purchase_price)}，${d.payment_method==='financed'?`貸款 ${d.loan_term_months} 期`:'現金購買'}${fees.length?'，'+fees.join('、'):''}`;
+    }
+    if (event.type==='home_purchase') {
+      const d=event.details||{};
+      return `房價 ${money(d.home_price)}，頭期款 ${money(d.home_down_payment)}，貸款 ${d.home_loan_term_months} 期`;
+    }
+    if (event.type==='marriage' || event.type==='child') {
+      return `一次 ${money(event.amount)}，每月 ${money(event.monthly_amount)}，至 ${event.end_period||'模擬結束'}`;
     }
     return '不支援的事件類型';
   }

@@ -3,10 +3,10 @@
   const templates = Object.freeze([
     {id:'vehicle',name:'購車',description:'選車款與付款方式，系統幫你算車貸、持有成本，並做購車分析。',icon:'vehicle',group:'life',status:'available',eventType:'vehicle_purchase'},
     {id:'job_change',name:'換工作',description:'設定新工作的實領月薪，看看收入改變後的財務走勢。',icon:'job',group:'life',status:'available',eventType:'salary_change'},
-    {id:'home',name:'買房',description:'規劃頭期款、房貸與買房後的生活開銷。',icon:'home',group:'life',status:'coming_soon'},
+    {id:'home',name:'買房',description:'規劃頭期款、房貸與買房後的生活開銷。',icon:'home',group:'life',status:'available',eventType:'home_purchase'},
     {id:'moving',name:'搬家',description:'安排搬家費用與新住處的每月開銷。',icon:'moving',group:'life',status:'coming_soon'},
-    {id:'marriage',name:'結婚',description:'規劃婚禮與共同生活的財務安排。',icon:'marriage',group:'life',status:'coming_soon'},
-    {id:'child',name:'生小孩',description:'預先安排育兒支出與家庭收入的變化。',icon:'child',group:'life',status:'coming_soon'},
+    {id:'marriage',name:'結婚',description:'設定婚禮費用與婚後每月的家庭支出變化。',icon:'marriage',group:'life',status:'available',eventType:'marriage'},
+    {id:'child',name:'生小孩',description:'設定生產費用與每月養育費，以及養到哪個月。',icon:'child',group:'life',status:'available',eventType:'child'},
     {id:'travel',name:'旅遊',description:'為一趟旅行安排預算與出發時間。',icon:'travel',group:'life',status:'coming_soon'},
     {id:'study',name:'進修',description:'規劃學費與進修期間的生活費。',icon:'study',group:'life',status:'coming_soon'},
     {id:'one_time',name:'一次性收支',description:'加入只發生一次的收入或支出，例如獎金或家電。',icon:'one_time',group:'custom',status:'available',eventType:'one_time'},

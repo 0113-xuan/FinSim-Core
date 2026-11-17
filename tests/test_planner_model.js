@@ -163,3 +163,21 @@ test('amounts are typed positive and the income or expense choice sets the store
     assert.equal(M.signedAmount(value, direction), stored);
   }
 });
+
+test('a home purchase sends the down payment as cash and the mortgage and house as balance-sheet items',()=>{
+  const details=M.homeDetails({home_price:'10000000',home_down_payment:'2000000',home_loan_term_months:'240',home_interest_rate:'2',home_monthly_cost:'5000'});
+  const {request}=build({events:[{type:'home_purchase',name:'買房',start_period:'2027-03',details}]});
+  assert.deepEqual(request.events,[
+    {type:'one_time',name:'買房頭期款',month:5,amount:-2000000},
+    {type:'range',name:'買房每月持有成本',start_month:5,end_month:60,monthly_amount:-5000}]);
+  assert.deepEqual(request.loans,[{principal:8000000,apr:0.02,months:240,start_month:5,note:'買房'}]);
+  assert.deepEqual(request.assets,[{name:'買房',start_month:5,value:10000000,annual_depreciation_rate:0}]);
+  assert.throws(()=>M.homeDetails({home_price:'1000000',home_down_payment:'1000000',home_loan_term_months:'240',home_interest_rate:'2'}),/頭期款/);
+});
+test('marriage and child events are a one-time cost plus a monthly cost until the end month',()=>{
+  for(const type of ['marriage','child']){
+    const {request}=build({events:[{type,name:'事件',start_period:'2027-01',end_period:'2027-12',amount:-300000,monthly_amount:-20000}]});
+    assert.deepEqual(request.events,[{type:'one_time',name:'事件',month:3,amount:-300000},
+      {type:'range',name:'事件',start_month:3,end_month:14,monthly_amount:-20000}]);
+  }
+});
