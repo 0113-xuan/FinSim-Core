@@ -38,18 +38,18 @@ def _has_investment(profile: Dict[str, Any]) -> bool:
 
 
 def _sampling_metadata(profile: Dict[str, Any], random_shocks: List[Dict[str, Any]],
-                       history: MarketHistory, assets: List[Dict[str, Any]]) -> Dict[str, Any]:
+                       history: MarketHistory, assets: List[Dict[str, Any]], block_months: int) -> Dict[str, Any]:
     sampled_parameters = []
     fixed_parameters = []
     span = f'{history.start_period} 至 {history.end_period} 共 {len(history.periods)} 個月'
     if profile.get('inflation_rate') is None:
         sampled_parameters.append('inflation_rate')
-        notes = [f'通膨率與台股報酬取自 {span}的台灣歷史月資料，每次試驗以連續 {BLOCK_MONTHS} 個月為一個區塊抽樣，'
+        notes = [f'通膨率與台股報酬取自 {span}的台灣歷史月資料，每次試驗以連續 {block_months} 個月為一個區塊抽樣，'
                  '同一個月的通膨與報酬成對抽取。']
     else:
         fixed_parameters.append('inflation_rate')
         notes = [f"通膨率固定使用使用者提供的 {float(profile['inflation_rate']) * 100:g}%，未抽樣；"
-                 f'台股報酬取自 {span}的歷史月資料，以連續 {BLOCK_MONTHS} 個月為一個區塊抽樣。'
+                 f'台股報酬取自 {span}的歷史月資料，以連續 {block_months} 個月為一個區塊抽樣。'
                  '歷史通膨與報酬按同一個月份成對選取，但通膨以使用者的固定值取代。']
     if profile.get('raise_rate') is None:
         if 'inflation_rate' in sampled_parameters:
@@ -91,7 +91,7 @@ def _sampling_metadata(profile: Dict[str, Any], random_shocks: List[Dict[str, An
         'sampling_note': ''.join(notes),
         'sampling_method': {
             'method': 'block_bootstrap',
-            'block_months': BLOCK_MONTHS,
+            'block_months': block_months,
             'paired_inflation_and_return': 'inflation_rate' in sampled_parameters,
             'history_start': history.start_period,
             'history_end': history.end_period,
@@ -111,6 +111,7 @@ def run_monte_carlo(
     sample_paths: int = 8,
     include_details: bool = False,
     assets: Optional[List[Dict[str, Any]]] = None,
+    *, block_months: int = BLOCK_MONTHS,
 ) -> Dict[str, Any]:
     if months <= 0:
         raise ValueError("months must be > 0")
@@ -122,6 +123,8 @@ def run_monte_carlo(
     random_shocks = random_shocks or []
     master_rng = random.Random(seed)
     history = load_market_history()
+    if not isinstance(block_months, int) or not 1 <= block_months <= len(history.periods):
+        raise ValueError("block_months must be between 1 and the history length")
     fixed_inflation = profile.get("inflation_rate")
 
     final_balances: List[float] = []
@@ -139,7 +142,7 @@ def run_monte_carlo(
     for index in range(simulations):
         path_seed = master_rng.randint(0, 2_147_483_647)
         # Inflation and return always come from the same historical month.
-        months_drawn = block_bootstrap_indices(master_rng, months, len(history.periods))
+        months_drawn = block_bootstrap_indices(master_rng, months, len(history.periods), block_months)
         return_path = [history.returns[i] for i in months_drawn]
         inflation_path = None if fixed_inflation is not None else [history.inflation[i] for i in months_drawn]
         result = simulate_finance(
@@ -172,7 +175,7 @@ def run_monte_carlo(
             paths.append(
                 {
                     "seed": path_seed,
-                    "history_periods": [history.periods[i] for i in months_drawn[::BLOCK_MONTHS]],
+                    "history_periods": [history.periods[i] for i in months_drawn[::block_months]],
                     "points": [{"month": row["month"], "balance": row["balance"], "net_worth": row["net_worth"]}
                                for row in curve],
                 }
@@ -196,7 +199,7 @@ def run_monte_carlo(
         "real_net_worth_definition": "期末淨資產（現金加投資）除以該次試驗的累積物價倍數，以今日購買力表示",
         "probability_cash_shortfall": round(shortfall_probability, 4),
         "cash_shortfall_definition": "模擬期間任一月底現金小於 0 的試驗比例",
-        **_sampling_metadata(profile, random_shocks, history, assets or []),
+        **_sampling_metadata(profile, random_shocks, history, assets or [], block_months),
         "data_sources": [dict(source) for source in history.data_sources],
         "expected_emergency_fund_shortfall": round(statistics.fmean(emergency_shortfalls), 2),
         "sample_paths": paths,
