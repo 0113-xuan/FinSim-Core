@@ -186,8 +186,9 @@
     const C=root.CompareModel,R=root.ResultsModel,id=name=>$(`${prefix}Chart${name}`);
     const palette=['#b45309','#6d28d9','#be123c','#15803d','#1d4ed8','#a16207'],startPeriod=items[0].startPeriod;
     const shape=(curve,events)=>R.splitData(curve,startPeriod,events,ctx.profile,ctx.debts);
+    const names=C.uniqueNames(items.map(item=>item.plan.name));
     const data=[...(baseline?[{name:'一般情況',kind:'baseline',color:'#0e7490',dash:[6,4],data:shape(baseline,[])}]:[]),
-      ...items.map((item,index)=>({name:item.plan.name,color:palette[index%palette.length],data:shape(item.curve,item.events)}))];
+      ...items.map((item,index)=>({name:names[index],color:palette[index%palette.length],data:shape(item.curve,item.events)}))];
     const focus=C.focusRange(items.flatMap(item=>item.eventMonths),240);
     let measure='cash',mode='focus';
     function render(){

@@ -169,6 +169,17 @@
     return {from, months: end - from >= total ? 0 : end - from};
   }
 
+  // Plans may share a name (two cars); number only the repeats so the legend and event labels stay distinguishable.
+  function uniqueNames(names) {
+    const total = new Map(), seen = new Map();
+    names.forEach(name => total.set(name, (total.get(name) || 0) + 1));
+    return names.map(name => {
+      if (total.get(name) < 2) return name;
+      seen.set(name, (seen.get(name) || 0) + 1);
+      return `${name} ${seen.get(name)}`;
+    });
+  }
+
   // Which line leads at the end and where each one bottoms out, for the text version of a chart.
   function chartSummary(chart, measureLabel) {
     const money = shell.money, last = chart.labels.length - 1;
@@ -184,6 +195,6 @@
   }
 
   const api = {MAX_SCENARIOS, BASELINE_NAME, SEED, SIMULATIONS, eventOptions, defaultScenarios, scenarioName, resolveScenarios,
-    summarize, leaders, conclusion, netWorthGap, chartSeries, windowChart, focusRange, chartSummary, vehicleRows};
+    summarize, leaders, conclusion, netWorthGap, chartSeries, windowChart, focusRange, uniqueNames, chartSummary, vehicleRows};
   if (node) module.exports = api; else root.CompareModel = api;
 })(globalThis);

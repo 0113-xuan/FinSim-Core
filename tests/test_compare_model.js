@@ -181,6 +181,11 @@ test('a chart can be cut to a window from any month, marks move with the cut, an
   assert.deepEqual(C.focusRange([2], 30), {from:0, months:0});            // the window would be the whole run: show everything
 });
 
+test('plans that share a name get numbered, unique ones keep theirs', () => {
+  const C = require('../static/compare-model.js');
+  assert.deepEqual(C.uniqueNames(['購車', '換工作', '購車', '買房']), ['購車 1', '換工作', '購車 2', '買房']);
+  assert.deepEqual(C.uniqueNames([]), []);
+});
 
 test('comparison displays optional intervals and retains risk marks and legacy text',()=>{
   const item=run('A',{p5:1,p50:2,p95:3,shortfall:.1});
