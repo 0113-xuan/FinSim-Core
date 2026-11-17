@@ -4,6 +4,7 @@
 id: salary-growth
 source: app/core/simulation.py：requested_raise_rate、salary_growth；static/results-model.js：assumptionRows
 tags: 年調薪率,薪水成長,沒填,跟著通膨
+aliases: 薪水沒填,薪水會漲嗎,調薪怎麼算,加薪怎麼算
 
 沒有填年調薪率時，模擬讓薪資跟著通膨，每年調整一次；若有自行指定，就依指定的固定年率處理。這是模型為了規劃而採用的假設，不代表雇主會依物價調薪。進階支出分類也可以有各自的通膨設定，因此不是所有支出都必然和薪水以同樣幅度變動。
 
@@ -11,6 +12,7 @@ tags: 年調薪率,薪水成長,沒填,跟著通膨
 id: depreciation-default
 source: app/decision_assumptions.py：VEHICLE_DEPRECIATION；app/core/simulation.py：owned_assets
 tags: 折舊率,預設折舊,車輛價值,百分之十五
+aliases: 車子一年掉多少,折舊預設幾趴,車子會貶值多少
 
 計畫頁的車輛年折舊率預設為 15%，這是可修改的規劃假設，不是從中古車成交資料校準的價格。折舊用來推算持有車輛的估值變化，會影響淨資產與經濟成本；它本身不是每月額外扣款。實際出售價格仍會受車況與市場條件影響，工具不提供成交價預測。
 
@@ -18,6 +20,7 @@ tags: 折舊率,預設折舊,車輛價值,百分之十五
 id: running-cost-defaults
 source: app/decision_assumptions.py：ASSUMPTIONS.annual_maintenance_budget、monthly_fuel_or_energy
 tags: 保養,油電,預設值,持有成本,預算
+aliases: 保養費多少,油錢怎麼算,電費預設,養車費用
 
 未自行填入持有成本時，保養預算預設每年 18000 元，油電預算預設每月 3000 元。這些是讓計算能開始的規劃預算，不是實際保養單或加油、充電報價，也不會因為選了純電車就自動估出充電費。使用者可以依自己的里程、車況與實際費用修改。
 
@@ -25,6 +28,7 @@ tags: 保養,油電,預設值,持有成本,預算
 id: no-auto-sell
 source: app/core/simulation.py：investment、net_cashflow；static/results-model.js：assumptionRows
 tags: 自動賣出,現金不足,投資變現,負數
+aliases: 錢不夠會賣股票嗎,會不會自動變現,現金為負怎麼辦,會不會自動借錢
 
 目前模擬把現金和投資分開計算，現金不足時不會自動賣出投資，也不會自動替你借款。因此現金可能變成負數，而投資帳戶仍保有市值。這是在提醒現金流的缺口，並不表示現實中可以無限制透支；若想觀察不同支出或投入安排，需要修改輸入後重新模擬。
 
@@ -32,6 +36,7 @@ tags: 自動賣出,現金不足,投資變現,負數
 id: monthly-investment
 source: app/core/simulation.py：investment、monthly_investment、net_cashflow
 tags: 每月投資,從現金轉入,投資金額,支出
+aliases: 每月存股從哪扣,定期定額怎麼算,投資的錢哪來
 
 每月投資是把設定的金額從現金轉進投資帳戶，現金流會減少同一筆金額，投資市值則加上投入並受報酬變化影響。它不是憑空增加資產，也不等於生活消費。即使收入扣除生活費與還款後不夠，模型仍照設定投入，所以應一起查看最低現金與現金不足情況。
 
@@ -40,5 +45,6 @@ tags: 每月投資,從現金轉入,投資金額,支出
 id: life-shocks
 source: app/core/life_shocks.py；app/core/simulation.py
 tags: 意外風險,機率,示範假設,重大醫療支出,車禍與車損自付,收入中斷
+aliases: 意外發生機率,生病車禍機率,失業醫療風險,突發狀況
 
 意外風險的機率與金額是示範假設，不是統計或預測，用來觀察計畫遇到意外時的變化。情境包括重大醫療支出、車禍與車損自付，以及收入中斷。收入中斷發生時，模型會在設定的期間按收入倍數調整現金流中的收入；支出分類仍按原本收入計算。
