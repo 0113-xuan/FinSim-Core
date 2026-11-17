@@ -10,6 +10,7 @@ import asyncio
 import hashlib
 import json
 import logging
+import math
 import re
 from collections import OrderedDict
 from decimal import ROUND_HALF_UP, Decimal
@@ -103,6 +104,16 @@ def format_percent(probability: float) -> str:
     if 0 < probability < 0.005:
         return '不到 1%'
     return f"{_round(probability * 100, '1')}%"
+
+
+def format_percent_range(interval: Any) -> str:
+    if not isinstance(interval, dict):
+        return ''
+    low, high = interval.get('low'), interval.get('high')
+    if (any(isinstance(x, bool) or not isinstance(x, (int, float)) or not math.isfinite(x) for x in (low, high))
+            or not 0 <= low <= high <= 1):
+        return ''
+    return f'{math.floor(low * 100 + 1e-9)}% 到 {math.ceil(high * 100 - 1e-9)}%'
 
 
 def format_months(value: float) -> str:
@@ -202,6 +213,10 @@ def build_facts(
 
     shortfall = mc['probability_cash_shortfall']
     add('shortfall_probability', '現金不足機率（任一月底現金小於零的試驗比例）', format_percent(shortfall), shortfall)
+    interval = mc.get('probability_cash_shortfall_interval')
+    formatted_interval = format_percent_range(interval)
+    if formatted_interval:
+        add('shortfall_interval', '現金不足機率的 95% 區間（只反映抽樣誤差）', formatted_interval, interval)
     for key, label in (('p5', '期末淨資產（較差情況，20 次模擬裡有 1 次比這低）'), ('p50', '期末淨資產（一般情況，一半比這好、一半比這差）'),
                        ('p95', '期末淨資產（順利情況，20 次模擬裡有 1 次比這高）')):
         value = mc['net_worth_percentiles'][key]
