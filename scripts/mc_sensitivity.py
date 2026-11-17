@@ -9,7 +9,14 @@ sys.path.insert(0, str(ROOT))
 from app.core.monte_carlo import run_monte_carlo
 
 CASES = runpy.run_path(str(ROOT / "tests/test_mc_regression.py"))["CASES"]
-NAMES = ("simple", "investment", "car_loan", "advanced_shocks")
+CASES["tight_shocks"] = dict(
+    profile=dict(salary=40000, fixed_expense=18000, variable_expense=18000,
+                 balance=10000, inflation_rate=.02, raise_rate=.01),
+    months=12,
+    random_shocks=[dict(name="維修", monthly_probability=.12, min_amount=5000,
+                        max_amount=35000, distribution="uniform", duration_months=1, enabled=True)],
+)
+NAMES = ("simple", "investment", "car_loan", "advanced_shocks", "tight_shocks")
 
 
 def run(name, count, seed, block=12):
