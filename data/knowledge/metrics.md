@@ -4,7 +4,7 @@
 id: minimum-cash
 source: app/core/simulation.py：summarize_simulation；app/services/plan_explanation.py：build_facts
 tags: 最低現金,最低存款,發生月份,現金下降
-aliases: 最低存款,哪個月最少錢,現金最少是什麼時候,最吃緊的月份,撐得住
+aliases: 最低存款,哪個月最少錢,現金最少月份,最吃緊的月份,撐得住
 
 最低現金是模擬期間各個月底的現金餘額中最低的一筆，發生月份則是這筆餘額對應的月份。它不把投資市值或車輛估值當作現金。事件支出、生活費、還款與每月投資都可能影響現金；要問自己的最低金額與月份，須先執行計畫模擬，讓回答取得這次的事實表。
 
@@ -28,7 +28,7 @@ aliases: 會不會破產,會不會沒錢,錢夠不夠,現金會不會見底,會�
 id: net-worth
 source: app/core/simulation.py：net_worth = balance + investment + owned_assets - owed_loans - owed_debts
 tags: 淨資產,剩餘貸款,投資市值,車輛估值,算法
-aliases: 總資產,資產扣負債,身家,淨值怎麼算
+aliases: 總資產,資產扣負債,身家,淨值計算
 
 淨資產等於現金加上投資市值、車輛估值，再扣除模擬內剩餘的新貸款與既有債務餘額。買車後現金會變少，但仍持有車輛，所以現金支出不等於淨資產減少。車輛估值是依折舊假設推算，不是可立即成交的價格；淨資產也不能全部視為可隨時動用的現金。
 
@@ -36,7 +36,7 @@ aliases: 總資產,資產扣負債,身家,淨值怎麼算
 id: percentile-cases
 source: app/core/monte_carlo.py：percentile、net_worth_percentiles；app/services/plan_explanation.py：build_facts
 tags: 一般情況,較差情況,順利情況,中位數,分位數
-aliases: 最差情況,最好情況,最壞會怎樣,較差跟順利,中位數,運氣不好,落到哪裡
+aliases: 最差情況,最好情況,最壞會怎樣,較差跟順利,中位數,運氣不好,運氣差
 
 一般情況是模擬結果的中位數，一半結果較高、一半較低。較差情況約是 20 次裡有 1 次比這低的位置，順利情況約是 20 次裡有 1 次比這高的位置。這些是把抽樣結果排序後整理的位置，不是最壞或最好情況，也不表示你未來會走到其中某一條固定路徑。
 
@@ -52,6 +52,6 @@ aliases: 圖上顏色,深淺色,陰影範圍,圖表範圍
 id: purchasing-power
 source: app/core/monte_carlo.py：price_multiplier、real_net_worths
 tags: 今日購買力,實質淨資產,通膨,物價
-aliases: 換成現在的錢,通膨後的價值,實質價值,現值
+aliases: 換成今日幣值,通膨後的價值,實質價值,現值
 
 以今日購買力計算的期末淨資產，是把每次模擬的期末淨資產除以該次累積物價倍數，再整理出結果。這是在說明未來帳面金額扣除物價變化後，相當於今天多少購買能力。它不是另外增加或扣除一筆現金，也不是預測未來實際能購買哪些商品。

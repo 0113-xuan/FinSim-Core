@@ -4,7 +4,7 @@
 id: why-simulate
 source: README.md：backend engine；app/core/simulation.py：simulate_finance；app/core/monte_carlo.py：run_monte_carlo
 tags: 模擬用途,未來,風險,現金流
-aliases: 為什麼要模擬,模擬有什麼用,為什麼不直接算,做模擬用途
+aliases: 模擬原因,模擬用途,不直接算,做模擬用途
 
 計畫把收入、生活費、還款、投資與事件逐月放進同一套現金流計算，觀察現金何時較吃緊。隨機模擬再加入歷史資料抽樣，看看不同通膨與股市變化下結果有多分散。用途是比較自己填入的條件與風險，不是由系統替你決定是否購車，或判斷未來一定會發生什麼。
 
@@ -20,7 +20,7 @@ aliases: 跑幾次,模擬幾次,要跑幾次才夠,跑五百次
 id: historical-sampling
 source: app/core/market_data.py：BLOCK_MONTHS、block_bootstrap_indices；app/core/monte_carlo.py：_sampling_metadata
 tags: 歷史抽樣,通膨,台股報酬,區塊,十二個月
-aliases: 怎麼抽歷史資料,通膨和報酬怎麼配對,歷史資料多久
+aliases: 抽歷史資料,通膨報酬配對,歷史資料多久
 
 隨機模擬以台灣歷史月資料為基礎，每次取連續 12 個月為一個區塊，同月份的通膨與台股報酬成對抽取，接成模擬期間。若自己填固定通膨率，通膨就不抽樣；投資報酬仍依歷史資料抽樣。這是在保留部分歷史連動的規劃方法，不能涵蓋所有未來可能出現的市場情境。
 
@@ -36,7 +36,7 @@ aliases: 固定和隨機差在哪,兩種模擬差別,固定值模擬
 id: fixed-seed
 source: static/plan-page.js：seed；app/services/plan_explanation.py：SIMULATE_SEED、MONTE_CARLO_SEED
 tags: 固定種子,亂數,重跑,相同,四十二
-aliases: 結果為什麼一樣,每次都一樣,為什麼不會變,重跑結果相同,重新整理,數字沒變
+aliases: 結果一樣,每次都一樣,結果不會變,重跑結果相同,重新整理,數字沒變
 
 計畫頁與白話解釋把亂數種子固定為 42，讓相同輸入、資料與程式版本重跑時取得相同結果，便於比較與查核。固定種子只是讓抽樣過程可以重現，沒有挑出比較有利的未來。修改收入、事件、模擬期間或資料版本後，結果仍可能不同。
 

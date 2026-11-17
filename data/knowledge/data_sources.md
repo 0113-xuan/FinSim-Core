@@ -12,7 +12,7 @@ aliases: 車價是即時嗎,車價哪來的,車價會更新嗎,車價準嗎
 id: salary-population
 source: data/salary/SOURCES.md：統計對象、統計項；data/salary/tw_regular_salary.json
 tags: 行業薪資,主計總處,本國籍,全時,稅前,平均薪資
-aliases: 平均薪資怎麼統計,薪資調查對象,包含哪些人
+aliases: 平均薪資統計,薪資調查對象,包含哪些人
 
 行業薪資參考來自主計總處受僱員工薪資調查，採本國籍全時受僱員工的稅前平均經常性薪資。不是全體員工、職缺或起薪調查，也不代表雇主或自由接案者收入。這張表沒有提供相同母體的中位數；平均值不能直接當成你的實領薪資，需依自己的實際收入確認。
 
@@ -28,7 +28,7 @@ aliases: 薪資是哪個月,薪資資料期間,薪資是單月嗎
 id: parking-sources
 source: static/parking-form.js；app/parking.py；scripts/fetch_tdx_parking.py
 tags: TDX,月租來源,收費說明,解析,停車資料
-aliases: 停車費哪來的,停車場資料來源,月租怎麼來
+aliases: 停車費哪來的,停車場資料來源,月租來源
 
 停車場參考資料來自 TDX，專案從停車場收費說明解析月租方案，並不是每間停車場都提供可辨識的月租。沒有解析到月租不等於免費，也不表示沒有停車場。資料可能含多種方案與適用對象，工具會顯示來源與說明供核對，實際空位與價格仍應向營運單位確認。
 
@@ -36,7 +36,7 @@ aliases: 停車費哪來的,停車場資料來源,月租怎麼來
 id: insurance-sources
 source: app/vehicle_fees.py：COMPULSORY_SOURCE、VOLUNTARY_SOURCE、BODY_SOURCE；static/vehicle-fees-form.js
 tags: 保險來源,保費範圍,公開資料,不是報價,車價和保險資料
-aliases: 保費是真的嗎,保險報價準嗎,保險費怎麼估
+aliases: 保費是真的嗎,保險報價準嗎,保險費估算
 
 保險參考混合官方強制險費率表與網路公開投保範例，車體險則依單一範例車款的比例估算。來源與假設會隨項目列出，不是全部都來自官方報價。系統沒有蒐集足以核保的個人條件，參考範圍不能用來宣稱任何人都能以同樣保費投保，實際金額要向保險公司確認。
 
@@ -44,6 +44,6 @@ aliases: 保費是真的嗎,保險報價準嗎,保險費怎麼估
 id: market-sources
 source: data/market/SOURCES.md；app/core/market_data.py：SOURCES、load_market_history
 tags: 通膨資料,台股資料,股利,消費者物價指數,CPI,來源
-aliases: 通膨資料哪來,股市資料哪來,資料來源在哪
+aliases: 通膨資料哪來,股市資料哪來,資料來源在哪,CPI來源
 
 通膨使用主計總處消費者物價指數，股市使用臺灣證券交易所發行量加權股價報酬指數，後者含股利再投入。執行模擬時只讀專案保存的月資料，取共同期間計算同月的通膨與報酬。資料更新日期不代表即時行情；歷史數值也不能當作未來收入或投資報酬的承諾。
