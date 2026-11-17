@@ -1,0 +1,55 @@
+{
+  "labels": {
+    "knowledge": "詢問一般概念、公式、資料來源或功能說明",
+    "simulation": "詢問目前計畫的個人金額、月份或模擬結果",
+    "compare": "要求修改條件並比較不同計畫",
+    "stress": "要求模擬失業、醫療或意外支出對計畫的影響",
+    "clarify": "問題不完整、涉及多個無法決定的動作，或與本工具無關"
+  },
+  "questions": [
+    {"q": "蒙地卡羅是什麼", "label": "knowledge"},
+    {"q": "淨資產是怎麼算的", "label": "knowledge"},
+    {"q": "現金不足機率是什麼意思", "label": "knowledge"},
+    {"q": "車價資料是從哪裡來的", "label": "knowledge"},
+    {"q": "為什麼每次跑的結果都一樣", "label": "knowledge"},
+    {"q": "歷史資料有多久", "label": "knowledge"},
+    {"q": "區塊抽樣是什麼", "label": "knowledge"},
+    {"q": "通膨會怎麼影響模擬結果", "label": "knowledge"},
+    {"q": "複利是什麼概念", "label": "knowledge"},
+    {"q": "緊急預備金月數怎麼算", "label": "knowledge"},
+
+    {"q": "我的現金會在哪個月最低", "label": "simulation"},
+    {"q": "我買車之後現金夠不夠用", "label": "simulation"},
+    {"q": "我這個計畫的現金不足機率是多少", "label": "simulation"},
+    {"q": "我的淨資產最後會剩多少", "label": "simulation"},
+    {"q": "我買車那個月要付多少錢", "label": "simulation"},
+    {"q": "我的預備金會不會不夠", "label": "simulation"},
+    {"q": "我換工作之後存款會變多少", "label": "simulation"},
+    {"q": "我的車貸每個月要還多少", "label": "simulation"},
+
+    {"q": "如果把買車延後一年會怎樣", "label": "compare"},
+    {"q": "貸款買車和現金買車哪個比較好", "label": "compare"},
+    {"q": "換一台便宜一點的車會差多少", "label": "compare"},
+    {"q": "先換工作再買車和先買車差在哪", "label": "compare"},
+    {"q": "頭期款多付一點會比較好嗎", "label": "compare"},
+    {"q": "把買車提早到明年的話呢", "label": "compare"},
+    {"q": "如果不買車只換工作呢", "label": "compare"},
+    {"q": "幫我比較兩個方案", "label": "compare"},
+
+    {"q": "如果我失業半年會怎樣", "label": "stress"},
+    {"q": "萬一生大病要花很多錢，我的現金會怎樣", "label": "stress"},
+    {"q": "發生車禍的話我的計畫還撐得住嗎", "label": "stress"},
+    {"q": "突然收入中斷三個月怎麼辦", "label": "stress"},
+    {"q": "遇到重大醫療支出會不會破產", "label": "stress"},
+    {"q": "萬一被裁員會怎樣", "label": "stress"},
+    {"q": "有意外的話風險有多大", "label": "stress"},
+    {"q": "最壞的狀況模擬一下", "label": "stress"},
+
+    {"q": "幫我看一下", "label": "clarify"},
+    {"q": "這個好嗎", "label": "clarify"},
+    {"q": "今天天氣如何", "label": "clarify"},
+    {"q": "明天要不要買", "label": "clarify"},
+    {"q": "我想買車也想買房還想換工作，要怎麼做", "label": "clarify"},
+    {"q": "怎麼辦", "label": "clarify"}
+  ]
+}
