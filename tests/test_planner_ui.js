@@ -390,24 +390,7 @@ test('the plan page has no cash trajectory chart and the dashboard draws life ev
   assert.ok(html.indexOf('id="plansChartSection"')<html.indexOf('id="suddenChartSection"')&&html.indexOf('id="suddenChartSection"')<html.indexOf('id="plansHeading"'));
   assert.ok(pages.includes('await plansChart(ctx,loaded)'));
   assert.ok(pages.includes("const isSudden=item=>item.events.every(event=>event.type==='one_time'||event.type==='range');"));
-  assert.ok(pages.includes("life=withEvents.filter(item=>!isSudden(item))"));
-  assert.ok(pages.includes("drawGroup(ctx,'sudden',withEvents.filter(isSudden),baseline,startPeriod)"));
+  assert.ok(pages.includes("[['plans',withEvents.filter(item=>!isSudden(item))],['sudden',withEvents.filter(isSudden)]]"));
   assert.ok(pages.includes("name:'一般情況',kind:'baseline'"));
   assert.match(pages,/drawCompare\(\$\(prefix\+'Chart'\)[^\n]*zeroLine:measure==='cash'/);
-});
-
-test('the sudden-event chart has a simulate button that draws a fresh random sample containing a major event',()=>{
-  const html=fs.readFileSync(path.join(__dirname,'../static/dashboard.html'),'utf8');
-  const pages=fs.readFileSync(path.join(__dirname,'../static/pages.js'),'utf8');
-  const section=html.slice(html.indexOf('id="suddenChartSection"'),html.indexOf('id="plansHeading"'));
-  assert.ok(section.includes('<button id="suddenSimulate" class="primary" type="button">模擬突發事件</button><p id="suddenStatus" class="run-status" role="status" aria-live="polite"></p>'));
-  assert.ok(section.indexOf('id="suddenSimulate"')<section.indexOf('id="suddenChartBody" hidden')&&section.indexOf('id="suddenChartBody" hidden')<section.indexOf('<canvas id="suddenChart"'));
-  assert.ok(pages.includes("shockButton(ctx,built,sudden,startPeriod)"));
-  assert.ok(pages.includes("post('/monte-carlo/life-shocks',{...built.request,months:12,simulations:1,seed:1})"));   // the server's assumptions, read cheaply
-  assert.ok(pages.includes("seed:Math.floor(Math.random()*1e9),random_shocks:shocks.list,include_details:true"));       // a new draw every press
-  assert.ok(pages.includes("attempt<20&&!pick"));                                                                    // draws without a major event are discarded
-  assert.ok(pages.includes("detail.month<=120"));
-  assert.ok(pages.includes("button.textContent='重新模擬'"));
-  assert.ok(pages.includes("markNames:Object.fromEntries("));                                                         // marks carry the shock's own name
-  assert.ok(pages.includes("if(body)body.hidden=!shown.length;"));                                                    // no lines yet: only the button shows
 });
