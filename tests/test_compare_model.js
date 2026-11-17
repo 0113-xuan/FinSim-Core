@@ -162,3 +162,19 @@ test('the compare page is wired into the app and every element it uses exists', 
   assert.match(read('dashboard.html'), /href="\/compare\.html"/);
   assert.match(read('charts.js'), /drawCompare/);
 });
+
+
+test('comparison displays optional intervals and retains risk marks and legacy text',()=>{
+  const item=run('A',{p5:1,p50:2,p95:3,shortfall:.1});
+  const interval={low:.0767,high:.1294};
+  const legacy=rowsOf([item])[0];
+  item.mc.probability_cash_shortfall_interval=interval;
+  const current=rowsOf([item])[0];
+  assert.deepEqual(current.shortfallInterval,interval);
+  assert.equal(legacy.shortfallInterval,undefined);
+  const page=fs.readFileSync(path.join(__dirname,'../static/compare-page.js'),'utf8');
+  const line=page.split('\n').find(line=>line.includes("['現金不足機率（隨機模擬）'"));
+  const expression=line.slice(line.indexOf('summaries.map'),line.lastIndexOf('],'));
+  const cells=new Function('summaries','M','riskMark',`return ${expression}`)([current,legacy],M,()=> '最低');
+  assert.deepEqual(cells,[{text:'10%（7% 到 13%）',mark:'最低'},{text:'10%',mark:'最低'}]);
+});
