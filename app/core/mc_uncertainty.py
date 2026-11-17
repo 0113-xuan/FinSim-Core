@@ -8,7 +8,8 @@ def wilson_interval(successes: int, n: int, z: float = 1.96) -> tuple[float, flo
     denominator = 1 + z * z / n
     center = (p + z * z / (2 * n)) / denominator
     margin = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denominator
-    return max(0.0, center - margin), min(1.0, center + margin)
+    return (0.0 if successes == 0 else max(0.0, center - margin),
+            1.0 if successes == n else min(1.0, center + margin))
 
 
 def quantile_interval(values: list[float], q: float, z: float = 1.96) -> tuple[float, float]:
