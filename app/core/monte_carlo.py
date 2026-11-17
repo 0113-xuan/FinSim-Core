@@ -124,7 +124,7 @@ def run_monte_carlo(
     random_shocks = random_shocks or []
     master_rng = random.Random(seed)
     history = load_market_history()
-    if not isinstance(block_months, int) or not 1 <= block_months <= len(history.periods):
+    if isinstance(block_months, bool) or not isinstance(block_months, int) or not 1 <= block_months <= len(history.periods):
         raise ValueError("block_months must be between 1 and the history length")
     fixed_inflation = profile.get("inflation_rate")
 

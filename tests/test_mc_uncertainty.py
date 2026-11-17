@@ -58,7 +58,7 @@ def test_monte_carlo_fields_and_blocks(monkeypatch):
     for draw in draws:
         for start in (0, 6):
             assert draw[start:start + 6] == list(range(draw[start], draw[start] + 6))
-    for bad in (0, -1, len(load_market_history().periods) + 1):
+    for bad in (0, -1, True, False, len(load_market_history().periods) + 1):
         with pytest.raises(ValueError):
             monte_carlo.run_monte_carlo(**args, block_months=bad)
 
